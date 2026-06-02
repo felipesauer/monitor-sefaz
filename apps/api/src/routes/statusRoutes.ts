@@ -1,0 +1,62 @@
+import type { FastifyInstance } from 'fastify';
+import {
+  historyQuerySchema,
+  statusQuerySchema,
+  type EnvironmentValue,
+} from '@monitor-sefaz/contracts';
+import type { StatusStore } from '../store/StatusStore.js';
+import { SummaryService } from '../services/SummaryService.js';
+
+export interface StatusRoutesDeps {
+  readonly store: StatusStore;
+  readonly summaryService: SummaryService;
+  readonly now: () => number;
+}
+
+/**
+ * Registra as rotas de leitura de status. Toda validação de query/params usa os
+ * schemas Zod de `@monitor-sefaz/contracts`, garantindo contrato único API↔Web.
+ */
+export function registerStatusRoutes(app: FastifyInstance, deps: StatusRoutesDeps): void {
+  const { store, summaryService, now } = deps;
+
+  app.get('/api/v1/health', async () => ({ status: 'ok' }));
+
+  app.get('/api/v1/status', async (request) => {
+    const query = statusQuerySchema.parse(request.query);
+    const all = await store.getSnapshot(query.env);
+    const services = all
+      .filter((s) => (query.document ? s.document === query.document : true))
+      .filter((s) => (query.uf ? s.uf === query.uf.toUpperCase() : true));
+    return {
+      environment: query.env,
+      generatedAt: new Date(now()).toISOString(),
+      services,
+    };
+  });
+
+  app.get<{ Params: { document: string; uf: string } }>(
+    '/api/v1/status/:document/:uf',
+    async (request, reply) => {
+      const env = statusQuerySchema.parse(request.query).env;
+      const id = `${request.params.document}:${request.params.uf.toUpperCase()}`;
+      const service = await store.getService(env, id);
+      if (!service) {
+        return reply.code(404).send({ message: 'Serviço não encontrado' });
+      }
+      return service;
+    }
+  );
+
+  app.get('/api/v1/summary', async (request) => {
+    const env: EnvironmentValue = statusQuerySchema.parse(request.query).env;
+    const services = await store.getSnapshot(env);
+    return summaryService.build(env, services, new Date(now()).toISOString());
+  });
+
+  app.get<{ Params: { id: string } }>('/api/v1/services/:id/history', async (request) => {
+    const { env, period } = historyQuerySchema.parse(request.query);
+    const points = await store.getHistory(env, decodeURIComponent(request.params.id), period);
+    return { id: request.params.id, period, points };
+  });
+}
