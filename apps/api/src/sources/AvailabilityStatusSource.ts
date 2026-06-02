@@ -15,15 +15,25 @@ import type { StatusSource } from './StatusSource.js';
 /**
  * Fonte baseada no scraping da página oficial de disponibilidade da SEFAZ.
  *
- * A página reporta status POR AUTORIZADOR. Como o monitor exibe POR UF, aqui
- * resolvemos, para cada UF de cada documento, qual autorizador a atende
- * (via `Catalog`) e aplicamos o estado daquele autorizador. Funciona sem
- * certificado A1 e em qualquer rede — é a fonte padrão.
+ * As páginas oficiais (NF-e e CT-e) reportam status POR AUTORIZADOR. Como o
+ * monitor exibe POR UF, resolvemos, para cada UF de cada documento, qual
+ * autorizador a atende (via `Catalog`) e aplicamos o estado daquele autorizador.
+ * Funciona sem certificado A1 e em qualquer rede — é a fonte padrão.
+ *
+ * Cobertura dos 5 documentos:
+ * - NF-e e NFC-e: página oficial da NF-e.
+ * - CT-e: página oficial da CT-e.
+ * - MDF-e e DC-e: são CENTRALIZADOS no SVRS (ambiente nacional único), então
+ *   seu estado acompanha o do autorizador SVRS — que já capturamos nas páginas
+ *   acima. Reaproveitamos esse estado em vez de raspar o portal SPA do SVRS.
  *
  * A página oficial é de PRODUÇÃO; para homologação não há dados (retorna vazio).
  */
 export class AvailabilityStatusSource implements StatusSource {
   public readonly name = 'availability';
+
+  /** Documentos derivados do estado do SVRS (sem página própria de scraping). */
+  private static readonly SVRS_DERIVED: DocumentType[] = [DocumentType.MDFe, DocumentType.DCe];
 
   constructor(
     private readonly provider = new HttpAvailabilityProvider(),
@@ -38,13 +48,29 @@ export class AvailabilityStatusSource implements StatusSource {
 
     const checkedAt = new Date(this.now()).toISOString();
     const services: ServiceStatusDTO[] = [];
+    // Mapa global de estado por autorizador, agregado de todas as páginas.
+    const globalByAuthorizer = new Map<AuthorizerCode, AvailabilityRow>();
 
     for (const document of this.provider.supportedDocuments()) {
-      const rows = await this.provider.fetch(document);
+      let rows: AvailabilityRow[];
+      try {
+        rows = await this.provider.fetch(document);
+      } catch {
+        // Falha pontual num documento não pode derrubar os demais.
+        continue;
+      }
       const byAuthorizer = new Map<AuthorizerCode, AvailabilityRow>(
         rows.map((r) => [r.authorizer, r])
       );
+      for (const row of rows) {
+        globalByAuthorizer.set(row.authorizer, row);
+      }
       services.push(...this.expandToUFs(document, byAuthorizer, checkedAt));
+    }
+
+    // MDF-e/DC-e: centralizados no SVRS → reaproveita o estado do SVRS já lido.
+    for (const document of AvailabilityStatusSource.SVRS_DERIVED) {
+      services.push(...this.expandToUFs(document, globalByAuthorizer, checkedAt));
     }
 
     return services;

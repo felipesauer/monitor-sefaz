@@ -13,9 +13,9 @@ COPY apps/api/package.json apps/api/
 COPY apps/web/package.json apps/web/
 RUN pnpm install --frozen-lockfile
 
-# Código e build de todos os pacotes/apps.
+# Código e build do front (apps/web/dist é servido pela API).
 COPY . .
-RUN pnpm build
+RUN pnpm --filter @monitor-sefaz/web build
 
 # ---- Runtime ----
 FROM node:22-alpine AS runtime
@@ -23,9 +23,11 @@ WORKDIR /app
 RUN corepack enable
 ENV NODE_ENV=production
 
-# Copia o monorepo já buildado (inclui apps/web/dist servido pela API).
+# Copia o monorepo (com apps/web/dist). A API roda via tsx, resolvendo os
+# pacotes de workspace direto do TypeScript — sem bundle, o que preserva o
+# monkey-patch do axios-cookiejar-support usado no scraping da SEFAZ.
 COPY --from=build /app ./
 
 EXPOSE 3333
 WORKDIR /app/apps/api
-CMD ["node", "dist/server.js"]
+CMD ["pnpm", "start"]

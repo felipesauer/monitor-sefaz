@@ -34,9 +34,15 @@ export class HttpAvailabilityProvider {
       axios.create({
         jar,
         timeout: this.timeoutMs,
-        maxRedirects: 5,
+        // O portal usa AspxAutoDetectCookieSupport e pode encadear vários
+        // redirects até fixar o cookie de sessão; damos folga suficiente.
+        maxRedirects: 15,
         responseType: 'arraybuffer', // a página é latin-1; decodificamos manualmente
-        headers: { 'User-Agent': BROWSER_UA, Accept: 'text/html' },
+        headers: {
+          'User-Agent': BROWSER_UA,
+          Accept: 'text/html,application/xhtml+xml',
+          'Accept-Language': 'pt-BR,pt;q=0.9',
+        },
         validateStatus: () => true,
       })
     );
@@ -47,14 +53,31 @@ export class HttpAvailabilityProvider {
     return Object.keys(AVAILABILITY_URLS) as DocumentType[];
   }
 
-  /** Busca e parseia a tabela de disponibilidade de um documento. */
-  public async fetch(document: DocumentType): Promise<AvailabilityRow[]> {
+  /**
+   * Busca e parseia a tabela de disponibilidade de um documento, com algumas
+   * tentativas — a SEFAZ ocasionalmente recusa a conexão de forma intermitente,
+   * e não queremos que um documento "suma" do snapshot por uma falha pontual.
+   */
+  public async fetch(document: DocumentType, attempts = 3): Promise<AvailabilityRow[]> {
     const url = AVAILABILITY_URLS[document];
     if (!url) {
       return [];
     }
-    const response = await this.http.get<ArrayBuffer>(url);
-    const html = Buffer.from(response.data).toString('latin1');
-    return this.parser.parse(html);
+
+    let lastError: unknown;
+    for (let attempt = 1; attempt <= attempts; attempt += 1) {
+      try {
+        const response = await this.http.get<ArrayBuffer>(url);
+        const html = Buffer.from(response.data).toString('latin1');
+        const rows = this.parser.parse(html);
+        if (rows.length > 0) {
+          return rows;
+        }
+        lastError = new Error(`resposta sem linhas de status (HTTP ${response.status})`);
+      } catch (err) {
+        lastError = err;
+      }
+    }
+    throw lastError instanceof Error ? lastError : new Error(String(lastError));
   }
 }

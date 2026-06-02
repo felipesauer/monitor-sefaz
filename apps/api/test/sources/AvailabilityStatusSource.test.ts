@@ -47,4 +47,15 @@ describe('AvailabilityStatusSource', () => {
     const services = await source.collect('producao');
     expect(services.find((s) => s.id === 'NFe:SP')?.latencyMs).toBe(1000);
   });
+
+  it('deriva MDF-e e DC-e do estado do SVRS (centralizados)', async () => {
+    const services = await source.collect('producao');
+    // SVRS está DOWN na fixture → todo MDF-e/DC-e deve refletir isso
+    const mdfe = services.filter((s) => s.document === 'MDFe');
+    const dce = services.filter((s) => s.document === 'DCe');
+    expect(mdfe).toHaveLength(27);
+    expect(dce).toHaveLength(27);
+    expect(mdfe.every((s) => s.authorizer === 'SVRS' && s.state === 'DOWN')).toBe(true);
+    expect(dce.every((s) => s.authorizer === 'SVRS' && s.state === 'DOWN')).toBe(true);
+  });
 });
