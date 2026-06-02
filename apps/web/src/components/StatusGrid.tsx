@@ -3,13 +3,15 @@ import { STATE_META } from './serviceState.js';
 
 interface StatusGridProps {
   services: ServiceStatusDTO[];
+  onSelect?: (service: ServiceStatusDTO) => void;
 }
 
 /**
  * Grade de status no estilo "status page": uma linha por UF, uma coluna por
- * documento, cada célula colorida pelo estado do serviço.
+ * documento, cada célula colorida pelo estado do serviço. Clicar numa célula
+ * abre o detalhe daquele serviço.
  */
-export function StatusGrid({ services }: StatusGridProps) {
+export function StatusGrid({ services, onSelect }: StatusGridProps) {
   const ufs = [...new Set(services.map((s) => s.uf))].sort();
   const documents = [...new Set(services.map((s) => s.document))].sort();
   const byKey = new Map(services.map((s) => [`${s.document}:${s.uf}`, s]));
@@ -47,11 +49,13 @@ export function StatusGrid({ services }: StatusGridProps) {
               return (
                 <td
                   key={doc}
-                  className="status-cell"
+                  className="status-cell status-cell--clickable"
                   style={{ backgroundColor: meta.color }}
                   title={`${doc} ${uf} (${service.authorizer}) — ${meta.label}${
                     service.error ? `: ${service.error}` : ''
                   } — ${service.latencyMs}ms`}
+                  onClick={() => onSelect?.(service)}
+                  role={onSelect ? 'button' : undefined}
                 >
                   <span className="status-cell__authorizer">{service.authorizer}</span>
                 </td>

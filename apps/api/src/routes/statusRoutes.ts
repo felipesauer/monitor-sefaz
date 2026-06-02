@@ -6,10 +6,12 @@ import {
 } from '@monitor-sefaz/contracts';
 import type { StatusStore } from '../store/StatusStore.js';
 import { SummaryService } from '../services/SummaryService.js';
+import { UptimeCalculator } from '../services/UptimeCalculator.js';
 
 export interface StatusRoutesDeps {
   readonly store: StatusStore;
   readonly summaryService: SummaryService;
+  readonly uptimeCalculator: UptimeCalculator;
   readonly now: () => number;
 }
 
@@ -18,7 +20,7 @@ export interface StatusRoutesDeps {
  * schemas Zod de `@monitor-sefaz/contracts`, garantindo contrato único API↔Web.
  */
 export function registerStatusRoutes(app: FastifyInstance, deps: StatusRoutesDeps): void {
-  const { store, summaryService, now } = deps;
+  const { store, summaryService, uptimeCalculator, now } = deps;
 
   app.get('/api/v1/health', async () => ({ status: 'ok' }));
 
@@ -58,5 +60,28 @@ export function registerStatusRoutes(app: FastifyInstance, deps: StatusRoutesDep
     const { env, period } = historyQuerySchema.parse(request.query);
     const points = await store.getHistory(env, decodeURIComponent(request.params.id), period);
     return { id: request.params.id, period, points };
+  });
+
+  app.get<{ Params: { id: string } }>('/api/v1/services/:id/uptime', async (request) => {
+    const { env, period } = historyQuerySchema.parse(request.query);
+    const id = decodeURIComponent(request.params.id);
+    const points = await store.getHistory(env, id, period);
+    return { id, period, ...uptimeCalculator.computeUptime(points) };
+  });
+
+  app.get('/api/v1/incidents', async (request) => {
+    const { env, period } = historyQuerySchema.parse(request.query);
+    const snapshot = await store.getSnapshot(env);
+    const incidents = (
+      await Promise.all(
+        snapshot.map(async (service) => {
+          const points = await store.getHistory(env, service.id, period);
+          return uptimeCalculator.deriveIncidents(service.id, points);
+        })
+      )
+    ).flat();
+    // mais recentes primeiro
+    incidents.sort((a, b) => b.startedAt.localeCompare(a.startedAt));
+    return { period, incidents };
   });
 }

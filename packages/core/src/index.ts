@@ -23,7 +23,13 @@ export {
 } from './parsers/DocumentStatusParsers.js';
 
 // Checker
-export type { SoapClient, SoapResponse, SoapRequestOptions } from './checker/SoapClient.js';
+export type {
+  SoapClient,
+  SoapResponse,
+  SoapRequestOptions,
+  ClientCertificate,
+  AxiosSoapClientOptions,
+} from './checker/SoapClient.js';
 export { AxiosSoapClient } from './checker/SoapClient.js';
 export { StatusClassifier } from './checker/StatusClassifier.js';
 export { StatusChecker, type StatusCheckerOptions } from './checker/StatusChecker.js';

@@ -13,5 +13,25 @@ services:
       timeout: 3s
       retries: 5
 
+  app:
+    build: .
+    container_name: monitor-sefaz-app
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      PORT: 3333
+      REDIS_URL: redis://redis:6379
+      CRON_EXPRESSION: ${CRON_EXPRESSION:-*/5 * * * *}
+      SEFAZ_TIMEOUT_MS: ${SEFAZ_TIMEOUT_MS:-15000}
+      SEFAZ_CONCURRENCY: ${SEFAZ_CONCURRENCY:-5}
+      # Certificado A1 opcional para mTLS (monte o .pfx via volume e aponte aqui):
+      # SEFAZ_CERT_PATH: /certs/empresa.pfx
+      # SEFAZ_CERT_PASSPHRASE: senha
+    ports:
+      - '${APP_PORT:-3333}:3333'
+    # volumes:
+    #   - ./certs:/certs:ro
+
 volumes:
   redis-data:

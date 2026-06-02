@@ -15,6 +15,12 @@ export interface AppConfig {
   readonly historyRetentionMs: number;
   /** Token para endpoints protegidos (ex: disparo manual). Vazio = aberto. */
   readonly adminToken: string;
+  /** Caminho do certificado A1 (.pfx) para mTLS. Vazio = sem certificado. */
+  readonly certPath: string;
+  /** Senha do certificado A1. */
+  readonly certPassphrase: string;
+  /** Limite de requisições por janela (rate limit). */
+  readonly rateLimitMax: number;
 }
 
 function intEnv(name: string, fallback: number): number {
@@ -34,5 +40,8 @@ export function loadConfig(): AppConfig {
     timeoutMs: intEnv('SEFAZ_TIMEOUT_MS', 15_000),
     historyRetentionMs: intEnv('HISTORY_RETENTION_MS', 72 * 60 * 60 * 1000),
     adminToken: process.env.ADMIN_TOKEN ?? '',
+    certPath: process.env.SEFAZ_CERT_PATH ?? '',
+    certPassphrase: process.env.SEFAZ_CERT_PASSPHRASE ?? '',
+    rateLimitMax: intEnv('RATE_LIMIT_MAX', 120),
   };
 }

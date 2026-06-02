@@ -14,13 +14,19 @@ import {
   DCeStatusParser,
   MDFeStatusParser,
 } from '../parsers/DocumentStatusParsers.js';
-import { AxiosSoapClient, type SoapClient } from '../checker/SoapClient.js';
+import {
+  AxiosSoapClient,
+  type ClientCertificate,
+  type SoapClient,
+} from '../checker/SoapClient.js';
 import { StatusClassifier } from '../checker/StatusClassifier.js';
 import { StatusChecker, type StatusCheckerOptions } from '../checker/StatusChecker.js';
 
 export interface CheckerFactoryDeps {
   /** Cliente SOAP; padrão `AxiosSoapClient`. Injetável para testes. */
   readonly client?: SoapClient;
+  /** Certificado A1 opcional repassado ao cliente axios padrão. */
+  readonly certificate?: ClientCertificate;
   readonly options?: StatusCheckerOptions;
 }
 
@@ -53,7 +59,7 @@ export class CheckerFactory {
   }
 
   public static create(deps: CheckerFactoryDeps = {}): StatusChecker {
-    const client = deps.client ?? new AxiosSoapClient();
+    const client = deps.client ?? new AxiosSoapClient({ certificate: deps.certificate });
     return new StatusChecker(
       CheckerFactory.buildersByDocument(),
       CheckerFactory.parsersByDocument(),

@@ -5,8 +5,11 @@ import {
   statusSnapshotSchema,
   summarySchema,
   historyResponseSchema,
+  uptimeResponseSchema,
+  incidentSchema,
   type ServiceStatusDTO,
 } from '@monitor-sefaz/contracts';
+import { z } from 'zod';
 import type { FastifyInstance } from 'fastify';
 import { buildApp } from '../../src/app.js';
 import { RedisStatusStore } from '../../src/store/RedisStatusStore.js';
@@ -92,5 +95,22 @@ describe('statusRoutes', () => {
   it('GET de serviço inexistente responde 404', async () => {
     const res = await app.inject({ method: 'GET', url: '/api/v1/status/NFe/ZZ' });
     expect(res.statusCode).toBe(404);
+  });
+
+  it('GET /api/v1/services/:id/uptime retorna uptime conforme schema', async () => {
+    const res = await app.inject({
+      method: 'GET',
+      url: '/api/v1/services/NFe%3ASP/uptime?period=24h',
+    });
+    const parsed = uptimeResponseSchema.parse(res.json());
+    expect(parsed.id).toBe('NFe:SP');
+    expect(parsed.uptime).toBe(100); // único ponto é OPERATIONAL
+    expect(parsed.totalChecks).toBe(1);
+  });
+
+  it('GET /api/v1/incidents retorna lista conforme schema', async () => {
+    const res = await app.inject({ method: 'GET', url: '/api/v1/incidents?period=24h' });
+    const body = z.object({ period: z.string(), incidents: z.array(incidentSchema) }).parse(res.json());
+    expect(Array.isArray(body.incidents)).toBe(true);
   });
 });

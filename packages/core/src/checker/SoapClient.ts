@@ -23,14 +23,26 @@ export interface AxiosSoapClientOptions {
    * Em produção com certificado A1, prefira `false` + cadeia confiável.
    */
   readonly rejectUnauthorized?: boolean;
+  /**
+   * Certificado A1 do contribuinte para autenticação mTLS. Vários autorizadores
+   * exigem certificado de cliente — sem ele, o handshake TLS falha.
+   */
+  readonly certificate?: ClientCertificate;
   /** Função de tempo, injetável para testes determinísticos. */
   readonly now?: () => number;
+}
+
+/** Certificado digital A1 (.pfx/.p12) do contribuinte. */
+export interface ClientCertificate {
+  readonly pfx: Buffer;
+  readonly passphrase: string;
 }
 
 /**
  * Implementação de `SoapClient` sobre axios. Espelha as decisões do protótipo:
  * `keepAlive`, `rejectUnauthorized:false`, `validateStatus:()=>true` (HTTP 500
- * da SEFAZ ainda pode trazer XML útil) e medição de latência.
+ * da SEFAZ ainda pode trazer XML útil) e medição de latência. Suporta
+ * opcionalmente certificado A1 para mTLS.
  */
 export class AxiosSoapClient implements SoapClient {
   private readonly http: AxiosInstance;
@@ -41,6 +53,9 @@ export class AxiosSoapClient implements SoapClient {
     const httpsAgent = new https.Agent({
       rejectUnauthorized: options.rejectUnauthorized ?? false,
       keepAlive: true,
+      ...(options.certificate
+        ? { pfx: options.certificate.pfx, passphrase: options.certificate.passphrase }
+        : {}),
     });
     this.http = axios.create({
       httpsAgent,

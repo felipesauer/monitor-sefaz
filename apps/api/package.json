@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc -b tsconfig.json",
+    "build": "tsup",
     "typecheck": "tsc -b tsconfig.json",
     "lint": "eslint src",
     "test": "vitest run",
@@ -16,6 +16,10 @@
     "@monitor-sefaz/contracts": "workspace:*",
     "@monitor-sefaz/core": "workspace:*",
     "@fastify/cors": "^10.0.1",
+    "@fastify/rate-limit": "^10.2.1",
+    "@fastify/static": "^8.0.3",
+    "axios": "^1.7.9",
+    "fast-xml-parser": "^4.5.1",
     "fastify": "^5.2.0",
     "ioredis": "^5.4.2",
     "node-cron": "^3.0.3",
@@ -25,6 +29,7 @@
     "@types/node": "^22.10.2",
     "@types/node-cron": "^3.0.11",
     "ioredis-mock": "^8.9.0",
+    "tsup": "^8.3.5",
     "tsx": "^4.19.2"
   }
 }

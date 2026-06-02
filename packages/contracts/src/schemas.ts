@@ -91,6 +91,28 @@ export const historyResponseSchema = z.object({
 });
 export type HistoryResponseDTO = z.infer<typeof historyResponseSchema>;
 
+/** Disponibilidade agregada de um serviço em um período. */
+export const uptimeResponseSchema = z.object({
+  id: z.string(),
+  period: historyPeriodSchema,
+  /** Percentual de checagens operacionais no período (0–100). */
+  uptime: z.number(),
+  totalChecks: z.number(),
+  operationalChecks: z.number(),
+  avgLatencyMs: z.number().nullable(),
+});
+export type UptimeResponseDTO = z.infer<typeof uptimeResponseSchema>;
+
+/** Incidente derivado de transições para estado não-operacional. */
+export const incidentSchema = z.object({
+  serviceId: z.string(),
+  startedAt: z.string(),
+  endedAt: z.string().nullable(),
+  worstState: serviceStateSchema,
+  lastMotivo: z.string().nullable(),
+});
+export type IncidentDTO = z.infer<typeof incidentSchema>;
+
 /** Parâmetros de query do endpoint de status. */
 export const statusQuerySchema = z.object({
   env: environmentSchema.default('producao'),

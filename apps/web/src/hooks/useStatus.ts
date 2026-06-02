@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import type { EnvironmentValue } from '@monitor-sefaz/contracts';
+import type { EnvironmentValue, HistoryPeriod } from '@monitor-sefaz/contracts';
 import { apiClient, type StatusFilters } from '../api/client.js';
 
 /**
@@ -21,5 +21,12 @@ export function useSummary(env: EnvironmentValue) {
     queryKey: ['summary', env],
     queryFn: () => apiClient.getSummary(env),
     refetchInterval: POLL_INTERVAL_MS,
+  });
+}
+
+export function useServiceHistory(env: EnvironmentValue, id: string, period: HistoryPeriod) {
+  return useQuery({
+    queryKey: ['history', env, id, period],
+    queryFn: () => apiClient.getHistory(env, id, period),
   });
 }
