@@ -2,12 +2,17 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
+// Base path da aplicação. No GitHub Pages de projeto, o site fica em
+// `usuario.github.io/<repo>/`, então passamos `BASE_PATH=/<repo>/` no build.
+const base = process.env.BASE_PATH ?? '/';
+
 export default defineConfig({
+  base,
   plugins: [react()],
   server: {
     port: 5173,
     proxy: {
-      // Em dev, encaminha chamadas da API para o backend Fastify.
+      // Em dev, encaminha chamadas /api para o backend Fastify (modo self-host).
       '/api': 'http://localhost:3333',
     },
   },

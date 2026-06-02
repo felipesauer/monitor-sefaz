@@ -7,21 +7,21 @@ interface SummaryCardsProps {
 /** Cartões com os indicadores agregados da rodada atual. */
 export function SummaryCards({ summary }: SummaryCardsProps) {
   const cards = [
-    { label: 'Disponibilidade', value: `${summary.availability}%` },
-    { label: 'Operacionais', value: `${summary.operational}/${summary.total}` },
-    { label: 'Com falha', value: String(summary.failing) },
+    { value: `${summary.availability}%`, label: 'Disponibilidade' },
+    { value: `${summary.operational}/${summary.total}`, label: 'Serviços no ar' },
+    { value: String(summary.failing), label: 'Com problema' },
     {
-      label: 'Latência média',
       value: summary.avgLatencyMs === null ? '—' : `${summary.avgLatencyMs} ms`,
+      label: 'Tempo médio',
     },
   ];
 
   return (
-    <section className="summary-cards" aria-label="Resumo de disponibilidade">
+    <section className="cards" aria-label="Resumo de disponibilidade">
       {cards.map((card) => (
-        <div className="summary-card" key={card.label}>
-          <span className="summary-card__value">{card.value}</span>
-          <span className="summary-card__label">{card.label}</span>
+        <div className="card" key={card.label}>
+          <div className="card__value">{card.value}</div>
+          <div className="card__label">{card.label}</div>
         </div>
       ))}
     </section>

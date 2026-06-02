@@ -1,32 +1,32 @@
 import { useQuery } from '@tanstack/react-query';
-import type { EnvironmentValue, HistoryPeriod } from '@monitor-sefaz/contracts';
-import { apiClient, type StatusFilters } from '../api/client.js';
+import type { HistoryPeriod } from '@monitor-sefaz/contracts';
+import { dataSource, type StatusFilters } from '../api/index.js';
 
 /**
- * Intervalo de polling de fallback. O caminho primário de atualização é o SSE
- * (`useStatusStream`); este refetch lento cobre o caso de a conexão SSE cair.
+ * Intervalo de polling. Substitui o SSE no modo estático (GitHub Pages, sem
+ * servidor persistente); no modo API/Worker também mantém o dado fresco.
  */
-const POLL_INTERVAL_MS = 120_000;
+const POLL_INTERVAL_MS = 60_000;
 
-export function useStatusSnapshot(env: EnvironmentValue, filters: StatusFilters = {}) {
+export function useStatusSnapshot(filters: StatusFilters = {}) {
   return useQuery({
-    queryKey: ['status', env, filters.document ?? null, filters.uf ?? null],
-    queryFn: () => apiClient.getStatus(env, filters),
+    queryKey: ['status', filters.document ?? null, filters.uf ?? null],
+    queryFn: () => dataSource.getStatus(filters),
     refetchInterval: POLL_INTERVAL_MS,
   });
 }
 
-export function useSummary(env: EnvironmentValue) {
+export function useSummary() {
   return useQuery({
-    queryKey: ['summary', env],
-    queryFn: () => apiClient.getSummary(env),
+    queryKey: ['summary'],
+    queryFn: () => dataSource.getSummary(),
     refetchInterval: POLL_INTERVAL_MS,
   });
 }
 
-export function useServiceHistory(env: EnvironmentValue, id: string, period: HistoryPeriod) {
+export function useServiceHistory(id: string, period: HistoryPeriod) {
   return useQuery({
-    queryKey: ['history', env, id, period],
-    queryFn: () => apiClient.getHistory(env, id, period),
+    queryKey: ['history', id, period],
+    queryFn: () => dataSource.getHistory(id, period),
   });
 }

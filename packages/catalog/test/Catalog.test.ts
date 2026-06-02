@@ -26,6 +26,7 @@ describe('Catalog', () => {
 
   it('usa endpoint de homologação no ambiente de homologação', () => {
     const entry = catalog.resolve(DocumentType.NFe, 'SP', Environment.Homologation);
+    // a URL real da SEFAZ-SP de homologação contém "homologacao" no domínio
     expect(entry?.url).toContain('homologacao');
   });
 

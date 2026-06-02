@@ -20,7 +20,7 @@ const services: ServiceStatusDTO[] = [
     document: 'NFe' as ServiceStatusDTO['document'],
     uf: 'SP',
     authorizer: 'SP',
-    environment: 'producao',
+    environment: 'production',
     state: 'OPERATIONAL',
     cStat: 107,
     xMotivo: 'ok',
@@ -33,7 +33,7 @@ const services: ServiceStatusDTO[] = [
     document: 'NFe' as ServiceStatusDTO['document'],
     uf: 'RS',
     authorizer: 'RS',
-    environment: 'producao',
+    environment: 'production',
     state: 'DOWN',
     cStat: 109,
     xMotivo: 'parado',
@@ -49,7 +49,7 @@ describe('statusRoutes', () => {
   beforeEach(async () => {
     const redis = new RedisMock() as unknown as Redis;
     const store = new RedisStatusStore(redis, () => 1_000_000);
-    await store.saveSnapshot('producao', services);
+    await store.saveSnapshot('production', services);
     app = await buildApp({ store, now: () => 1_000_000 });
   });
 
@@ -60,7 +60,7 @@ describe('statusRoutes', () => {
   });
 
   it('GET /api/v1/status retorna snapshot válido conforme schema', async () => {
-    const res = await app.inject({ method: 'GET', url: '/api/v1/status?env=producao' });
+    const res = await app.inject({ method: 'GET', url: '/api/v1/status?env=production' });
     expect(res.statusCode).toBe(200);
     const parsed = statusSnapshotSchema.parse(res.json());
     expect(parsed.services).toHaveLength(2);

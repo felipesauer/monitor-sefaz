@@ -18,7 +18,7 @@ type EndpointMap = Partial<Record<AuthorizerCode, string>>;
 type DocumentEndpoints = Record<EnvironmentKey, EndpointMap>;
 
 const NFE_ENDPOINTS: DocumentEndpoints = {
-  producao: {
+  production: {
     AM: 'https://nfe.sefaz.am.gov.br/services2/services/NfeStatusServico2',
     BA: 'https://nfe.sefaz.ba.gov.br/webservices/NfeStatusServico2/NfeStatusServico2.asmx',
     CE: 'https://nfe.sefaz.ce.gov.br/nfe2/services/NFeStatusServico4',
@@ -37,7 +37,7 @@ const NFE_ENDPOINTS: DocumentEndpoints = {
     SVCRS: 'https://nfe.svrs.rs.gov.br/ws/NfeStatus/NfeStatus2.asmx',
     AN: 'https://www.nfe.fazenda.gov.br/NFeStatusServico4/NFeStatusServico4.asmx',
   },
-  homologacao: {
+  homologation: {
     AM: 'https://homnfe.sefaz.am.gov.br/services2/services/NfeStatusServico2',
     BA: 'https://hnfe.sefaz.ba.gov.br/webservices/NfeStatusServico2/NfeStatusServico2.asmx',
     CE: 'https://nfeh.sefaz.ce.gov.br/nfe2/services/NFeStatusServico4',
@@ -63,7 +63,7 @@ const NFE_ENDPOINTS: DocumentEndpoints = {
  * mantêm sua URL; os demais usam o SVRS. Lista expansível conforme o MOC CT-e.
  */
 const CTE_ENDPOINTS: DocumentEndpoints = {
-  producao: {
+  production: {
     MG: 'https://cte.fazenda.mg.gov.br/cte/services/CTeStatusServicoV4',
     MS: 'https://producao.cte.ms.gov.br/ws/CTeStatusServicoV4',
     MT: 'https://cte.sefaz.mt.gov.br/ctews2/services/CTeStatusServicoV4',
@@ -75,7 +75,7 @@ const CTE_ENDPOINTS: DocumentEndpoints = {
     SVCAN: 'https://www.cte.fazenda.gov.br/CTeStatusServicoV4/CTeStatusServicoV4.asmx',
     AN: 'https://www.cte.fazenda.gov.br/CTeStatusServicoV4/CTeStatusServicoV4.asmx',
   },
-  homologacao: {
+  homologation: {
     MG: 'https://hcte.fazenda.mg.gov.br/cte/services/CTeStatusServicoV4',
     MS: 'https://homologacao.cte.ms.gov.br/ws/CTeStatusServicoV4',
     MT: 'https://homologacao.cte.sefaz.mt.gov.br/ctews2/services/CTeStatusServicoV4',
@@ -94,11 +94,11 @@ const CTE_ENDPOINTS: DocumentEndpoints = {
  * maioria das UFs é atendida pelo SVRS, além do ambiente nacional.
  */
 const MDFE_ENDPOINTS: DocumentEndpoints = {
-  producao: {
+  production: {
     SVRS: 'https://mdfe.svrs.rs.gov.br/ws/MDFeStatusServico/MDFeStatusServico.asmx',
     AN: 'https://www.mdfe.fazenda.gov.br/MDFeStatusServico/MDFeStatusServico.asmx',
   },
-  homologacao: {
+  homologation: {
     SVRS: 'https://mdfe-homologacao.svrs.rs.gov.br/ws/MDFeStatusServico/MDFeStatusServico.asmx',
     AN: 'https://hom.mdfe.fazenda.gov.br/MDFeStatusServico/MDFeStatusServico.asmx',
   },
@@ -109,10 +109,10 @@ const MDFE_ENDPOINTS: DocumentEndpoints = {
  * centralizado no SVRS.
  */
 const DCE_ENDPOINTS: DocumentEndpoints = {
-  producao: {
+  production: {
     SVRS: 'https://dce.svrs.rs.gov.br/ws/dceStatusServico/dceStatusServico.asmx',
   },
-  homologacao: {
+  homologation: {
     SVRS: 'https://dce-homologacao.svrs.rs.gov.br/ws/dceStatusServico/dceStatusServico.asmx',
   },
 };

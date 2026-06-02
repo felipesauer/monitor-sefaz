@@ -1,0 +1,52 @@
+name: Deploy SPA (GitHub Pages)
+
+# Builda a SPA estática e publica no GitHub Pages. Roda quando o código do front
+# muda ou quando o coletor commita novos dados (apps/web/public/data).
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/web/**'
+      - 'packages/**'
+      - '.github/workflows/deploy-pages.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build SPA
+        # BASE_PATH = "/<repo>/" para Pages de projeto.
+        # VITE_API_BASE_URL vazio → SPA usa os JSONs estáticos versionados.
+        run: BASE_PATH="/${GITHUB_REPOSITORY#*/}/" pnpm --filter "@monitor-sefaz/web..." build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/web/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

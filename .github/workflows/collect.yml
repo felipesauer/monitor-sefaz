@@ -1,0 +1,44 @@
+name: Coletar status SEFAZ
+
+# Roda periodicamente, coleta o status da página oficial de disponibilidade e
+# commita os JSONs em apps/web/public/data/ — consumidos pela SPA no GitHub Pages.
+on:
+  schedule:
+    - cron: '*/15 * * * *' # a cada 15 minutos
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: collect
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Coletar status
+        run: pnpm --filter @monitor-sefaz/collector collect "$GITHUB_WORKSPACE/apps/web/public/data"
+
+      - name: Commitar dados atualizados
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add apps/web/public/data
+          if git diff --cached --quiet; then
+            echo "Sem mudanças nos dados."
+          else
+            git commit -m "chore(data): atualiza status SEFAZ [skip ci]"
+            git push
+          fi

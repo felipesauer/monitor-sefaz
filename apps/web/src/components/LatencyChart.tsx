@@ -12,7 +12,7 @@ const PADDING = 4;
 export function LatencyChart({ points }: LatencyChartProps) {
   const operational = points.filter((p) => p.latencyMs > 0);
   if (operational.length < 2) {
-    return <p className="empty">Dados insuficientes para o gráfico de latência.</p>;
+    return <p className="muted">Dados insuficientes para o gráfico de latência.</p>;
   }
 
   const max = Math.max(...operational.map((p) => p.latencyMs));

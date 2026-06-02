@@ -11,18 +11,18 @@ export const documentTypeSchema = z.nativeEnum(DocumentType);
 export const serviceStateSchema = z.enum(['OPERATIONAL', 'SLOWDOWN', 'DOWN', 'ERROR']);
 export type ServiceStateValue = z.infer<typeof serviceStateSchema>;
 
-/** Ambiente em formato textual usado na API. */
-export const environmentSchema = z.enum(['producao', 'homologacao']);
+/** Ambiente em formato textual usado na API (contrato em inglês). */
+export const environmentSchema = z.enum(['production', 'homologation']);
 export type EnvironmentValue = z.infer<typeof environmentSchema>;
 
 /** Converte a chave textual de ambiente para o enum numérico do core. */
 export function toEnvironment(value: EnvironmentValue): Environment {
-  return value === 'producao' ? Environment.Production : Environment.Homologation;
+  return value === 'production' ? Environment.Production : Environment.Homologation;
 }
 
 /** Converte o enum numérico do core para a chave textual da API. */
 export function fromEnvironment(env: Environment): EnvironmentValue {
-  return env === Environment.Production ? 'producao' : 'homologacao';
+  return env === Environment.Production ? 'production' : 'homologation';
 }
 
 /** Status atual de um serviço (documento+UF) — item do snapshot. */
@@ -91,6 +91,17 @@ export const historyResponseSchema = z.object({
 });
 export type HistoryResponseDTO = z.infer<typeof historyResponseSchema>;
 
+/**
+ * Arquivo de histórico estático versionado (gerado pelo GitHub Actions e lido
+ * pela SPA no modo estático). Mapeia o id do serviço para sua série de pontos.
+ */
+export const historyFileSchema = z.object({
+  updatedAt: z.string(),
+  /** `{ "NFe:SP": [ {timestamp,state,cStat,latencyMs}, ... ] }` */
+  series: z.record(z.string(), z.array(historyPointSchema)),
+});
+export type HistoryFileDTO = z.infer<typeof historyFileSchema>;
+
 /** Disponibilidade agregada de um serviço em um período. */
 export const uptimeResponseSchema = z.object({
   id: z.string(),
@@ -115,14 +126,14 @@ export type IncidentDTO = z.infer<typeof incidentSchema>;
 
 /** Parâmetros de query do endpoint de status. */
 export const statusQuerySchema = z.object({
-  env: environmentSchema.default('producao'),
+  env: environmentSchema.default('production'),
   document: documentTypeSchema.optional(),
   uf: z.string().length(2).optional(),
 });
 export type StatusQuery = z.infer<typeof statusQuerySchema>;
 
 export const historyQuerySchema = z.object({
-  env: environmentSchema.default('producao'),
+  env: environmentSchema.default('production'),
   period: historyPeriodSchema.default('24h'),
 });
 export type HistoryQuery = z.infer<typeof historyQuerySchema>;

@@ -53,3 +53,8 @@ export {
   HttpAvailabilityProvider,
   AVAILABILITY_URLS,
 } from './availability/AvailabilityProvider.js';
+export {
+  AvailabilityCollector,
+  type CollectedStatus,
+  type AvailabilityProviderLike,
+} from './availability/AvailabilityCollector.js';

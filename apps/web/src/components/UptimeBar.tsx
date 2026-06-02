@@ -11,18 +11,18 @@ interface UptimeBarProps {
  */
 export function UptimeBar({ points }: UptimeBarProps) {
   if (points.length === 0) {
-    return <p className="empty">Sem histórico no período.</p>;
+    return <p className="muted">Sem histórico no período.</p>;
   }
   return (
     <div className="uptime-bar" role="img" aria-label="Histórico de disponibilidade">
       {points.map((point, index) => (
         <span
           key={`${point.timestamp}-${index}`}
-          className="uptime-bar__segment"
-          style={{ backgroundColor: STATE_META[point.state].color }}
+          className="uptime-bar__seg"
+          style={{ background: STATE_META[point.state].color }}
           title={`${new Date(point.timestamp).toLocaleString('pt-BR')} — ${
             STATE_META[point.state].label
-          } (${point.latencyMs}ms)`}
+          }${point.latencyMs > 0 ? ` (${point.latencyMs}ms)` : ''}`}
         />
       ))}
     </div>

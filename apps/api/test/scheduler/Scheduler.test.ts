@@ -10,7 +10,7 @@ function service(state: ServiceStatusDTO['state']): ServiceStatusDTO {
     document: 'NFe' as ServiceStatusDTO['document'],
     uf: 'SP',
     authorizer: 'SP',
-    environment: 'producao',
+    environment: 'production',
     state,
     cStat: state === 'OPERATIONAL' ? 107 : 109,
     xMotivo: null,
@@ -42,25 +42,25 @@ function makeSource(sequence: ServiceStatusDTO['state'][]): StatusSource {
 }
 
 const logger = { info: () => {}, error: () => {} };
-const opts = { cronExpression: '* * * * *', environments: ['producao'] as EnvironmentValue[] };
+const opts = { cronExpression: '* * * * *', environments: ['production'] as EnvironmentValue[] };
 
 describe('Scheduler', () => {
   it('persiste snapshot e não publica mudança na primeira rodada', async () => {
     const store = makeStore();
     const scheduler = new Scheduler(makeSource(['OPERATIONAL']), store, opts, logger);
 
-    await scheduler.runOnce('producao');
+    await scheduler.runOnce('production');
 
     expect(store.saveSnapshot).toHaveBeenCalledOnce();
-    expect(store.publishUpdates).toHaveBeenCalledWith('producao', []);
+    expect(store.publishUpdates).toHaveBeenCalledWith('production', []);
   });
 
   it('publica apenas serviços que mudaram de estado entre rodadas', async () => {
     const store = makeStore();
     const scheduler = new Scheduler(makeSource(['OPERATIONAL', 'DOWN']), store, opts, logger);
 
-    await scheduler.runOnce('producao'); // baseline OPERATIONAL
-    await scheduler.runOnce('producao'); // transição -> DOWN
+    await scheduler.runOnce('production'); // baseline OPERATIONAL
+    await scheduler.runOnce('production'); // transição -> DOWN
 
     const lastCall = store.publishUpdates.mock.calls.at(-1);
     const changed = lastCall?.[1] as ServiceStatusDTO[];
@@ -73,7 +73,7 @@ describe('Scheduler', () => {
     const source: StatusSource = { name: 'empty', collect: async () => [] };
     const scheduler = new Scheduler(source, store, opts, logger);
 
-    await scheduler.runOnce('homologacao');
+    await scheduler.runOnce('homologation');
     expect(store.saveSnapshot).not.toHaveBeenCalled();
   });
 });

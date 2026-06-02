@@ -20,12 +20,12 @@ const TABS: { value: DocumentFilter; label: string }[] = [
 /** Abas para filtrar a grade por tipo de documento. */
 export function DocumentFilterTabs({ value, onChange }: DocumentFilterTabsProps) {
   return (
-    <nav className="doc-tabs" aria-label="Filtrar por documento">
+    <nav className="tabs" aria-label="Filtrar por documento">
       {TABS.map((tab) => (
         <button
           key={tab.value}
           type="button"
-          className={`doc-tab${value === tab.value ? ' doc-tab--active' : ''}`}
+          className={`tab${value === tab.value ? ' tab--active' : ''}`}
           aria-pressed={value === tab.value}
           onClick={() => onChange(tab.value)}
         >

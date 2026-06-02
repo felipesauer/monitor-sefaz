@@ -64,7 +64,7 @@ export type AuthorizerCode =
   | 'SVCRS'; // Sefaz Virtual de Contingência — Rio Grande do Sul
 
 /** Chave de ambiente em formato textual usada em configs/URLs. */
-export type EnvironmentKey = 'producao' | 'homologacao';
+export type EnvironmentKey = 'production' | 'homologation';
 
 /** Metadados de uma UF: código IBGE e nome por extenso. */
 export interface UFInfo {

@@ -25,14 +25,14 @@ describe('StatusBroadcaster', () => {
     broadcaster.subscribe((payload) => received.push(payload));
 
     const payload: UpdatePayload = {
-      environment: 'producao',
+      environment: 'production',
       services: [],
     };
     await publisher.publish(UPDATES_CHANNEL, JSON.stringify(payload));
     await new Promise((resolve) => setTimeout(resolve, 20));
 
     expect(received).toHaveLength(1);
-    expect(received[0]?.environment).toBe('producao');
+    expect(received[0]?.environment).toBe('production');
   });
 
   it('para de notificar após o unsubscribe do listener', async () => {
@@ -45,7 +45,7 @@ describe('StatusBroadcaster', () => {
 
     await publisher.publish(
       UPDATES_CHANNEL,
-      JSON.stringify({ environment: 'producao', services: [] })
+      JSON.stringify({ environment: 'production', services: [] })
     );
     await new Promise((resolve) => setTimeout(resolve, 20));
 

@@ -1,66 +1,74 @@
 import { useMemo, useState } from 'react';
-import type { EnvironmentValue, ServiceStatusDTO } from '@monitor-sefaz/contracts';
+import type { ServiceStatusDTO } from '@monitor-sefaz/contracts';
 import { useStatusSnapshot, useSummary } from '../hooks/useStatus.js';
-import { useStatusStream } from '../hooks/useStatusStream.js';
+import { useTheme } from '../hooks/useTheme.js';
+import { GlobalBanner } from '../components/GlobalBanner.js';
 import { DocumentFilterTabs, type DocumentFilter } from '../components/DocumentFilterTabs.js';
 import { SummaryCards } from '../components/SummaryCards.js';
-import { StatusGrid } from '../components/StatusGrid.js';
+import { ServiceList } from '../components/ServiceList.js';
 import { StatusLegend } from '../components/StatusLegend.js';
 import { ServiceDetailPanel } from '../components/ServiceDetailPanel.js';
 
-/**
- * Ambiente monitorado. A fonte pública de disponibilidade da SEFAZ cobre apenas
- * produção, por isso o dashboard é fixo em produção (sem alternador).
- */
-const ENV: EnvironmentValue = 'producao';
-
-/** Página principal do dashboard: resumo + grade de status por UF/documento. */
+/** Página principal: status page de disponibilidade da SEFAZ (produção). */
 export function DashboardPage() {
+  const { theme, toggle } = useTheme();
   const [docFilter, setDocFilter] = useState<DocumentFilter>('ALL');
   const [selected, setSelected] = useState<ServiceStatusDTO | null>(null);
-  const status = useStatusSnapshot(ENV);
-  const summary = useSummary(ENV);
-  useStatusStream(ENV);
+  const status = useStatusSnapshot();
+  const summary = useSummary();
 
   const services = useMemo(() => {
     const all = status.data?.services ?? [];
     return docFilter === 'ALL' ? all : all.filter((s) => s.document === docFilter);
   }, [status.data, docFilter]);
 
-  // Mantém o painel de detalhe em sincronia com o snapshot mais recente.
   const selectedLive = selected
-    ? (services.find((s) => s.id === selected.id) ?? selected)
+    ? (status.data?.services.find((s) => s.id === selected.id) ?? selected)
     : null;
 
   return (
-    <main className="dashboard">
-      <header className="dashboard__header">
-        <div>
-          <h1>Monitor SEFAZ</h1>
-          <p className="dashboard__subtitle">
-            Status em tempo real dos serviços de documentos fiscais eletrônicos
-          </p>
+    <div className="shell">
+      <header className="topbar">
+        <div className="brand">
+          <div className="brand__logo">SF</div>
+          <div>
+            <h1 className="brand__title">Monitor SEFAZ</h1>
+            <p className="brand__subtitle">Disponibilidade de NF-e, NFC-e, CT-e, MDF-e e DC-e</p>
+          </div>
         </div>
+        <button
+          type="button"
+          className="icon-btn"
+          onClick={toggle}
+          aria-label="Alternar tema"
+          title="Alternar tema"
+        >
+          {theme === 'dark' ? '☀️' : '🌙'}
+        </button>
       </header>
 
+      {summary.data && <GlobalBanner summary={summary.data} />}
       {summary.data && <SummaryCards summary={summary.data} />}
 
       <DocumentFilterTabs value={docFilter} onChange={setDocFilter} />
       <StatusLegend />
 
-      {status.isLoading && <p className="empty">Carregando…</p>}
-      {status.isError && <p className="error">Falha ao carregar o status. Tente novamente.</p>}
-      {status.data && <StatusGrid services={services} onSelect={setSelected} />}
+      {status.isLoading && <p className="muted">Carregando…</p>}
+      {status.isError && <p className="error">Não foi possível carregar o status. Tente novamente.</p>}
+      {status.data && <ServiceList services={services} onSelect={setSelected} />}
 
       {status.data && (
-        <footer className="dashboard__footer">
-          Atualizado em {new Date(status.data.generatedAt).toLocaleString('pt-BR')}
+        <footer className="foot">
+          Atualizado em {new Date(status.data.generatedAt).toLocaleString('pt-BR')} ·{' '}
+          <a href="https://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx" target="_blank" rel="noreferrer">
+            fonte oficial SEFAZ
+          </a>
         </footer>
       )}
 
       {selectedLive && (
-        <ServiceDetailPanel env={ENV} service={selectedLive} onClose={() => setSelected(null)} />
+        <ServiceDetailPanel service={selectedLive} onClose={() => setSelected(null)} />
       )}
-    </main>
+    </div>
   );
 }

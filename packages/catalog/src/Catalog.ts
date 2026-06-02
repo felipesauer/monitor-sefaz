@@ -21,7 +21,7 @@ export interface CatalogEntry {
 }
 
 function environmentKey(environment: Environment): EnvironmentKey {
-  return environment === Environment.Production ? 'producao' : 'homologacao';
+  return environment === Environment.Production ? 'production' : 'homologation';
 }
 
 /**

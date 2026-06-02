@@ -6,7 +6,7 @@ export interface AppConfig {
   /** Expressão cron das checagens agendadas. */
   readonly cronExpression: string;
   /** Ambientes a monitorar (por padrão apenas produção). */
-  readonly environments: ('producao' | 'homologacao')[];
+  readonly environments: ('production' | 'homologation')[];
   /**
    * Fonte de status:
    * - `availability`: scraping da página oficial (pública, sem cert) — padrão.
@@ -41,7 +41,7 @@ export function loadConfig(): AppConfig {
     host: process.env.HOST ?? '0.0.0.0',
     redisUrl: process.env.REDIS_URL ?? 'redis://localhost:6379',
     cronExpression: process.env.CRON_EXPRESSION ?? '*/5 * * * *',
-    environments: ['producao'],
+    environments: ['production'],
     statusSource: process.env.STATUS_SOURCE === 'soap' ? 'soap' : 'availability',
     concurrency: intEnv('SEFAZ_CONCURRENCY', 5),
     timeoutMs: intEnv('SEFAZ_TIMEOUT_MS', 15_000),
