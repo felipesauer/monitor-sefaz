@@ -2,8 +2,11 @@ import { useQuery } from '@tanstack/react-query';
 import type { EnvironmentValue } from '@monitor-sefaz/contracts';
 import { apiClient, type StatusFilters } from '../api/client.js';
 
-/** Intervalo de polling do snapshot (será substituído por SSE na Fase 3). */
-const POLL_INTERVAL_MS = 30_000;
+/**
+ * Intervalo de polling de fallback. O caminho primário de atualização é o SSE
+ * (`useStatusStream`); este refetch lento cobre o caso de a conexão SSE cair.
+ */
+const POLL_INTERVAL_MS = 120_000;
 
 export function useStatusSnapshot(env: EnvironmentValue, filters: StatusFilters = {}) {
   return useQuery({

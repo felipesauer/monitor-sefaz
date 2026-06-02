@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { EnvironmentValue } from '@monitor-sefaz/contracts';
 import { useStatusSnapshot, useSummary } from '../hooks/useStatus.js';
+import { useStatusStream } from '../hooks/useStatusStream.js';
 import { EnvironmentToggle } from '../components/EnvironmentToggle.js';
 import { SummaryCards } from '../components/SummaryCards.js';
 import { StatusGrid } from '../components/StatusGrid.js';
@@ -11,6 +12,7 @@ export function DashboardPage() {
   const [env, setEnv] = useState<EnvironmentValue>('producao');
   const status = useStatusSnapshot(env);
   const summary = useSummary(env);
+  useStatusStream(env);
 
   return (
     <main className="dashboard">

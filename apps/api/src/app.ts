@@ -2,10 +2,14 @@ import Fastify, { type FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
 import { SummaryService } from './services/SummaryService.js';
 import { registerStatusRoutes } from './routes/statusRoutes.js';
+import { registerStreamRoutes } from './routes/streamRoutes.js';
 import type { StatusStore } from './store/StatusStore.js';
+import type { StatusBroadcaster } from './realtime/StatusBroadcaster.js';
 
 export interface BuildAppDeps {
   readonly store: StatusStore;
+  /** Broadcaster de tempo real; quando ausente, a rota SSE não é registrada. */
+  readonly broadcaster?: StatusBroadcaster;
   /** Função de tempo, injetável para testes determinísticos. */
   readonly now?: () => number;
   readonly logger?: boolean;
@@ -24,6 +28,10 @@ export async function buildApp(deps: BuildAppDeps): Promise<FastifyInstance> {
     summaryService: new SummaryService(),
     now: deps.now ?? (() => Date.now()),
   });
+
+  if (deps.broadcaster) {
+    registerStreamRoutes(app, { broadcaster: deps.broadcaster });
+  }
 
   return app;
 }
