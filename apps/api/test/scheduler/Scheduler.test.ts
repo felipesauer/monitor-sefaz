@@ -1,32 +1,22 @@
 import { describe, it, expect, vi } from 'vitest';
-import { DocumentType, Environment } from '@monitor-sefaz/catalog';
-import { ServiceState, type ServiceTarget, type StatusResult } from '@monitor-sefaz/core';
-import type { BatchChecker, AuthorizerRegistry } from '@monitor-sefaz/core';
-import type { ServiceStatusDTO } from '@monitor-sefaz/contracts';
+import type { EnvironmentValue, ServiceStatusDTO } from '@monitor-sefaz/contracts';
 import { Scheduler } from '../../src/scheduler/Scheduler.js';
 import type { StatusStore } from '../../src/store/StatusStore.js';
+import type { StatusSource } from '../../src/sources/StatusSource.js';
 
-const target: ServiceTarget = {
-  document: DocumentType.NFe,
-  uf: 'SP',
-  authorizer: 'SP',
-  environment: Environment.Production,
-  cUF: 35,
-  url: 'https://example.test',
-};
-
-function result(state: ServiceState): StatusResult {
+function service(state: ServiceStatusDTO['state']): ServiceStatusDTO {
   return {
-    target,
+    id: 'NFe:SP',
+    document: 'NFe' as ServiceStatusDTO['document'],
+    uf: 'SP',
+    authorizer: 'SP',
+    environment: 'producao',
     state,
-    cStat: state === ServiceState.Operational ? 107 : 109,
+    cStat: state === 'OPERATIONAL' ? 107 : 109,
     xMotivo: null,
     latencyMs: 10,
-    dhRecbto: null,
-    tMed: null,
-    httpStatus: 200,
     error: null,
-    checkedAt: new Date(0),
+    checkedAt: '2026-06-02T11:00:00.000Z',
   };
 }
 
@@ -37,53 +27,53 @@ function makeStore() {
     getService: vi.fn(async () => null),
     getHistory: vi.fn(async () => []),
     publishUpdates: vi.fn(async () => undefined),
-  } satisfies StatusStore as StatusStore & {
+  } as unknown as StatusStore & {
     publishUpdates: ReturnType<typeof vi.fn>;
     saveSnapshot: ReturnType<typeof vi.fn>;
   };
 }
 
-const registry: AuthorizerRegistry = {
-  resolve: () => target,
-  listAll: () => [target],
-};
+function makeSource(sequence: ServiceStatusDTO['state'][]): StatusSource {
+  let call = 0;
+  return {
+    name: 'fake',
+    collect: vi.fn(async () => [service(sequence[Math.min(call++, sequence.length - 1)]!)]),
+  };
+}
 
 const logger = { info: () => {}, error: () => {} };
+const opts = { cronExpression: '* * * * *', environments: ['producao'] as EnvironmentValue[] };
 
 describe('Scheduler', () => {
   it('persiste snapshot e não publica mudança na primeira rodada', async () => {
     const store = makeStore();
-    const batch = { checkAll: vi.fn(async () => [result(ServiceState.Operational)]) } as unknown as BatchChecker;
-    const scheduler = new Scheduler(batch, registry, store, {
-      cronExpression: '* * * * *',
-      environments: ['producao'],
-    }, logger);
+    const scheduler = new Scheduler(makeSource(['OPERATIONAL']), store, opts, logger);
 
     await scheduler.runOnce('producao');
 
     expect(store.saveSnapshot).toHaveBeenCalledOnce();
-    // primeira observação não conta como transição
     expect(store.publishUpdates).toHaveBeenCalledWith('producao', []);
   });
 
   it('publica apenas serviços que mudaram de estado entre rodadas', async () => {
     const store = makeStore();
-    const states = [ServiceState.Operational, ServiceState.Down];
-    let call = 0;
-    const batch = {
-      checkAll: vi.fn(async () => [result(states[call++]!)]),
-    } as unknown as BatchChecker;
-    const scheduler = new Scheduler(batch, registry, store, {
-      cronExpression: '* * * * *',
-      environments: ['producao'],
-    }, logger);
+    const scheduler = new Scheduler(makeSource(['OPERATIONAL', 'DOWN']), store, opts, logger);
 
-    await scheduler.runOnce('producao'); // OPERATIONAL (baseline)
-    await scheduler.runOnce('producao'); // DOWN (transição)
+    await scheduler.runOnce('producao'); // baseline OPERATIONAL
+    await scheduler.runOnce('producao'); // transição -> DOWN
 
     const lastCall = store.publishUpdates.mock.calls.at(-1);
     const changed = lastCall?.[1] as ServiceStatusDTO[];
     expect(changed).toHaveLength(1);
     expect(changed[0]?.state).toBe('DOWN');
+  });
+
+  it('não persiste quando a fonte retorna vazio (ex: homologação no scraping)', async () => {
+    const store = makeStore();
+    const source: StatusSource = { name: 'empty', collect: async () => [] };
+    const scheduler = new Scheduler(source, store, opts, logger);
+
+    await scheduler.runOnce('homologacao');
+    expect(store.saveSnapshot).not.toHaveBeenCalled();
   });
 });

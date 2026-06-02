@@ -17,7 +17,10 @@
   "dependencies": {
     "@monitor-sefaz/catalog": "workspace:*",
     "axios": "^1.7.9",
-    "fast-xml-parser": "^4.5.1"
+    "axios-cookiejar-support": "^5.0.5",
+    "cheerio": "^1.0.0",
+    "fast-xml-parser": "^4.5.1",
+    "tough-cookie": "^5.1.0"
   },
   "devDependencies": {
     "@types/node": "^22.10.2"

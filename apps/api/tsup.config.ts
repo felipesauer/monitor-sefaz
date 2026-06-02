@@ -12,9 +12,10 @@ export default defineConfig({
   target: 'node22',
   bundle: true,
   clean: true,
-  // Embute apenas os pacotes internos do monorepo (resolvem para src/*.ts).
+  // Externaliza TODAS as deps de node_modules (várias são CJS com require
+  // dinâmico — ex: axios→form-data, cheerio→iconv-lite→safer-buffer — e quebram
+  // se embutidas em ESM). Só os pacotes internos do monorepo (que resolvem para
+  // src/*.ts) são embutidos via noExternal.
+  skipNodeModulesBundle: true,
   noExternal: [/@monitor-sefaz\//],
-  // Deixa as dependências de runtime fora do bundle — várias (axios→form-data→
-  // combined-stream) são CJS e quebram com require dinâmico se forem embutidas.
-  external: ['axios', 'fast-xml-parser', 'fastify', '@fastify/cors', '@fastify/rate-limit', '@fastify/static', 'ioredis', 'node-cron', 'zod'],
 });

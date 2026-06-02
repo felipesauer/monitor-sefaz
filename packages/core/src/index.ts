@@ -1,3 +1,7 @@
+// Reexporta os enums/tipos de domínio do catalog (conveniência para consumidores)
+export { DocumentType, Environment } from '@monitor-sefaz/catalog';
+export type { UF, AuthorizerCode } from '@monitor-sefaz/catalog';
+
 // Domínio
 export * from './domain/types.js';
 export * from './domain/errors.js';
@@ -42,3 +46,10 @@ export { CheckerFactory, type CheckerFactoryDeps } from './registry/CheckerFacto
 
 // Relatório
 export { StatusReport, type StatusSummary } from './report/StatusReport.js';
+
+// Disponibilidade (scraping da página oficial — sem certificado A1)
+export { AvailabilityParser, type AvailabilityRow } from './availability/AvailabilityParser.js';
+export {
+  HttpAvailabilityProvider,
+  AVAILABILITY_URLS,
+} from './availability/AvailabilityProvider.js';

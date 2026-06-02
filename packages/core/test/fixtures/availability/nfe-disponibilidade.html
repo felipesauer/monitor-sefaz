@@ -1,0 +1,392 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="pt-br" xmlns="http://www.w3.org/1999/xhtml">
+<head><title>
+	Portal da Nota Fiscal Eletrônica
+</title>
+
+    <!-- CSS -->
+    <link href="css/geral.css" rel="stylesheet" type="text/css" /><link href="css/classes.css" rel="stylesheet" type="text/css" /><link href="css/paginasInternas.css" rel="stylesheet" type="text/css" /><link href="css/estilo_visualizacao.css" rel="stylesheet" type="text/css" />
+
+	
+    <!-- Javascript -->
+    <script src="scripts/jquery-3.2.1.min.js" type="text/javascript"></script>
+    <script src="scripts/menu.js" type="text/javascript"></script>
+    <script src="scripts/mascaras.js" type="text/javascript"></script>
+    <script src="//www.receita.fazenda.gov.br/estatistica/estatistica.js" type="text/javascript"></script>
+    <script src="scripts/captcha-som.js" type="text/javascript"></script>
+
+    <meta http-equiv="cache-control" content="no-store, no-cache, must-revalidate, Post-Check=0, Pre-Check=0" /><meta http-equiv="pragma" content="no-cache" /><meta http-equiv="expires" content="0" />
+
+    <script type="text/javascript">
+        document.addEventListener('keydown', function (e) {
+            if (e.ctrlKey && e.shiftKey && e.code === 'KeyQ') {
+                var popup = document.getElementById('ctl00_PanelPopup');
+            popup.style.display = popup.style.display === 'none' ? 'block' : 'none';
+        }
+    });
+    </script>
+
+
+
+    
+    </head>
+<body onselectstart="return true;">
+    <div id="barra-brasil" style="background: #7F7F7F; height: 20px; padding: 0 0 0 10px; display: block;">
+        <ul id="menu-barra-temp" style="list-style: none;">
+            <li style="display: inline; float: left; padding-right: 10px; margin-right: 10px; border-right: 1px solid #EDEDED">
+                <a href="http://brasil.gov.br" style="font-family: sans,sans-serif; text-decoration: none; color: white;">Portal do Governo Brasileiro</a></li>
+            <li><a style="font-family: sans,sans-serif; text-decoration: none; color: white;" href="http://epwg.governoeletronico.gov.br/barra/atualize.html">Atualize sua Barra de Governo</a></li>
+        </ul>
+    </div>
+   
+    <script defer="defer" src="//barra.brasil.gov.br/barra.js" type="text/javascript"></script>
+ 
+
+
+    <div id="divCentral">
+        <form method="post" action="./disponibilidade.aspx?AspxAutoDetectCookieSupport=1" id="aspnetForm">
+<div class="aspNetHidden">
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKMTkxMjE5NzczMA9kFgJmD2QWAgIDD2QWEAILDw8WAh4EVGV4dAUPNTgsMjU4IGJpbGjDtWVzZGQCDw8PFgIfAAUOMywwMTIgbWlsaMO1ZXNkZAIRDw8WAh4LTmF2aWdhdGVVcmwFFWluZm9Fc3RhdGlzdGljYXMuYXNweGRkAhUPDxYCHwEFRWh0dHBzOi8vd3d3Lm5mZS5mYXplbmRhLmdvdi5ici9hcmVhcmVzdHJpdGEvaW5pY2lhbC9hdXRlbnRpY2FjYW8uYXNweGRkAhkPDxYCHwEFMnBlcmd1bnRhc0ZyZXF1ZW50ZXMuYXNweD90aXBvQ29udGV1ZG89M093MW5mVEJ6SW89ZGQCKQ88KwARAwAPFgQeC18hRGF0YUJvdW5kZx4LXyFJdGVtQ291bnQCBWQBEBYAFgAWAAwUKwAAFgJmD2QWDmYPDxYCHgdWaXNpYmxlaGRkAgEPZBYCZg9kFgICAQ8PFgYeDUFsdGVybmF0ZVRleHQFJkNvbmhlY2ltZW50byBkZSBUcmFuc3BvcnRlIEVsZXRyw7RuaWNvHg9Db21tYW5kQXJndW1lbnQFHWh0dHA6Ly93d3cuY3RlLmZhemVuZGEuZ292LmJyHghJbWFnZVVybAUkfi9pbWFnZW5zL2Jhbm5lcnNfVmlzaXRlX0NUZV9PZmYucG5nFgIeBXRpdGxlBSZDb25oZWNpbWVudG8gZGUgVHJhbnNwb3J0ZSBFbGV0csO0bmljb2QCAg9kFgJmD2QWAgIBDw8WBh8FBSlTaXN0ZW1hIFDDumJsaWNvIGRlIEVzY3JpdHVyYcOnw6NvIEZpc2NhbB8GBSNodHRwOi8vd3d3MS5yZWNlaXRhLmZhemVuZGEuZ292LmJyLx8HBSV+L2ltYWdlbnMvYmFubmVyc19WaXNpdGVfU3BlZF9PZmYucG5nFgIfCAUpU2lzdGVtYSBQw7pibGljbyBkZSBFc2NyaXR1cmHDp8OjbyBGaXNjYWxkAgMPZBYCZg9kFgICAQ8PFgYfBQUqU3VwZXJpbnRlbmTDqm5jaWEgZGEgWm9uYSBGcmFuY2EgZGUgTWFuYXVzHwYFGmh0dHA6Ly93d3cuc3VmcmFtYS5nb3YuYnIvHwcFIH4vaW1hZ2Vucy9iYW5uZXJzX21hbmF1c19PZmYucG5nFgIfCAUqU3VwZXJpbnRlbmTDqm5jaWEgZGEgWm9uYSBGcmFuY2EgZGUgTWFuYXVzZAIED2QWAmYPZBYCAgEPDxYGHwUFK01hbmlmZXN0byBFbGV0csO0bmljbyBkZSBEb2N1bWVudG9zIEZpc2NhaXMfBgUmaHR0cHM6Ly9kZmUtcG9ydGFsLnN2cnMucnMuZ292LmJyL01kZmUfBwUdfi9pbWFnZW5zL2Jhbm5lcl9tZGZlX09mZi5wbmcWAh8IBStNYW5pZmVzdG8gRWxldHLDtG5pY28gZGUgRG9jdW1lbnRvcyBGaXNjYWlzZAIFD2QWAmYPZBYCAgEPDxYGHwUFMlBvcnRhbCBOYWNpb25hbCBkbyBCaWxoZXRlIGRlIFBhc3NhZ2VtIEVsZXRyw7RuaWNvHwYFJWh0dHBzOi8vZGZlLXBvcnRhbC5zdnJzLnJzLmdvdi5ici9CcGUfBwUcfi9pbWFnZW5zL2Jhbm5lcl9icGVfT2ZmLnBuZxYCHwgFMlBvcnRhbCBOYWNpb25hbCBkbyBCaWxoZXRlIGRlIFBhc3NhZ2VtIEVsZXRyw7RuaWNvZAIGDw8WAh8EaGRkAjUPZBYQAgEPDxYCHwAFGUNvbnN1bHRhciBEaXNwb25pYmlsaWRhZGVkZAIDDw9kDxAWAWYWARYCHg5QYXJhbWV0ZXJWYWx1ZWQWAQIEZGQCBQ88KwARAwAPFgYeB0NhcHRpb24FoQFWaXPDo28gR2VyYWwgZGUgRGlzcG9uaWJpbGlkYWRlIGRvcyBTZXJ2acOnb3M8YnIvPjxzcGFuIGNsYXNzPSdmb250ZTEwJz4gLSDDmmx0aW1hIFZlcmlmaWNhw6fDo286IDAyLzA2LzIwMjYgMTU6Mzk6MzI8YnIvPjxici8+IC0gV2ViU2VydmljZXMgVmVyc8OjbyA0LjAwPC9zcGFuPh8CZx8DAg5kARAWAQIGFgE8KwAFAQAWAh4KSGVhZGVyVGV4dAUMVGVtcG8gTcOpZGlvFgFmDBQrAAAWAmYPZBYeAgEPZBYSZg8PFgIfAAUCQU1kZAIBD2QWBGYPDxYEHwcFGn4vaW1hZ2Vucy9ib2xhX3ZlcmRlX1AucG5nHwVlZGQCAQ8PFgIfBGhkZAICD2QWBGYPDxYEHwcFGn4vaW1hZ2Vucy9ib2xhX3ZlcmRlX1AucG5nHwVlZGQCAQ8PFgIf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aW1hZ2Vucy9ib2xhX3ZlcmRlX1AucG5nHwVlZGQCAQ8PFgIfBGhkZAIOD2QWEmYPDxYCHwAFBlNWQy1SU2RkAgEPZBYEZg8PFgQfBwUafi9pbWFnZW5zL2JvbGFfdmVyZGVfUC5wbmcfBWVkZAIBDw8WAh8EaGRkAgIPZBYEZg8PFgQfBwUafi9pbWFnZW5zL2JvbGFfdmVyZGVfUC5wbmcfBWVkZAIBDw8WAh8EaGRkAgMPZBYEZg8PFgYfB2QfBWUfBGhkZAIBDw8WBB8AZR8EZ2RkAgQPZBYEZg8PFgQfBwUafi9pbWFnZW5zL2JvbGFfdmVyZGVfUC5wbmcfBWVkZAIBDw8WAh8EaGRkAgUPZBYEZg8PFgQfBwUafi9pbWFnZW5zL2JvbGFfdmVyZGVfUC5wbmcfBWVkZAIBDw8WAh8EaGRkAgYPDxYCHwAFAS1kZAIHD2QWBGYPDxYGHwdkHwVlHwRoZGQCAQ8PFgQfAGUfBGdkZAIID2QWBGYPDxYEHwcFGn4vaW1hZ2Vucy9ib2xhX3ZlcmRlX1AucG5nHwVlZGQCAQ8PFgIfBGhkZAIPDw8WAh8EaGRkAgcPDxYCHwAFAk1BZGQCCQ8PFgIfAAUSQUMsIEVTLCBSTiwgUEIsIFNDZGQCCw8PFgIfAAU+QUMsIEFMLCBBUCwgQ0UsIERGLCBFUywgUEEsIFBCLCBQSSwgUkosIFJOLCBSTywgUlIsIFNDLCBTRSwgVE9kZAINDw8WAh8ABUpBQywgQUwsIEFQLCBDRSwgREYsIEVTLCBNRywgUEEsIFBCLCBQSSwgUkosIFJOLCBSTywgUlIsIFJTLCBTQywgU0UsIFNQLCBUT2RkAg8PDxYCHwAFHkFNLCBCQSwgR08sIE1BLCBNUywgTVQsIFBFLCBQUmRkAjkPDxYCHwAFN1BvcnRhbCBkYSBORi1lIDIwMjYgLSBOb3RhIEZpc2NhbCBFbGV0csO0bmljYSAgdjIuOS43LjBkZBgDBR5fX0NvbnRyb2xzUmVxdWlyZVBvc3RCYWNrS2V5X18WBgUPY3RsMDAkaWJ0QnVzY2FyBSljdGwwMCRnZHZMaW5rc0Rlc3RhcXVlJGN0bDAyJEltYWdlQnV0dG9uMQUpY3RsMDAkZ2R2TGlua3NEZXN0YXF1ZSRjdGwwMyRJbWFnZUJ1dHRvbjEFKWN0bDAwJGdkdkxpbmtzRGVzdGFxdWUkY3RsMDQkSW1hZ2VCdXR0b24xBSljdGwwMCRnZHZMaW5rc0Rlc3RhcXVlJGN0bDA1JEltYWdlQnV0dG9uMQUpY3RsMDAkZ2R2TGlua3NEZXN0YXF1ZSRjdGwwNiRJbWFnZUJ1dHRvbjEFLWN0bDAwJENvbnRlbnRQbGFjZUhvbGRlcjEkZ2R2RGlzcG9uaWJpbGlkYWRlMg88KwAMAQgCAWQFFmN0bDAwJGdkdkxpbmtzRGVzdGFxdWUPPCsADAEIAgFkaOjWoDtWaFLGAlodOF3Qk11y0Pk=" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+    theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/portal/WebResource.axd?d=ZWO9axJrMUCOr1izP3UEZRCC9H9dses7etW7JecjiAOQDqMwdG-StzfDPAgcsQ8hxRkl-AMsAJBR-BfkCGB56pQ3gKo1&amp;t=638901428248157332" type="text/javascript"></script>
+
+
+<script src="/portal/ScriptResource.axd?d=lKER9OjLRXZj9hl3hYK1NeWbJzY0IIuG9PQaTzQ6Pm4nRciLTwk7o7LjvpMe9GVNg6X662VfwSehVb1otyCcpU2m44xxQkgLKAsDvmWO2Yna970r9nQMs9iM2wsfBKVn0e1N7A7CfQv2RmViMgcjNESKRE1Dcs2RNiSvVkuZ4dWJXKV60&amp;t=5c0e0825" type="text/javascript"></script>
+<script src="/portal/ScriptResource.axd?d=Zi9TAHOLxEdccMKnNf4xNp8a5H_hC7ktwxXCMW839oIKC-KlhfxAOitBAXQG-SWySwraG75zIJTvwEANGe6get63WoT4ZdLXWAgk2Z-XBAfy6jgxiI7x9b-cNebF_Co_PAsvQ0fBly5YGzia9V_0av0M8lEOOZsSxMV4gVx6Zq9PLtC70&amp;t=5c0e0825" type="text/javascript"></script>
+<script src="/portal/ScriptResource.axd?d=smDdZy0UdpA1U3PAJHasvdsXod9zn0f2STlJy-PJhGx8_vYP8dRjsZf1qYxwY3mS3cKF3WfB2R7Sg2WH_GXXIJKqKFePPEuDwdr0J1yTgWwyQFaZHnpfUQNuECmQ8Px3haXQojOb4ag1amzsVDiDq6qB-x01&amp;t=ffffffff87636c38" type="text/javascript"></script>
+<script src="/portal/ScriptResource.axd?d=kVR0IuuaOhFQpbjZA2sxxCaO48uBn_yQ4V1ccam0AMBnJU-vxMcVz4_hScZwm0hjt38WU8tS_S9S9e-wfV9LiOXTumlBPyt5u-wXxYke6l0NhR_Ob4oiPVTYswKhwFEsSqlZZo1rxk5seYGDbATTjkNDUzY1&amp;t=ffffffff87636c38" type="text/javascript"></script>
+<script src="/portal/ScriptResource.axd?d=pkcToEKdnWyj6BBLNVnJyu_Y3XuXBs98wZ9wyZ15w9FXEvOrMM_gT7X2PwqJnvsQwfFLRbyxKeWQ2-Se4Q_7IXxARPdPMFy6Wgv8gHuYX2tS02anFSYZQgATkiBq9L2Yo3nBUqnJHh5z5fmkcUkTqbk72f01&amp;t=ffffffff87636c38" type="text/javascript"></script>
+<script src="/portal/ScriptResource.axd?d=l84ZJb7av4nWEYmrUBlqz_xYDiy0on6DT4jtttxtkWr02MctCAoc2Wn1hZblUUTh-TGffEgIYUOPcfY6FTKpxumPBPqSE5DeU9Fe88UicGnOpX87B2r7zozypeAyqKLoVYXUNAX1vrLuRgjmBPBiJGaY0c2ZX4rNd72hCnu_9ISYB4lw0&amp;t=ffffffff87636c38" type="text/javascript"></script>
+<script src="/portal/ScriptResource.axd?d=iDbFzJSD2oML9r8HieMBM-M5gKhdLCr5IrMss1r17SsZ0JcaO8TSLbAGunGheaW3Fj0IjsrIGzPxUhMMhtkaM-AhC3KMBTGg9PenIXe-p2nmvF4WImocqKuito4crmkzUW3tjQSXa_Vrz-x-4r8IrVyS-Jloz7keeyTzQuO8126poHhe0&amp;t=ffffffff87636c38" type="text/javascript"></script>
+<script src="/portal/ScriptResource.axd?d=AiYOmmQWJYcb6cvJtIZ-9MKPdtkBa7UyWQPa9fehqyoGrsAdiYguZzbaZYfBK6IRoAwuGML54M6traEPFdZLa4H8KLLZLY3s8RhJWQWrRIKONPTO4QgzVn0-ZnBE_h16Nc6oo_qSbd5C77QEW-IevdOLAS5skB6YczbXT-cJBPKepBnt0&amp;t=ffffffff87636c38" type="text/javascript"></script>
+<script src="/portal/ScriptResource.axd?d=re7kKGQqZxCO0AjgKkBJNbY_JwHnDfNmkK6-PdOBQcA-_lUmrvxrQm5kHHnzPxP9CMhmIbF8xgBPP2bg3tQI3aH6pnGFWuGn1wQ_6PbuTzniu6aYITmr5zjYR4AGaiIXWdxLh79qhN9GIa4oxYvya7XvOkcOfXsHte-TGaHlNkb7Nptc0&amp;t=ffffffff87636c38" type="text/javascript"></script>
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="5E95F13A" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdAAqZce26N6j/jLbDfJ4xmUnyZLQlHz+zjyg7L4aHZvZX1VRXlc/8UyQ3XSUj7QL9zmMEao+HCuWf709Mb5rjbkLgNCckUz+Zyz93RVMykxNgIZ447S1NfnWN7VA5SBuEBeJOjU6XyL6ErgbhWj6OwNA5jxoQlmOeg+bJl0yPRxMOmzTZNOtTvRyGaT6hhlTIEUNN11GISA+gOcqDGnwa1tFKShxoJ6S/FErVu217L1wOSaOVi7Y=" />
+</div>
+            <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ctl00$ScriptManager', 'aspnetForm', ['tctl00$upnBuscar',''], [], [], 90, 'ctl00');
+//]]>
+</script>
+
+
+            <div id="ctl00_PanelPopup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 100; background-color: white; padding: 20px; border: 1px solid #ccc; box-shadow: 0px 0px 10px #ccc;">
+	
+                <span id="ctl00_LabelPopup">Deseja acessar a Área Restrita com autenticação via GovBR?</span>
+                <br />
+                <br />
+                <input type="submit" name="ctl00$ButtonAcessar" value="Acessar" onclick="window.location=&#39;https://hom.nfe.fazenda.gov.br/arearestrita/inicial/autenticacao.aspx&#39;; return false;" id="ctl00_ButtonAcessar" />
+                &nbsp;
+            <input type="submit" name="ctl00$ButtonSair" value="Sair" onclick="document.getElementById(&#39;&lt;%= PanelPopup.ClientID %>&#39;).style.display=&#39;none&#39;; return false;" id="ctl00_ButtonSair" />
+
+            
+</div>
+
+            <div id="tudoSemRodape" class="contemFloat">
+                <div id="cabecalho">
+                    <div id="menuAcessibilidade">
+                        <?xml version="1.0" encoding="utf-8"?><a href="listaSubMenu.aspx?Id=6H4uVlIEaKs=">Conheça a NF-e</a><a href="listaSubMenu.aspx?Id=esCrSQFUvGg=">Serviços</a><a href="listaSubMenu.aspx?Id=ndIjl+iEFdE=">Legislação</a><a href="listaSubMenu.aspx?Id=04BIflQt1aY=">Documentos</a><a href="listaSubMenu.aspx?Id=BMPFMBoln3w=">Downloads</a><a href="https://www.nfe.fazenda.gov.br/arearestrita/inicial/autenticacao.aspx">Área Restrita</a><a href="https://www1.sped.fazenda.gov.br/spednfeacesso/arnfe/inicial/listaSubMenu.aspx?Id=UORZ3ynALMA=">Documentos e outros</a>
+                    </div>
+                    
+                    <div id="divTransparente" onclick="javascript:location.href = 'principal.aspx'">
+                    </div>
+                    <div id="imgHome">
+                        <a href="principal.aspx">
+                            <img id="ibtHome" src="imagens/home_icon_Off.png" onmouseover="javascript: trocarImagem(this)"
+                                onmouseout="javascript: trocarImagem(this)" alt="Link para a página inicial do Portal da NF-e" />
+                        </a>
+                    </div>
+                    <div id="menu">
+                        <?xml version="1.0" encoding="utf-8"?><ul class="abasMenu" xmlns:chave="http://exslt.org/chaveacesso"><li class="itemMenuPrincipal"><a href="listaSubMenu.aspx?Id=esCrSQFUvGg=">Serviços</a><ul class="dropdown"><li><a href="consultaRecaptcha.aspx?tipoConsulta=resumo&amp;tipoConteudo=7PhJ+gAVw2g=">Consultar NF-e</a></li><li><a href="consulta.aspx?tipoConsulta=inutilizacao&amp;tipoConteudo=nDmpH/MjKrg=">Consultar Inutilização</a></li><li><a href="solicitaCertificado.aspx?tipoConteudo=49BQNAeyGfk=">Consultar Duplicidade AN</a></li><li><a href="disponibilidade.aspx?versao=0.00&amp;tipoConteudo=P2c98tUpxrI=">Consultar Disponibilidade</a></li><li><a href="manifestacaoDestinatario.aspx?tipoConteudo=o9MkXc+hmKs=">Manifestação Destinatário</a></li><li><a href="webServices.aspx?tipoConteudo=OUC/YVNWZfo=">Relação de Serviços Web</a></li><li><a href="https://www.nfe.fazenda.gov.br/AgendamentoSVC/?tipoConteudo=dKnzIG+XQXM=">Agendamento SVC-AN</a></li><li><a href="consultaEPECConciliacao.aspx?tipoConteudo=uoOHfIFn8Nc=">Consulta/Liberação de EPEC pendente de conciliação</a></li></ul></li><li class="itemMenuPrincipal"><a href="listaSubMenu.aspx?Id=ndIjl+iEFdE=">Legislação</a><ul class="dropdown"><li><a href="listaConteudo.aspx?tipoConteudo=3GhDwJ/ZeSI=">Ajustes SINIEF</a></li><li><a href="listaConteudo.aspx?tipoConteudo=AX0vPC2u8xc=">Atos COTEPE</a></li><li><a href="listaConteudo.aspx?tipoConteudo=QIcipqxg0bU=">Convênios</a></li><li><a href="listaConteudo.aspx?tipoConteudo=gPWmdzYAb0Y=">Protocolos</a></li></ul></li><li class="itemMenuPrincipal"><a href="listaSubMenu.aspx?Id=04BIflQt1aY=">Documentos</a><ul class="dropdown"><li><a href="listaConteudo.aspx?tipoConteudo=ndIjl+iEFdE=">Manuais </a></li><li><a href="listaConteudo.aspx?tipoConteudo=BMPFMBoln3w=">Esquemas XML</a></li><li><a href="listaConteudo.aspx?tipoConteudo=04BIflQt1aY=">Notas Técnicas</a></li><li><a href="listaConteudo.aspx?tipoConteudo=hXzemuyNHW4=">Informes Técnicos</a></li><li><a href="listaConteudo.aspx?tipoConteudo=/NJarYc9nus=">Diversos</a></li></ul></li><li class="itemMenuPrincipal"><a href="listaSubMenu.aspx?Id=BMPFMBoln3w=">Downloads</a><ul class="dropdown"><li><a href="download.aspx?tipoConteudo=vBO/4eBj5F4=">Visualizador de DF-e</a></li><li><a href="download.aspx?tipoConteudo=OFrcUd5//Lg=">Assinador</a></li></ul></li></ul>
+                    </div>
+                </div>
+                <div id="barraDireita">
+                    <div id="estatisticas">
+                        <h1>Estatísticas da NF-e</h1>
+                        <span id="ctl00_lblTituloNfeAut">NF-e Autorizadas</span>
+                        <br />
+                        <div class="valorEstatistica">
+                            <span id="ctl00_lblTotalNfeAut">58,258 bilhões</span>
+                        </div>
+                        <span id="ctl00_lblTituloEmissores">Número de Emissores</span>
+                        <br />
+                        <div class="valorEstatistica">
+                            <span id="ctl00_lblTotalEmissores">3,012 milhões</span>
+                        </div>
+                        <a id="ctl00_hlkInfoEstatisticas" href="infoEstatisticas.aspx">... saiba mais</a>
+                    </div>
+                    <div id="busca">
+                        <div id="ctl00_upnBuscar">
+	
+                                <input name="ctl00$txtPalavraChave" type="text" id="ctl00_txtPalavraChave" class="campoTextoBusca" />
+                                
+                                <input type="image" name="ctl00$ibtBuscar" id="ctl00_ibtBuscar" class="botaoBuscar" onmouseover="javascript: trocarImagem(this)" onmouseout="javascript: trocarImagem(this)" src="imagens/botao_buscar_Off_completo.png" />
+                                
+                            
+</div>
+                    </div>
+                    <div id="linkAreaRestrita">
+                        <p>
+                            <a id="ctl00_hlkAreaRestrita" href="https://www.nfe.fazenda.gov.br/arearestrita/inicial/autenticacao.aspx">Área Restrita do Fisco</a>
+                        </p>
+                    </div>
+                    <div id="linkCentralNFe">
+                        <p>
+                            <a id="ctl00_hlkCentralAtendimento" href="https://www.serpro.gov.br/menu/suporte/central-de-atendimento-serpro-nfe-cte">Central de Atendimento</a>
+                        </p>
+                    </div>
+                    <div id="linkFAQ">
+                        <p>
+                            <a id="ctl00_hlkFAQ" href="perguntasFrequentes.aspx?tipoConteudo=3Ow1nfTBzIo=">Perguntas Frequentes</a>
+                        </p>
+                    </div>
+                    <div id="linkSefaz">
+                        <p>
+                            <span id="ctl00_lblPortaisSefaz">Portais e Secretarias</span>
+                        </p>
+                    </div>
+                    <div id="linkBanners">
+                        <p>
+                            <span id="ctl00_lblPortaisEstaduais">Portais Estaduais da NF-e</span>
+                            <br />
+                            <?xml version="1.0" encoding="utf-8"?><select onchange="javascript: window.open(this.value)"><option value="">Selecione</option><option value="http://sefaznet.ac.gov.br/nfe/">Acre</option><option value="http://www.sefaz.al.gov.br/nfe/">Alagoas</option><option value="https://www.sefaz.ap.gov.br/index.php/nf-e">Amapá</option><option value="http://sistemas.sefaz.am.gov.br/nfeweb/portal/index.do">Amazonas</option><option value="http://www.sefaz.ba.gov.br/scripts/default/nfiscal.asp">Bahia</option><option value="http://nfe.sefaz.ce.gov.br/">Ceará</option><option value="http://dec.fazenda.df.gov.br/">Distrito Federal</option><option value="http://internet.sefaz.es.gov.br/informacoes/nfe/">Espirito Santo</option><option value="https://www.economia.go.gov.br/receita-estadual/documentos-fiscais/nfe.html">Goiás</option><option value="https://sistemas1.sefaz.ma.gov.br/portalsefaz/jsp/pagina/pagina.jsf?codigo=11">Maranhão</option><option value="http://www.sefaz.mt.gov.br/portal/nfe/">Mato Grosso</option><option value="https://www.sefaz.ms.gov.br/documentos-fiscais-eletronicos/nf-e/">Mato Grosso do Sul</option><option value="http://www.sped.fazenda.mg.gov.br/">Minas Gerais</option><option value="http://www.sefa.pa.gov.br/index.php/component/banners/click/7">Pará</option><option value="https://www.sefaz.pb.gov.br/servirtual/documentos-fiscais/nf-e/consulta-completa">Paraíba</option><option value="http://www.sped.fazenda.pr.gov.br/modules/conteudo/conteudo.php?conteudo=1">Paraná</option><option value="https://www.sefaz.pe.gov.br/Servicos/Nota-Fiscal-Eletronica/Paginas/Apresentacao.aspx">Pernambuco</option><option value="http://portal.sefaz.pi.gov.br/documentoseletronicos/portal/efd/index.php">Piauí</option><option value="http://www.fazenda.rj.gov.br/sefaz/faces/webcenter/faces/owResource.jspx?z=oracle.webcenter.doclib%21UCMServer%21UCMServer%2523dDocName%253A100998">Rio de Janeiro</option><option value="http://www.set.rn.gov.br/contentProducao/Aplicacao/SET_v2/nfe/gerados/inicio.asp">Rio Grande do Norte</option><option value="http://receita.fazenda.rs.gov.br/lista/2933/nf-e-(nota-fiscal-eletronica)">Rio Grande do Sul</option><option value="https://www.sefin.ro.gov.br/conteudo.jsp?idCategoria=524">Rondônia</option><option value="https://www.sefaz.rr.gov.br/empresa/consultar-internamento-nf">Roraima</option><option value="http://nfe.sef.sc.gov.br/">Santa Catarina</option><option value="http://www.fazenda.sp.gov.br/nfe/">São Paulo</option><option value="http://nfe.sefaz.se.gov.br/">Sergipe</option><option value="http://www.sefaz.to.gov.br/">Tocantins</option></select>
+                        </p>
+                        <p>
+                            <span id="ctl00_lblLinkSefaz">Secretarias de Fazenda</span>
+                            <br />
+                            <?xml version="1.0" encoding="utf-8"?><select onchange="javascript: window.open(this.value)"><option value="">Selecione</option><option value="http://www.sefaz.ac.gov.br">Acre</option><option value="http://www.sefaz.al.gov.br/">Alagoas</option><option value="http://www.sefaz.ap.gov.br/">Amapá</option><option value="http://www.sefaz.am.gov.br/">Amazonas</option><option value="http://www.sefaz.ba.gov.br/">Bahia</option><option value="http://www.sefaz.ce.gov.br/">Ceará</option><option value="http://www.fazenda.df.gov.br/">Distrito Federal</option><option value="http://www.sefaz.es.gov.br/">Espirito Santo</option><option value="http://www.sefaz.go.gov.br/">Goiás</option><option value="http://www.sefaz.ma.gov.br/">Maranhão</option><option value="http://www.sefaz.mt.gov.br/">Mato Grosso</option><option value="http://www.sefaz.ms.gov.br/">Mato Grosso do Sul</option><option value="http://www.fazenda.mg.gov.br/">Minas Gerais</option><option value="http://www.sefa.pa.gov.br/">Pará</option><option value="https://www.sefaz.pb.gov.br/">Paraíba</option><option value="http://www.sped.fazenda.pr.gov.br/">Paraná</option><option value="https://www.sefaz.pe.gov.br/SitePages/Home.aspx">Pernambuco</option><option value="http://www.sefaz.pi.gov.br/">Piauí</option><option value="https://www.google.com.br/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0ahUKEwig-4mTh7rRAhUHjpAKHW_bCCYQFggcMAA&amp;url=http%3A%2F%2Fwww.fazenda.rj.gov.br%2F&amp;usg=AFQjCNEYn8VLkOFFH3QwfbCmOeh_LOGUEw">Rio de Janeiro</option><option value="http://www.set.rn.gov.br/">Rio Grande do Norte</option><option value="http://fazenda.rs.gov.br/inicial">Rio Grande do Sul</option><option value="https://www.sefin.ro.gov.br/">Rondônia</option><option value="http://www.sefaz.rr.gov.br/">Roraima</option><option value="http://www.sef.sc.gov.br/">Santa Catarina</option><option value="http://www.fazenda.sp.gov.br/">São Paulo</option><option value="http://www.sefaz.se.gov.br/">Sergipe</option><option value="http://www.sefaz.to.gov.br/">Tocantins</option></select>
+                        </p>
+                        
+                        
+                        <img id="linhaDivisoria" src="imagens/linha_divisoria.png" alt="Linha divisória" />
+                        <div>
+	<table cellspacing="0" rules="all" id="ctl00_gdvLinksDestaque" style="border-width:0px;border-collapse:collapse;">
+		<tr>
+			<td>
+                                        <input type="image" name="ctl00$gdvLinksDestaque$ctl02$ImageButton1" id="ctl00_gdvLinksDestaque_ctl02_ImageButton1" onmouseover="javascript: trocarImagem(this)" onmouseout="javascript: trocarImagem(this)" title="Conhecimento de Transporte Eletrônico" src="imagens/banners_Visite_CTe_Off.png" alt="Conhecimento de Transporte Eletrônico" onclick="aspnetForm.target =&#39;_blank&#39;;" />
+                                    </td>
+		</tr><tr>
+			<td>
+                                        <input type="image" name="ctl00$gdvLinksDestaque$ctl03$ImageButton1" id="ctl00_gdvLinksDestaque_ctl03_ImageButton1" onmouseover="javascript: trocarImagem(this)" onmouseout="javascript: trocarImagem(this)" title="Sistema Público de Escrituração Fiscal" src="imagens/banners_Visite_Sped_Off.png" alt="Sistema Público de Escrituração Fiscal" onclick="aspnetForm.target =&#39;_blank&#39;;" />
+                                    </td>
+		</tr><tr>
+			<td>
+                                        <input type="image" name="ctl00$gdvLinksDestaque$ctl04$ImageButton1" id="ctl00_gdvLinksDestaque_ctl04_ImageButton1" onmouseover="javascript: trocarImagem(this)" onmouseout="javascript: trocarImagem(this)" title="Superintendência da Zona Franca de Manaus" src="imagens/banners_manaus_Off.png" alt="Superintendência da Zona Franca de Manaus" onclick="aspnetForm.target =&#39;_blank&#39;;" />
+                                    </td>
+		</tr><tr>
+			<td>
+                                        <input type="image" name="ctl00$gdvLinksDestaque$ctl05$ImageButton1" id="ctl00_gdvLinksDestaque_ctl05_ImageButton1" onmouseover="javascript: trocarImagem(this)" onmouseout="javascript: trocarImagem(this)" title="Manifesto Eletrônico de Documentos Fiscais" src="imagens/banner_mdfe_Off.png" alt="Manifesto Eletrônico de Documentos Fiscais" onclick="aspnetForm.target =&#39;_blank&#39;;" />
+                                    </td>
+		</tr><tr>
+			<td>
+                                        <input type="image" name="ctl00$gdvLinksDestaque$ctl06$ImageButton1" id="ctl00_gdvLinksDestaque_ctl06_ImageButton1" onmouseover="javascript: trocarImagem(this)" onmouseout="javascript: trocarImagem(this)" title="Portal Nacional do Bilhete de Passagem Eletrônico" src="imagens/banner_bpe_Off.png" alt="Portal Nacional do Bilhete de Passagem Eletrônico" onclick="aspnetForm.target =&#39;_blank&#39;;" />
+                                    </td>
+		</tr>
+	</table>
+</div>
+                        
+                    </div>
+                </div>
+                <div id="conteudo">
+                    <div id="localizacao">
+                        <div id="voceEstaAqui">
+                            Você está aqui:
+                        </div>
+                        <div id="caminho">
+                            <a id="ctl00_hlkPaginaPrincipao" href="principal.aspx">Página Principal</a>
+                            
+                            
+                            
+                        </div>
+                    </div>
+                    <div id="zoomAcessibilidade">
+                        <img src="imagens/acessibilidade_reduzir_Off.png" id="imgZoomMenos" onmouseover="javascript: trocarImagem(this)"
+                            onmouseout="javascript: trocarImagem(this)" alt="Link que permite reduzir o tamanho da fonte" />
+                        <img src="imagens/acessibilidade_ampliar_Off.png" id="imgZoomMais" onmouseover="javascript: trocarImagem(this)"
+                            onmouseout="javascript: trocarImagem(this)" alt="Link que permite aumentar o tamanho da fonte" />
+                    </div>
+                    <div id="conteudoDinamico">
+                        
+    <meta http-equiv="refresh" content="120">
+    <div class="divTituloPrincipal">
+        <span id="ctl00_ContentPlaceHolder1_lblTituloPrincipal" class="tituloPrincipal">Consultar Disponibilidade</span>
+    </div>
+
+
+    <div class="indentacaoConteudo">
+        
+    </div>
+    <div>
+	<table class="tabelaListagemDados" cellspacing="0" rules="all" border="1" id="ctl00_ContentPlaceHolder1_gdvDisponibilidade2" style="border-collapse:collapse;">
+		<caption>
+			Visão Geral de Disponibilidade dos Serviços<br/><span class='fonte10'> - Última Verificação: 02/06/2026 15:39:32<br/><br/> - WebServices Versão 4.00</span>
+		</caption><tr>
+			<th scope="col">Autorizador</th><th scope="col">Autorização4</th><th scope="col">Retorno Autorização4</th><th scope="col">Inutilização4</th><th scope="col">Consulta Protocolo4</th><th scope="col">Status Serviço4</th><th scope="col">Tempo M&#233;dio</th><th scope="col">Consulta Cadastro4</th><th scope="col">Recepção Evento4</th>
+		</tr><tr class="linhaImparCentralizada">
+			<td>AM</td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td>-</td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td>
+		</tr><tr class="linhaParCentralizada">
+			<td>BA</td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td>-</td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td>
+		</tr><tr class="linhaImparCentralizada">
+			<td>GO</td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td>-</td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td>
+		</tr><tr class="linhaParCentralizada">
+			<td>MG</td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td>-</td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td>
+		</tr><tr class="linhaImparCentralizada">
+			<td>MS</td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td>-</td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td>
+		</tr><tr class="linhaParCentralizada">
+			<td>MT</td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td>-</td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td>
+		</tr><tr class="linhaImparCentralizada">
+			<td>PE</td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td>-</td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td>
+		</tr><tr class="linhaParCentralizada">
+			<td>PR</td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td>-</td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td>
+		</tr><tr class="linhaImparCentralizada">
+			<td>RS</td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td>-</td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td>
+		</tr><tr class="linhaParCentralizada">
+			<td>SP</td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td>-</td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td>
+		</tr><tr class="linhaImparCentralizada">
+			<td>SVAN</td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td>-</td><td><span></span></td><td><img src="imagens/bola_verde_P.png" /></td>
+		</tr><tr class="linhaParCentralizada">
+			<td>SVRS</td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td>-</td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td>
+		</tr><tr class="linhaImparCentralizada">
+			<td>SVC-AN</td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td>-</td><td><span></span></td><td><img src="imagens/bola_verde_P.png" /></td>
+		</tr><tr class="linhaParCentralizada">
+			<td>SVC-RS</td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td><span></span></td><td><img src="imagens/bola_verde_P.png" /></td><td><img src="imagens/bola_verde_P.png" /></td><td>-</td><td><span></span></td><td><img src="imagens/bola_verde_P.png" /></td>
+		</tr>
+	</table>
+</div>
+
+    <div class="indentacaoConteudo">
+        <span class="fonte10">
+            
+            <span class="fonteMarromBold">SIGLAS UTILIZADAS:<br />
+                *SVAN</span> - Sefaz Virtual Ambiente Nacional <span class="fonteMarromBold">*SVRS</span>
+            - Sefaz Virtual Rio Grande do Sul <span class="fonteMarromBold">*SVC</span> - Sefaz Virtual de Contingência 
+            <p>
+                <label>UF que utilizam a  <span class="fonteMarromBold">SVAN</span> - Sefaz Virtual do Ambiente Nacional: </label>
+                <span id="ctl00_ContentPlaceHolder1_lblUsuariosSVAN">MA</span>
+                <br />
+                <label>UF que utilizam a  <span class="fonteMarromBold">SVRS</span> - Sefaz Virtual do RS: </label>
+                <br />
+                <label>- Para serviço de Consulta Cadastro:  </label>
+                <span id="ctl00_ContentPlaceHolder1_lblUsuarioSVRS_ConsCad">AC, ES, RN, PB, SC</span>
+                <br />
+                <label>- Para demais serviços relacionados com o sistema da NF-e:  </label>
+                <span id="ctl00_ContentPlaceHolder1_lblUsuarioSVRS_DemServ">AC, AL, AP, CE, DF, ES, PA, PB, PI, RJ, RN, RO, RR, SC, SE, TO</span>
+                <br />
+                <label>Autorizadores em contingência: </label>
+                <br />
+                <label>- UF que utilizam a <span class="fonteMarromBold">SVC-AN</span> - Sefaz Virtual de Contingência Ambiente Nacional:</label>
+                <span id="ctl00_ContentPlaceHolder1_lblUsuariosSVCAN">AC, AL, AP, CE, DF, ES, MG, PA, PB, PI, RJ, RN, RO, RR, RS, SC, SE, SP, TO</span>
+                <br />
+                <label>- UF que utilizam a <span class="fonteMarromBold">SVC-RS</span> - Sefaz Virtual de Contingência Rio Grande do Sul:</label>
+                <span id="ctl00_ContentPlaceHolder1_lblUsuariosSVCRS">AM, BA, GO, MA, MS, MT, PE, PR</span>
+
+                
+            </p>
+            <p>
+                Verificados através de conexões via Internet, as consultas aos serviços são feitas
+                a intervalos regulares, variando com a estabilidade da rede e disponibilidade dos
+                serviços. O Tempo Médio em segundos, extraido do Status do Serviço, indica a média
+                da performance do serviço de processamento dos lotes NFe nos últimos 5 minutos (NI
+                = não informado).
+            </p>
+        </span>
+        <table cellspacing="0" class="tabelaSemaforo">
+            <caption>
+                Legendas da Disponibilidade</caption>
+            <tr>
+                <td class="tdLinhaDireitaEInferior">
+                    <img id="ctl00_ContentPlaceHolder1_imgVermelha" src="imagens/bola_vermelho_G.png" />
+                </td>
+                <td class="tdLinhaInferior">
+                    <span class="fonteMarromBold">Vermelho</span>: quando há respostas negativas seguidas
+                        para uma consulta (falta Serviço ou falha de conexão).<br />
+                    Ocorre após o <span class="fonteBold">Amarelo</span>.<br />
+                    Havendo uma resposta positiva a qualquer momento, o estado <span class="fonteBold">Verde</span>
+                    é retomado.
+                </td>
+            </tr>
+            <tr>
+                <td class="tdLinhaDireitaEInferior">
+                    <img id="ctl00_ContentPlaceHolder1_imgAmarela" src="imagens/bola_amarela_G.png" />
+                </td>
+                <td class="tdLinhaInferior">
+                    <span class="fonteMarromBold">Amarelo</span>: a consulta retornou a primeira resposta
+                        negativa (falta Serviço ou falha de conexão).<br />
+                    Ocorre após o <span class="fonteBold">Verde</span>, permanecendo por até 10 minutos.<br />
+                    &nbsp;Nesse estágio, uma resposta positiva à consulta retorna o estado para <span
+                        class="fonteBold">Verde</span>.<br />
+                    As respostas negativas, ao final do tempo, evoluem o estado para <span class="fonteBold">Vermelho</span>.
+                </td>
+            </tr>
+            <tr>
+                <td class="tdLinhaDireita">
+                    <img id="ctl00_ContentPlaceHolder1_imgVerde" src="imagens/bola_verde_G.png" />
+                </td>
+                <td>
+                    <span class="fonteMarromBold">Verde</span>: a consulta retornou resposta positiva.<br />
+                    Ocorre após qualquer estágio.
+                </td>
+            </tr>
+        </table>
+    </div>
+
+                    </div>
+                </div>
+            </div>
+            <div id="rodape">
+                <div id="sombraRodape">
+                </div>
+                <div id="conteudoRodape">
+                    <div id="menuRodape">
+                        <?xml version="1.0" encoding="utf-8"?><a href="listaSubMenu.aspx?Id=6H4uVlIEaKs=">Conheça a NF-e</a><a href="listaSubMenu.aspx?Id=esCrSQFUvGg=">Serviços</a><a href="listaSubMenu.aspx?Id=ndIjl+iEFdE=">Legislação</a><a href="listaSubMenu.aspx?Id=04BIflQt1aY=">Documentos</a><a href="listaSubMenu.aspx?Id=BMPFMBoln3w=">Downloads</a><a href="https://www.nfe.fazenda.gov.br/arearestrita/inicial/autenticacao.aspx">Área Restrita</a><a href="https://www1.sped.fazenda.gov.br/spednfeacesso/arnfe/inicial/listaSubMenu.aspx?Id=UORZ3ynALMA=">Documentos e outros</a>
+                        <span id="ctl00_lblPortalRodape" class="labelPortalRodape">Portal da NF-e 2026 - Nota Fiscal Eletrônica  v2.9.7.0</span>
+                    </div>
+                    <div id="marcaReceita">
+                        <a href="//www.receita.fazenda.gov.br" target="_blank" class="imgReceita">
+                            <!--img src="imagens/marca_Receita.png" class="imgReceita" alt="Link para o sítio da Receita Federal"/-->
+                            Receita Federal </a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tipoAmbiente">
+                <span id="ctl00_lblAmbiente"></span>
+            </div>
+
+        
+
+<script type="text/javascript">
+//<![CDATA[
+Sys.Application.add_init(function() {
+    $create(AjaxControlToolkit.AutoCompleteBehavior, {"completionListCssClass":"popupBusca","delimiterCharacters":"(),.! ","id":"ctl00_aceAutoCompletarBusca","minimumPrefixLength":1,"serviceMethod":"ListarAutocompletarCampoPesquisar","servicePath":"AutoCompletarBusca.asmx"}, null, null, $get("ctl00_txtPalavraChave"));
+});
+//]]>
+</script>
+</form>
+    </div>
+</body>
+
+</html>

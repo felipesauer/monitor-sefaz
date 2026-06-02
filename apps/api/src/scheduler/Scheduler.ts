@@ -1,8 +1,7 @@
 import cron, { type ScheduledTask } from 'node-cron';
-import { type BatchChecker, type AuthorizerRegistry } from '@monitor-sefaz/core';
-import { toEnvironment, type EnvironmentValue } from '@monitor-sefaz/contracts';
+import { type EnvironmentValue } from '@monitor-sefaz/contracts';
 import type { StatusStore } from '../store/StatusStore.js';
-import { toServiceStatusDTO } from '../store/mappers.js';
+import type { StatusSource } from '../sources/StatusSource.js';
 
 export interface SchedulerOptions {
   readonly cronExpression: string;
@@ -16,9 +15,9 @@ export interface SchedulerLogger {
 }
 
 /**
- * Agenda e executa as rodadas de checagem. Resolve os alvos via registry,
- * consulta em lote, persiste no store e publica os serviços que mudaram de
- * estado (para o fan-out em tempo real). Roda dentro do processo da API.
+ * Agenda e executa as rodadas de checagem. Coleta o status via uma `StatusSource`
+ * (SOAP ou scraping da página oficial), persiste no store e publica os serviços
+ * que mudaram de estado (para o fan-out em tempo real). Roda dentro da API.
  */
 export class Scheduler {
   private task: ScheduledTask | null = null;
@@ -26,8 +25,7 @@ export class Scheduler {
   private readonly lastState = new Map<string, string>();
 
   constructor(
-    private readonly batch: BatchChecker,
-    private readonly registry: AuthorizerRegistry,
+    private readonly source: StatusSource,
     private readonly store: StatusStore,
     private readonly options: SchedulerOptions,
     private readonly logger: SchedulerLogger
@@ -57,9 +55,10 @@ export class Scheduler {
   /** Executa uma única rodada para um ambiente. */
   public async runOnce(env: EnvironmentValue): Promise<void> {
     try {
-      const targets = this.registry.listAll(toEnvironment(env));
-      const results = await this.batch.checkAll(targets);
-      const services = results.map(toServiceStatusDTO);
+      const services = await this.source.collect(env);
+      if (services.length === 0) {
+        return;
+      }
 
       const changed = services.filter((service) => {
         const key = `${env}:${service.id}`;
@@ -72,7 +71,7 @@ export class Scheduler {
       await this.store.publishUpdates(env, changed);
 
       this.logger.info(
-        `Rodada ${env}: ${services.length} serviços, ${changed.length} mudança(s) de estado`
+        `Rodada ${env} [${this.source.name}]: ${services.length} serviços, ${changed.length} mudança(s)`
       );
     } catch (err) {
       this.logger.error(`Falha na rodada ${env}: ${err instanceof Error ? err.message : err}`);

@@ -13,6 +13,9 @@ import { buildApp } from './app.js';
 import { RedisStatusStore } from './store/RedisStatusStore.js';
 import { Scheduler } from './scheduler/Scheduler.js';
 import { StatusBroadcaster } from './realtime/StatusBroadcaster.js';
+import type { StatusSource } from './sources/StatusSource.js';
+import { SoapStatusSource } from './sources/SoapStatusSource.js';
+import { AvailabilityStatusSource } from './sources/AvailabilityStatusSource.js';
 
 /** Entrypoint: conecta o Redis, monta a API e inicia o scheduler de checagens. */
 async function main(): Promise<void> {
@@ -34,12 +37,21 @@ async function main(): Promise<void> {
     };
   }
 
-  const checker = CheckerFactory.create({
-    certificate,
-    options: { timeoutMs: config.timeoutMs },
-  });
-  const batch = new BatchChecker(checker, config.concurrency);
-  const registry = new CatalogAuthorizerRegistry();
+  // Seleciona a fonte de status: scraping da página oficial (padrão, sem cert)
+  // ou consulta SOAP direta (quando há rede/certificado A1).
+  let source: StatusSource;
+  if (config.statusSource === 'soap') {
+    const checker = CheckerFactory.create({
+      certificate,
+      options: { timeoutMs: config.timeoutMs },
+    });
+    source = new SoapStatusSource(
+      new BatchChecker(checker, config.concurrency),
+      new CatalogAuthorizerRegistry()
+    );
+  } else {
+    source = new AvailabilityStatusSource();
+  }
 
   // Diretório do front buildado (apps/web/dist), servido em produção.
   const here = dirname(fileURLToPath(import.meta.url));
@@ -54,8 +66,7 @@ async function main(): Promise<void> {
   });
 
   const scheduler = new Scheduler(
-    batch,
-    registry,
+    source,
     store,
     { cronExpression: config.cronExpression, environments: config.environments },
     { info: (m) => app.log.info(m), error: (m) => app.log.error(m) }

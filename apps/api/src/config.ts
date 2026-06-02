@@ -7,6 +7,12 @@ export interface AppConfig {
   readonly cronExpression: string;
   /** Ambientes a monitorar (por padrão apenas produção). */
   readonly environments: ('producao' | 'homologacao')[];
+  /**
+   * Fonte de status:
+   * - `availability`: scraping da página oficial (pública, sem cert) — padrão.
+   * - `soap`: consulta SOAP direta (exige rede/cert A1).
+   */
+  readonly statusSource: 'availability' | 'soap';
   /** Concorrência de requisições à SEFAZ por lote. */
   readonly concurrency: number;
   /** Timeout por requisição SEFAZ (ms). */
@@ -36,6 +42,7 @@ export function loadConfig(): AppConfig {
     redisUrl: process.env.REDIS_URL ?? 'redis://localhost:6379',
     cronExpression: process.env.CRON_EXPRESSION ?? '*/5 * * * *',
     environments: ['producao'],
+    statusSource: process.env.STATUS_SOURCE === 'soap' ? 'soap' : 'availability',
     concurrency: intEnv('SEFAZ_CONCURRENCY', 5),
     timeoutMs: intEnv('SEFAZ_TIMEOUT_MS', 15_000),
     historyRetentionMs: intEnv('HISTORY_RETENTION_MS', 72 * 60 * 60 * 1000),

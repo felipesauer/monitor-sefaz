@@ -28,6 +28,13 @@ apps/
   web/         React + Vite: dashboard (TanStack Query + EventSource)
 ```
 
+- **Fonte de status (híbrida):**
+  - `availability` (padrão) — scraping da **página oficial de disponibilidade**
+    da SEFAZ (`disponibilidade.aspx`), pública e que **não exige certificado A1**;
+    funciona em qualquer rede. É a mesma fonte usada por monitores públicos.
+  - `soap` — consulta SOAP direta aos webservices (cStat, latência e tMed reais
+    por endpoint), porém exige saída de rede e, em vários autorizadores,
+    **certificado A1** (mTLS). Selecione com `STATUS_SOURCE=soap`.
 - **Persistência:** somente **Redis** — snapshot atual (HASH) + histórico curto
   (ZSET, podado por retenção) + pub/sub para tempo real. Sem banco relacional.
 - **Tempo real:** o scheduler publica deltas no Redis; a API faz fan-out via
