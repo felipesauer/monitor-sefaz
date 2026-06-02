@@ -8,11 +8,19 @@ export {
   NFeStatusEnvelopeBuilder,
   NFCeStatusEnvelopeBuilder,
 } from './envelopes/NFeStatusEnvelopeBuilder.js';
+export { CTeStatusEnvelopeBuilder } from './envelopes/CTeStatusEnvelopeBuilder.js';
+export { MDFeStatusEnvelopeBuilder } from './envelopes/MDFeStatusEnvelopeBuilder.js';
+export { DCeStatusEnvelopeBuilder } from './envelopes/DCeStatusEnvelopeBuilder.js';
 
 // Parsers
 export type { ResponseParser, ParsedStatus } from './parsers/ResponseParser.js';
 export { AbstractRetConsParser } from './parsers/AbstractRetConsParser.js';
 export { NFeStatusParser, NFCeStatusParser } from './parsers/NFeStatusParser.js';
+export {
+  CTeStatusParser,
+  MDFeStatusParser,
+  DCeStatusParser,
+} from './parsers/DocumentStatusParsers.js';
 
 // Checker
 export type { SoapClient, SoapResponse, SoapRequestOptions } from './checker/SoapClient.js';

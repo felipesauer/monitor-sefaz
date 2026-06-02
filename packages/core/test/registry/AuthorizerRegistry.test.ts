@@ -25,11 +25,29 @@ describe('CatalogAuthorizerRegistry', () => {
     expect(target?.authorizer).toBe('SVAN');
   });
 
-  it('listAll retorna ao menos os serviços de NF-e e NFC-e cadastrados', () => {
+  it('resolve CT-e de MG no autorizador próprio e de AC no SVRS', () => {
+    expect(registry.resolve(DocumentType.CTe, 'MG', Environment.Production)?.authorizer).toBe('MG');
+    expect(registry.resolve(DocumentType.CTe, 'AC', Environment.Production)?.authorizer).toBe('SVRS');
+  });
+
+  it('resolve MDF-e e DC-e centralizados no SVRS', () => {
+    expect(registry.resolve(DocumentType.MDFe, 'SP', Environment.Production)?.authorizer).toBe('SVRS');
+    expect(registry.resolve(DocumentType.DCe, 'SP', Environment.Production)?.authorizer).toBe('SVRS');
+  });
+
+  it('listAll cobre NF-e e NFC-e (27 cada) e inclui os 5 documentos', () => {
     const all = registry.listAll(Environment.Production);
-    const nfe = all.filter((t) => t.document === DocumentType.NFe);
-    const nfce = all.filter((t) => t.document === DocumentType.NFCe);
-    expect(nfe.length).toBe(27);
-    expect(nfce.length).toBe(27);
+    expect(all.filter((t) => t.document === DocumentType.NFe)).toHaveLength(27);
+    expect(all.filter((t) => t.document === DocumentType.NFCe)).toHaveLength(27);
+    const documents = new Set(all.map((t) => t.document));
+    expect(documents).toEqual(
+      new Set([
+        DocumentType.NFe,
+        DocumentType.NFCe,
+        DocumentType.CTe,
+        DocumentType.MDFe,
+        DocumentType.DCe,
+      ])
+    );
   });
 });

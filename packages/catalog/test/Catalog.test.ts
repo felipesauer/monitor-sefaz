@@ -29,7 +29,14 @@ describe('Catalog', () => {
     expect(entry?.url).toContain('homologacao');
   });
 
-  it('retorna null para documento sem endpoints cadastrados (CT-e na Fase 1)', () => {
-    expect(catalog.resolve(DocumentType.CTe, 'SP', Environment.Production)).toBeNull();
+  it('resolve CT-e de SP no autorizador próprio', () => {
+    const entry = catalog.resolve(DocumentType.CTe, 'SP', Environment.Production);
+    expect(entry?.authorizer).toBe('SP');
+    expect(entry?.url).toContain('CTeStatusServico');
+  });
+
+  it('centraliza MDF-e e DC-e no SVRS', () => {
+    expect(catalog.resolve(DocumentType.MDFe, 'PA', Environment.Production)?.authorizer).toBe('SVRS');
+    expect(catalog.resolve(DocumentType.DCe, 'PA', Environment.Production)?.authorizer).toBe('SVRS');
   });
 });

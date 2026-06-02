@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
+  <soap:Body>
+    <mdfeResultMsg xmlns="http://www.portalfiscal.inf.br/mdfe/wsdl/MDFeStatusServico">
+      <retConsStatServMDFe versao="3.00" xmlns="http://www.portalfiscal.inf.br/mdfe">
+        <tpAmb>1</tpAmb>
+        <verAplic>SVRS</verAplic>
+        <cStat>109</cStat>
+        <xMotivo>Servico Paralisado sem Previsao</xMotivo>
+        <cUF>90</cUF>
+        <dhRecbto>2026-06-02T11:00:00-03:00</dhRecbto>
+      </retConsStatServMDFe>
+    </mdfeResultMsg>
+  </soap:Body>
+</soap:Envelope>

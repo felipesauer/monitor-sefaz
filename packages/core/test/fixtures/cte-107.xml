@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
+  <soap:Body>
+    <cteResultMsg xmlns="http://www.portalfiscal.inf.br/cte/wsdl/CTeStatusServicoV4">
+      <retConsStatServCte versao="4.00" xmlns="http://www.portalfiscal.inf.br/cte">
+        <tpAmb>1</tpAmb>
+        <verAplic>RS20240101</verAplic>
+        <cStat>107</cStat>
+        <xMotivo>Servico em Operacao</xMotivo>
+        <cUF>43</cUF>
+        <dhRecbto>2026-06-02T11:00:00-03:00</dhRecbto>
+        <tMed>2</tMed>
+      </retConsStatServCte>
+    </cteResultMsg>
+  </soap:Body>
+</soap:Envelope>

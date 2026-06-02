@@ -1,6 +1,9 @@
 import { z } from 'zod';
 import { DocumentType, Environment } from '@monitor-sefaz/catalog';
 
+// Reexporta os enums de domínio para que o front consuma tudo de um só pacote.
+export { DocumentType, Environment } from '@monitor-sefaz/catalog';
+
 /** Enum Zod para os tipos de documento. */
 export const documentTypeSchema = z.nativeEnum(DocumentType);
 

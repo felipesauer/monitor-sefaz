@@ -78,6 +78,29 @@ body {
     margin: 1.5rem 0;
 }
 
+.doc-tabs {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    margin: 1.5rem 0 0.5rem;
+}
+
+.doc-tab {
+    background: var(--surface);
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.35rem 0.9rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.doc-tab--active {
+    background: var(--surface-2);
+    color: var(--text);
+    font-weight: 600;
+}
+
 .summary-card {
     background: var(--surface);
     border: 1px solid var(--border);

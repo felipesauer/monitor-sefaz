@@ -45,6 +45,31 @@ function buildNFeAuthorizerMap(): Record<UF, AuthorizerCode> {
 
 const NFE_AUTHORIZERS = buildNFeAuthorizerMap();
 
+/** UFs com autorizador CT-e próprio; as demais delegam ao SVRS. */
+const CTE_OWN_AUTHORIZERS: UF[] = ['MG', 'MS', 'MT', 'PR', 'RS', 'SP'];
+
+function buildCTeAuthorizerMap(): Record<UF, AuthorizerCode> {
+  const map = {} as Record<UF, AuthorizerCode>;
+  for (const uf of ALL_UFS) {
+    map[uf] = CTE_OWN_AUTHORIZERS.includes(uf) ? uf : 'SVRS';
+  }
+  return map;
+}
+
+/**
+ * MDF-e e DC-e são centralizados: todas as UFs são atendidas pelo SVRS.
+ */
+function buildCentralizedSVRSMap(): Record<UF, AuthorizerCode> {
+  const map = {} as Record<UF, AuthorizerCode>;
+  for (const uf of ALL_UFS) {
+    map[uf] = 'SVRS';
+  }
+  return map;
+}
+
+const CTE_AUTHORIZERS = buildCTeAuthorizerMap();
+const CENTRALIZED_SVRS = buildCentralizedSVRSMap();
+
 /**
  * Autorizador padrão usado quando uma UF não está mapeada explicitamente
  * para um documento.
@@ -57,9 +82,9 @@ export const UF_AUTHORIZERS: Readonly<
   // NFC-e segue o mesmo mapeamento de autorizadores da NF-e na consulta de status.
   [DocumentType.NFe]: NFE_AUTHORIZERS,
   [DocumentType.NFCe]: NFE_AUTHORIZERS,
-  [DocumentType.CTe]: {},
-  [DocumentType.MDFe]: {},
-  [DocumentType.DCe]: {},
+  [DocumentType.CTe]: CTE_AUTHORIZERS,
+  [DocumentType.MDFe]: CENTRALIZED_SVRS,
+  [DocumentType.DCe]: CENTRALIZED_SVRS,
 };
 
 /**

@@ -59,13 +59,72 @@ const NFE_ENDPOINTS: DocumentEndpoints = {
 };
 
 /**
+ * Endpoints CT-e (`CTeStatusServico`, v4.00). Estados com autorizador próprio
+ * mantêm sua URL; os demais usam o SVRS. Lista expansível conforme o MOC CT-e.
+ */
+const CTE_ENDPOINTS: DocumentEndpoints = {
+  producao: {
+    MG: 'https://cte.fazenda.mg.gov.br/cte/services/CTeStatusServicoV4',
+    MS: 'https://producao.cte.ms.gov.br/ws/CTeStatusServicoV4',
+    MT: 'https://cte.sefaz.mt.gov.br/ctews2/services/CTeStatusServicoV4',
+    PR: 'https://cte.fazenda.pr.gov.br/cte4/CTeStatusServicoV4',
+    RS: 'https://cte.svrs.rs.gov.br/ws/CTeStatusServico/CTeStatusServico.asmx',
+    SP: 'https://nfe.fazenda.sp.gov.br/CTeWS/WS/CTeStatusServicoV4.asmx',
+    SVRS: 'https://cte.svrs.rs.gov.br/ws/CTeStatusServico/CTeStatusServico.asmx',
+    SVCRS: 'https://cte.svrs.rs.gov.br/ws/CTeStatusServico/CTeStatusServico.asmx',
+    SVCAN: 'https://www.cte.fazenda.gov.br/CTeStatusServicoV4/CTeStatusServicoV4.asmx',
+    AN: 'https://www.cte.fazenda.gov.br/CTeStatusServicoV4/CTeStatusServicoV4.asmx',
+  },
+  homologacao: {
+    MG: 'https://hcte.fazenda.mg.gov.br/cte/services/CTeStatusServicoV4',
+    MS: 'https://homologacao.cte.ms.gov.br/ws/CTeStatusServicoV4',
+    MT: 'https://homologacao.cte.sefaz.mt.gov.br/ctews2/services/CTeStatusServicoV4',
+    PR: 'https://homologacao.cte.fazenda.pr.gov.br/cte4/CTeStatusServicoV4',
+    RS: 'https://cte-homologacao.svrs.rs.gov.br/ws/CTeStatusServico/CTeStatusServico.asmx',
+    SP: 'https://homologacao.nfe.fazenda.sp.gov.br/CTeWS/WS/CTeStatusServicoV4.asmx',
+    SVRS: 'https://cte-homologacao.svrs.rs.gov.br/ws/CTeStatusServico/CTeStatusServico.asmx',
+    SVCRS: 'https://cte-homologacao.svrs.rs.gov.br/ws/CTeStatusServico/CTeStatusServico.asmx',
+    SVCAN: 'https://hom.cte.fazenda.gov.br/CTeStatusServicoV4/CTeStatusServicoV4.asmx',
+    AN: 'https://hom.cte.fazenda.gov.br/CTeStatusServicoV4/CTeStatusServicoV4.asmx',
+  },
+};
+
+/**
+ * Endpoints MDF-e (`MDFeStatusServico`, v3.00). O MDF-e é centralizado: a
+ * maioria das UFs é atendida pelo SVRS, além do ambiente nacional.
+ */
+const MDFE_ENDPOINTS: DocumentEndpoints = {
+  producao: {
+    SVRS: 'https://mdfe.svrs.rs.gov.br/ws/MDFeStatusServico/MDFeStatusServico.asmx',
+    AN: 'https://www.mdfe.fazenda.gov.br/MDFeStatusServico/MDFeStatusServico.asmx',
+  },
+  homologacao: {
+    SVRS: 'https://mdfe-homologacao.svrs.rs.gov.br/ws/MDFeStatusServico/MDFeStatusServico.asmx',
+    AN: 'https://hom.mdfe.fazenda.gov.br/MDFeStatusServico/MDFeStatusServico.asmx',
+  },
+};
+
+/**
+ * Endpoints DC-e (Declaração de Conteúdo eletrônica). Documento novo,
+ * centralizado no SVRS.
+ */
+const DCE_ENDPOINTS: DocumentEndpoints = {
+  producao: {
+    SVRS: 'https://dce.svrs.rs.gov.br/ws/dceStatusServico/dceStatusServico.asmx',
+  },
+  homologacao: {
+    SVRS: 'https://dce-homologacao.svrs.rs.gov.br/ws/dceStatusServico/dceStatusServico.asmx',
+  },
+};
+
+/**
  * Registro de endpoints por documento. NFC-e reaproveita o webservice da NF-e
- * na consulta de status. CT-e/MDF-e/DC-e serão preenchidos na expansão (Fase 4).
+ * na consulta de status.
  */
 export const ENDPOINTS: Readonly<Record<DocumentType, DocumentEndpoints>> = {
   [DocumentType.NFe]: NFE_ENDPOINTS,
   [DocumentType.NFCe]: NFE_ENDPOINTS,
-  [DocumentType.CTe]: { producao: {}, homologacao: {} },
-  [DocumentType.MDFe]: { producao: {}, homologacao: {} },
-  [DocumentType.DCe]: { producao: {}, homologacao: {} },
+  [DocumentType.CTe]: CTE_ENDPOINTS,
+  [DocumentType.MDFe]: MDFE_ENDPOINTS,
+  [DocumentType.DCe]: DCE_ENDPOINTS,
 };

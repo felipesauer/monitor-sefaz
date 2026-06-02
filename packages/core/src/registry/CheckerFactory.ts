@@ -4,8 +4,16 @@ import {
   NFCeStatusEnvelopeBuilder,
   NFeStatusEnvelopeBuilder,
 } from '../envelopes/NFeStatusEnvelopeBuilder.js';
+import { CTeStatusEnvelopeBuilder } from '../envelopes/CTeStatusEnvelopeBuilder.js';
+import { MDFeStatusEnvelopeBuilder } from '../envelopes/MDFeStatusEnvelopeBuilder.js';
+import { DCeStatusEnvelopeBuilder } from '../envelopes/DCeStatusEnvelopeBuilder.js';
 import type { ResponseParser } from '../parsers/ResponseParser.js';
 import { NFCeStatusParser, NFeStatusParser } from '../parsers/NFeStatusParser.js';
+import {
+  CTeStatusParser,
+  DCeStatusParser,
+  MDFeStatusParser,
+} from '../parsers/DocumentStatusParsers.js';
 import { AxiosSoapClient, type SoapClient } from '../checker/SoapClient.js';
 import { StatusClassifier } from '../checker/StatusClassifier.js';
 import { StatusChecker, type StatusCheckerOptions } from '../checker/StatusChecker.js';
@@ -26,12 +34,21 @@ export class CheckerFactory {
     const builders: EnvelopeBuilder[] = [
       new NFeStatusEnvelopeBuilder(),
       new NFCeStatusEnvelopeBuilder(),
+      new CTeStatusEnvelopeBuilder(),
+      new MDFeStatusEnvelopeBuilder(),
+      new DCeStatusEnvelopeBuilder(),
     ];
     return new Map(builders.map((b) => [b.document, b]));
   }
 
   public static parsersByDocument(): Map<DocumentType, ResponseParser> {
-    const parsers: ResponseParser[] = [new NFeStatusParser(), new NFCeStatusParser()];
+    const parsers: ResponseParser[] = [
+      new NFeStatusParser(),
+      new NFCeStatusParser(),
+      new CTeStatusParser(),
+      new MDFeStatusParser(),
+      new DCeStatusParser(),
+    ];
     return new Map(parsers.map((p) => [p.document, p]));
   }
 
