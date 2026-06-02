@@ -2,21 +2,25 @@ import { useMemo, useState } from 'react';
 import type { EnvironmentValue, ServiceStatusDTO } from '@monitor-sefaz/contracts';
 import { useStatusSnapshot, useSummary } from '../hooks/useStatus.js';
 import { useStatusStream } from '../hooks/useStatusStream.js';
-import { EnvironmentToggle } from '../components/EnvironmentToggle.js';
 import { DocumentFilterTabs, type DocumentFilter } from '../components/DocumentFilterTabs.js';
 import { SummaryCards } from '../components/SummaryCards.js';
 import { StatusGrid } from '../components/StatusGrid.js';
 import { StatusLegend } from '../components/StatusLegend.js';
 import { ServiceDetailPanel } from '../components/ServiceDetailPanel.js';
 
+/**
+ * Ambiente monitorado. A fonte pública de disponibilidade da SEFAZ cobre apenas
+ * produção, por isso o dashboard é fixo em produção (sem alternador).
+ */
+const ENV: EnvironmentValue = 'producao';
+
 /** Página principal do dashboard: resumo + grade de status por UF/documento. */
 export function DashboardPage() {
-  const [env, setEnv] = useState<EnvironmentValue>('producao');
   const [docFilter, setDocFilter] = useState<DocumentFilter>('ALL');
   const [selected, setSelected] = useState<ServiceStatusDTO | null>(null);
-  const status = useStatusSnapshot(env);
-  const summary = useSummary(env);
-  useStatusStream(env);
+  const status = useStatusSnapshot(ENV);
+  const summary = useSummary(ENV);
+  useStatusStream(ENV);
 
   const services = useMemo(() => {
     const all = status.data?.services ?? [];
@@ -37,7 +41,6 @@ export function DashboardPage() {
             Status em tempo real dos serviços de documentos fiscais eletrônicos
           </p>
         </div>
-        <EnvironmentToggle value={env} onChange={setEnv} />
       </header>
 
       {summary.data && <SummaryCards summary={summary.data} />}
@@ -56,7 +59,7 @@ export function DashboardPage() {
       )}
 
       {selectedLive && (
-        <ServiceDetailPanel env={env} service={selectedLive} onClose={() => setSelected(null)} />
+        <ServiceDetailPanel env={ENV} service={selectedLive} onClose={() => setSelected(null)} />
       )}
     </main>
   );

@@ -2,12 +2,17 @@
 
 Monitor open-source de disponibilidade, em tempo real, dos webservices da SEFAZ
 para os documentos fiscais eletrônicos brasileiros: **NF-e, NFC-e, CT-e, MDF-e e
-DC-e**, por UF e ambiente.
+DC-e**, por UF.
 
-Inspirado no [monitorsefaz.com.br](https://monitorsefaz.com.br). Consulta o
-serviço de _status do serviço_ de cada autorizador via SOAP, classifica o
-resultado (operacional / instável / indisponível / erro), guarda histórico curto
-e exibe tudo num dashboard que atualiza em tempo real.
+Inspirado no [monitorsefaz.com.br](https://monitorsefaz.com.br). Coleta o status
+de cada autorizador, classifica o resultado (operacional / instável /
+indisponível / erro), guarda histórico curto e exibe tudo num dashboard que
+atualiza em tempo real.
+
+> **Ambiente:** o dashboard monitora **produção**. A fonte pública padrão
+> (página oficial de disponibilidade) só cobre produção; homologação só é
+> alcançável pela consulta SOAP direta (modo `soap`, que exige rede e
+> certificado A1). Por isso a UI não oferece alternador de ambiente.
 
 ## Arquitetura
 

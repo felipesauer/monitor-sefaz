@@ -49,28 +49,6 @@ body {
     font-size: 0.85rem;
 }
 
-.toggle {
-    display: inline-flex;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.toggle__button {
-    background: var(--surface);
-    color: var(--text-dim);
-    border: none;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-    font-size: 0.9rem;
-}
-
-.toggle__button--active {
-    background: var(--surface-2);
-    color: var(--text);
-    font-weight: 600;
-}
-
 .summary-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
