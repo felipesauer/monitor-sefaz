@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <nfeResultMsg xmlns="http://www.portalfiscal.inf.br/nfe/wsdl/NFeStatusServico4">
+      <retConsStatServ versao="4.00" xmlns="http://www.portalfiscal.inf.br/nfe">
+        <tpAmb>1</tpAmb>
+        <verAplic>SP_NFE_PL_009_V4</verAplic>
+        <cStat>107</cStat>
+        <xMotivo>Servico em Operacao</xMotivo>
+        <cUF>35</cUF>
+        <dhRecbto>2026-06-02T11:00:00-03:00</dhRecbto>
+        <tMed>1</tMed>
+      </retConsStatServ>
+    </nfeResultMsg>
+  </soap:Body>
+</soap:Envelope>

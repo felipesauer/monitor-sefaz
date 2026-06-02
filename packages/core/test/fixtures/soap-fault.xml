@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
+  <soap:Body>
+    <soap:Fault>
+      <soap:Code>
+        <soap:Value>soap:Receiver</soap:Value>
+      </soap:Code>
+      <soap:Reason>
+        <soap:Text xml:lang="pt">System.Web.Services.Protocols.SoapException: Erro interno</soap:Text>
+      </soap:Reason>
+      <faultstring>Erro ao processar a mensagem</faultstring>
+    </soap:Fault>
+  </soap:Body>
+</soap:Envelope>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope">
+  <env:Body>
+    <ns2:nfeResultMsg xmlns:ns2="http://www.portalfiscal.inf.br/nfe/wsdl/NFeStatusServico4">
+      <ns3:retConsStatServ versao="4.00" xmlns:ns3="http://www.portalfiscal.inf.br/nfe">
+        <ns3:tpAmb>1</ns3:tpAmb>
+        <ns3:verAplic>SVRS202606</ns3:verAplic>
+        <ns3:cStat>109</ns3:cStat>
+        <ns3:xMotivo>Servico Paralisado sem Previsao</ns3:xMotivo>
+        <ns3:cUF>90</ns3:cUF>
+        <ns3:dhRecbto>2026-06-02T11:10:00-03:00</ns3:dhRecbto>
+      </ns3:retConsStatServ>
+    </ns2:nfeResultMsg>
+  </env:Body>
+</env:Envelope>

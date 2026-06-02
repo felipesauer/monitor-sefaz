@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
+  <soap:Body>
+    <nfeResultMsg xmlns="http://www.portalfiscal.inf.br/nfe/wsdl/NFeStatusServico4">
+      <retConsStatServ versao="4.00" xmlns="http://www.portalfiscal.inf.br/nfe">
+        <tpAmb>1</tpAmb>
+        <verAplic>RS_V4</verAplic>
+        <cStat>108</cStat>
+        <xMotivo>Servico Paralisado Momentaneamente</xMotivo>
+        <cUF>43</cUF>
+        <dhRecbto>2026-06-02T11:05:00-03:00</dhRecbto>
+        <tMed>3</tMed>
+      </retConsStatServ>
+    </nfeResultMsg>
+  </soap:Body>
+</soap:Envelope>
