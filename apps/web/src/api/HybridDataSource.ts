@@ -4,7 +4,7 @@ import type {
   StatusSnapshotDTO,
   SummaryDTO,
 } from '@monitor-sefaz/contracts';
-import type { DataSource, StatusFilters } from './DataSource.js';
+import type { DataSource, HistorySeries, StatusFilters } from './DataSource.js';
 
 /**
  * Combina duas fontes: status/summary vêm da fonte AO VIVO (Worker/API), e o
@@ -29,5 +29,9 @@ export class HybridDataSource implements DataSource {
 
   public getHistory(id: string, period: HistoryPeriod): Promise<HistoryResponseDTO> {
     return this.history.getHistory(id, period);
+  }
+
+  public getHistorySeries(): Promise<HistorySeries> {
+    return this.history.getHistorySeries();
   }
 }

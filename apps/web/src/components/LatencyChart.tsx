@@ -1,40 +1,78 @@
+import {
+  Area,
+  AreaChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 import type { HistoryPointDTO } from '@monitor-sefaz/contracts';
 
 interface LatencyChartProps {
   points: HistoryPointDTO[];
 }
 
-const WIDTH = 600;
-const HEIGHT = 120;
-const PADDING = 4;
-
-/** Gráfico de linha simples (SVG) da latência ao longo do tempo. */
+/** Gráfico de área (Recharts) da latência ao longo do tempo. */
 export function LatencyChart({ points }: LatencyChartProps) {
-  const operational = points.filter((p) => p.latencyMs > 0);
-  if (operational.length < 2) {
-    return <p className="muted">Dados insuficientes para o gráfico de latência.</p>;
+  const data = points
+    .filter((p) => p.latencyMs > 0)
+    .map((p) => ({
+      t: new Date(p.timestamp).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+      ms: p.latencyMs,
+    }));
+
+  if (data.length < 2) {
+    return (
+      <p className="text-xs" style={{ color: 'var(--text-dim)' }}>
+        Dados insuficientes para o gráfico de latência.
+      </p>
+    );
   }
 
-  const max = Math.max(...operational.map((p) => p.latencyMs));
-  const stepX = (WIDTH - PADDING * 2) / (operational.length - 1);
-
-  const path = operational
-    .map((point, index) => {
-      const x = PADDING + index * stepX;
-      const y = HEIGHT - PADDING - (point.latencyMs / max) * (HEIGHT - PADDING * 2);
-      return `${index === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`;
-    })
-    .join(' ');
-
   return (
-    <svg
-      className="latency-chart"
-      viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-      preserveAspectRatio="none"
-      role="img"
-      aria-label={`Latência ao longo do tempo, máximo ${max}ms`}
-    >
-      <path d={path} fill="none" stroke="#38bdf8" strokeWidth={2} />
-    </svg>
+    <div className="h-40 w-full">
+      <ResponsiveContainer width="100%" height="100%">
+        <AreaChart data={data} margin={{ top: 6, right: 6, bottom: 0, left: -16 }}>
+          <defs>
+            <linearGradient id="lat-grad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="var(--accent)" stopOpacity={0.35} />
+              <stop offset="100%" stopColor="var(--accent)" stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <XAxis
+            dataKey="t"
+            tick={{ fontSize: 10, fill: 'var(--text-dim)' }}
+            tickLine={false}
+            axisLine={false}
+            minTickGap={24}
+          />
+          <YAxis
+            tick={{ fontSize: 10, fill: 'var(--text-dim)' }}
+            tickLine={false}
+            axisLine={false}
+            width={44}
+            unit="ms"
+          />
+          <Tooltip
+            contentStyle={{
+              background: 'var(--surface)',
+              border: '1px solid var(--border)',
+              borderRadius: 8,
+              fontSize: 12,
+            }}
+            labelStyle={{ color: 'var(--text-dim)' }}
+            formatter={(v: number) => [`${v} ms`, 'Latência']}
+          />
+          <Area
+            type="monotone"
+            dataKey="ms"
+            stroke="var(--accent)"
+            strokeWidth={2}
+            fill="url(#lat-grad)"
+            isAnimationActive={false}
+          />
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
   );
 }

@@ -6,10 +6,17 @@ const STATES: ServiceStateValue[] = ['OPERATIONAL', 'SLOWDOWN', 'DOWN', 'ERROR']
 /** Legenda das cores usadas na grade de status. */
 export function StatusLegend() {
   return (
-    <div className="legend" aria-label="Legenda de estados">
+    <div
+      className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs"
+      style={{ color: 'var(--text-dim)' }}
+      aria-label="Legenda de estados"
+    >
       {STATES.map((state) => (
-        <span className="legend__item" key={state}>
-          <span className="legend__swatch" style={{ backgroundColor: STATE_META[state].color }} />
+        <span className="inline-flex items-center gap-1.5" key={state}>
+          <span
+            className="inline-block h-2.5 w-2.5 rounded-full"
+            style={{ background: STATE_META[state].color }}
+          />
           {STATE_META[state].label}
         </span>
       ))}

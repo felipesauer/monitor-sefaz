@@ -37,8 +37,12 @@ export function UpdateInfo({ generatedAt, refreshIntervalMs }: UpdateInfoProps) 
   const remaining = refreshIntervalMs - (elapsed % refreshIntervalMs);
 
   return (
-    <p className="update-info">
-      <span className="update-info__dot" aria-hidden />
+    <p className="-mt-1 flex items-center gap-2 text-xs" style={{ color: 'var(--text-dim)' }}>
+      <span
+        aria-hidden
+        className="inline-block h-2 w-2 rounded-full"
+        style={{ background: 'var(--ok)', animation: 'ping 2s ease-in-out infinite' }}
+      />
       Atualizado há {formatRelative(elapsed)} · próxima em ~{formatRelative(remaining)}
     </p>
   );

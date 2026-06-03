@@ -1,9 +1,13 @@
 import type {
   HistoryPeriod,
+  HistoryPointDTO,
   HistoryResponseDTO,
   StatusSnapshotDTO,
   SummaryDTO,
 } from '@monitor-sefaz/contracts';
+
+/** Mapa `id do serviço` → série de pontos, usado para os sparklines dos cards. */
+export type HistorySeries = Record<string, HistoryPointDTO[]>;
 
 /** Filtros opcionais aplicados à consulta de status. */
 export interface StatusFilters {
@@ -21,6 +25,8 @@ export interface DataSource {
   getStatus(filters?: StatusFilters): Promise<StatusSnapshotDTO>;
   getSummary(): Promise<SummaryDTO>;
   getHistory(id: string, period: HistoryPeriod): Promise<HistoryResponseDTO>;
+  /** Todas as séries de uma vez (para os sparklines dos cards). */
+  getHistorySeries(): Promise<HistorySeries>;
 }
 
 export async function fetchJson(url: string): Promise<unknown> {

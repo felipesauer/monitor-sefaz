@@ -7,7 +7,12 @@ import {
   type StatusSnapshotDTO,
   type SummaryDTO,
 } from '@monitor-sefaz/contracts';
-import { fetchJson, type DataSource, type StatusFilters } from './DataSource.js';
+import {
+  fetchJson,
+  type DataSource,
+  type HistorySeries,
+  type StatusFilters,
+} from './DataSource.js';
 
 /**
  * Fonte ao vivo: consome a API REST (servidor Fastify self-host ou Cloudflare
@@ -35,5 +40,15 @@ export class ApiDataSource implements DataSource {
         `${this.baseUrl}/api/v1/services/${encodeURIComponent(id)}/history?period=${period}`
       )
     );
+  }
+
+  /**
+   * A API/Worker não expõe todas as séries num único endpoint (seria caro). No
+   * uso padrão (GitHub Pages), o histórico vem do `HybridDataSource`, que delega
+   * isto à fonte estática. Aqui retornamos vazio — os cards apenas omitem o
+   * sparkline no modo self-host puro.
+   */
+  public async getHistorySeries(): Promise<HistorySeries> {
+    return {};
   }
 }

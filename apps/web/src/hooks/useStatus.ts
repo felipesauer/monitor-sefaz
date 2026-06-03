@@ -1,26 +1,27 @@
 import { useQuery } from '@tanstack/react-query';
 import type { HistoryPeriod } from '@monitor-sefaz/contracts';
-import { dataSource, type StatusFilters } from '../api/index.js';
+import { dataSource } from '../api/index.js';
 
 /**
- * Intervalo de polling. Substitui o SSE no modo estático (GitHub Pages, sem
- * servidor persistente); no modo API/Worker também mantém o dado fresco.
+ * Intervalo de polling padrão. Substitui o SSE no modo estático (GitHub Pages,
+ * sem servidor persistente); no modo API/Worker também mantém o dado fresco.
  */
 export const POLL_INTERVAL_MS = 60_000;
 
-export function useStatusSnapshot(filters: StatusFilters = {}) {
+/** `false` pausa o polling (controle de auto-refresh no header). */
+export function useStatusSnapshot(refreshMs: number | false = POLL_INTERVAL_MS) {
   return useQuery({
-    queryKey: ['status', filters.document ?? null, filters.uf ?? null],
-    queryFn: () => dataSource.getStatus(filters),
-    refetchInterval: POLL_INTERVAL_MS,
+    queryKey: ['status'],
+    queryFn: () => dataSource.getStatus(),
+    refetchInterval: refreshMs,
   });
 }
 
-export function useSummary() {
+export function useSummary(refreshMs: number | false = POLL_INTERVAL_MS) {
   return useQuery({
     queryKey: ['summary'],
     queryFn: () => dataSource.getSummary(),
-    refetchInterval: POLL_INTERVAL_MS,
+    refetchInterval: refreshMs,
   });
 }
 
@@ -28,5 +29,15 @@ export function useServiceHistory(id: string, period: HistoryPeriod) {
   return useQuery({
     queryKey: ['history', id, period],
     queryFn: () => dataSource.getHistory(id, period),
+  });
+}
+
+/** Todas as séries (para os sparklines dos cards). Atualiza mais devagar. */
+export function useHistorySeries() {
+  return useQuery({
+    queryKey: ['history-series'],
+    queryFn: () => dataSource.getHistorySeries(),
+    refetchInterval: POLL_INTERVAL_MS * 5,
+    staleTime: POLL_INTERVAL_MS,
   });
 }

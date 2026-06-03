@@ -7,7 +7,12 @@ import {
   type StatusSnapshotDTO,
   type SummaryDTO,
 } from '@monitor-sefaz/contracts';
-import { fetchJson, type DataSource, type StatusFilters } from './DataSource.js';
+import {
+  fetchJson,
+  type DataSource,
+  type HistorySeries,
+  type StatusFilters,
+} from './DataSource.js';
 
 const PERIOD_MS: Record<HistoryPeriod, number> = {
   '1h': 60 * 60 * 1000,
@@ -47,5 +52,10 @@ export class StaticDataSource implements DataSource {
     const cutoff = Date.parse(file.updatedAt) - PERIOD_MS[period];
     const points = all.filter((p) => Date.parse(p.timestamp) >= cutoff);
     return { id, period, points };
+  }
+
+  public async getHistorySeries(): Promise<HistorySeries> {
+    const file = historyFileSchema.parse(await fetchJson(`${this.base}data/history.json`));
+    return file.series;
   }
 }
