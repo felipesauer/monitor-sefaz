@@ -34,8 +34,13 @@ jobs:
 
       - name: Build SPA
         # BASE_PATH = "/<repo>/" para Pages de projeto.
-        # VITE_API_BASE_URL vazio → SPA usa os JSONs estáticos versionados.
-        run: BASE_PATH="/${GITHUB_REPOSITORY#*/}/" pnpm --filter "@monitor-sefaz/web..." build
+        # VITE_API_BASE_URL → SPA consome o Cloudflare Worker ao vivo. A URL vem
+        # da variável de repositório WORKER_URL (Settings → Variables); se ausente,
+        # cai para os JSONs estáticos versionados.
+        env:
+          BASE_PATH: /${{ github.event.repository.name }}/
+          VITE_API_BASE_URL: ${{ vars.WORKER_URL }}
+        run: pnpm --filter "@monitor-sefaz/web..." build
 
       - uses: actions/upload-pages-artifact@v3
         with:

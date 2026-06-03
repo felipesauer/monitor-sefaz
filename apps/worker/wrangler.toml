@@ -3,5 +3,7 @@ main = "src/index.ts"
 compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat"]
 
-# Deploy: `pnpm --filter @monitor-sefaz/worker deploy` (requer `wrangler login`).
+# Deploy: `pnpm --filter @monitor-sefaz/worker exec wrangler deploy`
+#   (use `exec wrangler deploy`, não `pnpm deploy` — o pnpm tem um comando
+#    nativo `deploy` que intercepta o script). Requer `wrangler login`.
 # A SPA aponta para a URL pública deste worker via VITE_API_BASE_URL.
