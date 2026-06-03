@@ -4,7 +4,10 @@ name: Coletar status SEFAZ
 # commita os JSONs em apps/web/public/data/ — consumidos pela SPA no GitHub Pages.
 on:
   schedule:
-    - cron: '*/15 * * * *' # a cada 15 minutos
+    # A cada 30 min, nos minutos 7 e 37 — fora do minuto 0 (mais concorrido na
+    # fila do GitHub). O cron do Actions é best-effort: intervalos maiores e
+    # deslocados da hora cheia são honrados de forma mais consistente que */15.
+    - cron: '7,37 * * * *'
   workflow_dispatch: {}
 
 permissions:
