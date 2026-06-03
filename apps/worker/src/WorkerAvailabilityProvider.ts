@@ -25,11 +25,29 @@ export class WorkerAvailabilityProvider {
   }
 
   public async fetch(document: DocumentType): Promise<AvailabilityRow[]> {
-    const url = AVAILABILITY_URLS[document];
-    if (!url) {
+    const urls = AVAILABILITY_URLS[document];
+    if (!urls || urls.length === 0) {
       return [];
     }
+    // Tenta cada URL (primária + fallbacks: ex. www. → hom.) até obter dados.
+    let lastError: unknown;
+    for (const url of urls) {
+      try {
+        const rows = await this.fetchOne(url);
+        if (rows.length > 0) {
+          return rows;
+        }
+      } catch (err) {
+        lastError = err;
+      }
+    }
+    if (lastError) {
+      throw lastError instanceof Error ? lastError : new Error(String(lastError));
+    }
+    return [];
+  }
 
+  private async fetchOne(url: string): Promise<AvailabilityRow[]> {
     const headers: Record<string, string> = {
       'User-Agent': BROWSER_UA,
       Accept: 'text/html,application/xhtml+xml',
@@ -41,10 +59,16 @@ export class WorkerAvailabilityProvider {
 
     if (response.status === 301 || response.status === 302) {
       const cookie = this.extractCookies(response.headers);
-      const location = response.headers.get('location') ?? url;
-      const next = new URL(location, url).toString();
-      const retryHeaders = cookie ? { ...headers, Cookie: cookie } : headers;
-      response = await fetch(next, { headers: retryHeaders });
+      if (cookie) {
+        // Reenvia para a URL ORIGINAL (limpa) com o cookie. NÃO seguir o
+        // `location` (que traz `?AspxAutoDetectCookieSupport=1` e devolve uma
+        // página intermediária sem a tabela). Com cookie + URL limpa, o ASP.NET
+        // serve a página real.
+        response = await fetch(url, { headers: { ...headers, Cookie: cookie } });
+      } else {
+        const location = response.headers.get('location') ?? url;
+        response = await fetch(new URL(location, url).toString(), { headers });
+      }
     }
 
     const html = await response.text();

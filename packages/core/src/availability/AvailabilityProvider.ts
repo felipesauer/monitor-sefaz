@@ -4,11 +4,28 @@ import { CookieJar } from 'tough-cookie';
 import { DocumentType } from '@monitor-sefaz/catalog';
 import { AvailabilityParser, type AvailabilityRow } from './AvailabilityParser.js';
 
-/** URLs das páginas oficiais de disponibilidade por documento. */
-export const AVAILABILITY_URLS: Partial<Record<DocumentType, string>> = {
-  [DocumentType.NFe]: 'https://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx',
-  [DocumentType.NFCe]: 'https://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx',
-  [DocumentType.CTe]: 'https://www.cte.fazenda.gov.br/portal/disponibilidade.aspx',
+/**
+ * URLs das páginas oficiais de disponibilidade por documento, em ordem de
+ * preferência. Cada documento tem uma ou mais URLs; o provider tenta a próxima
+ * quando a anterior falha ou não traz dados.
+ *
+ * Os portais `www.` e `hom.` servem a MESMA tabela de disponibilidade (status
+ * real de produção). Mantemos ambos porque a SEFAZ ocasionalmente retorna uma
+ * página de erro (`erro.aspx`) em um deles — o fallback dá resiliência.
+ */
+export const AVAILABILITY_URLS: Partial<Record<DocumentType, readonly string[]>> = {
+  [DocumentType.NFe]: [
+    'https://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx',
+    'https://hom.nfe.fazenda.gov.br/portal/disponibilidade.aspx',
+  ],
+  [DocumentType.NFCe]: [
+    'https://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx',
+    'https://hom.nfe.fazenda.gov.br/portal/disponibilidade.aspx',
+  ],
+  [DocumentType.CTe]: [
+    'https://www.cte.fazenda.gov.br/portal/disponibilidade.aspx',
+    'https://hom.cte.fazenda.gov.br/portal/disponibilidade.aspx',
+  ],
 };
 
 const BROWSER_UA =
@@ -54,28 +71,31 @@ export class HttpAvailabilityProvider {
   }
 
   /**
-   * Busca e parseia a tabela de disponibilidade de um documento, com algumas
-   * tentativas — a SEFAZ ocasionalmente recusa a conexão de forma intermitente,
-   * e não queremos que um documento "suma" do snapshot por uma falha pontual.
+   * Busca e parseia a tabela de disponibilidade de um documento. Tenta cada URL
+   * (primária e fallbacks) em sequência; dentro de cada URL, repete algumas
+   * vezes — a SEFAZ ocasionalmente devolve `erro.aspx` ou recusa a conexão de
+   * forma intermitente, e não queremos que um documento "suma" do snapshot.
    */
-  public async fetch(document: DocumentType, attempts = 3): Promise<AvailabilityRow[]> {
-    const url = AVAILABILITY_URLS[document];
-    if (!url) {
+  public async fetch(document: DocumentType, attemptsPerUrl = 2): Promise<AvailabilityRow[]> {
+    const urls = AVAILABILITY_URLS[document];
+    if (!urls || urls.length === 0) {
       return [];
     }
 
     let lastError: unknown;
-    for (let attempt = 1; attempt <= attempts; attempt += 1) {
-      try {
-        const response = await this.http.get<ArrayBuffer>(url);
-        const html = Buffer.from(response.data).toString('latin1');
-        const rows = this.parser.parse(html);
-        if (rows.length > 0) {
-          return rows;
+    for (const url of urls) {
+      for (let attempt = 1; attempt <= attemptsPerUrl; attempt += 1) {
+        try {
+          const response = await this.http.get<ArrayBuffer>(url);
+          const html = Buffer.from(response.data).toString('latin1');
+          const rows = this.parser.parse(html);
+          if (rows.length > 0) {
+            return rows;
+          }
+          lastError = new Error(`resposta sem linhas de status (HTTP ${response.status})`);
+        } catch (err) {
+          lastError = err;
         }
-        lastError = new Error(`resposta sem linhas de status (HTTP ${response.status})`);
-      } catch (err) {
-        lastError = err;
       }
     }
     throw lastError instanceof Error ? lastError : new Error(String(lastError));
