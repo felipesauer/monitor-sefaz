@@ -1,8 +1,9 @@
 import { useMemo, useState } from 'react';
 import type { ServiceStatusDTO } from '@monitor-sefaz/contracts';
-import { useStatusSnapshot, useSummary } from '../hooks/useStatus.js';
+import { useStatusSnapshot, useSummary, POLL_INTERVAL_MS } from '../hooks/useStatus.js';
 import { useTheme } from '../hooks/useTheme.js';
 import { GlobalBanner } from '../components/GlobalBanner.js';
+import { UpdateInfo } from '../components/UpdateInfo.js';
 import { DocumentFilterTabs, type DocumentFilter } from '../components/DocumentFilterTabs.js';
 import { SummaryCards } from '../components/SummaryCards.js';
 import { ServiceList } from '../components/ServiceList.js';
@@ -48,6 +49,12 @@ export function DashboardPage() {
       </header>
 
       {summary.data && <GlobalBanner summary={summary.data} />}
+      {status.data && (
+        <UpdateInfo
+          generatedAt={status.data.generatedAt}
+          refreshIntervalMs={POLL_INTERVAL_MS}
+        />
+      )}
       {summary.data && <SummaryCards summary={summary.data} />}
 
       <DocumentFilterTabs value={docFilter} onChange={setDocFilter} />

@@ -1,19 +1,22 @@
 import type { DataSource } from './DataSource.js';
 import { ApiDataSource } from './ApiDataSource.js';
 import { StaticDataSource } from './StaticDataSource.js';
+import { HybridDataSource } from './HybridDataSource.js';
 
 /**
  * Seleciona a fonte de dados em build/runtime:
- * - Se `VITE_API_BASE_URL` estiver definida → consome a API/Worker ao vivo.
- * - Caso contrário → lê os JSONs estáticos versionados (modo GitHub Pages),
- *   relativos ao `BASE_URL` da aplicação.
+ * - Com `VITE_API_BASE_URL` → status/summary AO VIVO do Worker/API, mas o
+ *   histórico vem do JSON estático (o Worker é stateless, sem acúmulo).
+ * - Sem ela → tudo dos JSONs estáticos versionados (modo GitHub Pages).
  */
 export function createDataSource(): DataSource {
   const apiBase = import.meta.env.VITE_API_BASE_URL?.trim();
+  const base = import.meta.env.BASE_URL ?? '/';
+  const staticSource = new StaticDataSource(base);
   if (apiBase) {
-    return new ApiDataSource(apiBase.replace(/\/$/, ''));
+    return new HybridDataSource(new ApiDataSource(apiBase.replace(/\/$/, '')), staticSource);
   }
-  return new StaticDataSource(import.meta.env.BASE_URL ?? '/');
+  return staticSource;
 }
 
 export const dataSource = createDataSource();

@@ -6,7 +6,7 @@ import { dataSource, type StatusFilters } from '../api/index.js';
  * Intervalo de polling. Substitui o SSE no modo estático (GitHub Pages, sem
  * servidor persistente); no modo API/Worker também mantém o dado fresco.
  */
-const POLL_INTERVAL_MS = 60_000;
+export const POLL_INTERVAL_MS = 60_000;
 
 export function useStatusSnapshot(filters: StatusFilters = {}) {
   return useQuery({
