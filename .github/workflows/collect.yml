@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: write
+  actions: write # para disparar o deploy do Pages após commitar os dados
 
 concurrency:
   group: collect
@@ -41,7 +42,19 @@ jobs:
           git add apps/web/public/data
           if git diff --cached --quiet; then
             echo "Sem mudanças nos dados."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             git commit -m "chore(data): atualiza status SEFAZ [skip ci]"
             git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
+        id: commit
+
+      # O commit acima usa [skip ci] (evita loop), o que também impede o deploy
+      # automático. Quando houve mudança, disparamos o deploy do Pages
+      # explicitamente para republicar o history.json atualizado.
+      - name: Republicar SPA (history.json)
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy-pages.yml --ref main
