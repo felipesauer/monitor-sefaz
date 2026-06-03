@@ -5,27 +5,20 @@ import { DocumentType } from '@monitor-sefaz/catalog';
 import { AvailabilityParser, type AvailabilityRow } from './AvailabilityParser.js';
 
 /**
- * URLs das páginas oficiais de disponibilidade por documento, em ordem de
- * preferência. Cada documento tem uma ou mais URLs; o provider tenta a próxima
- * quando a anterior falha ou não traz dados.
+ * URLs das páginas oficiais de disponibilidade de PRODUÇÃO, por documento, em
+ * ordem de preferência. Cada documento aceita uma ou mais URLs; o provider
+ * tenta a próxima quando a anterior falha ou não traz dados.
  *
- * Os portais `www.` e `hom.` servem a MESMA tabela de disponibilidade (status
- * real de produção). Mantemos ambos porque a SEFAZ ocasionalmente retorna uma
- * página de erro (`erro.aspx`) em um deles — o fallback dá resiliência.
+ * IMPORTANTE: só entram aqui fontes de **produção**. Os portais `hom.` mostram
+ * a disponibilidade do ambiente de HOMOLOGAÇÃO — status independente do de
+ * produção — e por isso NÃO servem como fallback (reportariam o ambiente errado).
+ * Quando a fonte de produção falha (ex.: `erro.aspx` intermitente da SEFAZ), o
+ * documento fica ausente do snapshot e o front o exibe como "Sem dados".
  */
 export const AVAILABILITY_URLS: Partial<Record<DocumentType, readonly string[]>> = {
-  [DocumentType.NFe]: [
-    'https://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx',
-    'https://hom.nfe.fazenda.gov.br/portal/disponibilidade.aspx',
-  ],
-  [DocumentType.NFCe]: [
-    'https://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx',
-    'https://hom.nfe.fazenda.gov.br/portal/disponibilidade.aspx',
-  ],
-  [DocumentType.CTe]: [
-    'https://www.cte.fazenda.gov.br/portal/disponibilidade.aspx',
-    'https://hom.cte.fazenda.gov.br/portal/disponibilidade.aspx',
-  ],
+  [DocumentType.NFe]: ['https://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx'],
+  [DocumentType.NFCe]: ['https://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx'],
+  [DocumentType.CTe]: ['https://www.cte.fazenda.gov.br/portal/disponibilidade.aspx'],
 };
 
 const BROWSER_UA =
@@ -72,11 +65,13 @@ export class HttpAvailabilityProvider {
 
   /**
    * Busca e parseia a tabela de disponibilidade de um documento. Tenta cada URL
-   * (primária e fallbacks) em sequência; dentro de cada URL, repete algumas
-   * vezes — a SEFAZ ocasionalmente devolve `erro.aspx` ou recusa a conexão de
-   * forma intermitente, e não queremos que um documento "suma" do snapshot.
+   * de produção em sequência; dentro de cada uma, repete algumas vezes — a SEFAZ
+   * ocasionalmente devolve `erro.aspx` (página sem a tabela) ou recusa a conexão
+   * de forma intermitente, e o retry evita que um documento "suma" por uma falha
+   * momentânea. Se todas as tentativas falharem, lança (o coletor então omite o
+   * documento, que o front mostra como "Sem dados").
    */
-  public async fetch(document: DocumentType, attemptsPerUrl = 2): Promise<AvailabilityRow[]> {
+  public async fetch(document: DocumentType, attemptsPerUrl = 3): Promise<AvailabilityRow[]> {
     const urls = AVAILABILITY_URLS[document];
     if (!urls || urls.length === 0) {
       return [];

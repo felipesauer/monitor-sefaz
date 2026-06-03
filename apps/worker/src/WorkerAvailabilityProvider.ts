@@ -24,21 +24,25 @@ export class WorkerAvailabilityProvider {
     return Object.keys(AVAILABILITY_URLS) as DocumentType[];
   }
 
-  public async fetch(document: DocumentType): Promise<AvailabilityRow[]> {
+  public async fetch(document: DocumentType, attemptsPerUrl = 3): Promise<AvailabilityRow[]> {
     const urls = AVAILABILITY_URLS[document];
     if (!urls || urls.length === 0) {
       return [];
     }
-    // Tenta cada URL (primária + fallbacks: ex. www. → hom.) até obter dados.
+    // Tenta cada URL de produção, com retries — a SEFAZ devolve `erro.aspx`
+    // (página sem a tabela) de forma intermitente. NÃO há fallback de
+    // homologação: o ambiente é distinto e reportaria status errado.
     let lastError: unknown;
     for (const url of urls) {
-      try {
-        const rows = await this.fetchOne(url);
-        if (rows.length > 0) {
-          return rows;
+      for (let attempt = 1; attempt <= attemptsPerUrl; attempt += 1) {
+        try {
+          const rows = await this.fetchOne(url);
+          if (rows.length > 0) {
+            return rows;
+          }
+        } catch (err) {
+          lastError = err;
         }
-      } catch (err) {
-        lastError = err;
       }
     }
     if (lastError) {
