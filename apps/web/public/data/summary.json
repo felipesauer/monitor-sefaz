@@ -1,11 +1,115 @@
 {
   "environment": "production",
-  "generatedAt": "2026-06-04T22:11:19.681Z",
-  "total": 0,
-  "operational": 0,
+  "generatedAt": "2026-06-04T23:48:58.057Z",
+  "total": 135,
+  "operational": 135,
   "failing": 0,
-  "availability": 0,
-  "avgLatencyMs": null,
-  "byDocument": [],
-  "byAuthorizer": []
+  "availability": 100,
+  "avgLatencyMs": 1314,
+  "byDocument": [
+    {
+      "key": "CTe",
+      "total": 27,
+      "operational": 27,
+      "availability": 100
+    },
+    {
+      "key": "DCe",
+      "total": 27,
+      "operational": 27,
+      "availability": 100
+    },
+    {
+      "key": "MDFe",
+      "total": 27,
+      "operational": 27,
+      "availability": 100
+    },
+    {
+      "key": "NFCe",
+      "total": 27,
+      "operational": 27,
+      "availability": 100
+    },
+    {
+      "key": "NFe",
+      "total": 27,
+      "operational": 27,
+      "availability": 100
+    }
+  ],
+  "byAuthorizer": [
+    {
+      "key": "AM",
+      "total": 2,
+      "operational": 2,
+      "availability": 100
+    },
+    {
+      "key": "BA",
+      "total": 1,
+      "operational": 1,
+      "availability": 100
+    },
+    {
+      "key": "GO",
+      "total": 2,
+      "operational": 2,
+      "availability": 100
+    },
+    {
+      "key": "MG",
+      "total": 3,
+      "operational": 3,
+      "availability": 100
+    },
+    {
+      "key": "MS",
+      "total": 3,
+      "operational": 3,
+      "availability": 100
+    },
+    {
+      "key": "MT",
+      "total": 3,
+      "operational": 3,
+      "availability": 100
+    },
+    {
+      "key": "PE",
+      "total": 1,
+      "operational": 1,
+      "availability": 100
+    },
+    {
+      "key": "PR",
+      "total": 3,
+      "operational": 3,
+      "availability": 100
+    },
+    {
+      "key": "RS",
+      "total": 3,
+      "operational": 3,
+      "availability": 100
+    },
+    {
+      "key": "SP",
+      "total": 3,
+      "operational": 3,
+      "availability": 100
+    },
+    {
+      "key": "SVAN",
+      "total": 1,
+      "operational": 1,
+      "availability": 100
+    },
+    {
+      "key": "SVRS",
+      "total": 110,
+      "operational": 110,
+      "availability": 100
+    }
+  ]
 }
