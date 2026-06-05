@@ -1,11 +1,11 @@
 {
   "environment": "production",
-  "generatedAt": "2026-06-05T12:18:45.999Z",
+  "generatedAt": "2026-06-05T15:38:24.242Z",
   "total": 135,
-  "operational": 134,
-  "failing": 1,
-  "availability": 99.3,
-  "avgLatencyMs": 1644,
+  "operational": 135,
+  "failing": 0,
+  "availability": 100,
+  "avgLatencyMs": 1221,
   "byDocument": [
     {
       "key": "CTe",
@@ -34,8 +34,8 @@
     {
       "key": "NFe",
       "total": 27,
-      "operational": 26,
-      "availability": 96.3
+      "operational": 27,
+      "availability": 100
     }
   ],
   "byAuthorizer": [
@@ -78,8 +78,8 @@
     {
       "key": "PE",
       "total": 1,
-      "operational": 0,
-      "availability": 0
+      "operational": 1,
+      "availability": 100
     },
     {
       "key": "PR",
