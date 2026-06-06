@@ -1,17 +1,17 @@
 {
   "environment": "production",
-  "generatedAt": "2026-06-06T15:54:26.252Z",
+  "generatedAt": "2026-06-06T17:23:23.621Z",
   "total": 135,
-  "operational": 134,
-  "failing": 1,
-  "availability": 99.3,
-  "avgLatencyMs": 950,
+  "operational": 135,
+  "failing": 0,
+  "availability": 100,
+  "avgLatencyMs": 1266,
   "byDocument": [
     {
       "key": "CTe",
       "total": 27,
-      "operational": 26,
-      "availability": 96.3
+      "operational": 27,
+      "availability": 100
     },
     {
       "key": "DCe",
@@ -66,8 +66,8 @@
     {
       "key": "MS",
       "total": 3,
-      "operational": 2,
-      "availability": 66.7
+      "operational": 3,
+      "availability": 100
     },
     {
       "key": "MT",
