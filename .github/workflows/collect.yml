@@ -4,10 +4,11 @@ name: Coletar status SEFAZ
 # commita os JSONs em apps/web/public/data/ — consumidos pela SPA no GitHub Pages.
 on:
   schedule:
-    # A cada 30 min, nos minutos 7 e 37 — fora do minuto 0 (mais concorrido na
-    # fila do GitHub). O cron do Actions é best-effort: intervalos maiores e
-    # deslocados da hora cheia são honrados de forma mais consistente que */15.
-    - cron: '7,37 * * * *'
+    # De hora em hora, no minuto 17 (fora da hora cheia, que é mais concorrida).
+    # O cron do GitHub Actions é best-effort e quase nunca honra granularidade
+    # sub-horária (com '7,37' observamos ~6 coletas/dia em vez de 48). Cadência
+    # horária é disparada de forma muito mais consistente.
+    - cron: '17 * * * *'
   workflow_dispatch: {}
 
 permissions:
@@ -32,22 +33,39 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      - name: Sincronizar com o remoto
+        # Garante que a coleta parta do history.json MAIS RECENTE (outra rodada
+        # pode ter commitado nesse meio-tempo). Sem isso, o append parte de uma
+        # base velha e sobrescreve pontos no push.
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull --rebase --autostash origin main
+
       - name: Coletar status
         run: pnpm --filter @monitor-sefaz/collector collect "$GITHUB_WORKSPACE/apps/web/public/data"
 
       - name: Commitar dados atualizados
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
           git add apps/web/public/data
           if git diff --cached --quiet; then
             echo "Sem mudanças nos dados."
             echo "changed=false" >> "$GITHUB_OUTPUT"
-          else
-            git commit -m "chore(data): atualiza status SEFAZ [skip ci]"
-            git push
-            echo "changed=true" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
+          git commit -m "chore(data): atualiza status SEFAZ [skip ci]"
+          # Push resiliente: se outra rodada commitou nesse intervalo, rebaseia e
+          # tenta de novo (evita a race condition que descartava pontos).
+          for attempt in 1 2 3; do
+            if git push; then
+              echo "changed=true" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            echo "push falhou (tentativa $attempt); rebaseando…"
+            git pull --rebase --autostash origin main || true
+          done
+          echo "Não foi possível dar push após 3 tentativas." >&2
+          exit 1
         id: commit
 
       # O commit acima usa [skip ci] (evita loop), o que também impede o deploy

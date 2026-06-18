@@ -35,10 +35,7 @@ const BROWSER_UA =
 export class HttpAvailabilityProvider {
   private readonly http: AxiosInstance;
 
-  constructor(
-    private readonly parser = new AvailabilityParser(),
-    private readonly timeoutMs = 20_000
-  ) {
+  constructor(private readonly timeoutMs = 20_000) {
     const jar = new CookieJar();
     this.http = wrapper(
       axios.create({
@@ -77,13 +74,15 @@ export class HttpAvailabilityProvider {
       return [];
     }
 
+    // Cada documento tem layout de colunas próprio (NF-e usa índice 5, CT-e usa 2).
+    const parser = new AvailabilityParser(document);
     let lastError: unknown;
     for (const url of urls) {
       for (let attempt = 1; attempt <= attemptsPerUrl; attempt += 1) {
         try {
           const response = await this.http.get<ArrayBuffer>(url);
           const html = Buffer.from(response.data).toString('latin1');
-          const rows = this.parser.parse(html);
+          const rows = parser.parse(html);
           if (rows.length > 0) {
             return rows;
           }
