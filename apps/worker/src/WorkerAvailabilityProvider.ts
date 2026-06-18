@@ -18,8 +18,6 @@ const BROWSER_UA =
  * que funciona em Workers).
  */
 export class WorkerAvailabilityProvider {
-  constructor(private readonly parser = new AvailabilityParser()) {}
-
   public supportedDocuments(): DocumentType[] {
     return Object.keys(AVAILABILITY_URLS) as DocumentType[];
   }
@@ -29,6 +27,8 @@ export class WorkerAvailabilityProvider {
     if (!urls || urls.length === 0) {
       return [];
     }
+    // Cada documento tem layout de colunas próprio (NF-e=5, CT-e=2).
+    const parser = new AvailabilityParser(document);
     // Tenta cada URL de produção, com retries — a SEFAZ devolve `erro.aspx`
     // (página sem a tabela) de forma intermitente. NÃO há fallback de
     // homologação: o ambiente é distinto e reportaria status errado.
@@ -36,7 +36,7 @@ export class WorkerAvailabilityProvider {
     for (const url of urls) {
       for (let attempt = 1; attempt <= attemptsPerUrl; attempt += 1) {
         try {
-          const rows = await this.fetchOne(url);
+          const rows = await this.fetchOne(url, parser);
           if (rows.length > 0) {
             return rows;
           }
@@ -51,7 +51,7 @@ export class WorkerAvailabilityProvider {
     return [];
   }
 
-  private async fetchOne(url: string): Promise<AvailabilityRow[]> {
+  private async fetchOne(url: string, parser: AvailabilityParser): Promise<AvailabilityRow[]> {
     const headers: Record<string, string> = {
       'User-Agent': BROWSER_UA,
       Accept: 'text/html,application/xhtml+xml',
@@ -76,7 +76,7 @@ export class WorkerAvailabilityProvider {
     }
 
     const html = await response.text();
-    return this.parser.parse(html);
+    return parser.parse(html);
   }
 
   /**

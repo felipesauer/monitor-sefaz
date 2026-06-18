@@ -34,15 +34,35 @@ describe('AvailabilityCollector', () => {
     expect(sp?.state).toBe(ServiceState.Operational);
     expect(sp?.cStat).toBe(107);
 
-    // AC delega a SVRS → down
+    // AC delega a SVRS → down (cStat 109, não null — regressão do bug de captura)
     const ac = collected.find((s) => s.document === DocumentType.NFe && s.uf === 'AC');
     expect(ac?.authorizer).toBe('SVRS');
     expect(ac?.state).toBe(ServiceState.Down);
+    expect(ac?.cStat).toBe(109);
 
     // MA delega a SVAN → operacional
     const ma = collected.find((s) => s.document === DocumentType.NFe && s.uf === 'MA');
     expect(ma?.authorizer).toBe('SVAN');
     expect(ma?.state).toBe(ServiceState.Operational);
+  });
+
+  it('mapeia o cStat correto para cada estado (107/108/109)', async () => {
+    const provider = {
+      supportedDocuments: () => [DocumentType.NFe],
+      fetch: async (): Promise<AvailabilityRow[]> => [
+        { authorizer: 'SP', state: ServiceState.Operational, tMedSeconds: null },
+        { authorizer: 'MG', state: ServiceState.SlowDown, tMedSeconds: null },
+        { authorizer: 'PE', state: ServiceState.Down, tMedSeconds: null },
+      ],
+    };
+    const collected = await new AvailabilityCollector(
+      provider as never,
+      undefined,
+      fakeClock()
+    ).collect();
+    expect(collected.find((s) => s.uf === 'SP')?.cStat).toBe(107); // OPERATIONAL
+    expect(collected.find((s) => s.uf === 'MG')?.cStat).toBe(108); // SLOWDOWN
+    expect(collected.find((s) => s.uf === 'PE')?.cStat).toBe(109); // DOWN
   });
 
   it('reporta a latência medida do fetch (tempo de resposta da SEFAZ)', async () => {

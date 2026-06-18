@@ -48,7 +48,12 @@ export { CheckerFactory, type CheckerFactoryDeps } from './registry/CheckerFacto
 export { StatusReport, type StatusSummary } from './report/StatusReport.js';
 
 // Disponibilidade (scraping da página oficial — sem certificado A1)
-export { AvailabilityParser, type AvailabilityRow } from './availability/AvailabilityParser.js';
+export {
+  AvailabilityParser,
+  DOCUMENT_COLUMNS,
+  type AvailabilityRow,
+  type ColumnLayout,
+} from './availability/AvailabilityParser.js';
 export {
   HttpAvailabilityProvider,
   AVAILABILITY_URLS,

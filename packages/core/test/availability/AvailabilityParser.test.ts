@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { AvailabilityParser } from '../../src/availability/AvailabilityParser.js';
 import { ServiceState } from '../../src/domain/types.js';
+import { DocumentType } from '@monitor-sefaz/catalog';
 
 const here = dirname(fileURLToPath(import.meta.url));
 
@@ -12,7 +13,7 @@ function loadAvailability(name: string): string {
 }
 
 describe('AvailabilityParser', () => {
-  const parser = new AvailabilityParser();
+  const parser = new AvailabilityParser(DocumentType.NFe);
 
   it('extrai os autorizadores da página real de NF-e', () => {
     const rows = parser.parse(loadAvailability('nfe-disponibilidade.html'));
@@ -38,10 +39,41 @@ describe('AvailabilityParser', () => {
     }
   });
 
-  it('extrai os autorizadores da página real de CT-e', () => {
-    const rows = parser.parse(loadAvailability('cte-disponibilidade.html'));
+  it('extrai os autorizadores da página real de CT-e usando o layout da CT-e', () => {
+    const cteParser = new AvailabilityParser(DocumentType.CTe);
+    const rows = cteParser.parse(loadAvailability('cte-disponibilidade.html'));
     expect(rows.length).toBeGreaterThanOrEqual(6);
     expect(rows.map((r) => r.authorizer)).toContain('SVRS');
+    // Com o layout correto (coluna 2), todo estado é válido.
+    for (const row of rows) {
+      expect([
+        ServiceState.Operational,
+        ServiceState.SlowDown,
+        ServiceState.Down,
+      ]).toContain(row.state);
+    }
+  });
+
+  it('lê a coluna "Status Serviço" da CT-e (índice 2), não "Recepção Evento" (índice 5)', () => {
+    // Regressão do bug de fidelidade: a CT-e tem layout diferente da NF-e.
+    // Provamos que o layout importa — ler a CT-e com o índice da NF-e (5) lê
+    // outra coluna. Construímos uma linha onde a coluna 2 e a 5 divergem.
+    const html = `<table><tr>
+      <td>SVRS</td>
+      <td><img src="bola_verde.png"></td>
+      <td><img src="bola_vermelho.png"></td>
+      <td><img src="bola_verde.png"></td>
+      <td><img src="bola_verde.png"></td>
+      <td><img src="bola_verde.png"></td>
+      <td>3</td>
+      <td>5</td>
+    </tr></table>`;
+    const cte = new AvailabilityParser(DocumentType.CTe).parse(html);
+    const nfeLayout = new AvailabilityParser(DocumentType.NFe).parse(html);
+    expect(cte[0]?.state).toBe(ServiceState.Down); // coluna 2 (Status Serviço CT-e)
+    expect(nfeLayout[0]?.state).toBe(ServiceState.Operational); // coluna 5 (errado p/ CT-e)
+    // tMed da CT-e vem da coluna 7 (=5), não da 6.
+    expect(cte[0]?.tMedSeconds).toBe(5);
   });
 
   it('ignora HTML sem tabela de status', () => {

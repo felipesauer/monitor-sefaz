@@ -1,5 +1,8 @@
 import {
   Catalog,
+  CSTAT_DOWN,
+  CSTAT_OPERATIONAL,
+  CSTAT_SLOWDOWN,
   DocumentType,
   Environment,
   type AuthorizerCode,
@@ -7,6 +10,24 @@ import {
 } from '@monitor-sefaz/catalog';
 import { ServiceState } from '../domain/types.js';
 import type { AvailabilityRow } from './AvailabilityParser.js';
+
+/**
+ * Mapeia um `ServiceState` para o `cStat` correspondente da SEFAZ.
+ * Antes, estados não-operacionais recebiam `cStat=null`, fazendo SLOWDOWN/DOWN
+ * perderem a identificação numérica (108/109) — o histórico só registrava 107.
+ */
+function stateToCStat(state: ServiceState): number | null {
+  switch (state) {
+    case ServiceState.Operational:
+      return CSTAT_OPERATIONAL; // 107
+    case ServiceState.SlowDown:
+      return CSTAT_SLOWDOWN; // 108
+    case ServiceState.Down:
+      return CSTAT_DOWN; // 109
+    default:
+      return null; // ERROR / sem leitura
+  }
+}
 
 /** Status coletado de um serviço (documento + UF), pronto para virar DTO. */
 export interface CollectedStatus {
@@ -106,7 +127,7 @@ export class AvailabilityCollector {
         uf: entry.uf,
         authorizer: entry.authorizer,
         state: row.state,
-        cStat: row.state === ServiceState.Operational ? 107 : null,
+        cStat: stateToCStat(row.state),
         latencyMs: latencyByAuthorizer.get(entry.authorizer) ?? 0,
       });
     }
