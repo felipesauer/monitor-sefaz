@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { X } from 'lucide-react';
-import type { HistoryPeriod, ServiceStatusDTO } from '@monitor-sefaz/contracts';
+import { X, Info } from 'lucide-react';
+import { DocumentType, type HistoryPeriod, type ServiceStatusDTO } from '@monitor-sefaz/contracts';
 import { useServiceHistory } from '../hooks/useStatus.js';
 import { StatusBadge } from './StatusBadge.js';
 import { UptimeBar } from './UptimeBar.js';
 import { LatencyChart } from './LatencyChart.js';
-import { DOC_LABEL, UF_NAME } from '../lib/labels.js';
+import { DOC_LABEL, DOC_DESCRIPTION, UF_NAME } from '../lib/labels.js';
+import { computeUptime } from '../lib/uptime.js';
 
 interface ServiceDetailPanelProps {
   service: ServiceStatusDTO;
@@ -13,14 +14,15 @@ interface ServiceDetailPanelProps {
 }
 
 const PERIODS: HistoryPeriod[] = ['1h', '6h', '24h', '72h'];
+const SVRS_DERIVED = new Set<string>([DocumentType.MDFe, DocumentType.DCe]);
 
 /** Drawer com histórico de uptime e latência de um serviço. */
 export function ServiceDetailPanel({ service, onClose }: ServiceDetailPanelProps) {
   const [period, setPeriod] = useState<HistoryPeriod>('24h');
   const history = useServiceHistory(service.id, period);
   const points = history.data?.points ?? [];
-  const operational = points.filter((p) => p.state === 'OPERATIONAL').length;
-  const uptime = points.length === 0 ? null : ((operational / points.length) * 100).toFixed(1);
+  const stats = computeUptime(points, period);
+  const isDerived = SVRS_DERIVED.has(service.document);
 
   return (
     <div
@@ -42,6 +44,11 @@ export function ServiceDetailPanel({ service, onClose }: ServiceDetailPanelProps
             <p className="mt-0.5 text-sm" style={{ color: 'var(--text-dim)' }}>
               {UF_NAME[service.uf] ?? service.uf} · autorizador {service.authorizer}
             </p>
+            {DOC_DESCRIPTION[service.document] && (
+              <p className="mt-1 text-xs" style={{ color: 'var(--text-dim)' }}>
+                {DOC_DESCRIPTION[service.document]}
+              </p>
+            )}
           </div>
           <button
             type="button"
@@ -58,6 +65,20 @@ export function ServiceDetailPanel({ service, onClose }: ServiceDetailPanelProps
           <p className="text-xs" style={{ color: 'var(--down)' }}>
             {service.error}
           </p>
+        )}
+
+        {isDerived && (
+          <div
+            className="flex gap-2 rounded-lg border p-3 text-xs"
+            style={{ background: 'var(--surface-2)', color: 'var(--text-dim)' }}
+          >
+            <Info className="mt-0.5 h-4 w-4 shrink-0" />
+            <span>
+              MDF-e e DC-e são centralizados no ambiente nacional (SVRS). Este status
+              <strong> reflete o do autorizador SVRS</strong> — não é uma medição independente
+              por estado.
+            </span>
+          </div>
         )}
 
         <div className="flex gap-1.5">
@@ -78,10 +99,23 @@ export function ServiceDetailPanel({ service, onClose }: ServiceDetailPanelProps
           ))}
         </div>
 
-        {uptime !== null && (
-          <p className="text-sm" style={{ color: 'var(--text-dim)' }}>
-            Disponibilidade no período: <strong style={{ color: 'var(--text)' }}>{uptime}%</strong>
-          </p>
+        {stats.uptime !== null && (
+          <div className="text-sm" style={{ color: 'var(--text-dim)' }}>
+            <p>
+              Disponibilidade no período:{' '}
+              <strong style={{ color: 'var(--text)' }}>{stats.uptime}%</strong>{' '}
+              <span className="text-xs">
+                ({stats.points} de ~{stats.expectedPoints} leituras esperadas)
+              </span>
+            </p>
+            {stats.lowCoverage && (
+              <p className="mt-1 flex gap-1.5 text-xs" style={{ color: 'var(--slow)' }}>
+                <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                Cobertura de {stats.coverage}% no período — instabilidades em janelas sem leitura
+                podem não ter sido registradas.
+              </p>
+            )}
+          </div>
         )}
 
         <div>

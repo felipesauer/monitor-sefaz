@@ -39,6 +39,15 @@ export const DOC_LABEL: Record<string, string> = {
   DCe: 'DC-e',
 };
 
+/** Descrição curta de cada documento, para tooltips e o painel de detalhe. */
+export const DOC_DESCRIPTION: Record<string, string> = {
+  NFe: 'Nota Fiscal Eletrônica — documento que registra a circulação de mercadorias entre empresas (modelo 55).',
+  NFCe: 'Nota Fiscal de Consumidor Eletrônica — emitida na venda ao consumidor final no varejo (modelo 65).',
+  CTe: 'Conhecimento de Transporte Eletrônico — documenta a prestação de serviço de transporte de cargas.',
+  MDFe: 'Manifesto Eletrônico de Documentos Fiscais — agrupa as notas/CT-e de uma carga em trânsito.',
+  DCe: 'Declaração de Conteúdo eletrônica — usada no transporte de bens entre não contribuintes.',
+};
+
 /** Formata latência em ms para exibição (ex: 1500 → "1.5 s", 240 → "240 ms"). */
 export function formatLatency(ms: number): { value: string; unit: string } {
   if (ms <= 0) return { value: '—', unit: '' };

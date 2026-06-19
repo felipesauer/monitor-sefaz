@@ -1,9 +1,17 @@
 import { STATE_META } from './serviceState.js';
 import type { ServiceStateValue } from '@monitor-sefaz/contracts';
 
+/** Texto didático de cada estado (mostrado no tooltip da legenda). */
+const STATE_HELP: Record<ServiceStateValue, string> = {
+  OPERATIONAL: 'cStat 107 — Serviço em Operação. A SEFAZ respondeu normalmente.',
+  SLOWDOWN: 'cStat 108 — Paralisado Momentaneamente. Instabilidade temporária.',
+  DOWN: 'cStat 109 — Paralisado sem Previsão. Serviço fora do ar.',
+  ERROR: 'Sem leitura — não foi possível obter o status naquele momento.',
+};
+
 const STATES: ServiceStateValue[] = ['OPERATIONAL', 'SLOWDOWN', 'DOWN', 'ERROR'];
 
-/** Legenda das cores usadas na grade de status. */
+/** Legenda das cores usadas na grade de status, com explicação no hover. */
 export function StatusLegend() {
   return (
     <div
@@ -12,7 +20,11 @@ export function StatusLegend() {
       aria-label="Legenda de estados"
     >
       {STATES.map((state) => (
-        <span className="inline-flex items-center gap-1.5" key={state}>
+        <span
+          className="inline-flex cursor-help items-center gap-1.5"
+          key={state}
+          title={STATE_HELP[state]}
+        >
           <span
             className="inline-block h-2.5 w-2.5 rounded-full"
             style={{ background: STATE_META[state].color }}
