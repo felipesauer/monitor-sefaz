@@ -12,3 +12,6 @@ coverage/
 # Config local do Claude Code e scripts de debug ad-hoc
 .claude/settings.json
 packages/core/test-*.mjs
+
+# Cache do wrangler dev
+.wrangler/
