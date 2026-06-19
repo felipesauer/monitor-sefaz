@@ -1,6 +1,7 @@
 import type { ServiceStateValue } from '@monitor-sefaz/contracts';
 import { STATE_META } from './serviceState.js';
 import { UF_NAME } from '../lib/labels.js';
+import { BR_PATHS, BR_VIEWBOX } from '../lib/brazilGeo.js';
 
 interface BrazilMapProps {
   /** Estado agregado (pior) de cada UF. */
@@ -10,28 +11,10 @@ interface BrazilMapProps {
 }
 
 /**
- * Mapa do Brasil em "tile grid" — cada UF é um bloco posicionado de forma
- * aproximada à sua geografia (técnica consagrada de cartograma em grade, sem
- * depender de paths SVG complexos e frágeis). Colorido pelo pior status da UF
- * e clicável para filtrar. Leitura geográfica imediata, igual ao monitorsefaz.
- *
- * Grade [linha, coluna] aproximando as regiões: Norte em cima, Sul embaixo.
+ * Mapa geográfico do Brasil (SVG real dos 27 estados), colorido pelo pior
+ * status de cada UF e clicável para filtrar. Os paths vêm de um GeoJSON de
+ * domínio público, simplificado para o tamanho do bundle.
  */
-const GRID: Record<string, [number, number]> = {
-  RR: [0, 2], AP: [0, 4],
-  AM: [1, 1], PA: [1, 3], MA: [1, 4], CE: [1, 5], RN: [1, 6],
-  AC: [2, 0], RO: [2, 1], TO: [2, 3], PI: [2, 4], PB: [2, 6],
-  MT: [3, 2], GO: [3, 3], BA: [3, 4], PE: [3, 5], AL: [3, 6],
-  MS: [4, 2], MG: [4, 3], DF: [4, 4], SE: [4, 5], ES: [4, 6],
-  SP: [5, 3], RJ: [5, 4],
-  PR: [6, 3],
-  SC: [7, 3],
-  RS: [8, 3],
-};
-
-const ROWS = 9;
-const COLS = 7;
-
 export function BrazilMap({ ufStates, selectedUfs, onToggleUf }: BrazilMapProps) {
   const stateByUf = new Map(ufStates.map((u) => [u.uf, u.state]));
   const hasSelection = selectedUfs.size > 0;
@@ -48,40 +31,47 @@ export function BrazilMap({ ufStates, selectedUfs, onToggleUf }: BrazilMapProps)
       >
         Mapa por estado
       </h2>
-      <div
-        className="mx-auto grid w-fit gap-1"
-        style={{
-          gridTemplateColumns: `repeat(${COLS}, minmax(2rem, 2.75rem))`,
-          gridTemplateRows: `repeat(${ROWS}, minmax(2rem, 2.75rem))`,
-        }}
+      <svg
+        viewBox={BR_VIEWBOX}
+        className="mx-auto block h-auto w-full"
+        style={{ maxHeight: '60vh' }}
+        role="group"
       >
-        {Object.entries(GRID).map(([uf, [row, col]]) => {
+        {Object.entries(BR_PATHS).map(([uf, d]) => {
           const state = stateByUf.get(uf);
           const color = state ? STATE_META[state].color : 'var(--err)';
           const active = selectedUfs.has(uf);
           const dimmed = hasSelection && !active;
           return (
-            <button
+            <path
               key={uf}
-              type="button"
-              onClick={() => onToggleUf(uf)}
+              d={d}
+              role="button"
+              tabIndex={0}
               aria-pressed={active}
-              title={`${UF_NAME[uf] ?? uf}${state ? ` — ${STATE_META[state].label}` : ' — sem dados'}`}
-              className="flex items-center justify-center rounded-md font-mono text-xs font-bold transition-all"
+              aria-label={`${UF_NAME[uf] ?? uf}${state ? ` — ${STATE_META[state].label}` : ' — sem dados'}`}
+              onClick={() => onToggleUf(uf)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  onToggleUf(uf);
+                }
+              }}
+              className="cursor-pointer outline-none transition-opacity"
               style={{
-                gridRow: row + 1,
-                gridColumn: col + 1,
-                background: `color-mix(in srgb, ${color} ${active ? '90%' : '20%'}, transparent)`,
-                color: active ? '#fff' : 'var(--text)',
-                border: `1.5px solid ${color}`,
-                opacity: dimmed ? 0.35 : 1,
+                fill: `color-mix(in srgb, ${color} ${active ? '85%' : '45%'}, transparent)`,
+                stroke: active ? color : 'var(--surface)',
+                strokeWidth: active ? 1.6 : 0.8,
+                opacity: dimmed ? 0.3 : 1,
               }}
             >
-              {uf}
-            </button>
+              <title>
+                {`${UF_NAME[uf] ?? uf}${state ? ` — ${STATE_META[state].label}` : ' — sem dados'}`}
+              </title>
+            </path>
           );
         })}
-      </div>
+      </svg>
     </section>
   );
 }
