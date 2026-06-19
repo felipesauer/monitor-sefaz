@@ -17,6 +17,8 @@ import { ServiceGrid } from '../components/ServiceGrid.js';
 import { ServiceDetailPanel } from '../components/ServiceDetailPanel.js';
 import { Footer } from '../components/Footer.js';
 import { StatusLegend } from '../components/StatusLegend.js';
+import { BrazilMap } from '../components/BrazilMap.js';
+import { HelpSection } from '../components/HelpSection.js';
 import { STATE_SEVERITY } from '../components/serviceState.js';
 
 /** Estado agregado (pior) de uma UF entre os serviços visíveis — colore o chip. */
@@ -107,13 +109,23 @@ export function DashboardPage() {
       />
 
       <main className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-6">
-        {summary.data && <GlobalBanner summary={summary.data} />}
+        <p className="text-sm leading-relaxed" style={{ color: 'var(--text-dim)' }}>
+          Acompanhe em tempo real a disponibilidade dos serviços de autorização da SEFAZ para os
+          documentos fiscais eletrônicos, por estado. Os dados vêm da página oficial de
+          disponibilidade da SEFAZ.
+        </p>
+
+        {summary.data && <GlobalBanner summary={summary.data} services={all} />}
 
         {status.data && (
           <UpdateInfo generatedAt={status.data.generatedAt} refreshIntervalMs={POLL_INTERVAL_MS} />
         )}
 
         {layout === 'metrics' && summary.data && <SummaryCards summary={summary.data} />}
+
+        {layout !== 'operation' && (
+          <BrazilMap ufStates={ufStates} selectedUfs={selectedUfs} onToggleUf={toggleUf} />
+        )}
 
         {layout !== 'operation' && (
           <FilterBar
@@ -141,6 +153,8 @@ export function DashboardPage() {
         {status.data && (
           <ServiceGrid services={visible} series={series.data ?? {}} onSelect={setSelected} />
         )}
+
+        <HelpSection />
       </main>
 
       <Footer />

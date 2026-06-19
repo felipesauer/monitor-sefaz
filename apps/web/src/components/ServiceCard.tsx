@@ -18,11 +18,16 @@ interface ServiceCardProps {
 export function ServiceCard({ service, spark = [], onSelect }: ServiceCardProps) {
   const meta = STATE_META[service.state];
   const Icon = meta.icon;
-  const latency = formatLatency(service.latencyMs);
   const ufName = UF_NAME[service.uf] ?? service.uf;
   const sparkData = spark
     .filter((p) => p.latencyMs > 0)
     .map((p, i) => ({ i, v: p.latencyMs }));
+  // Latência exibida = último ponto da MESMA série do gráfico (history.json),
+  // para o card e o gráfico de detalhe não divergirem. Sem série, cai para o
+  // snapshot ao vivo. É o tempo de acesso à página da SEFAZ (não o tempo do
+  // serviço — a SEFAZ não publica essa métrica).
+  const lastSparkLatency = sparkData.at(-1)?.v;
+  const latency = formatLatency(lastSparkLatency ?? service.latencyMs);
 
   return (
     <button
@@ -74,8 +79,12 @@ export function ServiceCard({ service, spark = [], onSelect }: ServiceCardProps)
 
       <div className="flex items-end justify-between gap-2">
         <div>
-          <p className="text-[10px] uppercase tracking-wide" style={{ color: 'var(--text-dim)' }}>
-            Tempo de resposta
+          <p
+            className="cursor-help text-[10px] uppercase tracking-wide"
+            style={{ color: 'var(--text-dim)' }}
+            title="Tempo para acessar a página de disponibilidade do autorizador na SEFAZ. Não é o tempo de processar uma nota — a SEFAZ não publica essa métrica."
+          >
+            Tempo de acesso
           </p>
           <div className="font-mono text-3xl font-bold tracking-tighter">
             {latency.value}

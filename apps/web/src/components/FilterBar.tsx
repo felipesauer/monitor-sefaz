@@ -3,7 +3,7 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import type { ServiceStateValue } from '@monitor-sefaz/contracts';
 import { DocumentType } from '@monitor-sefaz/contracts';
 import { STATE_META } from './serviceState.js';
-import { UF_NAME } from '../lib/labels.js';
+import { DOC_DESCRIPTION, UF_NAME } from '../lib/labels.js';
 
 export type DocumentFilter = DocumentType | 'ALL';
 
@@ -50,7 +50,8 @@ export function FilterBar({
               type="button"
               onClick={() => onDocFilter(tab.value)}
               aria-pressed={docFilter === tab.value}
-              className="rounded-md px-3 py-1.5 text-xs font-semibold transition-colors"
+              title={tab.value === 'ALL' ? 'Todos os documentos' : DOC_DESCRIPTION[tab.value]}
+              className="cursor-help rounded-md px-3 py-1.5 text-xs font-semibold transition-colors"
               style={
                 docFilter === tab.value
                   ? { background: 'var(--accent)', color: '#fff' }
