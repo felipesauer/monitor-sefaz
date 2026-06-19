@@ -9,7 +9,7 @@ interface QA {
 const FAQ: QA[] = [
   {
     q: 'O que significam os estados (cStat 107/108/109)?',
-    a: 'A SEFAZ responde a uma "consulta status do serviço" com um código (cStat). 107 = Serviço em Operação (verde). 108 = Paralisado Momentaneamente (amarelo/instável). 109 = Paralisado sem Previsão (vermelho/indisponível). "Sem dados" (cinza) significa que não conseguimos ler o status naquele momento.',
+    a: 'A SEFAZ responde a uma "consulta status do serviço" com um código (cStat). 107 = Serviço em Operação (verde). 108 = Paralisado Momentaneamente (amarelo/instável). 109 = Paralisado sem Previsão (vermelho/indisponível). "Contingência" (azul) indica que a UF está operando por um ambiente de contingência (SVC) — ainda é possível emitir. "Sem dados" (cinza) significa que não conseguimos ler o status naquele momento.',
   },
   {
     q: 'O que é um "autorizador"?',
@@ -21,11 +21,11 @@ const FAQ: QA[] = [
   },
   {
     q: 'O que é contingência (SVC-AN / SVC-RS)?',
-    a: 'São ambientes de contingência usados quando o autorizador principal de um estado está indisponível, permitindo continuar emitindo documentos. Aparecem como autorizadores próprios na tabela da SEFAZ.',
+    a: 'São ambientes de contingência usados quando o autorizador principal de um estado está indisponível, permitindo continuar emitindo documentos. Na tela, uma UF em contingência aparece em azul: o serviço está no ar, mas operando pelo ambiente alternativo (SVC), não pelo principal.',
   },
   {
     q: 'De onde vêm os dados e com que frequência?',
-    a: 'Coletamos da página oficial e pública de disponibilidade da SEFAZ (não exige certificado). O status na tela é atualizado ao vivo; o histórico é amostrado periodicamente (cerca de uma vez por hora), então janelas curtas de instabilidade podem não ser registradas no gráfico.',
+    a: 'Consolidamos o monitoramento público de disponibilidade da SEFAZ (não exige certificado), por UF e para os 5 documentos. Se a fonte principal ficar indisponível, recorremos automaticamente à consulta da página oficial. O status na tela é atualizado ao vivo; o histórico é amostrado periodicamente (cerca de uma vez por hora), então janelas curtas de instabilidade podem não ser registradas no gráfico.',
   },
 ];
 

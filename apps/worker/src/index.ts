@@ -1,4 +1,10 @@
-import { AvailabilityCollector, type CollectedStatus } from '@monitor-sefaz/core';
+import {
+  AvailabilityCollector,
+  HybridCollector,
+  IntegraNotasCollector,
+  type CollectedStatus,
+  type IntegraNotasFetcher,
+} from '@monitor-sefaz/core';
 import {
   fromEnvironment,
   type ServiceStatusDTO,
@@ -7,6 +13,30 @@ import {
 } from '@monitor-sefaz/contracts';
 import { Environment } from '@monitor-sefaz/catalog';
 import { WorkerAvailabilityProvider } from './WorkerAvailabilityProvider.js';
+
+/** Fetcher do IntegraNotas no runtime do Worker (fetch nativo + header XHR). */
+const integraNotasFetcher: IntegraNotasFetcher = async (url) => {
+  const res = await fetch(url, {
+    headers: {
+      'X-Requested-With': 'XMLHttpRequest',
+      Accept: 'application/json',
+      'User-Agent':
+        'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36',
+    },
+  });
+  if (!res.ok) {
+    throw new Error(`IntegraNotas HTTP ${res.status}`);
+  }
+  return res.text();
+};
+
+/** Híbrido do Worker: IntegraNotas (JSON) com fallback ao scraping oficial. */
+function buildCollector(): HybridCollector {
+  return new HybridCollector(
+    IntegraNotasCollector.create(integraNotasFetcher),
+    new AvailabilityCollector(new WorkerAvailabilityProvider())
+  );
+}
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
@@ -33,15 +63,19 @@ function toDTO(s: CollectedStatus, checkedAt: string): ServiceStatusDTO {
   };
 }
 
+/** "No ar" inclui operação normal e contingência. */
+const isUp = (s: ServiceStatusDTO): boolean =>
+  s.state === 'OPERATIONAL' || s.state === 'CONTINGENCY';
+
 function buildSummary(services: ServiceStatusDTO[], generatedAt: string): SummaryDTO {
   const total = services.length;
-  const operational = services.filter((s) => s.state === 'OPERATIONAL').length;
+  const operational = services.filter(isUp).length;
   const group = (keyOf: (s: ServiceStatusDTO) => string): SummaryDTO['byDocument'] => {
     const map = new Map<string, { total: number; operational: number }>();
     for (const s of services) {
       const b = map.get(keyOf(s)) ?? { total: 0, operational: 0 };
       b.total += 1;
-      if (s.state === 'OPERATIONAL') b.operational += 1;
+      if (isUp(s)) b.operational += 1;
       map.set(keyOf(s), b);
     }
     return [...map.entries()]
@@ -53,7 +87,7 @@ function buildSummary(services: ServiceStatusDTO[], generatedAt: string): Summar
       }))
       .sort((a, b) => a.key.localeCompare(b.key));
   };
-  const latencies = services.filter((s) => s.state === 'OPERATIONAL').map((s) => s.latencyMs);
+  const latencies = services.filter((s) => isUp(s) && s.latencyMs > 0).map((s) => s.latencyMs);
   return {
     environment: 'production',
     generatedAt,
@@ -86,7 +120,7 @@ export default {
     }
 
     const { pathname } = new URL(request.url);
-    const collector = new AvailabilityCollector(new WorkerAvailabilityProvider());
+    const collector = buildCollector();
 
     try {
       const generatedAt = new Date().toISOString();

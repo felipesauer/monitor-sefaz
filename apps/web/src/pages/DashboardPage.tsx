@@ -111,8 +111,8 @@ export function DashboardPage() {
       <main className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-6">
         <p className="text-sm leading-relaxed" style={{ color: 'var(--text-dim)' }}>
           Acompanhe em tempo real a disponibilidade dos serviços de autorização da SEFAZ para os
-          documentos fiscais eletrônicos, por estado. Os dados vêm da página oficial de
-          disponibilidade da SEFAZ.
+          documentos fiscais eletrônicos, por estado e por UF. Os dados são consolidados a partir do
+          monitoramento público da SEFAZ.
         </p>
 
         {summary.data && <GlobalBanner summary={summary.data} services={all} />}

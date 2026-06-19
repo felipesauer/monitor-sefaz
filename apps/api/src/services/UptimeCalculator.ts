@@ -7,13 +7,18 @@ export interface UptimeStats {
   avgLatencyMs: number | null;
 }
 
-/** "Pior" estado entre dois, para rotular um incidente. DOWN > ERROR > SLOWDOWN. */
+/** "Pior" estado, para rotular um incidente. DOWN > ERROR > SLOWDOWN > CONTINGENCY. */
 const STATE_SEVERITY: Record<ServiceStateValue, number> = {
   OPERATIONAL: 0,
-  SLOWDOWN: 1,
-  ERROR: 2,
-  DOWN: 3,
+  CONTINGENCY: 1,
+  SLOWDOWN: 2,
+  ERROR: 3,
+  DOWN: 4,
 };
+
+/** "No ar" inclui operação normal e contingência (serviço disponível). */
+const isUp = (state: ServiceStateValue): boolean =>
+  state === 'OPERATIONAL' || state === 'CONTINGENCY';
 
 /**
  * Deriva métricas de disponibilidade e incidentes a partir da série temporal
@@ -22,11 +27,11 @@ const STATE_SEVERITY: Record<ServiceStateValue, number> = {
 export class UptimeCalculator {
   public computeUptime(points: readonly HistoryPointDTO[]): UptimeStats {
     const totalChecks = points.length;
-    const operationalChecks = points.filter((p) => p.state === 'OPERATIONAL').length;
+    const operationalChecks = points.filter((p) => isUp(p.state)).length;
     const uptime =
       totalChecks === 0 ? 0 : Number(((operationalChecks / totalChecks) * 100).toFixed(2));
 
-    const latencies = points.filter((p) => p.state === 'OPERATIONAL').map((p) => p.latencyMs);
+    const latencies = points.filter((p) => isUp(p.state)).map((p) => p.latencyMs);
     const avgLatencyMs =
       latencies.length === 0
         ? null
@@ -50,7 +55,7 @@ export class UptimeCalculator {
     const severityOf = (state: ServiceStateValue): number => STATE_SEVERITY[state] ?? 0;
 
     for (const point of points) {
-      const isDown = point.state !== 'OPERATIONAL';
+      const isDown = !isUp(point.state);
       if (isDown) {
         if (!open) {
           open = { startedAt: point.timestamp, worstState: point.state };

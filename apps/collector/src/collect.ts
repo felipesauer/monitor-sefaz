@@ -1,6 +1,6 @@
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { AvailabilityCollector, HttpAvailabilityProvider } from '@monitor-sefaz/core';
+import { HybridCollector } from '@monitor-sefaz/core';
 import { Environment } from '@monitor-sefaz/catalog';
 import {
   fromEnvironment,
@@ -15,15 +15,20 @@ import {
 /** Retenção do histórico estático (ms). Padrão 7 dias. */
 const RETENTION_MS = Number(process.env.HISTORY_RETENTION_MS ?? 7 * 24 * 60 * 60 * 1000);
 
+/** "No ar" inclui operação normal e contingência (o serviço está disponível). */
+function isUp(s: ServiceStatusDTO): boolean {
+  return s.state === 'OPERATIONAL' || s.state === 'CONTINGENCY';
+}
+
 function buildSummary(services: ServiceStatusDTO[], generatedAt: string): SummaryDTO {
   const total = services.length;
-  const operational = services.filter((s) => s.state === 'OPERATIONAL').length;
+  const operational = services.filter(isUp).length;
   const group = (keyOf: (s: ServiceStatusDTO) => string): SummaryDTO['byDocument'] => {
     const map = new Map<string, { total: number; operational: number }>();
     for (const s of services) {
       const b = map.get(keyOf(s)) ?? { total: 0, operational: 0 };
       b.total += 1;
-      if (s.state === 'OPERATIONAL') b.operational += 1;
+      if (isUp(s)) b.operational += 1;
       map.set(keyOf(s), b);
     }
     return [...map.entries()]
@@ -35,7 +40,7 @@ function buildSummary(services: ServiceStatusDTO[], generatedAt: string): Summar
       }))
       .sort((a, b) => a.key.localeCompare(b.key));
   };
-  const latencies = services.filter((s) => s.state === 'OPERATIONAL').map((s) => s.latencyMs);
+  const latencies = services.filter((s) => isUp(s) && s.latencyMs > 0).map((s) => s.latencyMs);
   return {
     environment: 'production',
     generatedAt,
@@ -90,7 +95,9 @@ async function main(): Promise<void> {
   mkdirSync(outDir, { recursive: true });
 
   const generatedAt = new Date().toISOString();
-  const collector = new AvailabilityCollector(new HttpAvailabilityProvider());
+  // Fonte híbrida: IntegraNotas (JSON, 5 docs por UF) com fallback ao scraping
+  // oficial da SEFAZ.
+  const collector = HybridCollector.createForNode();
   const collected = await collector.collect();
 
   const services: ServiceStatusDTO[] = collected.map((s) => ({

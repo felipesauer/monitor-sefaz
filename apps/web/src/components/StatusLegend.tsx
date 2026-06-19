@@ -4,12 +4,13 @@ import type { ServiceStateValue } from '@monitor-sefaz/contracts';
 /** Texto didático de cada estado (mostrado no tooltip da legenda). */
 const STATE_HELP: Record<ServiceStateValue, string> = {
   OPERATIONAL: 'cStat 107 — Serviço em Operação. A SEFAZ respondeu normalmente.',
+  CONTINGENCY: 'Operando em contingência (SVC) — disponível, mas pelo ambiente de contingência.',
   SLOWDOWN: 'cStat 108 — Paralisado Momentaneamente. Instabilidade temporária.',
   DOWN: 'cStat 109 — Paralisado sem Previsão. Serviço fora do ar.',
   ERROR: 'Sem leitura — não foi possível obter o status naquele momento.',
 };
 
-const STATES: ServiceStateValue[] = ['OPERATIONAL', 'SLOWDOWN', 'DOWN', 'ERROR'];
+const STATES: ServiceStateValue[] = ['OPERATIONAL', 'CONTINGENCY', 'SLOWDOWN', 'DOWN', 'ERROR'];
 
 /** Legenda das cores usadas na grade de status, com explicação no hover. */
 export function StatusLegend() {

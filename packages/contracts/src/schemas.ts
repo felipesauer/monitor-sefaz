@@ -8,7 +8,13 @@ export { DocumentType, Environment } from '@monitor-sefaz/catalog';
 export const documentTypeSchema = z.nativeEnum(DocumentType);
 
 /** Estado normalizado do serviço (espelha `ServiceState` do core). */
-export const serviceStateSchema = z.enum(['OPERATIONAL', 'SLOWDOWN', 'DOWN', 'ERROR']);
+export const serviceStateSchema = z.enum([
+  'OPERATIONAL',
+  'CONTINGENCY',
+  'SLOWDOWN',
+  'DOWN',
+  'ERROR',
+]);
 export type ServiceStateValue = z.infer<typeof serviceStateSchema>;
 
 /** Ambiente em formato textual usado na API (contrato em inglês). */

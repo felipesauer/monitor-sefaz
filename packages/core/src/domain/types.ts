@@ -6,6 +6,8 @@ import type { AuthorizerCode, DocumentType, Environment, UF } from '@monitor-sef
 export enum ServiceState {
   /** Serviço em operação (cStat 107). */
   Operational = 'OPERATIONAL',
+  /** Operando em ambiente de contingência (SVC), não no autorizador principal. */
+  Contingency = 'CONTINGENCY',
   /** Paralisação momentânea / degradação (cStat 108). */
   SlowDown = 'SLOWDOWN',
   /** Paralisação sem previsão (cStat 109). */

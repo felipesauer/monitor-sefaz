@@ -1,4 +1,11 @@
-import { CircleCheckBig, TriangleAlert, CircleX, CircleHelp, type LucideIcon } from 'lucide-react';
+import {
+  CircleCheckBig,
+  TriangleAlert,
+  CircleX,
+  CircleHelp,
+  Shuffle,
+  type LucideIcon,
+} from 'lucide-react';
 import type { ServiceStateValue } from '@monitor-sefaz/contracts';
 
 interface StateMeta {
@@ -20,15 +27,22 @@ export const STATE_META: Record<ServiceStateValue, StateMeta> = {
     icon: CircleCheckBig,
     hint: 'Normal: ≤ 2s',
   },
+  CONTINGENCY: {
+    label: 'Contingência',
+    color: 'var(--contingency)',
+    icon: Shuffle,
+    hint: 'Operando via SVC',
+  },
   SLOWDOWN: { label: 'Instável', color: 'var(--slow)', icon: TriangleAlert, hint: 'Lento' },
   DOWN: { label: 'Indisponível', color: 'var(--down)', icon: CircleX, hint: 'Fora do ar' },
   ERROR: { label: 'Sem dados', color: 'var(--err)', icon: CircleHelp, hint: 'Sem leitura' },
 };
 
-/** Ordem de severidade para ordenar/priorizar exibição. */
+/** Ordem de severidade para ordenar/priorizar exibição (pior primeiro). */
 export const STATE_SEVERITY: Record<ServiceStateValue, number> = {
-  DOWN: 3,
-  SLOWDOWN: 2,
-  ERROR: 1,
+  DOWN: 4,
+  SLOWDOWN: 3,
+  ERROR: 2,
+  CONTINGENCY: 1,
   OPERATIONAL: 0,
 };

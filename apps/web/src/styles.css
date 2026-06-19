@@ -11,6 +11,7 @@
   --color-slow: oklch(0.78 0.16 75);
   --color-down: oklch(0.63 0.23 27);
   --color-err: oklch(0.6 0.02 260);
+  --color-contingency: oklch(0.6 0.19 264);
   --color-accent: oklch(0.62 0.21 264);
 }
 
@@ -27,6 +28,7 @@
   --slow: var(--color-slow);
   --down: var(--color-down);
   --err: var(--color-err);
+  --contingency: var(--color-contingency);
   --accent: var(--color-accent);
 }
 

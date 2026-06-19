@@ -63,3 +63,15 @@ export {
   type CollectedStatus,
   type AvailabilityProviderLike,
 } from './availability/AvailabilityCollector.js';
+
+// Fonte IntegraNotas (API JSON pública) + collector híbrido
+export {
+  IntegraNotasProvider,
+  INTEGRANOTAS_DOCUMENTS,
+  mapIntegraNotasState,
+  type IntegraNotasRow,
+  type IntegraNotasFetcher,
+} from './integranotas/IntegraNotasProvider.js';
+export { IntegraNotasCollector } from './integranotas/IntegraNotasCollector.js';
+export { createHttpIntegraNotasFetcher } from './integranotas/httpFetcher.js';
+export { HybridCollector, type StatusCollectorLike } from './integranotas/HybridCollector.js';
