@@ -1,17 +1,17 @@
 {
   "environment": "production",
-  "generatedAt": "2026-06-21T07:12:20.548Z",
+  "generatedAt": "2026-06-21T10:49:41.237Z",
   "total": 135,
-  "operational": 135,
-  "failing": 0,
-  "availability": 100,
+  "operational": 131,
+  "failing": 4,
+  "availability": 97,
   "avgLatencyMs": 1000,
   "byDocument": [
     {
       "key": "CTe",
       "total": 27,
-      "operational": 27,
-      "availability": 100
+      "operational": 23,
+      "availability": 85.2
     },
     {
       "key": "DCe",
@@ -96,8 +96,8 @@
     {
       "key": "SP",
       "total": 3,
-      "operational": 3,
-      "availability": 100
+      "operational": 2,
+      "availability": 66.7
     },
     {
       "key": "SVAN",
@@ -108,8 +108,8 @@
     {
       "key": "SVRS",
       "total": 110,
-      "operational": 110,
-      "availability": 100
+      "operational": 107,
+      "availability": 97.3
     }
   ]
 }
