@@ -29,6 +29,14 @@ function stateToCStat(state: ServiceState): number | null {
   }
 }
 
+/**
+ * De onde veio a medição — define a SEMÂNTICA de `latencyMs`:
+ * - `integranotas`: tempo médio da SEFAZ (segundos×1000, tipicamente 0/1000/6000);
+ * - `availability`: latência de rede real do fetch da página oficial (ms contínuos).
+ * Sem isso, o gráfico colaria as duas grandezas na mesma série.
+ */
+export type StatusSource = 'integranotas' | 'availability';
+
 /** Status coletado de um serviço (documento + UF), pronto para virar DTO. */
 export interface CollectedStatus {
   readonly document: DocumentType;
@@ -36,8 +44,9 @@ export interface CollectedStatus {
   readonly authorizer: AuthorizerCode;
   readonly state: ServiceState;
   readonly cStat: number | null;
-  /** Tempo de resposta (ms) da SEFAZ ao buscar a página de disponibilidade. */
+  /** Latência (ms); a semântica depende de `source` — ver {@link StatusSource}. */
   readonly latencyMs: number;
+  readonly source: StatusSource;
 }
 
 /**
@@ -129,6 +138,7 @@ export class AvailabilityCollector {
         state: row.state,
         cStat: stateToCStat(row.state),
         latencyMs: latencyByAuthorizer.get(entry.authorizer) ?? 0,
+        source: 'availability',
       });
     }
     return out;

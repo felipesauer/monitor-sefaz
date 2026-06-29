@@ -50,6 +50,7 @@ export class RedisStatusStore implements StatusStore {
         state: service.state,
         cStat: service.cStat,
         latencyMs: service.latencyMs,
+        source: service.source,
       };
       const historyKey = this.historyKey(env, service.id);
       pipeline.zadd(historyKey, ts, JSON.stringify(point));

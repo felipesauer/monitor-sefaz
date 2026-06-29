@@ -6,14 +6,17 @@ import { StatusBadge } from './StatusBadge.js';
 import { UptimeBar } from './UptimeBar.js';
 import { LatencyChart } from './LatencyChart.js';
 import { DOC_LABEL, DOC_DESCRIPTION, UF_NAME } from '../lib/labels.js';
-import { computeUptime } from '../lib/uptime.js';
+import { computeUptime, maxGapMs } from '../lib/uptime.js';
 
 interface ServiceDetailPanelProps {
   service: ServiceStatusDTO;
   onClose: () => void;
 }
 
-const PERIODS: HistoryPeriod[] = ['1h', '6h', '24h', '72h'];
+// '1h' e '6h' foram omitidos: com a cadência real de coleta (~3h/ponto), essas
+// janelas rendem 0–2 amostras — o gráfico fica vazio e o uptime sai sobre uma
+// amostra única. Mantemos só janelas com densidade de pontos significativa.
+const PERIODS: HistoryPeriod[] = ['24h', '72h'];
 const SVRS_DERIVED = new Set<string>([DocumentType.MDFe, DocumentType.DCe]);
 
 /** Drawer com histórico de uptime e latência de um serviço. */
@@ -22,6 +25,7 @@ export function ServiceDetailPanel({ service, onClose }: ServiceDetailPanelProps
   const history = useServiceHistory(service.id, period);
   const points = history.data?.points ?? [];
   const stats = computeUptime(points, period);
+  const maxGapHours = Math.round(maxGapMs(points) / (60 * 60 * 1000));
   const isDerived = SVRS_DERIVED.has(service.document);
 
   return (
@@ -111,7 +115,7 @@ export function ServiceDetailPanel({ service, onClose }: ServiceDetailPanelProps
             {stats.lowCoverage && (
               <p className="mt-1 flex gap-1.5 text-xs" style={{ color: 'var(--slow)' }}>
                 <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-                Cobertura de {stats.coverage}% no período — instabilidades em janelas sem leitura
+                Houve um intervalo de ~{maxGapHours}h sem leitura — instabilidades nessa janela
                 podem não ter sido registradas.
               </p>
             )}

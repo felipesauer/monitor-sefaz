@@ -19,6 +19,9 @@ export function toServiceStatusDTO(result: StatusResult): ServiceStatusDTO {
     cStat: result.cStat,
     xMotivo: result.xMotivo,
     latencyMs: result.latencyMs,
+    // O checker SOAP mede latência de rede real (ms contínuos), como a fonte de
+    // disponibilidade — não o "tempo médio" do IntegraNotas.
+    source: 'availability',
     error: result.error,
     checkedAt: result.checkedAt.toISOString(),
   };

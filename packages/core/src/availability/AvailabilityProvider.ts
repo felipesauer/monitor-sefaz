@@ -32,10 +32,17 @@ const BROWSER_UA =
  * loop de redirect sem cookies; por isso usamos um cookie jar e um User-Agent
  * de browser. Esta é a mesma estratégia de monitores públicos da SEFAZ.
  */
+/** Espera `ms` antes de resolver. Injetável para os testes não dormirem de verdade. */
+export type Sleeper = (ms: number) => Promise<void>;
+const defaultSleeper: Sleeper = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export class HttpAvailabilityProvider {
   private readonly http: AxiosInstance;
 
-  constructor(private readonly timeoutMs = 20_000) {
+  constructor(
+    private readonly timeoutMs = 20_000,
+    private readonly sleep: Sleeper = defaultSleeper
+  ) {
     const jar = new CookieJar();
     this.http = wrapper(
       axios.create({
@@ -77,8 +84,11 @@ export class HttpAvailabilityProvider {
     // Cada documento tem layout de colunas próprio (NF-e usa índice 5, CT-e usa 2).
     const parser = new AvailabilityParser(document);
     let lastError: unknown;
+    const totalAttempts = urls.length * attemptsPerUrl;
+    let attemptIndex = 0;
     for (const url of urls) {
       for (let attempt = 1; attempt <= attemptsPerUrl; attempt += 1) {
+        attemptIndex += 1;
         try {
           const response = await this.http.get<ArrayBuffer>(url);
           const html = Buffer.from(response.data).toString('latin1');
@@ -89,6 +99,13 @@ export class HttpAvailabilityProvider {
           lastError = new Error(`resposta sem linhas de status (HTTP ${response.status})`);
         } catch (err) {
           lastError = err;
+        }
+        // Backoff antes da PRÓXIMA tentativa (nunca após a última): dá tempo de
+        // uma falha transitória passar e não martela a SEFAZ em milissegundos,
+        // o que agravaria o rate-limit. Linear (500ms × n) com jitter ±20%.
+        if (attemptIndex < totalAttempts) {
+          const base = 500 * attempt;
+          await this.sleep(Math.round(base * (0.8 + Math.random() * 0.4)));
         }
       }
     }

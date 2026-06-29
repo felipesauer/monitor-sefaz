@@ -19,12 +19,25 @@ export class HybridDataSource implements DataSource {
     private readonly history: DataSource
   ) {}
 
-  public getStatus(filters?: StatusFilters): Promise<StatusSnapshotDTO> {
-    return this.live.getStatus(filters);
+  public async getStatus(filters?: StatusFilters): Promise<StatusSnapshotDTO> {
+    try {
+      return await this.live.getStatus(filters);
+    } catch (err) {
+      // A fonte ao vivo (Worker/API) caiu: em vez de derrubar o dashboard,
+      // servimos o último snapshot estático versionado. Um monitor de
+      // disponibilidade não pode sair do ar junto com sua própria fonte.
+      console.warn('Fonte ao vivo indisponível em getStatus; usando o estático.', err);
+      return this.history.getStatus(filters);
+    }
   }
 
-  public getSummary(): Promise<SummaryDTO> {
-    return this.live.getSummary();
+  public async getSummary(): Promise<SummaryDTO> {
+    try {
+      return await this.live.getSummary();
+    } catch (err) {
+      console.warn('Fonte ao vivo indisponível em getSummary; usando o estático.', err);
+      return this.history.getSummary();
+    }
   }
 
   public getHistory(id: string, period: HistoryPeriod): Promise<HistoryResponseDTO> {

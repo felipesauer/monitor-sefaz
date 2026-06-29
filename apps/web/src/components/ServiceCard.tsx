@@ -20,7 +20,8 @@ export function ServiceCard({ service, spark = [], onSelect }: ServiceCardProps)
   const Icon = meta.icon;
   const ufName = UF_NAME[service.uf] ?? service.uf;
   const sparkData = spark
-    .filter((p) => p.latencyMs > 0)
+    // tMed=0 é valor legítimo (ver LatencyChart): incluímos os zeros.
+    .filter((p) => p.latencyMs >= 0)
     .map((p, i) => ({ i, v: p.latencyMs }));
   // Latência exibida = último ponto da MESMA série do gráfico (history.json),
   // para o card e o gráfico de detalhe não divergirem. Sem série, cai para o

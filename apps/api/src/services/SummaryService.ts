@@ -1,4 +1,10 @@
-import type { EnvironmentValue, ServiceStatusDTO, SummaryDTO } from '@monitor-sefaz/contracts';
+import {
+  averageLatency,
+  isUp,
+  type EnvironmentValue,
+  type ServiceStatusDTO,
+  type SummaryDTO,
+} from '@monitor-sefaz/contracts';
 
 interface Bucket {
   total: number;
@@ -13,14 +19,11 @@ function availability(bucket: Bucket): number {
 export class SummaryService {
   public build(env: EnvironmentValue, services: ServiceStatusDTO[], generatedAt: string): SummaryDTO {
     const total = services.length;
-    const operational = services.filter((s) => s.state === 'OPERATIONAL').length;
+    const operational = services.filter((s) => isUp(s.state)).length;
     const failing = total - operational;
 
-    const latencies = services.filter((s) => s.state === 'OPERATIONAL').map((s) => s.latencyMs);
-    const avgLatencyMs =
-      latencies.length === 0
-        ? null
-        : Math.round(latencies.reduce((a, b) => a + b, 0) / latencies.length);
+    const latencies = services.filter((s) => isUp(s.state)).map((s) => s.latencyMs);
+    const avgLatencyMs = averageLatency(latencies);
 
     const byDocument = this.group(services, (s) => s.document);
     const byAuthorizer = this.group(services, (s) => s.authorizer);
@@ -47,7 +50,7 @@ export class SummaryService {
       const key = keyOf(service);
       const bucket = buckets.get(key) ?? { total: 0, operational: 0 };
       bucket.total += 1;
-      if (service.state === 'OPERATIONAL') {
+      if (isUp(service.state)) {
         bucket.operational += 1;
       }
       buckets.set(key, bucket);

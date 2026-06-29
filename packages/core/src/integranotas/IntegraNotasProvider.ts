@@ -92,8 +92,18 @@ export class IntegraNotasProvider {
     const body = await this.fetcher(`${BASE}/${slug}`);
     const parsed = JSON.parse(body) as IntegraNotasPayload;
     const d = parsed.dados;
-    if (!d?.labels || !d.backgroundColor) {
-      throw new Error('IntegraNotas: payload sem dados.labels');
+    // Exigimos labels, backgroundColor E data com o MESMO comprimento de labels.
+    // Sem essa checagem, um payload sem `data` faria tMed=-1 para todas as UFs e
+    // todas virariam Error silenciosamente — sem lançar, o híbrido seguiria com
+    // 27 "serviços fora do ar" e o fallback nunca dispararia. Lançar aqui faz o
+    // HybridCollector pular este documento e, se necessário, cair no fallback.
+    if (
+      !d?.labels ||
+      !d.backgroundColor ||
+      !Array.isArray(d.data) ||
+      d.data.length !== d.labels.length
+    ) {
+      throw new Error('IntegraNotas: payload incompleto (labels/data/backgroundColor)');
     }
 
     const rows: IntegraNotasRow[] = [];

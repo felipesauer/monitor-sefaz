@@ -44,6 +44,24 @@ describe('IntegraNotasProvider', () => {
     await expect(provider.fetch(DocumentType.NFe)).rejects.toThrow();
   });
 
+  it('lança quando há labels/backgroundColor mas falta o array data', async () => {
+    // Sem essa guarda, todas as UFs virariam Error silenciosamente (tMed=-1) e o
+    // fallback do híbrido nunca dispararia.
+    const payload = JSON.stringify({
+      dados: { labels: ['SP', 'RJ'], backgroundColor: ['', ''] },
+    });
+    const provider = new IntegraNotasProvider(async () => payload);
+    await expect(provider.fetch(DocumentType.NFe)).rejects.toThrow(/incompleto/);
+  });
+
+  it('lança quando data tem comprimento diferente de labels', async () => {
+    const payload = JSON.stringify({
+      dados: { labels: ['SP', 'RJ'], backgroundColor: ['', ''], data: [1] },
+    });
+    const provider = new IntegraNotasProvider(async () => payload);
+    await expect(provider.fetch(DocumentType.NFe)).rejects.toThrow(/incompleto/);
+  });
+
   it('cobre os 5 documentos suportados', () => {
     const provider = new IntegraNotasProvider(async () => nfeFixture);
     const docs = provider.supportedDocuments();
