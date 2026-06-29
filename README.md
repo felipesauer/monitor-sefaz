@@ -111,7 +111,7 @@ Veja [`.env.example`](.env.example). As principais:
 | Variável | Padrão | Uso |
 | -------- | ------ | --- |
 | `VITE_API_BASE_URL` | _(vazio)_ | Front: definido → API/Worker ao vivo; vazio → JSONs estáticos |
-| `STATUS_SOURCE` | `availability` | Self-host: `availability` (scraping) ou `soap` |
+| `STATUS_SOURCE` | `hybrid` | Self-host: `hybrid` (consenso multi-fonte), `availability` (só scraping) ou `soap` |
 | `REDIS_URL` | `redis://localhost:6379` | Self-host |
 | `SEFAZ_CERT_PATH` / `SEFAZ_CERT_PASSPHRASE` | _(vazio)_ | Certificado A1 para o modo `soap` (mTLS) |
 
@@ -123,7 +123,7 @@ Code. Interface em PT-BR; código, contratos e APIs em inglês.
 ```
 packages/
   catalog/     dados do MOC: UFs, cStat, endpoints e mapa UF→autorizador
-  core/        motor: AvailabilityCollector (scraping) + SOAP (Envelope/Parser/Checker)
+  core/        motor: consenso multi-fonte (SVRS + Receita + IntegraNotas) + SOAP (Envelope/Parser/Checker)
   contracts/   schemas Zod + DTOs compartilhados (single source of truth)
 apps/
   collector/   CLI → gera os JSONs versionados (usado pelo GitHub Actions)
@@ -132,10 +132,12 @@ apps/
   web/         React + Vite → status page (fonte de dados plugável)
 ```
 
-> **Como obtém os dados sem certificado:** a SEFAZ publica uma página oficial de
-> disponibilidade (`disponibilidade.aspx`), pública e sem mTLS. O monitor faz o
-> scraping dela — a mesma estratégia de monitores públicos. MDF-e e DC-e são
-> centralizados no SVRS, então derivam do estado desse autorizador.
+> **Como obtém os dados sem certificado:** o monitor cruza fontes públicas (sem
+> mTLS) por consenso com precedência oficial — o portal do **SVRS**
+> (`dfe-portal.svrs.rs.gov.br`) e a **página oficial da Receita**
+> (`disponibilidade.aspx`) decidem o estado de cada serviço; o **IntegraNotas**
+> (API JSON) preenche as UFs/documentos que as oficiais não publicam. MDF-e e
+> DC-e são centralizados no SVRS, então derivam do estado desse autorizador.
 
 ## 🧪 Testes
 
