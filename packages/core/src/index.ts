@@ -61,6 +61,7 @@ export {
 export {
   AvailabilityCollector,
   type CollectedStatus,
+  type StatusSource,
   type AvailabilityProviderLike,
 } from './availability/AvailabilityCollector.js';
 

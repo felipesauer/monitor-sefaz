@@ -61,6 +61,7 @@ export class IntegraNotasCollector {
           cStat: stateToCStat(row.state),
           // tMed é em segundos; convertemos para ms (0 quando ausente).
           latencyMs: row.tMedSeconds != null ? row.tMedSeconds * 1000 : 0,
+          source: 'integranotas',
         });
       }
     }

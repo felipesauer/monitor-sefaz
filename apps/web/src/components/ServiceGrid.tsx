@@ -16,10 +16,13 @@ export function ServiceGrid({ services, series, onSelect, pageSize = 24 }: Servi
   const [page, setPage] = useState(0);
   const pages = Math.max(1, Math.ceil(services.length / pageSize));
 
-  // Volta para a primeira página quando o filtro muda o total.
+  // Volta para a primeira página quando o CONJUNTO filtrado muda. Usar o total
+  // (services.length) não bastava: trocar de um filtro para outro de mesmo
+  // tamanho mantinha a página atual, exibindo um recorte arbitrário.
+  const filterKey = services.map((s) => s.id).join(',');
   useEffect(() => {
     setPage(0);
-  }, [services.length]);
+  }, [filterKey]);
 
   const current = Math.min(page, pages - 1);
   const slice = services.slice(current * pageSize, current * pageSize + pageSize);

@@ -36,14 +36,34 @@ export class HybridCollector implements StatusCollectorLike {
   }
 
   public async collect(): Promise<CollectedStatus[]> {
+    let primary: CollectedStatus[] = [];
     try {
-      const primary = await this.primary.collect();
-      if (primary.length >= this.minServices) {
-        return primary;
-      }
+      primary = await this.primary.collect();
     } catch {
-      // cai para o fallback
+      // primário indisponível — primary fica []
     }
-    return this.fallback.collect();
+
+    // Primário completo: usa direto (caminho normal).
+    if (primary.length >= this.minServices) {
+      return primary;
+    }
+
+    // Primário parcial ou vazio: em vez de DESCARTAR os dados reais por-UF que o
+    // primário trouxe, buscamos o fallback e usamos ele só para COMPLETAR as
+    // lacunas (o primário tem precedência por ser medição por estado, não
+    // derivada do autorizador). Se o fallback falhar, ficamos com o primário.
+    let fallback: CollectedStatus[] = [];
+    try {
+      fallback = await this.fallback.collect();
+    } catch {
+      return primary;
+    }
+
+    const key = (s: CollectedStatus): string => `${s.document}:${s.uf}`;
+    const merged = new Map(fallback.map((s) => [key(s), s]));
+    for (const s of primary) {
+      merged.set(key(s), s); // primário sobrescreve o fallback
+    }
+    return [...merged.values()];
   }
 }

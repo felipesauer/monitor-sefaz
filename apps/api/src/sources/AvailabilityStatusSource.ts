@@ -43,6 +43,7 @@ export class AvailabilityStatusSource implements StatusSource {
       cStat: s.cStat,
       xMotivo: null,
       latencyMs: s.latencyMs,
+      source: s.source,
       error: null,
       checkedAt,
     };
