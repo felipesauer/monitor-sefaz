@@ -13,7 +13,7 @@ import {
   type StatusSnapshotDTO,
   type SummaryDTO,
 } from '@monitor-sefaz/contracts';
-import { Environment } from '@monitor-sefaz/catalog';
+import { Catalog, Environment } from '@monitor-sefaz/catalog';
 import { WorkerAvailabilityProvider } from './WorkerAvailabilityProvider.js';
 
 /** Fetcher do IntegraNotas no runtime do Worker (fetch nativo + header XHR). */
@@ -121,7 +121,18 @@ export default {
 
     try {
       const generatedAt = new Date().toISOString();
-      const services = (await collector.collect()).map((s) => toDTO(s, generatedAt));
+      const collected = await collector.collect();
+
+      // Mesma guarda de piso do collector: coleta parcial não vira disponibilidade
+      // inflada servida como completa — respondemos 502 (mesmo predicado e ratio).
+      if (!new Catalog().meetsCoverageFloor(collected.length, Environment.Production)) {
+        return new Response(
+          JSON.stringify({ error: 'coleta abaixo do piso de cobertura' }),
+          { status: 502, headers: { 'Content-Type': 'application/json', ...CORS } }
+        );
+      }
+
+      const services = collected.map((s) => toDTO(s, generatedAt));
 
       if (pathname.endsWith('/summary')) {
         return json(buildSummary(services, generatedAt));

@@ -16,6 +16,7 @@ import { StatusBroadcaster } from './realtime/StatusBroadcaster.js';
 import type { StatusSource } from './sources/StatusSource.js';
 import { SoapStatusSource } from './sources/SoapStatusSource.js';
 import { AvailabilityStatusSource } from './sources/AvailabilityStatusSource.js';
+import { HybridStatusSource } from './sources/HybridStatusSource.js';
 
 /** Entrypoint: conecta o Redis, monta a API e inicia o scheduler de checagens. */
 async function main(): Promise<void> {
@@ -37,8 +38,10 @@ async function main(): Promise<void> {
     };
   }
 
-  // Seleciona a fonte de status: scraping da página oficial (padrão, sem cert)
-  // ou consulta SOAP direta (quando há rede/certificado A1).
+  // Seleciona a fonte de status. Padrão: híbrida (IntegraNotas + fallback), o
+  // MESMO motor do collector e do worker — assim os números batem entre as três
+  // pontas. Opt-in: 'soap' (consulta direta, exige cert A1) ou 'availability'
+  // (só scraping da página oficial).
   let source: StatusSource;
   if (config.statusSource === 'soap') {
     const checker = CheckerFactory.create({
@@ -49,8 +52,10 @@ async function main(): Promise<void> {
       new BatchChecker(checker, config.concurrency),
       new CatalogAuthorizerRegistry()
     );
-  } else {
+  } else if (config.statusSource === 'availability') {
     source = new AvailabilityStatusSource();
+  } else {
+    source = new HybridStatusSource();
   }
 
   // Diretório do front buildado (apps/web/dist), servido em produção.
