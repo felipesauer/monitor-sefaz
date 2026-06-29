@@ -48,9 +48,17 @@ export const DOC_DESCRIPTION: Record<string, string> = {
   DCe: 'Declaração de Conteúdo eletrônica — usada no transporte de bens entre não contribuintes.',
 };
 
-/** Formata latência em ms para exibição (ex: 1500 → "1.5 s", 240 → "240 ms"). */
+/**
+ * Formata latência em ms para exibição (ex: 1500 → "1.5 s", 240 → "240 ms").
+ *
+ * `0` é uma medição LEGÍTIMA — o "tempo médio" da SEFAZ vem em segundos inteiros
+ * e 0 significa resposta sub-segundo (rápida), não "sem dado". Só valores não
+ * numéricos ou negativos (ausência de medição) viram "—". Tratar 0 como "—"
+ * fazia a maioria dos cards saudáveis (tMed=0) exibir traço de indisponível.
+ */
 export function formatLatency(ms: number): { value: string; unit: string } {
-  if (ms <= 0) return { value: '—', unit: '' };
+  if (!Number.isFinite(ms) || ms < 0) return { value: '—', unit: '' };
+  if (ms === 0) return { value: '<1', unit: 's' };
   if (ms >= 1000) return { value: (ms / 1000).toFixed(1), unit: 's' };
   return { value: String(ms), unit: 'ms' };
 }

@@ -9,10 +9,12 @@ export interface AppConfig {
   readonly environments: ('production' | 'homologation')[];
   /**
    * Fonte de status:
-   * - `availability`: scraping da página oficial (pública, sem cert) — padrão.
+   * - `hybrid`: IntegraNotas (JSON) + fallback ao scraping — padrão. Mesmo motor
+   *   do collector e do worker, para os números baterem entre as três pontas.
+   * - `availability`: só o scraping da página oficial (pública, sem cert).
    * - `soap`: consulta SOAP direta (exige rede/cert A1).
    */
-  readonly statusSource: 'availability' | 'soap';
+  readonly statusSource: 'hybrid' | 'availability' | 'soap';
   /** Concorrência de requisições à SEFAZ por lote. */
   readonly concurrency: number;
   /** Timeout por requisição SEFAZ (ms). */
@@ -42,7 +44,12 @@ export function loadConfig(): AppConfig {
     redisUrl: process.env.REDIS_URL ?? 'redis://localhost:6379',
     cronExpression: process.env.CRON_EXPRESSION ?? '*/5 * * * *',
     environments: ['production'],
-    statusSource: process.env.STATUS_SOURCE === 'soap' ? 'soap' : 'availability',
+    statusSource:
+      process.env.STATUS_SOURCE === 'soap'
+        ? 'soap'
+        : process.env.STATUS_SOURCE === 'availability'
+          ? 'availability'
+          : 'hybrid',
     concurrency: intEnv('SEFAZ_CONCURRENCY', 5),
     timeoutMs: intEnv('SEFAZ_TIMEOUT_MS', 15_000),
     historyRetentionMs: intEnv('HISTORY_RETENTION_MS', 72 * 60 * 60 * 1000),

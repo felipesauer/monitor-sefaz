@@ -9,6 +9,13 @@ import { UF_INFO, ALL_UFS } from './uf-info.js';
 import { ENDPOINTS } from './endpoints.js';
 import { UF_AUTHORIZERS, DEFAULT_AUTHORIZER, VIRTUAL_AUTHORIZER_CUF } from './authorizers.js';
 
+/**
+ * Fração mínima padrão do catálogo que uma coleta precisa cobrir para ser
+ * considerada confiável. Override por env onde aplicável (ex.: MIN_COVERAGE_RATIO
+ * no collector). Compartilhado para collector e worker usarem o MESMO piso.
+ */
+export const DEFAULT_MIN_COVERAGE_RATIO = 0.75;
+
 /** Entrada resolvida do catálogo para uma combinação documento+UF+ambiente. */
 export interface CatalogEntry {
   readonly document: DocumentType;
@@ -76,6 +83,21 @@ export class Catalog {
   /** Lista todas as entradas de todos os documentos para um ambiente. */
   public listAll(environment: Environment): CatalogEntry[] {
     return Object.values(DocumentType).flatMap((document) => this.list(document, environment));
+  }
+
+  /**
+   * Uma coleta cobre o catálogo o bastante para ser confiável? Abaixo do piso
+   * (fração do total esperado), presume-se falha das fontes — não uma queda real
+   * da SEFAZ, que ainda retorna os serviços com state DOWN/ERROR. Compartilhado
+   * entre collector (aborta a publicação) e worker (responde 502).
+   */
+  public meetsCoverageFloor(
+    collectedCount: number,
+    environment: Environment,
+    ratio = DEFAULT_MIN_COVERAGE_RATIO
+  ): boolean {
+    const expected = this.listAll(environment).length;
+    return collectedCount >= Math.floor(expected * ratio);
   }
 
   /** Código IBGE de um autorizador virtual (SVRS/SVAN/AN/...), se houver. */

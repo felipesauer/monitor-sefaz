@@ -1,5 +1,6 @@
 import {
   historyResponseSchema,
+  statusSnapshotSchema,
   summarySchema,
   type HistoryPeriod,
   type HistoryResponseDTO,
@@ -8,7 +9,6 @@ import {
 } from '@monitor-sefaz/contracts';
 import {
   fetchJson,
-  parseStatusSnapshot,
   type DataSource,
   type HistorySeries,
   type StatusFilters,
@@ -25,9 +25,13 @@ export class ApiDataSource implements DataSource {
     const params = new URLSearchParams({ env: 'production' });
     if (filters.document) params.set('document', filters.document);
     if (filters.uf) params.set('uf', filters.uf);
-    return parseStatusSnapshot(
-      await fetchJson(`${this.baseUrl}/api/v1/status?${params.toString()}`),
-      'API'
+    // Parse ESTRITO (lança) de propósito: no modo híbrido esta é a fonte ao
+    // vivo, e o HybridDataSource depende do throw para cair no estático. Usar o
+    // parse tolerante aqui (que devolve {services:[]} sem lançar) neutralizaria
+    // o fallback. A resiliência por-item fica só no StaticDataSource, que é o
+    // último recurso e não tem para onde cair.
+    return statusSnapshotSchema.parse(
+      await fetchJson(`${this.baseUrl}/api/v1/status?${params.toString()}`)
     );
   }
 

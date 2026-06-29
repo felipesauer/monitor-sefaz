@@ -59,7 +59,23 @@ describe('IntegraNotasProvider', () => {
       dados: { labels: ['SP', 'RJ'], backgroundColor: ['', ''], data: [1] },
     });
     const provider = new IntegraNotasProvider(async () => payload);
-    await expect(provider.fetch(DocumentType.NFe)).rejects.toThrow(/incompleto/);
+    await expect(provider.fetch(DocumentType.NFe)).rejects.toThrow(/incompleto|desalinhad/);
+  });
+
+  it('lança quando backgroundColor desalinha de labels', async () => {
+    const payload = JSON.stringify({
+      dados: { labels: ['SP', 'RJ'], backgroundColor: [''], data: [1, 1] },
+    });
+    const provider = new IntegraNotasProvider(async () => payload);
+    await expect(provider.fetch(DocumentType.NFe)).rejects.toThrow(/desalinhad|incompleto/);
+  });
+
+  it('lança quando normal/svc (opcionais) desalinham de labels', async () => {
+    const payload = JSON.stringify({
+      dados: { labels: ['SP', 'RJ'], backgroundColor: ['', ''], data: [1, 1], normal: [1] },
+    });
+    const provider = new IntegraNotasProvider(async () => payload);
+    await expect(provider.fetch(DocumentType.NFe)).rejects.toThrow(/desalinhad|incompleto/);
   });
 
   it('cobre os 5 documentos suportados', () => {

@@ -15,8 +15,6 @@ import {
 } from './DataSource.js';
 
 const PERIOD_MS: Record<HistoryPeriod, number> = {
-  '1h': 60 * 60 * 1000,
-  '6h': 6 * 60 * 60 * 1000,
   '24h': 24 * 60 * 60 * 1000,
   '72h': 72 * 60 * 60 * 1000,
 };

@@ -36,12 +36,23 @@ const BROWSER_UA =
 export type Sleeper = (ms: number) => Promise<void>;
 const defaultSleeper: Sleeper = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+/**
+ * Atraso (ms) antes da próxima tentativa: linear (500ms × tentativa) com jitter
+ * de ±20%. `attempt` é 1-based; `random` deve devolver [0,1). Função pura para
+ * ser testável de forma determinística.
+ */
+export function backoffMs(attempt: number, random: () => number = Math.random): number {
+  return Math.round(500 * attempt * (0.8 + random() * 0.4));
+}
+
 export class HttpAvailabilityProvider {
   private readonly http: AxiosInstance;
 
   constructor(
     private readonly timeoutMs = 20_000,
-    private readonly sleep: Sleeper = defaultSleeper
+    private readonly sleep: Sleeper = defaultSleeper,
+    /** Fonte de aleatoriedade do jitter; injetável para o backoff ser determinístico em teste. */
+    private readonly random: () => number = Math.random
   ) {
     const jar = new CookieJar();
     this.http = wrapper(
@@ -104,8 +115,7 @@ export class HttpAvailabilityProvider {
         // uma falha transitória passar e não martela a SEFAZ em milissegundos,
         // o que agravaria o rate-limit. Linear (500ms × n) com jitter ±20%.
         if (attemptIndex < totalAttempts) {
-          const base = 500 * attempt;
-          await this.sleep(Math.round(base * (0.8 + Math.random() * 0.4)));
+          await this.sleep(backoffMs(attempt, this.random));
         }
       }
     }

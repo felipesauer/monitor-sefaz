@@ -92,18 +92,23 @@ export class IntegraNotasProvider {
     const body = await this.fetcher(`${BASE}/${slug}`);
     const parsed = JSON.parse(body) as IntegraNotasPayload;
     const d = parsed.dados;
-    // Exigimos labels, backgroundColor E data com o MESMO comprimento de labels.
-    // Sem essa checagem, um payload sem `data` faria tMed=-1 para todas as UFs e
-    // todas virariam Error silenciosamente — sem lançar, o híbrido seguiria com
-    // 27 "serviços fora do ar" e o fallback nunca dispararia. Lançar aqui faz o
-    // HybridCollector pular este documento e, se necessário, cair no fallback.
+    // Os arrays do payload são lidos por índice PARALELO (labels[i], data[i],
+    // backgroundColor[i], normal[i], svc[i]). Se qualquer um desalinhar, lemos o
+    // estado/flags de OUTRA UF ou caímos em Error silencioso. Por isso exigimos
+    // que todos os presentes tenham o mesmo comprimento de labels; senão lança e
+    // o HybridCollector pula o documento (e cai no fallback se necessário).
+    const n = d?.labels?.length;
+    const lenMismatch = (a?: unknown[]): boolean => Array.isArray(a) && a.length !== n;
     if (
       !d?.labels ||
-      !d.backgroundColor ||
+      !Array.isArray(d.backgroundColor) ||
+      d.backgroundColor.length !== n ||
       !Array.isArray(d.data) ||
-      d.data.length !== d.labels.length
+      d.data.length !== n ||
+      lenMismatch(d.normal) ||
+      lenMismatch(d.svc)
     ) {
-      throw new Error('IntegraNotas: payload incompleto (labels/data/backgroundColor)');
+      throw new Error('IntegraNotas: payload incompleto ou com arrays desalinhados');
     }
 
     const rows: IntegraNotasRow[] = [];
