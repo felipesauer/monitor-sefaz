@@ -1,6 +1,13 @@
-import type { EnvironmentValue, HistoryPointDTO, ServiceStatusDTO } from '@monitor-sefaz/contracts';
+import type {
+  EnvironmentValue,
+  HistoryPeriod,
+  HistoryPointDTO,
+  ServiceStatusDTO,
+} from '@monitor-sefaz/contracts';
 
-export type HistoryPeriod = '1h' | '6h' | '24h' | '72h';
+// HistoryPeriod vem de @monitor-sefaz/contracts (fonte única) para não divergir
+// das janelas suportadas.
+export type { HistoryPeriod };
 
 /**
  * Persistência do estado de monitoramento. Abstrai o Redis para que a camada
@@ -22,8 +29,6 @@ export interface StatusStore {
 
 /** Milissegundos correspondentes a cada período de histórico. */
 export const PERIOD_MS: Record<HistoryPeriod, number> = {
-  '1h': 60 * 60 * 1000,
-  '6h': 6 * 60 * 60 * 1000,
   '24h': 24 * 60 * 60 * 1000,
   '72h': 72 * 60 * 60 * 1000,
 };

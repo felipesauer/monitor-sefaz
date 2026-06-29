@@ -1,7 +1,7 @@
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { HybridCollector } from '@monitor-sefaz/core';
-import { Catalog, Environment } from '@monitor-sefaz/catalog';
+import { Catalog, DEFAULT_MIN_COVERAGE_RATIO, Environment } from '@monitor-sefaz/catalog';
 import {
   averageLatency,
   fromEnvironment,
@@ -19,11 +19,9 @@ const RETENTION_MS = Number(process.env.HISTORY_RETENTION_MS ?? 7 * 24 * 60 * 60
 
 /**
  * Fração mínima do catálogo que uma coleta precisa cobrir para ser publicada.
- * Abaixo disso, presume-se falha das fontes (não uma queda real da SEFAZ — uma
- * SEFAZ fora do ar ainda retorna os serviços, com state DOWN/ERROR) e abortamos
- * sem sobrescrever, preservando o último dado bom. Ajustável por env.
+ * Default compartilhado com o worker via @monitor-sefaz/catalog; ajustável por env.
  */
-const MIN_COVERAGE_RATIO = Number(process.env.MIN_COVERAGE_RATIO ?? 0.75);
+const MIN_COVERAGE_RATIO = Number(process.env.MIN_COVERAGE_RATIO ?? DEFAULT_MIN_COVERAGE_RATIO);
 
 function buildSummary(services: ServiceStatusDTO[], generatedAt: string): SummaryDTO {
   const total = services.length;
@@ -91,6 +89,18 @@ function appendHistory(
     series[s.id] = [...prev, point].filter((p) => Date.parse(p.timestamp) >= cutoff);
   }
 
+  // Poda também os IDs AUSENTES da coleta atual (UF/doc que sumiu da fonte, ou
+  // coleta parcial sob fallback): sem isso suas séries nunca expiravam e o
+  // history.json crescia sem limite, servindo pontos fora da janela de retenção.
+  for (const id of Object.keys(series)) {
+    const pruned = series[id]!.filter((p) => Date.parse(p.timestamp) >= cutoff);
+    if (pruned.length === 0) {
+      delete series[id];
+    } else {
+      series[id] = pruned;
+    }
+  }
+
   return { updatedAt: generatedAt, series };
 }
 
@@ -108,12 +118,13 @@ async function main(): Promise<void> {
   // provavelmente falharam. Abortar com erro (sem escrever) faz o git não ver
   // diff — o último snapshot bom permanece — e o GitHub Actions falha visível,
   // em vez de publicar services:[] / availability:0 silenciosamente.
-  const expected = new Catalog().listAll(Environment.Production).length;
-  const floor = Math.floor(expected * MIN_COVERAGE_RATIO);
-  if (collected.length < floor) {
+  const catalog = new Catalog();
+  if (!catalog.meetsCoverageFloor(collected.length, Environment.Production, MIN_COVERAGE_RATIO)) {
+    const expected = catalog.listAll(Environment.Production).length;
     console.error(
       `Coleta abaixo do piso: ${collected.length} de ${expected} serviços ` +
-        `(mínimo ${floor}). Provável falha das fontes; abortando sem sobrescrever.`
+        `(mínimo ${Math.floor(expected * MIN_COVERAGE_RATIO)}). ` +
+        `Provável falha das fontes; abortando sem sobrescrever.`
     );
     process.exit(1);
   }

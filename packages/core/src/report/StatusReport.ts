@@ -28,7 +28,12 @@ export class StatusReport {
     const failing = total - operational;
     const availability = total === 0 ? 0 : Number(((operational / total) * 100).toFixed(1));
 
-    const latencies = results.filter((r) => isUp(r.state)).map((r) => r.latencyMs);
+    // Espelha averageLatency de @monitor-sefaz/contracts: inclui 0 (medição
+    // legítima) e ignora negativos (ausência). Duplicado para não acoplar o core.
+    const latencies = results
+      .filter((r) => isUp(r.state))
+      .map((r) => r.latencyMs)
+      .filter((ms) => ms >= 0);
     const avgLatencyMs =
       latencies.length === 0
         ? null

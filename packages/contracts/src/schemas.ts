@@ -102,7 +102,9 @@ export const summarySchema = z.object({
 export type SummaryDTO = z.infer<typeof summarySchema>;
 
 /** Períodos suportados pela consulta de histórico curto. */
-export const historyPeriodSchema = z.enum(['1h', '6h', '24h', '72h']);
+// '1h'/'6h' foram removidos: com a cadência real de coleta (~3h/ponto) rendem
+// 0–2 amostras, deixando gráfico vazio e uptime sobre amostra única.
+export const historyPeriodSchema = z.enum(['24h', '72h']);
 export type HistoryPeriod = z.infer<typeof historyPeriodSchema>;
 
 /** Ponto da série temporal de histórico curto. */
