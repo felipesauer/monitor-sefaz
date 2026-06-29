@@ -87,3 +87,6 @@ export {
 export { SvrsProvider, SVRS_URLS, type SvrsFetcher } from './svrs/SvrsProvider.js';
 export { createHttpSvrsFetcher } from './svrs/httpFetcher.js';
 export { SvrsCollector } from './svrs/SvrsCollector.js';
+
+// Consenso multi-fonte (precedência oficial)
+export { ConsensusCollector, type ConsensusSource } from './consensus/ConsensusCollector.js';
