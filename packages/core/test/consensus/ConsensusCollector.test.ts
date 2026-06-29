@@ -10,9 +10,10 @@ function status(
   state: ServiceState,
   source: CollectedStatus['source'],
   latencyMs = 0,
-  document = DocumentType.NFe
+  document = DocumentType.NFe,
+  sourceCheckedAt?: string
 ): CollectedStatus {
-  return { document, uf, authorizer: uf, state, cStat: null, latencyMs, source };
+  return { document, uf, authorizer: uf, state, cStat: null, latencyMs, source, sourceCheckedAt };
 }
 
 /** Collector que devolve uma lista fixa (ou lança, se `fail`). */
@@ -70,8 +71,10 @@ describe('ConsensusCollector', () => {
     expect(out[0]!.state).toBe(ServiceState.Down);
   });
 
-  it('herda a latência real medida quando a fonte vencedora reporta 0', async () => {
-    const official = fake([status('SP', ServiceState.Operational, 'svrs', 0)]); // SVRS não mede latência
+  it('herda a latência real medida quando a fonte vencedora reporta 0, preservando sourceCheckedAt', async () => {
+    const official = fake([
+      status('SP', ServiceState.Operational, 'svrs', 0, DocumentType.NFe, '17:33:53'), // SVRS não mede latência
+    ]);
     const third = fake([status('SP', ServiceState.Operational, 'integranotas', 250)]);
     const consensus = new ConsensusCollector([
       { name: 'svrs', official: true, collector: official },
@@ -81,6 +84,7 @@ describe('ConsensusCollector', () => {
     const out = await consensus.collect();
     expect(out[0]!.source).toBe('svrs'); // estado é o oficial
     expect(out[0]!.latencyMs).toBe(250); // latência herdada da fonte que mediu
+    expect(out[0]!.sourceCheckedAt).toBe('17:33:53'); // frescor do SVRS preservado na herança
   });
 
   it('uma fonte que lança não derruba as demais', async () => {

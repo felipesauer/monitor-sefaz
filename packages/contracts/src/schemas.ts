@@ -58,7 +58,12 @@ export const serviceStatusSchema = z.object({
   latencyMs: z.number(),
   source: statusSourceSchema.optional(),
   error: z.string().nullable(),
-  checkedAt: z.string(), // ISO 8601
+  checkedAt: z.string(), // ISO 8601 — quando o MONITOR coletou
+  /**
+   * Horário "HH:MM:SS" em que a própria FONTE verificou o serviço (frescor do
+   * dado oficial). Hoje só o SVRS publica; ausente nas demais fontes.
+   */
+  sourceCheckedAt: z.string().optional(),
 });
 export type ServiceStatusDTO = z.infer<typeof serviceStatusSchema>;
 

@@ -39,4 +39,14 @@ describe('SvrsCollector', () => {
     const mdfe = out.filter((s) => s.document === DocumentType.MDFe);
     expect(mdfe.length).toBeGreaterThan(1);
   });
+
+  it('propaga o horário de aferição do SVRS em sourceCheckedAt', async () => {
+    const collector = new SvrsCollector(new SvrsProvider(fixtureFetcher));
+    const out = await collector.collect();
+    const withTime = out.filter((s) => s.sourceCheckedAt);
+    expect(withTime.length).toBeGreaterThan(0);
+    for (const s of withTime) {
+      expect(s.sourceCheckedAt).toMatch(/^\d{2}:\d{2}:\d{2}$/);
+    }
+  });
 });

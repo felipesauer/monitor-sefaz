@@ -87,10 +87,11 @@ export class SvrsCollector {
         // Preferimos o cStat REAL do SVRS; se ausente, derivamos do estado.
         cStat: status.cStat ?? stateToCStat(status.state),
         // O SVRS não publica latência de rede; mantemos 0 (o consenso pode
-        // herdar a latência de outra fonte). O timestamp do SVRS fica em
-        // `sourceCheckedAt` para o front exibir frescor — ver mapeamento no DTO.
+        // herdar a latência de outra fonte). O timestamp do SVRS vira o frescor
+        // exibido pelo front.
         latencyMs: 0,
         source: 'svrs',
+        sourceCheckedAt: status.lastCheckTime ?? undefined,
       });
     }
     return out;

@@ -47,6 +47,13 @@ export interface CollectedStatus {
   /** Latência (ms); a semântica depende de `source` — ver {@link StatusSource}. */
   readonly latencyMs: number;
   readonly source: StatusSource;
+  /**
+   * Horário "HH:MM:SS" em que a PRÓPRIA fonte verificou o serviço, quando ela o
+   * publica (hoje só o SVRS). É o frescor real do dado oficial — distinto do
+   * `checkedAt` do snapshot (quando o monitor coletou). Ausente nas fontes que
+   * não expõem essa informação.
+   */
+  readonly sourceCheckedAt?: string;
 }
 
 /**
