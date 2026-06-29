@@ -35,7 +35,7 @@ function stateToCStat(state: ServiceState): number | null {
  * página oficial) só diferem na fonte, não na grandeza. Mantido para rastrear a
  * procedência do dado.
  */
-export type StatusSource = 'integranotas' | 'availability';
+export type StatusSource = 'integranotas' | 'availability' | 'svrs';
 
 /** Status coletado de um serviço (documento + UF), pronto para virar DTO. */
 export interface CollectedStatus {
@@ -47,6 +47,13 @@ export interface CollectedStatus {
   /** Latência (ms); a semântica depende de `source` — ver {@link StatusSource}. */
   readonly latencyMs: number;
   readonly source: StatusSource;
+  /**
+   * Horário "HH:MM:SS" em que a PRÓPRIA fonte verificou o serviço, quando ela o
+   * publica (hoje só o SVRS). É o frescor real do dado oficial — distinto do
+   * `checkedAt` do snapshot (quando o monitor coletou). Ausente nas fontes que
+   * não expõem essa informação.
+   */
+  readonly sourceCheckedAt?: string;
 }
 
 /**

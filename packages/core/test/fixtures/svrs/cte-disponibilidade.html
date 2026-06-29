@@ -1,0 +1,534 @@
+
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Portal do Conhecimento de Transporte Eletr&#244;nico</title>
+
+    <link rel="icon" href="/Content/img/favicon.ico" type="image/x-icon" />
+
+    <link rel="stylesheet" href="/Content/font-awesome/css/font-awesome.min.css" media="all" />
+    <link rel="stylesheet" href="/Content/css/bootstrap-matriz.min.css" media="all" />
+    <link rel="stylesheet" href="/Content/css/bootstrap-override.css" media="all" />
+    <link rel="stylesheet" href="/Content/css/Cte.css" media="all" />
+    <link rel="stylesheet" href="/Content/css/print.css" media="print" />
+    <link rel="stylesheet" href="/Scripts/summernote/summernote-lite.css" />
+    <link rel="stylesheet" href="/Scripts/datepicker/datepicker.min.css" />
+
+    <link rel="stylesheet" href="/Content/css/owl.carousel.css" media="all" />
+    <link rel="alternate stylesheet" href="/Content/css/contraste.css" title="contraste" media="all" />
+    <script type="text/javascript" src="/Scripts/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="/Scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/Scripts/summernote/summernote-lite.js"></script>
+    <script type="text/javascript" src="/Scripts/datepicker/datepicker.min.js"></script>
+    <script type="text/javascript" src="/Scripts/datepicker/datepicker.pt-BR.js"></script>
+    <script type="text/javascript" src="/Scripts/jquery.browser.min.js"></script>
+    <script type="text/javascript" src="/Scripts/snap.svg-min.js"></script>
+    <script>
+        function download_arquivo_estatico(sistema, tipo, nome) {
+            var iframe = document.createElement('iframe');//se o iframe não existe, cria
+            iframe.id = 'iframe-resource';
+            iframe.style.display = 'none';
+            jQuery('body').append(iframe);
+            jQuery('#iframe-resource').attr({
+                src: '/' + sistema + '/DownloadArquivoEstatico/?sistema=' + sistema + '&tipoArquivo=' + tipo + '&nomeArquivo=' + nome
+            });
+        }
+    </script>
+
+</head>
+<body id="bodyPricipal">
+
+    <header id="cabecalho" class="cabecalho">
+        <div class="container">
+            <a class="cabecalho__logo logo" href="/Cte" title="Ir para a página inicial"><h1 class="text-hide">CTe</h1></a>
+            <span class="cabecalho__titulo ">Portal do Conhecimento de Transporte Eletr&#244;nico</span>
+            <div id="menu-parent" class="cabecalho__menu-parent">
+                    <div style="margin-bottom: 2%">
+                        <i class="fa fa-lock fa-redondo"></i>
+                        <a style="color:white; cursor:pointer" href="/Soe/Login?provider=SoeOidc">Acesso Restrito SEFAZ</a>
+                    </div>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menuPrincipal"> <span class="sr-only">Alterna a navegação</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span></button>
+                <button type="button" class="navbar-toggle busca-toggle visible-xs visible-sm" data-toggle="collapse" data-target="#frmBuscaGeral"><span class="sr-only">Abrir a busca</span><span class="glyphicon glyphicon-search"></span></button>
+
+                <form id="frmBuscaGeral" method="get" action="/Cte/Busca" class="collapse" role="search">
+                    <div class="input-group">
+                        <label for="buscageralTextBox" class="sr-only">Buscar</label>
+                        <input type="text" class="form-control" placeholder="Buscar" id="buscageralTextBox" name="palavraschave" required />
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span><span class="sr-only">Buscar</span> </button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <nav id="menuPrincipal" class="navbar navbar-cor navbar-default collapse" style="height: 1px;">
+        <div class="container">
+            <div class="navbar-collapse" id="menuPrincipalCollapse">
+                <a class="sr-only" id="menuInicio">Início do menu</a>
+                <div class="redes-sociais-xs visible-xs">
+
+                </div>
+                <ul class="nav navbar-nav">
+                    <li class="active"><a title="Inicial - Página inicial do site" href="index.html">Inicial</a></li>
+                    <li><a href="/Cte" title="Home">Home</a></li>
+                    <li><a href="/Cte/Sobre" title="Sobre">Sobre</a></li>
+                    <li><a href="/Cte/Avisos" title="Avisos">Avisos</a></li>
+                    <li><a href="/Cte/Noticias" title="Notícias">Notícias</a></li>
+                        <li><a href="/Cte/Servicos" title="Serviços">Serviços</a></li>
+                    <li><a href="/Cte/Documentos" title="Documentos">Documentos</a></li>
+                        <li><a href="/Cte/Legislacao" title="Legislação">Legislação</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    
+    <div class="wrapper__corpo">
+        <div class="corpo">
+            <div class="row">
+                <div class="col-sm-offset-1 col-md-8 col-md-offset-0 coluna-principal">
+                    
+
+<div class="row">
+
+    <div class="col-sm-offset-1 col-md-11 col-md-offset-0 coluna-principal">
+
+        <div class="row">
+
+            <article class="col-xs-12 artigo artigo__pagina__simples--padrao">
+                <ol class="breadcrumb">
+                    <li><a href="/Cte">Home</a></li>
+                    <li><a href="/Cte/Disponibilidade">Disponibilidade</a></li>
+                </ol>
+                <div class="artigo__ferramentas clearfix">
+                    <div class="btn-group btn-group-sm artigo__ferramentas__botoes pull-left">
+                        <a title="Clique para imprimir esta página" class="btn btn-default" href="javascript: this.print();">
+                            <i class="fa fa-print"></i> Imprimir
+                        </a>
+                    </div>
+                </div>
+                <header class="artigo__cabecalho">
+                    <h1 class="artigo__titulo">Disponibilidade dos Web Services</h1>
+                </header>
+
+                    <div class="row">
+                        <div class="col-sm-8 col-sm-offset-1">
+                                <table class="table table-hover" style="margin-left: 20px">
+            <tr>
+                <td style="width: 30px;vertical-align:middle; ">
+                    <i class="fa fa-lg fa-check-circle" style="color: #3c763d "></i>
+                </td>
+                <td style="">
+                    <b>WS Consulta Situa&#231;&#227;o V4</b>
+                    <br />
+                    <small>
+                        17:37:34 - WS com status normal (CStat: 731)
+                    </small>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 30px;vertical-align:middle; ">
+                    <i class="fa fa-lg fa-check-circle" style="color: #3c763d "></i>
+                </td>
+                <td style="">
+                    <b>WS Recep&#231;&#227;o Evento V4</b>
+                    <br />
+                    <small>
+                        17:37:48 - WS com status normal (CStat: 215)
+                    </small>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 30px;vertical-align:middle; ">
+                    <i class="fa fa-lg fa-check-circle" style="color: #3c763d "></i>
+                </td>
+                <td style="">
+                    <b>WS Recep&#231;&#227;o GTVe V4</b>
+                    <br />
+                    <small>
+                        17:38:23 - WS com status normal (CStat: 244)
+                    </small>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 30px;vertical-align:middle; ">
+                    <i class="fa fa-lg fa-check-circle" style="color: #3c763d "></i>
+                </td>
+                <td style="">
+                    <b>WS Recep&#231;&#227;o Simplificado V4</b>
+                    <br />
+                    <small>
+                        17:40:21 - WS com status normal (CStat: 244)
+                    </small>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 30px;vertical-align:middle; ">
+                    <i class="fa fa-lg fa-check-circle" style="color: #3c763d "></i>
+                </td>
+                <td style="">
+                    <b>WS Recepcao V4</b>
+                    <br />
+                    <small>
+                        17:40:02 - WS com status normal (CStat: 244)
+                    </small>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 30px;vertical-align:middle; ">
+                    <i class="fa fa-lg fa-check-circle" style="color: #3c763d "></i>
+                </td>
+                <td style="">
+                    <b>WS RecepcaoOS V4</b>
+                    <br />
+                    <small>
+                        17:38:06 - WS com status normal (CStat: 244)
+                    </small>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 30px;vertical-align:middle; ">
+                    <i class="fa fa-lg fa-check-circle" style="color: #3c763d "></i>
+                </td>
+                <td style="">
+                    <b>WS Status V4</b>
+                    <br />
+                    <small>
+                        17:37:52 - WS com status normal (CStat: 107)
+                    </small>
+                </td>
+            </tr>
+    </table>
+
+                        </div>
+                    </div>
+            </article>
+        </div>
+    </div>
+</div>
+
+                </div>
+                <div id="divColunaLateral" class="col-sm-offset-1 col-md-4 col-md-offset-0 coluna-lateral">
+                    
+
+
+<div class="coluna-lateral__corpo">
+    <div class="row">
+
+                <div class="col-xs-12">
+                    <a href="/Soe/Login?provider=OpenIdConnect&returnUrl=/Cte">
+                        <style>
+                            .rounded-button {
+                                background-color: #f5f5f5;
+                                color: #1351b4;
+                                border: none;
+                                padding: 10px 20px;
+                                font-size: 16px;
+                                cursor: pointer;
+                                border-radius: 100em;
+                                transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+                                justify-content: space-between;
+                                align-items: center;
+                                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+                            }
+
+                                .rounded-button:hover {
+                                    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15), 0 4px 6px rgba(0, 0, 0, 0.1);
+                                    transform: translateY(-2px);
+                                }
+
+                            .imagemGovBr {
+                                padding-left: 10px;
+                                height: 30px;
+                            }
+                        </style>
+                        <div class="btn btn-xs block m-b rounded-button">
+                            Entrar com<img class="imagemGovBr" src="https://www.gov.br/++theme++padrao_govbr/img/govbr-colorido-b.png" alt="gov.br" />
+                        </div>
+                    </a>
+                </div>
+                <br />
+                <br />
+                <br />
+                <div class="col-xs-12">
+                    <section class="panel panel-default panel--matriz" style="margin-bottom: 4%">
+                        <div class="panel-heading">
+                            <i class="fa fa-gear fa-redondo" style="margin-right:8px"></i>
+                            <h2 class="panel-title">Janela de Manutenção</h2>
+                        </div>
+                        <div class="panel-body">
+                            <p>
+                                As manutenções programadas do ambiente DFe são sempre efetuadas aos Domingos das 07h00 às 09h00.
+                                Pequenas manutenções sem risco de indisponibilidade (ou de baixo risco) serão programadas
+                                com até 36 horas de antecedência. Demais manutenções, serão comunicadas em tempo hábil.
+                                Ver previsão de manutenção no box abaixo.
+                            </p>
+                                <div class="bg-warning text-justify fa-border"><strong>Não há manutenção prevista para o próximo Domingo</strong></div>
+                        </div>
+                    </section>
+                </div>
+            <div class="col-xs-12">
+                <section class="panel panel-default panel--matriz secretarias" style="margin-bottom: 4%">
+                    <div class="panel-heading">
+                        <i class="fa fa-building fa-redondo" style="margin-right:8px"></i>
+                        <h2 class="panel-title">Secretarias de Fazenda</h2>
+                    </div>
+                    <div class="panel-body">
+                        <form class="form">
+                            <div class="form-group">
+                                <select id="fExemplo" class="form-control" name="fExemplo" required="" aria-required="true" onchange="javascript: window.open(this.value)">
+                                    <option value="http://www.sefaz.ac.gov.br/">Acre</option>
+                                    <option value="http://www.sefaz.al.gov.br/">Alagoas</option>
+                                    <option value="http://www.sefaz.ap.gov.br/">Amapá</option>
+                                    <option value="http://www.sefaz.am.gov.br/">Amazonas</option>
+                                    <option value="http://www.sefaz.ba.gov.br/">Bahia</option>
+                                    <option value="http://www.sefaz.ce.gov.br/">Ceará</option>
+                                    <option value="https://receita.fazenda.df.gov.br/">Distrito Federal</option>
+                                    <option value="http://www.sefaz.es.gov.br/">Espirito Santo</option>
+                                    <option value="http://www.sefaz.go.gov.br/">Goiás</option>
+                                    <option value="http://www.sefaz.ma.gov.br/">Maranhão</option>
+                                    <option value="http://www.sefaz.mt.gov.br/">Mato Grosso</option>
+                                    <option value="http://www.sefaz.ms.gov.br/">Mato Grosso do Sul</option>
+                                    <option value="http://www.fazenda.mg.gov.br/">Minas Gerais</option>
+                                    <option value="http://www.sefa.pa.gov.br/">Pará</option>
+                                    <option value="http://www.receita.pb.gov.br/">Paraíba</option>
+                                    <option value="http://www.fazenda.pr.gov.br/">Paraná</option>
+                                    <option value="http://www.sefaz.pe.gov.br/">Pernambuco</option>
+                                    <option value="http://www.sefaz.pi.gov.br/">Piauí</option>
+                                    <option value="https://atendimentodfe.fazenda.rj.gov.br/ForAtendimentoDFE/contribuinte/formulario">Rio de Janeiro</option>
+                                    <option value="http://www.set.rn.gov.br/">Rio Grande do Norte</option>
+                                    <option value="http://www.sefaz.rs.gov.br/">Rio Grande do Sul</option>
+                                    <option value="http://www.sefin.ro.gov.br/">Rondônia</option>
+                                    <option value="http://www.sefaz.rr.gov.br/">Roraima</option>
+                                    <option value="http://www.sef.sc.gov.br/">Santa Catarina</option>
+                                    <option value="http://www.fazenda.sp.gov.br/">São Paulo</option>
+                                    <option value="http://www.sefaz.se.gov.br/">Sergipe</option>
+                                    <option value="http://www.sefaz.to.gov.br/">Tocantins</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </div>
+                <div class="col-xs-12">
+                    <section class="panel panel-default panel--matriz lista-links" style="margin-bottom: 4%">
+                        <div id="qtd-dfes" class="panel-heading" style="cursor:pointer" href="#" onclick="$('#modalResumoQtdDfes').modal('show');">
+                            <i class="fa fa-newspaper-o fa-redondo" style="margin-right:8px"></i>
+                            <h2 class="panel-title">DFe Autorizados na SVRS (30 dias)</h2>
+                        </div>
+
+                    </section>
+                </div>
+                <div id="modalResumoQtdDfes" class="modal fade">
+                    <!--Como chamar um arquivo svg o que é um arquivo svg-->
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <div class="titulo-modal">
+                                    <p>DFe Autorizados na SVRS (30 dias) </p>
+                                </div>
+                            </div>
+                            <div class="modal-body modal--body">
+                                
+                                <div class="form-group">
+                                    <div class="col-lg-12 area-modal-form">
+                                        
+
+                                        <div class="col-lg-12">
+                                            <label id="tipo-de-sistema">Total de DFes:</label>
+                                            <label class="numero-de-dfes" style="font-size: 25px; font-weight: 500;"></label>
+                                        </div>
+
+                                    </div>
+                                    
+<link rel="stylesheet" href="/Content/css/DfesDoBrasil.css" />
+
+
+<!-- aqui vamos colocar o html que foi gerado na index.html-->
+<div class="container svgMapContainer">
+    <svg xmlns:mapsvg="http://mapsvg.com" xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns="http://www.w3.org/2000/svg"
+         id="svgMap"
+         viewBox="-30 -30 700 700"
+         width="100%"
+         height="100%"
+         preserveAspectRatio="xMinYMin meet">
+    </svg>
+</div>
+
+<div class="tooltip-mapa"></div>
+
+<div class="col-md-12 qtd-tabela ">
+    <table class="table">
+        <thead class="titulo-tabela">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">UF</th>
+                <th scope="col">DFes Autorizados</th>
+                <th scope="col">Referente ao total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">1°</th>
+                <td class="codUf26"></td>
+                <td class="qtdDfes26">0000</td>
+                <td class="porcertagemDfes26">0%</td>
+
+            </tr>
+            <tr>
+                <th scope="row">2°</th>
+                <td class="codUf25"></td>
+                <td class="qtdDfes25" >0000</td>
+                <td class="porcertagemDfes25" >0%</td>
+
+            </tr>
+            <tr>
+                <th scope="row">3°</th>
+                <td class="codUf24"></td>
+                <td class="qtdDfes24">0000</td>
+                <td class="porcertagemDfes24" >0%</td>
+
+            </tr>
+        </tbody>
+        <caption style="margin-top: 1%;">UFs que mais autorizaram DFes.</caption>
+    </table>
+</div>
+<script type="text/javascript" src="/Scripts/brasil.js"></script>
+
+<script>
+
+    ResumoSistemasDfes('Cte');
+    
+
+
+
+</script>
+
+                                </div>
+                                <div class="corpo-modal">
+
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="fecharModal()" style="margin-top: 2%;">Fechar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <div class="col-xs-12">
+                <section class="panel panel-default panel--matriz lista-links" style="margin-bottom: 4%">
+                    <div class="panel-heading">
+                        <i class="fa fa-link fa-redondo" style="margin-right:8px"></i>
+                        <h2 class="panel-title">Navegação</h2>
+                    </div>
+                    <div class="panel-body">
+                        <ul style="font-size: 110%">
+                                <li><a href="/Bpe" title="BPe - Portal do Bilhete de Passagem Eletrônico">Portal do BPe</a></li>
+                                                                                        <li><a href="/Mdfe" title="MDFe - Portal do Manifesto Eletrônico de Documentos Fiscais">Portal do MDFe</a></li>
+                                                            <li><a href="/Nfce" title="NFCe - Portal da Nota Fiscal do Consumidor Eletrônica">Portal da NFCe</a></li>
+                                                            <li><a href="/Nf3e" title="NF3e - Portal da Nota Fiscal da Energia Elétrica Eletrônica">Portal da NF3E</a></li>
+                                                            <li><a href="/Nfcom" title="NFCom - Portal da Nota Fiscal Fatura de Serviço de Comunicação Eletrônica">Portal da NFCom</a></li>
+                                                            <li><a href="/Nfe" title="NFe - Portal da Nota Fiscal Eletrônica">Portal da NFe</a></li>
+                                                            <li><a href="/Nff" title="NFF - Portal da Nota Fiscal Fácil">Portal da NFF</a></li>
+                                                            <li><a href="/One" title="ONE - Portal do Operador Nacional dos Estados">Portal do ONE</a></li>
+                                                            <li><a href="/Dce" title="DCE - Portal da Declaração de Conteúdo Eletrônica">Portal da DCe</a></li>
+                                                            <li><a href="/Difal" title="DIFAL - Portal da DIFAL">Portal da DIFAL</a></li>
+                                                            <li><a href="/Pes" title="PES - Portal da Plataforma de Emissão Simplificada">Portal da PES</a></li>
+                                                            <li><a href="/Cff" title="CFF - Portal da Conformidade Fácil">Portal da CFF</a></li>
+                                                            <li><a href="/Nfag" title="NFAG - Portal da Nota Fiscal da Água e Saneamento Eletrônica">Portal da NFAG</a></li>
+                                                            <li><a href="/Nfabi" title="NFABI - Portal da Nota Fiscal Eletrônica de Alienação de Bens Imóveis">Portal da NFABI</a></li>
+                                                            <li><a href="/Nfgas" title="NFGAS - Portal da Nota Fiscal Eletrônica do Gás">Portal da NFGAS</a></li>
+                        </ul>
+                    </div>
+                </section>
+            </div>
+            <div class="col-xs-12">
+                <section class="panel panel-default panel--matriz lista-links" style="margin-bottom: 4%">
+                    <div class="panel-heading">
+                        <i class="fa fa-cloud fa-redondo" style="margin-right:8px"></i>
+                        <h2 class="panel-title">Links externos</h2>
+                    </div>
+                    <div class="panel-body">
+                        <ul style="font-size: 110%">
+                            <li><a href="http://www.cte.fazenda.gov.br" target="_blank" title="CTe - Conhecimento de Transporte Eletrônico">CTe</a></li>
+                            <li><a href="http://www.nfe.fazenda.gov.br" target="_blank" title="NFe - Nota Fiscal Eletrônica">NFe</a></li>
+                            <li><a href="http://nfce.encat.org" target="_blank" title="NFCe - Notal Fiscal de Consumidor Eletrônica">NFCe</a></li>
+                            <li><a href="https://www.confaz.fazenda.gov.br/" target="_blank" title="CONFAZ - Conselho Nacional de Política Fazendaria">CONFAZ</a></li>
+                        </ul>
+                    </div>
+                </section>
+            </div>
+                <div class="col-xs-12">
+                    <section class="panel panel-default panel--matriz lista-links" style="margin-bottom: 4%">
+                        <div class="panel-heading">
+                            <i class="fa fa-question fa-redondo" style="margin-right:8px"></i>
+                            <h2 class="panel-title">Dúvidas frequentes</h2>
+                        </div>
+                        <div class="panel-body">
+                            <ul>
+                                <li>
+                                    <a href="/Cte/Faq" title="Perguntas Mais Frequentes">FAQ</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                </div>
+    </div>
+</div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="rodape">
+    <div class="wrapper-rodape__expediente">
+        <div class="container" style="width: 60%">
+            <div class="row">
+                <div class="col-md-12">
+                    <a class="cabecalho__logo" title="Visite o site da RECEITA ESTADUAL RS" style="background-size:cover; background-position: 50% 50%; background-image:url(../../Content/img/logos/logo_Receita_branco.png)" target="_blank" href="https://receita.fazenda.rs.gov.br/"></a>
+                    <a class="cabecalho__logo" title="Visite o site da PROCERGS" style="min-width:55%; float:right; background-size:auto; background-position: 50% 50%; background-image:url(../../Content/img/logos/logo_Procergs.png)" target="_blank" href="https://www.procergs.rs.gov.br/"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    
+    <script type="text/javascript" src="/Scripts/bootstrap.320.min.js"></script>
+    
+    <script type="text/javascript" src="/Scripts/owl.carousel.js"></script>
+    <script type="text/javascript" src="/Scripts/banner-rotativo.js"></script>
+    <script type="text/javascript" src="/Scripts/master.js"></script>
+
+    <div id="modalLogin" class="modal fade">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">Sair</span>
+                    </button>
+                    <br />
+                </div>
+                <div class="modal-body">
+                    <div id="modalBodyResult"></div>
+                </div>
+                <div class="modal-footer"></div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>
+<!-- SRVPRO964 -->

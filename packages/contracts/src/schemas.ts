@@ -18,12 +18,16 @@ export const serviceStateSchema = z.enum([
 export type ServiceStateValue = z.infer<typeof serviceStateSchema>;
 
 /**
- * Origem da medição. Em ambas, `latencyMs` é a latência de REDE real do fetch
- * (ms) — `integranotas` (API JSON, primária) e `availability` (scraping) só
- * diferem na fonte. Opcional para compatibilidade com dados gravados antes deste
- * campo; ausente é tratado como `integranotas` (a fonte primária e dominante).
+ * Origem da medição que VENCEU o consenso por serviço:
+ * - `svrs` / `availability`: fontes OFICIAIS (portal SVRS e portal da Receita),
+ *   com precedência de estado. `svrs` traz `cStat` real e não mede latência de
+ *   rede (pode herdá-la de outra fonte no consenso).
+ * - `integranotas`: terceiro mais completo; preenche serviços que as oficiais não
+ *   publicam. `latencyMs` aqui é a latência de REDE real do fetch (ms).
+ * Opcional para compatibilidade com dados gravados antes deste campo; ausente é
+ * tratado como `integranotas`.
  */
-export const statusSourceSchema = z.enum(['integranotas', 'availability']);
+export const statusSourceSchema = z.enum(['integranotas', 'availability', 'svrs']);
 export type StatusSourceValue = z.infer<typeof statusSourceSchema>;
 
 /** Ambiente em formato textual usado na API (contrato em inglês). */
@@ -54,7 +58,12 @@ export const serviceStatusSchema = z.object({
   latencyMs: z.number(),
   source: statusSourceSchema.optional(),
   error: z.string().nullable(),
-  checkedAt: z.string(), // ISO 8601
+  checkedAt: z.string(), // ISO 8601 — quando o MONITOR coletou
+  /**
+   * Horário "HH:MM:SS" em que a própria FONTE verificou o serviço (frescor do
+   * dado oficial). Hoje só o SVRS publica; ausente nas demais fontes.
+   */
+  sourceCheckedAt: z.string().optional(),
 });
 export type ServiceStatusDTO = z.infer<typeof serviceStatusSchema>;
 

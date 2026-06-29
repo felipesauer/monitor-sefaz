@@ -1,9 +1,12 @@
 import {
   AvailabilityCollector,
-  HybridCollector,
+  ConsensusCollector,
   IntegraNotasCollector,
+  SvrsCollector,
+  SvrsProvider,
   type CollectedStatus,
   type IntegraNotasFetcher,
+  type SvrsFetcher,
 } from '@monitor-sefaz/core';
 import {
   averageLatency,
@@ -32,12 +35,46 @@ const integraNotasFetcher: IntegraNotasFetcher = async (url) => {
   return res.text();
 };
 
-/** Híbrido do Worker: IntegraNotas (JSON) com fallback ao scraping oficial. */
-function buildCollector(): HybridCollector {
-  return new HybridCollector(
-    IntegraNotasCollector.create(integraNotasFetcher),
-    new AvailabilityCollector(new WorkerAvailabilityProvider())
-  );
+/** Fetcher do SVRS no runtime do Worker (fetch nativo, página latin-1). */
+const svrsFetcher: SvrsFetcher = async (url) => {
+  const res = await fetch(url, {
+    headers: {
+      'User-Agent':
+        'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36',
+      Accept: 'text/html,application/xhtml+xml',
+      'Accept-Language': 'pt-BR,pt;q=0.9',
+    },
+  });
+  if (!res.ok) {
+    throw new Error(`SVRS HTTP ${res.status}`);
+  }
+  // A página é latin-1; o Worker não tem Buffer, decodificamos via TextDecoder.
+  return new TextDecoder('latin1').decode(await res.arrayBuffer());
+};
+
+/**
+ * Consenso do Worker (precedência oficial): SVRS e página oficial decidem o
+ * estado; o IntegraNotas (mais completo) preenche o resto. Se o SVRS falhar no
+ * runtime do Worker, o consenso (`allSettled`) o ignora sem derrubar a coleta.
+ */
+function buildCollector(): ConsensusCollector {
+  return new ConsensusCollector([
+    {
+      name: 'svrs',
+      official: true,
+      collector: new SvrsCollector(new SvrsProvider(svrsFetcher)),
+    },
+    {
+      name: 'availability',
+      official: true,
+      collector: new AvailabilityCollector(new WorkerAvailabilityProvider()),
+    },
+    {
+      name: 'integranotas',
+      official: false,
+      collector: IntegraNotasCollector.create(integraNotasFetcher),
+    },
+  ]);
 }
 
 const CORS = {
@@ -61,6 +98,7 @@ function toDTO(s: CollectedStatus, checkedAt: string): ServiceStatusDTO {
     xMotivo: null,
     latencyMs: s.latencyMs,
     source: s.source,
+    sourceCheckedAt: s.sourceCheckedAt,
     error: null,
     checkedAt,
   };

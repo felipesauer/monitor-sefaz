@@ -38,10 +38,11 @@ async function main(): Promise<void> {
     };
   }
 
-  // Seleciona a fonte de status. Padrão: híbrida (IntegraNotas + fallback), o
-  // MESMO motor do collector e do worker — assim os números batem entre as três
-  // pontas. Opt-in: 'soap' (consulta direta, exige cert A1) ou 'availability'
-  // (só scraping da página oficial).
+  // Seleciona a fonte de status. Padrão: consenso multi-fonte (SVRS e página
+  // oficial — oficiais — com o IntegraNotas preenchendo lacunas), o MESMO motor
+  // do collector e do worker — assim os números batem entre as três pontas.
+  // Opt-in: 'soap' (consulta direta, exige cert A1) ou 'availability' (só
+  // scraping da página oficial).
   let source: StatusSource;
   if (config.statusSource === 'soap') {
     const checker = CheckerFactory.create({

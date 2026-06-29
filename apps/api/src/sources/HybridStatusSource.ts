@@ -1,5 +1,5 @@
 import {
-  HybridCollector,
+  ConsensusCollector,
   type CollectedStatus,
   type StatusCollectorLike,
 } from '@monitor-sefaz/core';
@@ -9,18 +9,20 @@ import { serviceId } from '../store/mappers.js';
 import type { StatusSource } from './StatusSource.js';
 
 /**
- * Fonte de status HÍBRIDA: IntegraNotas (JSON, 5 docs por UF) com fallback ao
- * scraping oficial — o MESMO motor (`HybridCollector`) usado pelo collector
- * (GitHub Actions) e pelo Cloudflare Worker. É o default da API para que as três
- * pontas produzam números e semântica de latência idênticos para a mesma frota.
+ * Fonte de status padrão da API: o consenso multi-fonte com precedência oficial
+ * (`ConsensusCollector` — SVRS e página da Receita decidem o estado, o
+ * IntegraNotas preenche as lacunas), o MESMO motor usado pelo collector (GitHub
+ * Actions) e pelo Cloudflare Worker, para que as três pontas produzam os mesmos
+ * números para a mesma frota.
  *
+ * Mantém o nome `hybrid` por compatibilidade com a config `STATUS_SOURCE`.
  * A fonte é de PRODUÇÃO; homologação retorna vazio.
  */
 export class HybridStatusSource implements StatusSource {
   public readonly name = 'hybrid';
 
   constructor(
-    private readonly collector: StatusCollectorLike = HybridCollector.createForNode(),
+    private readonly collector: StatusCollectorLike = ConsensusCollector.createForNode(),
     private readonly now: () => number = () => Date.now()
   ) {}
 
@@ -45,6 +47,7 @@ export class HybridStatusSource implements StatusSource {
       xMotivo: null,
       latencyMs: s.latencyMs,
       source: s.source,
+      sourceCheckedAt: s.sourceCheckedAt,
       error: null,
       checkedAt,
     };
