@@ -1,6 +1,5 @@
 import {
   historyFileSchema,
-  statusSnapshotSchema,
   summarySchema,
   type HistoryPeriod,
   type HistoryResponseDTO,
@@ -9,6 +8,7 @@ import {
 } from '@monitor-sefaz/contracts';
 import {
   fetchJson,
+  parseStatusSnapshot,
   type DataSource,
   type HistorySeries,
   type StatusFilters,
@@ -30,7 +30,10 @@ export class StaticDataSource implements DataSource {
   constructor(private readonly base: string) {}
 
   public async getStatus(filters: StatusFilters = {}): Promise<StatusSnapshotDTO> {
-    const snapshot = statusSnapshotSchema.parse(await fetchJson(`${this.base}data/status.json`));
+    const snapshot = parseStatusSnapshot(
+      await fetchJson(`${this.base}data/status.json`),
+      'estático'
+    );
     if (!filters.document && !filters.uf) {
       return snapshot;
     }

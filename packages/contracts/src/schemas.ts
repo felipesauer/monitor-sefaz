@@ -17,6 +17,15 @@ export const serviceStateSchema = z.enum([
 ]);
 export type ServiceStateValue = z.infer<typeof serviceStateSchema>;
 
+/**
+ * Origem da medição — define a semântica de `latencyMs`:
+ * `integranotas` = tempo médio da SEFAZ (s×1000); `availability` = latência de
+ * rede do fetch. Opcional para compatibilidade com dados gravados antes deste
+ * campo; ausente é tratado como `integranotas` (a fonte primária e dominante).
+ */
+export const statusSourceSchema = z.enum(['integranotas', 'availability']);
+export type StatusSourceValue = z.infer<typeof statusSourceSchema>;
+
 /** Ambiente em formato textual usado na API (contrato em inglês). */
 export const environmentSchema = z.enum(['production', 'homologation']);
 export type EnvironmentValue = z.infer<typeof environmentSchema>;
@@ -43,6 +52,7 @@ export const serviceStatusSchema = z.object({
   cStat: z.number().nullable(),
   xMotivo: z.string().nullable(),
   latencyMs: z.number(),
+  source: statusSourceSchema.optional(),
   error: z.string().nullable(),
   checkedAt: z.string(), // ISO 8601
 });
@@ -55,6 +65,20 @@ export const statusSnapshotSchema = z.object({
   services: z.array(serviceStatusSchema),
 });
 export type StatusSnapshotDTO = z.infer<typeof statusSnapshotSchema>;
+
+/**
+ * Variante TOLERANTE do snapshot para o front consumir fontes que podem evoluir
+ * (estado novo, cStat inesperado): um service inválido é DESCARTADO em vez de
+ * derrubar todo o snapshot. A API/worker continuam emitindo `statusSnapshotSchema`
+ * estrito — esta só relaxa a leitura, degradando em vez de esconder tudo.
+ */
+export const resilientStatusSnapshotSchema = z.object({
+  environment: environmentSchema,
+  generatedAt: z.string(),
+  services: z
+    .array(serviceStatusSchema.nullable().catch(null))
+    .transform((items) => items.filter((s): s is ServiceStatusDTO => s !== null)),
+});
 
 /** Resumo agregado de disponibilidade. */
 export const summaryGroupSchema = z.object({
@@ -87,6 +111,7 @@ export const historyPointSchema = z.object({
   state: serviceStateSchema,
   cStat: z.number().nullable(),
   latencyMs: z.number(),
+  source: statusSourceSchema.optional(),
 });
 export type HistoryPointDTO = z.infer<typeof historyPointSchema>;
 

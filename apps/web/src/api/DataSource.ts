@@ -1,9 +1,10 @@
-import type {
-  HistoryPeriod,
-  HistoryPointDTO,
-  HistoryResponseDTO,
-  StatusSnapshotDTO,
-  SummaryDTO,
+import {
+  resilientStatusSnapshotSchema,
+  type HistoryPeriod,
+  type HistoryPointDTO,
+  type HistoryResponseDTO,
+  type StatusSnapshotDTO,
+  type SummaryDTO,
 } from '@monitor-sefaz/contracts';
 
 /** Mapa `id do serviço` → série de pontos, usado para os sparklines dos cards. */
@@ -35,4 +36,20 @@ export async function fetchJson(url: string): Promise<unknown> {
     throw new Error(`Falha ao buscar ${url}: HTTP ${response.status}`);
   }
   return response.json();
+}
+
+/**
+ * Valida um snapshot de status de forma resiliente em duas camadas:
+ * 1. services inválidos individualmente são descartados (schema tolerante);
+ * 2. se a estrutura toda for inválida (ex.: `services` não é array), em vez de
+ *    lançar e apagar o dashboard, loga e devolve um snapshot vazio — a UI mostra
+ *    o estado "sem serviços" em vez de uma tela de erro.
+ */
+export function parseStatusSnapshot(data: unknown, source: string): StatusSnapshotDTO {
+  const result = resilientStatusSnapshotSchema.safeParse(data);
+  if (result.success) {
+    return result.data;
+  }
+  console.warn(`Snapshot de status inválido (${source}); exibindo vazio.`, result.error.issues);
+  return { environment: 'production', generatedAt: new Date().toISOString(), services: [] };
 }
