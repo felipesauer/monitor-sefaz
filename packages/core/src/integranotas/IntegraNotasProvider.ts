@@ -25,6 +25,13 @@ export interface IntegraNotasFetcher {
   (url: string): Promise<string>;
 }
 
+/** Resultado de uma busca: as linhas + a latência de REDE medida do fetch. */
+export interface IntegraNotasFetchResult {
+  readonly rows: IntegraNotasRow[];
+  /** Tempo de ida-e-volta da requisição HTTP (ms) — a latência real do documento. */
+  readonly fetchLatencyMs: number;
+}
+
 const BASE = 'https://integranotas.com.br/doc/sefaz/monitor';
 
 /** Documentos cobertos pelo IntegraNotas que o monitor expõe. */
@@ -78,18 +85,27 @@ function mapState(normal: number, svc: number | null, color: string, tMed: numbe
  * `tMedSeconds` é o "tempo médio" da SEFAZ em segundos (ou null).
  */
 export class IntegraNotasProvider {
-  constructor(private readonly fetcher: IntegraNotasFetcher) {}
+  constructor(
+    private readonly fetcher: IntegraNotasFetcher,
+    /** Relógio em ms; injetável para os testes serem determinísticos. */
+    private readonly now: () => number = () => Date.now()
+  ) {}
 
   public supportedDocuments(): DocumentType[] {
     return Object.keys(INTEGRANOTAS_DOCUMENTS) as DocumentType[];
   }
 
-  public async fetch(document: DocumentType): Promise<IntegraNotasRow[]> {
+  public async fetch(document: DocumentType): Promise<IntegraNotasFetchResult> {
     const slug = INTEGRANOTAS_DOCUMENTS[document];
     if (!slug) {
-      return [];
+      return { rows: [], fetchLatencyMs: 0 };
     }
+    // Cronometra a requisição: esta é a latência de REDE real do documento — a
+    // métrica que o front exibe. O tMed do IntegraNotas é tempo médio da SEFAZ
+    // em segundos inteiros (grosseiro: 0/1/6s), inútil como latência.
+    const start = this.now();
     const body = await this.fetcher(`${BASE}/${slug}`);
+    const fetchLatencyMs = this.now() - start;
     const parsed = JSON.parse(body) as IntegraNotasPayload;
     const d = parsed.dados;
     // Os arrays do payload são lidos por índice PARALELO (labels[i], data[i],
@@ -125,7 +141,7 @@ export class IntegraNotasProvider {
         tMedSeconds: tMed >= 0 ? tMed : null,
       });
     });
-    return rows;
+    return { rows, fetchLatencyMs };
   }
 }
 

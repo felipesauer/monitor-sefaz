@@ -30,10 +30,10 @@ function stateToCStat(state: ServiceState): number | null {
 }
 
 /**
- * De onde veio a medição — define a SEMÂNTICA de `latencyMs`:
- * - `integranotas`: tempo médio da SEFAZ (segundos×1000, tipicamente 0/1000/6000);
- * - `availability`: latência de rede real do fetch da página oficial (ms contínuos).
- * Sem isso, o gráfico colaria as duas grandezas na mesma série.
+ * De onde veio a medição. Em AMBAS, `latencyMs` é a latência de REDE real do
+ * fetch (ms contínuos) — `integranotas` (API JSON) e `availability` (scraping da
+ * página oficial) só diferem na fonte, não na grandeza. Mantido para rastrear a
+ * procedência do dado.
  */
 export type StatusSource = 'integranotas' | 'availability';
 

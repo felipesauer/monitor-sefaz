@@ -33,10 +33,22 @@ describe('mapIntegraNotasState', () => {
 describe('IntegraNotasProvider', () => {
   it('parseia a fixture real de NF-e (27 UFs, todas operacionais)', async () => {
     const provider = new IntegraNotasProvider(async () => nfeFixture);
-    const rows = await provider.fetch(DocumentType.NFe);
+    const { rows } = await provider.fetch(DocumentType.NFe);
     expect(rows).toHaveLength(27);
     expect(rows.map((r) => r.uf)).toContain('SP');
     expect(rows.every((r) => r.state === ServiceState.Operational)).toBe(true);
+  });
+
+  it('mede a latência de rede do fetch (now injetável)', async () => {
+    // relógio avança 137ms entre o início e o fim da requisição
+    let t = 1000;
+    const clock = (): number => t;
+    const provider = new IntegraNotasProvider(async () => {
+      t += 137;
+      return nfeFixture;
+    }, clock);
+    const { fetchLatencyMs } = await provider.fetch(DocumentType.NFe);
+    expect(fetchLatencyMs).toBe(137);
   });
 
   it('lança quando o payload não tem dados.labels', async () => {

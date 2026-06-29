@@ -24,12 +24,9 @@ export function LatencyChart({ points }: LatencyChartProps) {
       ms: p.latencyMs,
     }));
 
-  // O significado de latencyMs depende da fonte: 'availability' é latência de
-  // rede real; o resto (integranotas / ausente) é o "tempo médio" da SEFAZ.
-  // Rotulamos pela fonte predominante para não anunciar a métrica errada.
-  const netCount = points.filter((p) => p.source === 'availability').length;
-  const isNetwork = netCount > points.length / 2;
-  const label = isNetwork ? 'Latência de rede' : 'Tempo médio (SEFAZ)';
+  // Ambas as fontes (integranotas e availability) medem latência de REDE real do
+  // fetch em ms — não mais o "tempo médio" grosseiro da SEFAZ. Rótulo único.
+  const label = 'Latência de rede';
 
   if (data.length < 2) {
     return (

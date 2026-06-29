@@ -23,8 +23,8 @@ function stateToCStat(state: ServiceState): number | null {
  *
  * Vantagem sobre o scraping da página oficial: medição real por estado (não
  * derivada de autorizador) e cobertura nativa de MDF-e/DC-e. O autorizador de
- * cada UF ainda vem do `Catalog` (só para exibição). A latência de rede não é
- * fornecida pela fonte — usamos o "tempo médio" (s→ms) quando disponível.
+ * cada UF ainda vem do `Catalog` (só para exibição). A `latencyMs` é a latência
+ * de REDE do fetch (medida pelo provider), não o tMed grosseiro da SEFAZ.
  */
 export class IntegraNotasCollector {
   public readonly name = 'integranotas';
@@ -45,12 +45,13 @@ export class IntegraNotasCollector {
     const out: CollectedStatus[] = [];
 
     for (const document of this.provider.supportedDocuments()) {
-      let rows;
+      let result;
       try {
-        rows = await this.provider.fetch(document);
+        result = await this.provider.fetch(document);
       } catch {
         continue; // documento que falha não derruba os demais
       }
+      const { rows, fetchLatencyMs } = result;
       for (const row of rows) {
         const entry = this.catalog.resolve(document, row.uf, Environment.Production);
         out.push({
@@ -59,8 +60,11 @@ export class IntegraNotasCollector {
           authorizer: entry?.authorizer ?? row.uf,
           state: row.state,
           cStat: stateToCStat(row.state),
-          // tMed é em segundos; convertemos para ms (0 quando ausente).
-          latencyMs: row.tMedSeconds != null ? row.tMedSeconds * 1000 : 0,
+          // Latência de REDE real do fetch ao IntegraNotas (uma medição por
+          // documento, compartilhada pelas UFs daquele documento). NÃO usamos o
+          // tMed da SEFAZ aqui: é tempo médio em segundos inteiros (0/1/6s),
+          // grosseiro demais para ser exibido como latência.
+          latencyMs: fetchLatencyMs,
           source: 'integranotas',
         });
       }

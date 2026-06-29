@@ -19,10 +19,9 @@ export function isUp(state: ServiceStateValue | string): boolean {
 /**
  * Latência média (ms) das medições, arredondada; `null` se não houver nenhuma.
  *
- * IMPORTANTE: NÃO descarta `latencyMs === 0`. O valor vem do "tempo médio" da
- * SEFAZ em segundos inteiros (via IntegraNotas) e 0 é uma medição LEGÍTIMA
- * (resposta sub-segundo), não "sem dado". Filtrar `> 0` — como o código fazia —
- * inflava a média (publicava ~1000ms quando o real era ~326ms). Só valores
+ * IMPORTANTE: NÃO descarta `latencyMs === 0`. É latência de rede real em ms e 0
+ * é uma medição LEGÍTIMA (resposta sub-ms), não "sem dado". Filtrar `> 0` — como
+ * o código já fez — descartava medições válidas e enviesava a média. Só valores
  * negativos (sentinela de ausência, hoje inexistente) são ignorados.
  */
 export function averageLatency(latenciesMs: readonly number[]): number | null {
