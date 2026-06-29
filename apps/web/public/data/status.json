@@ -1,6 +1,6 @@
 {
   "environment": "production",
-  "generatedAt": "2026-06-29T16:13:42.112Z",
+  "generatedAt": "2026-06-29T18:26:29.666Z",
   "services": [
     {
       "id": "NFe:AC",
@@ -14,7 +14,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFe:AL",
@@ -28,7 +28,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFe:AM",
@@ -42,7 +42,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFe:AP",
@@ -56,7 +56,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFe:BA",
@@ -70,7 +70,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFe:CE",
@@ -84,7 +84,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFe:DF",
@@ -98,7 +98,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFe:ES",
@@ -112,7 +112,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFe:GO",
@@ -126,7 +126,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFe:MA",
@@ -140,7 +140,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFe:MG",
@@ -154,7 +154,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFe:MS",
@@ -168,7 +168,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFe:MT",
@@ -182,7 +182,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFe:PA",
@@ -196,7 +196,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFe:PB",
@@ -210,7 +210,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFe:PE",
@@ -224,7 +224,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFe:PI",
@@ -238,7 +238,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFe:PR",
@@ -252,7 +252,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFe:RJ",
@@ -266,7 +266,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFe:RN",
@@ -280,7 +280,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFe:RO",
@@ -294,7 +294,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFe:RR",
@@ -308,7 +308,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFe:RS",
@@ -322,7 +322,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFe:SC",
@@ -336,7 +336,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFe:SE",
@@ -350,7 +350,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFe:SP",
@@ -364,7 +364,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFe:TO",
@@ -378,7 +378,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFCe:AC",
@@ -392,7 +392,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFCe:AL",
@@ -406,7 +406,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFCe:AM",
@@ -420,7 +420,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFCe:AP",
@@ -434,7 +434,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFCe:BA",
@@ -448,7 +448,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFCe:CE",
@@ -462,7 +462,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFCe:DF",
@@ -476,7 +476,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFCe:ES",
@@ -490,7 +490,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFCe:GO",
@@ -504,7 +504,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFCe:MA",
@@ -518,7 +518,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFCe:MG",
@@ -532,7 +532,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFCe:MS",
@@ -546,7 +546,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFCe:MT",
@@ -560,7 +560,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFCe:PA",
@@ -574,7 +574,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFCe:PB",
@@ -588,7 +588,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFCe:PE",
@@ -602,7 +602,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFCe:PI",
@@ -616,7 +616,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFCe:PR",
@@ -630,7 +630,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFCe:RJ",
@@ -644,7 +644,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFCe:RN",
@@ -658,7 +658,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFCe:RO",
@@ -672,7 +672,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFCe:RR",
@@ -686,7 +686,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFCe:RS",
@@ -700,7 +700,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFCe:SC",
@@ -714,7 +714,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFCe:SE",
@@ -728,7 +728,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFCe:SP",
@@ -742,7 +742,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "NFCe:TO",
@@ -756,7 +756,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "CTe:AC",
@@ -770,7 +770,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "CTe:AL",
@@ -784,7 +784,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "CTe:AM",
@@ -798,7 +798,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "CTe:AP",
@@ -812,7 +812,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "CTe:BA",
@@ -826,7 +826,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "CTe:CE",
@@ -840,7 +840,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "CTe:DF",
@@ -854,7 +854,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "CTe:ES",
@@ -868,7 +868,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "CTe:GO",
@@ -882,7 +882,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "CTe:MA",
@@ -896,7 +896,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "CTe:MG",
@@ -910,7 +910,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "CTe:MS",
@@ -924,7 +924,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "CTe:MT",
@@ -938,7 +938,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "CTe:PA",
@@ -952,7 +952,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "CTe:PB",
@@ -966,7 +966,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "CTe:PE",
@@ -980,7 +980,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "CTe:PI",
@@ -994,7 +994,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "CTe:PR",
@@ -1008,7 +1008,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "CTe:RJ",
@@ -1022,7 +1022,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "CTe:RN",
@@ -1036,7 +1036,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "CTe:RO",
@@ -1050,7 +1050,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "CTe:RR",
@@ -1064,7 +1064,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "CTe:RS",
@@ -1078,7 +1078,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "CTe:SC",
@@ -1092,7 +1092,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "CTe:SE",
@@ -1106,7 +1106,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "CTe:SP",
@@ -1120,7 +1120,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "CTe:TO",
@@ -1134,7 +1134,7 @@
       "latencyMs": 1000,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "MDFe:AC",
@@ -1148,7 +1148,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "MDFe:AL",
@@ -1162,7 +1162,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "MDFe:AM",
@@ -1176,7 +1176,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "MDFe:AP",
@@ -1190,7 +1190,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "MDFe:BA",
@@ -1204,7 +1204,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "MDFe:CE",
@@ -1218,7 +1218,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "MDFe:DF",
@@ -1232,7 +1232,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "MDFe:ES",
@@ -1246,7 +1246,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "MDFe:GO",
@@ -1260,7 +1260,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "MDFe:MA",
@@ -1274,7 +1274,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "MDFe:MG",
@@ -1288,7 +1288,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "MDFe:MS",
@@ -1302,7 +1302,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "MDFe:MT",
@@ -1316,7 +1316,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "MDFe:PA",
@@ -1330,7 +1330,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "MDFe:PB",
@@ -1344,7 +1344,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "MDFe:PE",
@@ -1358,7 +1358,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "MDFe:PI",
@@ -1372,7 +1372,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "MDFe:PR",
@@ -1386,7 +1386,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "MDFe:RJ",
@@ -1400,7 +1400,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "MDFe:RN",
@@ -1414,7 +1414,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "MDFe:RO",
@@ -1428,7 +1428,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "MDFe:RR",
@@ -1442,7 +1442,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "MDFe:RS",
@@ -1456,7 +1456,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "MDFe:SC",
@@ -1470,7 +1470,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "MDFe:SE",
@@ -1484,7 +1484,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "MDFe:SP",
@@ -1498,7 +1498,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "MDFe:TO",
@@ -1512,7 +1512,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "DCe:AC",
@@ -1526,7 +1526,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "DCe:AL",
@@ -1540,7 +1540,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "DCe:AM",
@@ -1554,7 +1554,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "DCe:AP",
@@ -1568,7 +1568,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "DCe:BA",
@@ -1582,7 +1582,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "DCe:CE",
@@ -1596,7 +1596,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "DCe:DF",
@@ -1610,7 +1610,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "DCe:ES",
@@ -1624,7 +1624,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "DCe:GO",
@@ -1638,7 +1638,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "DCe:MA",
@@ -1652,7 +1652,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "DCe:MG",
@@ -1666,7 +1666,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "DCe:MS",
@@ -1680,7 +1680,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "DCe:MT",
@@ -1694,7 +1694,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "DCe:PA",
@@ -1708,7 +1708,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "DCe:PB",
@@ -1722,7 +1722,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "DCe:PE",
@@ -1736,7 +1736,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "DCe:PI",
@@ -1750,7 +1750,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "DCe:PR",
@@ -1764,7 +1764,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "DCe:RJ",
@@ -1778,7 +1778,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "DCe:RN",
@@ -1792,7 +1792,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "DCe:RO",
@@ -1806,7 +1806,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "DCe:RR",
@@ -1820,7 +1820,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "DCe:RS",
@@ -1834,7 +1834,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "DCe:SC",
@@ -1848,7 +1848,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "DCe:SE",
@@ -1862,7 +1862,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "DCe:SP",
@@ -1876,7 +1876,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     },
     {
       "id": "DCe:TO",
@@ -1890,7 +1890,7 @@
       "latencyMs": 0,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-06-29T16:13:42.112Z"
+      "checkedAt": "2026-06-29T18:26:29.666Z"
     }
   ]
 }
