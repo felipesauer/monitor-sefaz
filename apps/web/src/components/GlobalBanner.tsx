@@ -1,5 +1,5 @@
 import { CheckCircle2, AlertTriangle, XCircle } from 'lucide-react';
-import type { ServiceStatusDTO, SummaryDTO } from '@monitor-sefaz/contracts';
+import { isUp, type ServiceStatusDTO, type SummaryDTO } from '@monitor-sefaz/contracts';
 import { DOC_LABEL } from '../lib/labels.js';
 
 interface GlobalBannerProps {
@@ -23,9 +23,11 @@ export function GlobalBanner({ summary, services = [] }: GlobalBannerProps) {
         }
       : { color: 'var(--down)', title: 'Instabilidade generalizada', Icon: XCircle };
 
-  // Lista resumida dos afetados agora (didático, como o monitorsefaz).
+  // Lista resumida dos afetados agora (didático, como o monitorsefaz). Usa o
+  // mesmo isUp do summary.failing: contingência está "no ar", não é afetado —
+  // senão o banner diria "Todos operacionais" e listaria a UF como com problema.
   const affected = services
-    .filter((s) => s.state !== 'OPERATIONAL')
+    .filter((s) => !isUp(s.state))
     .map((s) => `${DOC_LABEL[s.document] ?? s.document}/${s.uf}`);
   const affectedLabel =
     affected.length > 0
