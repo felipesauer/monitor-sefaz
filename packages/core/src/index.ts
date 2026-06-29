@@ -76,3 +76,14 @@ export {
 export { IntegraNotasCollector } from './integranotas/IntegraNotasCollector.js';
 export { createHttpIntegraNotasFetcher } from './integranotas/httpFetcher.js';
 export { HybridCollector, type StatusCollectorLike } from './integranotas/HybridCollector.js';
+
+// Fonte SVRS (portal oficial de disponibilidade — sem certificado A1)
+export {
+  SvrsParser,
+  type SvrsAuthorizer,
+  type SvrsWebService,
+  type SvrsAuthorizerStatus,
+} from './svrs/SvrsParser.js';
+export { SvrsProvider, SVRS_URLS, type SvrsFetcher } from './svrs/SvrsProvider.js';
+export { createHttpSvrsFetcher } from './svrs/httpFetcher.js';
+export { SvrsCollector } from './svrs/SvrsCollector.js';

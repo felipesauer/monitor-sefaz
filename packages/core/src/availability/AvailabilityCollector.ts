@@ -35,7 +35,7 @@ function stateToCStat(state: ServiceState): number | null {
  * página oficial) só diferem na fonte, não na grandeza. Mantido para rastrear a
  * procedência do dado.
  */
-export type StatusSource = 'integranotas' | 'availability';
+export type StatusSource = 'integranotas' | 'availability' | 'svrs';
 
 /** Status coletado de um serviço (documento + UF), pronto para virar DTO. */
 export interface CollectedStatus {
