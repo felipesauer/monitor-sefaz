@@ -98,6 +98,7 @@ function toDTO(s: CollectedStatus, checkedAt: string): ServiceStatusDTO {
     xMotivo: null,
     latencyMs: s.latencyMs,
     source: s.source,
+    sourceCheckedAt: s.sourceCheckedAt,
     error: null,
     checkedAt,
   };

@@ -44,6 +44,7 @@ export class AvailabilityStatusSource implements StatusSource {
       xMotivo: null,
       latencyMs: s.latencyMs,
       source: s.source,
+      sourceCheckedAt: s.sourceCheckedAt,
       error: null,
       checkedAt,
     };
