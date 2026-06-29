@@ -15,11 +15,21 @@ interface LatencyChartProps {
 /** Gráfico de área (Recharts) da latência ao longo do tempo. */
 export function LatencyChart({ points }: LatencyChartProps) {
   const data = points
-    .filter((p) => p.latencyMs > 0)
+    // tMed do IntegraNotas vem em segundos inteiros: 0 é um valor legítimo
+    // (resposta rápida), não "sem dado". Incluímos os zeros para não esvaziar
+    // o gráfico nas UFs que reportam tMed=0.
+    .filter((p) => p.latencyMs >= 0)
     .map((p) => ({
       t: new Date(p.timestamp).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
       ms: p.latencyMs,
     }));
+
+  // O significado de latencyMs depende da fonte: 'availability' é latência de
+  // rede real; o resto (integranotas / ausente) é o "tempo médio" da SEFAZ.
+  // Rotulamos pela fonte predominante para não anunciar a métrica errada.
+  const netCount = points.filter((p) => p.source === 'availability').length;
+  const isNetwork = netCount > points.length / 2;
+  const label = isNetwork ? 'Latência de rede' : 'Tempo médio (SEFAZ)';
 
   if (data.length < 2) {
     return (
@@ -61,7 +71,7 @@ export function LatencyChart({ points }: LatencyChartProps) {
               fontSize: 12,
             }}
             labelStyle={{ color: 'var(--text-dim)' }}
-            formatter={(v: number) => [`${v} ms`, 'Latência']}
+            formatter={(v: number) => [`${v} ms`, label]}
           />
           <Area
             type="monotone"

@@ -26,7 +26,7 @@ export function UptimeBar({ points }: UptimeBarProps) {
           style={{ background: STATE_META[point.state].color }}
           title={`${new Date(point.timestamp).toLocaleString('pt-BR')} — ${
             STATE_META[point.state].label
-          }${point.latencyMs > 0 ? ` (${point.latencyMs}ms)` : ''}`}
+          }${point.latencyMs >= 0 ? ` (${point.latencyMs}ms)` : ''}`}
         />
       ))}
     </div>
