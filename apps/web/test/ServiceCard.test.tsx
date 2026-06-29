@@ -47,4 +47,14 @@ describe('ServiceCard', () => {
     fireEvent.click(screen.getByRole('button'));
     expect(onSelect).toHaveBeenCalledOnce();
   });
+
+  it('mostra o frescor "aferido pela SEFAZ" quando há sourceCheckedAt (HH:MM)', () => {
+    render(<ServiceCard service={service({ sourceCheckedAt: '17:33:53' })} onSelect={() => {}} />);
+    expect(screen.getByText(/aferido pela SEFAZ às 17:33/)).toBeInTheDocument();
+  });
+
+  it('omite o frescor quando a fonte não publica sourceCheckedAt', () => {
+    render(<ServiceCard service={service()} onSelect={() => {}} />);
+    expect(screen.queryByText(/aferido pela SEFAZ/)).not.toBeInTheDocument();
+  });
 });

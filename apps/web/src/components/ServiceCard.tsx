@@ -95,6 +95,15 @@ export function ServiceCard({ service, spark = [], onSelect }: ServiceCardProps)
               </span>
             )}
           </div>
+          {service.sourceCheckedAt && (
+            <p
+              className="mt-1 cursor-help text-[10px]"
+              style={{ color: 'var(--text-dim)' }}
+              title="Horário em que o próprio autorizador (SVRS) verificou o serviço — o frescor do dado oficial."
+            >
+              ✓ aferido pela SEFAZ às {service.sourceCheckedAt.slice(0, 5)}
+            </p>
+          )}
         </div>
         <Icon
           className="h-8 w-8 shrink-0 opacity-20 transition-opacity duration-300 group-hover:opacity-90"
