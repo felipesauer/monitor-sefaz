@@ -23,8 +23,8 @@ function stateToCStat(state: ServiceState): number | null {
  *
  * Vantagem sobre o scraping da página oficial: medição real por estado (não
  * derivada de autorizador) e cobertura nativa de MDF-e/DC-e. O autorizador de
- * cada UF ainda vem do `Catalog` (só para exibição). A latência de rede não é
- * fornecida pela fonte — usamos o "tempo médio" (s→ms) quando disponível.
+ * cada UF ainda vem do `Catalog` (só para exibição). A `latencyMs` é a latência
+ * de REDE do fetch (medida pelo provider), não o tMed grosseiro da SEFAZ.
  */
 export class IntegraNotasCollector {
   public readonly name = 'integranotas';

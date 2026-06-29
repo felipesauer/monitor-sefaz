@@ -18,9 +18,9 @@ export const serviceStateSchema = z.enum([
 export type ServiceStateValue = z.infer<typeof serviceStateSchema>;
 
 /**
- * Origem da medição — define a semântica de `latencyMs`:
- * `integranotas` = tempo médio da SEFAZ (s×1000); `availability` = latência de
- * rede do fetch. Opcional para compatibilidade com dados gravados antes deste
+ * Origem da medição. Em ambas, `latencyMs` é a latência de REDE real do fetch
+ * (ms) — `integranotas` (API JSON, primária) e `availability` (scraping) só
+ * diferem na fonte. Opcional para compatibilidade com dados gravados antes deste
  * campo; ausente é tratado como `integranotas` (a fonte primária e dominante).
  */
 export const statusSourceSchema = z.enum(['integranotas', 'availability']);
