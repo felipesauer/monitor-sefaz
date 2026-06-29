@@ -1,13 +1,22 @@
 import { ServiceState, type StatusResult } from '../domain/types.js';
 
+/**
+ * "No ar" inclui operação normal e contingência (a SEFAZ responde em ambos).
+ * Espelha o `isUp` de @monitor-sefaz/contracts — duplicado aqui de propósito
+ * para não acoplar o core ao pacote de contratos. Mantenha os dois em sincronia.
+ */
+function isUp(state: ServiceState): boolean {
+  return state === ServiceState.Operational || state === ServiceState.Contingency;
+}
+
 /** Resumo agregado de uma rodada de consultas. */
 export interface StatusSummary {
   readonly total: number;
   readonly operational: number;
   readonly failing: number;
-  /** Percentual de serviços operacionais (0–100, uma casa decimal). */
+  /** Percentual de serviços no ar (operacional ou contingência) — 0–100, 1 casa. */
   readonly availability: number;
-  /** Latência média (ms) considerando apenas serviços operacionais. */
+  /** Latência média (ms) considerando serviços no ar; inclui medições de 0ms. */
   readonly avgLatencyMs: number | null;
 }
 
@@ -15,13 +24,11 @@ export interface StatusSummary {
 export class StatusReport {
   public summarize(results: readonly StatusResult[]): StatusSummary {
     const total = results.length;
-    const operational = results.filter((r) => r.state === ServiceState.Operational).length;
+    const operational = results.filter((r) => isUp(r.state)).length;
     const failing = total - operational;
     const availability = total === 0 ? 0 : Number(((operational / total) * 100).toFixed(1));
 
-    const latencies = results
-      .filter((r) => r.state === ServiceState.Operational && r.latencyMs > 0)
-      .map((r) => r.latencyMs);
+    const latencies = results.filter((r) => isUp(r.state)).map((r) => r.latencyMs);
     const avgLatencyMs =
       latencies.length === 0
         ? null

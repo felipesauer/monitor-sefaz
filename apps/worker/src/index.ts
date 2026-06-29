@@ -6,7 +6,9 @@ import {
   type IntegraNotasFetcher,
 } from '@monitor-sefaz/core';
 import {
+  averageLatency,
   fromEnvironment,
+  isUp,
   type ServiceStatusDTO,
   type StatusSnapshotDTO,
   type SummaryDTO,
@@ -58,24 +60,21 @@ function toDTO(s: CollectedStatus, checkedAt: string): ServiceStatusDTO {
     cStat: s.cStat,
     xMotivo: null,
     latencyMs: s.latencyMs,
+    source: s.source,
     error: null,
     checkedAt,
   };
 }
 
-/** "No ar" inclui operação normal e contingência. */
-const isUp = (s: ServiceStatusDTO): boolean =>
-  s.state === 'OPERATIONAL' || s.state === 'CONTINGENCY';
-
 function buildSummary(services: ServiceStatusDTO[], generatedAt: string): SummaryDTO {
   const total = services.length;
-  const operational = services.filter(isUp).length;
+  const operational = services.filter((s) => isUp(s.state)).length;
   const group = (keyOf: (s: ServiceStatusDTO) => string): SummaryDTO['byDocument'] => {
     const map = new Map<string, { total: number; operational: number }>();
     for (const s of services) {
       const b = map.get(keyOf(s)) ?? { total: 0, operational: 0 };
       b.total += 1;
-      if (isUp(s)) b.operational += 1;
+      if (isUp(s.state)) b.operational += 1;
       map.set(keyOf(s), b);
     }
     return [...map.entries()]
@@ -87,7 +86,7 @@ function buildSummary(services: ServiceStatusDTO[], generatedAt: string): Summar
       }))
       .sort((a, b) => a.key.localeCompare(b.key));
   };
-  const latencies = services.filter((s) => isUp(s) && s.latencyMs > 0).map((s) => s.latencyMs);
+  const latencies = services.filter((s) => isUp(s.state)).map((s) => s.latencyMs);
   return {
     environment: 'production',
     generatedAt,
@@ -95,9 +94,7 @@ function buildSummary(services: ServiceStatusDTO[], generatedAt: string): Summar
     operational,
     failing: total - operational,
     availability: total === 0 ? 0 : Number(((operational / total) * 100).toFixed(1)),
-    avgLatencyMs: latencies.length
-      ? Math.round(latencies.reduce((a, b) => a + b, 0) / latencies.length)
-      : null,
+    avgLatencyMs: averageLatency(latencies),
     byDocument: group((s) => s.document),
     byAuthorizer: group((s) => s.authorizer),
   };

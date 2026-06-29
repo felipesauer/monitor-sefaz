@@ -1,4 +1,10 @@
-import type { HistoryPointDTO, IncidentDTO, ServiceStateValue } from '@monitor-sefaz/contracts';
+import {
+  averageLatency,
+  isUp,
+  type HistoryPointDTO,
+  type IncidentDTO,
+  type ServiceStateValue,
+} from '@monitor-sefaz/contracts';
 
 export interface UptimeStats {
   uptime: number;
@@ -16,10 +22,6 @@ const STATE_SEVERITY: Record<ServiceStateValue, number> = {
   DOWN: 4,
 };
 
-/** "No ar" inclui operação normal e contingência (serviço disponível). */
-const isUp = (state: ServiceStateValue): boolean =>
-  state === 'OPERATIONAL' || state === 'CONTINGENCY';
-
 /**
  * Deriva métricas de disponibilidade e incidentes a partir da série temporal
  * de checagens. Lógica pura (sem I/O) — fácil de testar e reutilizar.
@@ -32,10 +34,7 @@ export class UptimeCalculator {
       totalChecks === 0 ? 0 : Number(((operationalChecks / totalChecks) * 100).toFixed(2));
 
     const latencies = points.filter((p) => isUp(p.state)).map((p) => p.latencyMs);
-    const avgLatencyMs =
-      latencies.length === 0
-        ? null
-        : Math.round(latencies.reduce((a, b) => a + b, 0) / latencies.length);
+    const avgLatencyMs = averageLatency(latencies);
 
     return { uptime, totalChecks, operationalChecks, avgLatencyMs };
   }
