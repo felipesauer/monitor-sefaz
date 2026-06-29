@@ -1,6 +1,6 @@
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { HybridCollector } from '@monitor-sefaz/core';
+import { ConsensusCollector } from '@monitor-sefaz/core';
 import { Catalog, DEFAULT_MIN_COVERAGE_RATIO, Environment } from '@monitor-sefaz/catalog';
 import {
   averageLatency,
@@ -109,9 +109,10 @@ async function main(): Promise<void> {
   mkdirSync(outDir, { recursive: true });
 
   const generatedAt = new Date().toISOString();
-  // Fonte híbrida: IntegraNotas (JSON, 5 docs por UF) com fallback ao scraping
-  // oficial da SEFAZ.
-  const collector = HybridCollector.createForNode();
+  // Fonte multi-fonte com precedência oficial: SVRS e página oficial da Receita
+  // (oficiais) decidem o estado; o IntegraNotas (mais completo) preenche as UFs
+  // que as oficiais não publicam.
+  const collector = ConsensusCollector.createForNode();
   const collected = await collector.collect();
 
   // Guarda de piso: se a coleta veio muito abaixo do catálogo, ambas as fontes
