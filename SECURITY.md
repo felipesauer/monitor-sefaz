@@ -1,46 +1,48 @@
 # Política de Segurança
 
-## 🛡️ Versões suportadas
+## Versões suportadas
 
 Por ser um projeto em evolução, apenas a versão mais recente da branch `main`
 recebe correções de segurança.
 
-| Versão | Suporte |
-| ------ | ------- |
-| `main` (mais recente) | ✅ |
-| versões anteriores | ❌ |
+| Versão                | Suporte |
+| --------------------- | ------- |
+| `main` (mais recente) | Sim     |
+| versões anteriores    | Não     |
 
-## 📣 Reportando uma vulnerabilidade
+## Reportando uma vulnerabilidade
 
-**Não abra uma issue pública** para falhas de segurança.
+Não abra uma issue pública para falhas de segurança.
 
 Use o canal privado do GitHub:
 
-1. Acesse a aba **[Security → Report a vulnerability](https://github.com/felipesauer/monitor-sefaz/security/advisories/new)**
+1. Acesse a aba
+   [Security → Report a vulnerability](https://github.com/felipesauer/monitor-sefaz/security/advisories/new)
    do repositório (GitHub Security Advisories).
 2. Descreva a falha, o impacto e, se possível, passos para reproduzir.
 
-Se preferir, abra uma issue **sem detalhes sensíveis** apenas pedindo um canal de
+Se preferir, abra uma issue sem detalhes sensíveis apenas pedindo um canal de
 contato privado.
 
-**Resposta esperada:** confirmação de recebimento em até alguns dias e um plano de
+Resposta esperada: confirmação de recebimento em alguns dias e um plano de
 correção combinado de forma responsável (coordinated disclosure) antes da
 publicação dos detalhes.
 
-## 🔍 Escopo e modelo de ameaça
+## Escopo e modelo de ameaça
 
-Pontos relevantes ao avaliar segurança neste projeto:
+Pontos relevantes ao avaliar a segurança deste projeto:
 
-- **Dados públicos:** o modo padrão apenas **lê** a página pública de
-  disponibilidade da SEFAZ. Não há autenticação nem dados de contribuintes.
-- **Certificado A1:** usado **somente** no modo `soap` opcional, lido de um
-  arquivo local (`SEFAZ_CERT_PATH`) e nunca versionado nem transmitido a
-  terceiros. **Nunca** faça commit de arquivos `.pfx`/`.p12` ou senhas.
-- **Segredos:** mantenha tokens e credenciais fora do repositório; use variáveis
-  de ambiente / secrets do GitHub Actions.
-- **Sem coleta de dados de usuários:** a SPA é estática e não rastreia visitantes.
+- Dados públicos: o modo padrão apenas lê fontes públicas de disponibilidade
+  (SVRS, página da Receita e IntegraNotas). Não há autenticação nem dados de
+  contribuintes.
+- Certificado A1: usado somente no modo `soap` opcional, lido de um arquivo
+  local (`SEFAZ_CERT_PATH`) e nunca versionado nem transmitido a terceiros.
+  Nunca faça commit de arquivos `.pfx` ou `.p12`, nem de senhas.
+- Segredos: mantenha tokens e credenciais fora do repositório; use variáveis de
+  ambiente ou secrets do GitHub Actions. O arquivo `.env` é ignorado pelo git.
+- Sem coleta de dados de usuários: a SPA é estática e não rastreia visitantes.
 
-## 🤝 Reconhecimento
+## Reconhecimento
 
 Pesquisadores que reportarem vulnerabilidades de forma responsável serão
-creditados (se desejarem) nas notas da correção.
+creditados, se desejarem, nas notas da correção.
