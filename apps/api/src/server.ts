@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 import { Redis } from 'ioredis';
@@ -18,8 +18,30 @@ import { SoapStatusSource } from './sources/SoapStatusSource.js';
 import { AvailabilityStatusSource } from './sources/AvailabilityStatusSource.js';
 import { HybridStatusSource } from './sources/HybridStatusSource.js';
 
+/**
+ * Carrega variáveis de um arquivo `.env` para `process.env` (Node ≥20.12), sem
+ * dependência externa. Procura o `.env` na raiz do monorepo (dois níveis acima
+ * de apps/api) e, como fallback, no diretório de trabalho atual. Variáveis já
+ * definidas no ambiente têm precedência (o .env não sobrescreve). Se o arquivo
+ * não existir, segue silenciosamente — em produção as vars vêm do ambiente.
+ */
+function loadDotEnv(): void {
+  const here = dirname(fileURLToPath(import.meta.url));
+  const candidates = [resolve(here, '../../../.env'), resolve(process.cwd(), '.env')];
+  for (const path of candidates) {
+    if (!existsSync(path)) continue;
+    try {
+      process.loadEnvFile(path);
+    } catch {
+      // arquivo ilegível/malformado: ignora e usa só o ambiente do processo
+    }
+    return;
+  }
+}
+
 /** Entrypoint: conecta o Redis, monta a API e inicia o scheduler de checagens. */
 async function main(): Promise<void> {
+  loadDotEnv();
   const config = loadConfig();
   const redis = new Redis(config.redisUrl, { maxRetriesPerRequest: null });
   // Conexão dedicada para subscribe (não pode emitir comandos normais).
