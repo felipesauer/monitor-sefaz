@@ -1,193 +1,136 @@
-<div align="center">
+# Monitor SEFAZ
 
-# 📡 Monitor SEFAZ
+[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![Node](https://img.shields.io/badge/node-%3E%3D20-brightgreen)](https://nodejs.org)
+[![TypeScript](https://img.shields.io/badge/typescript-strict-3178c6)](https://www.typescriptlang.org)
 
-**Status em tempo real dos webservices da SEFAZ — NF-e, NFC-e, CT-e, MDF-e e DC-e, por UF.**
+Monitor de disponibilidade dos webservices da SEFAZ para documentos fiscais
+eletrônicos brasileiros — NF-e, NFC-e, CT-e, MDF-e e DC-e, por unidade federativa.
 
-[![Site](https://img.shields.io/badge/site-online-22c55e?style=flat-square)](https://felipesauer.github.io/monitor-sefaz/)
-[![License: MIT](https://img.shields.io/badge/license-MIT-4f46e5?style=flat-square)](LICENSE)
-[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Deploy](https://img.shields.io/badge/GitHub%20Pages-deploy-181717?style=flat-square&logo=github)](https://felipesauer.github.io/monitor-sefaz/)
+Coleta o status de cada autorizador, classifica o resultado e o apresenta num
+dashboard com histórico de uptime. Projeto open-source e independente, sem
+afiliação com a SEFAZ ou a Receita Federal.
 
-[**🌐 Acessar o monitor →**](https://felipesauer.github.io/monitor-sefaz/)
+Você pode [acessar o monitor online](https://felipesauer.github.io/monitor-sefaz/).
 
-</div>
+## O que ele monitora
 
----
+Os cinco documentos fiscais eletrônicos, nas 27 UFs, resolvendo automaticamente
+qual autorizador atende cada estado (próprio, SVRS, SVAN e demais):
 
-Monitor open-source de disponibilidade dos serviços de documentos fiscais
-eletrônicos brasileiros. Coleta o status de cada autorizador da **página oficial
-de disponibilidade da SEFAZ** (pública, **sem certificado digital**), classifica
-o resultado e exibe num dashboard limpo, com tema claro/escuro e histórico de
-uptime — inspirado no [monitorsefaz.com.br](https://monitorsefaz.com.br).
+- NF-e — Nota Fiscal Eletrônica (modelo 55)
+- NFC-e — Nota Fiscal de Consumidor Eletrônica (modelo 65)
+- CT-e — Conhecimento de Transporte Eletrônico
+- MDF-e — Manifesto Eletrônico de Documentos Fiscais
+- DC-e — Declaração de Conteúdo eletrônica
 
-## 🎯 Para quem é
+Cada serviço é classificado em um de quatro estados: operacional (cStat 107),
+instável (108), indisponível (109) ou sem dados.
 
-- **Quem emite nota fiscal** e precisa saber, num relance, se a SEFAZ do seu
-  estado está no ar antes de transmitir.
-- **Times de TI / ERPs** que querem um painel de disponibilidade próprio,
-  self-hosted ou estático, sem depender de serviços de terceiros.
-- **Desenvolvedores** que precisam de um motor TypeScript reutilizável para
-  consultar o status dos webservices da SEFAZ.
+## Como obtém os dados
 
-## 📋 O que ele monitora
+O modo padrão não exige certificado digital. O monitor cruza fontes públicas
+por consenso, com precedência para as oficiais: o
+[portal do SVRS](https://dfe-portal.svrs.rs.gov.br) e a
+[página de disponibilidade da Receita](https://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx)
+decidem o estado de cada serviço, e o IntegraNotas (API JSON) preenche as UFs e
+documentos que as fontes oficiais não publicam. MDF-e e DC-e são centralizados
+no SVRS, então derivam do estado desse autorizador.
 
-Os **5 documentos fiscais eletrônicos**, nas **27 UFs**, resolvendo automaticamente
-qual autorizador atende cada estado (próprio, SVRS, SVAN…):
+A consulta SOAP direta aos webservices (modo `soap`) fornece dados mais ricos,
+mas exige saída de rede e, em vários autorizadores, um certificado A1. Ela é
+opcional e desativada por padrão.
 
-| Documento | Descrição |
-| --------- | --------- |
-| 🧾 **NF-e**  | Nota Fiscal Eletrônica (modelo 55) |
-| 🛒 **NFC-e** | Nota Fiscal de Consumidor Eletrônica (modelo 65) |
-| 🚚 **CT-e**  | Conhecimento de Transporte Eletrônico |
-| 📦 **MDF-e** | Manifesto Eletrônico de Documentos Fiscais |
-| 📄 **DC-e**  | Declaração de Conteúdo eletrônica |
+## Uso
 
-### Estados
+A forma mais simples é acessar o site publicado. Os dados são atualizados de
+hora em hora por um GitHub Actions; a granularidade sub-horária não é honrada de
+forma confiável pelo agendador do GitHub.
 
-| cStat | Estado | Cor |
-| ----- | ------ | --- |
-| 107 | Operacional | 🟢 verde |
-| 108 | Instável | 🟡 amarelo |
-| 109 | Indisponível | 🔴 vermelho |
-| — | Sem dados | ⚪ cinza |
+Para rodar localmente é necessário Node 20 ou superior e pnpm.
 
-## 🚀 Como usar
+    pnpm install
 
-A forma mais simples é abrir o site:
+    # Gera os arquivos de status consultando as fontes públicas
+    pnpm --filter @monitor-sefaz/collector collect ./apps/web/public/data
 
-### 🌐 **[felipesauer.github.io/monitor-sefaz](https://felipesauer.github.io/monitor-sefaz/)**
+    # Sobe o dashboard em http://localhost:5173
+    pnpm --filter @monitor-sefaz/web dev
 
-Os dados são atualizados automaticamente de hora em hora por um GitHub Actions.
-Clique em qualquer serviço para ver o histórico de uptime e latência.
+## Deploy
 
-## ⚙️ Rodando localmente
+O mesmo motor de coleta alimenta três formas de rodar.
 
-Requer **Node 20+** e **pnpm**.
+**SPA estática (GitHub Pages).** Um GitHub Actions coleta e versiona os JSONs; a
+SPA apenas os lê. Não requer infraestrutura.
 
-```bash
-pnpm install
+**Cloudflare Worker.** O Worker faz a coleta ao vivo com CORS e a SPA o consome.
 
-# Gera os dados de status (consulta a SEFAZ real)
-pnpm --filter @monitor-sefaz/collector collect "$PWD/apps/web/public/data"
+    pnpm --filter @monitor-sefaz/worker deploy   # requer wrangler login
 
-# Sobe o dashboard em http://localhost:5173
-pnpm --filter @monitor-sefaz/web dev
-```
+**Self-host.** API Fastify com Redis e scheduler, servindo o dashboard.
 
-### 📦 Três modos de deploy
+    docker compose up --build   # http://localhost:3333
 
-O mesmo motor de coleta (`@monitor-sefaz/core`) alimenta três formas de rodar:
+## Configuração
 
-| Modo | Como funciona | Infra |
-| ---- | ------------- | ----- |
-| **SPA estática** (GitHub Pages) | Um GitHub Actions coleta e commita JSONs; a SPA só os lê | Nenhuma |
-| **Cloudflare Worker** | Worker faz o scraping ao vivo com CORS; SPA consome | Serverless |
-| **Self-host** | API Fastify + Redis + scheduler, servindo o dashboard | Docker |
+O front escolhe a fonte de dados por variável de ambiente. Quando
+`VITE_API_BASE_URL` está definida, consome a API ou o Worker ao vivo; quando
+vazia, lê os JSONs estáticos.
 
-```bash
-# Self-host completo (API + Redis + dashboard)
-docker compose up --build       # http://localhost:3333
+A API self-host lê as variáveis abaixo de um arquivo `.env` na raiz (veja
+`.env.example`):
 
-# Cloudflare Worker (requer `wrangler login`)
-pnpm --filter @monitor-sefaz/worker deploy
-```
+- `STATUS_SOURCE` — `hybrid` (consenso multi-fonte, padrão), `availability` (só
+  a página oficial) ou `soap` (consulta SOAP direta)
+- `REDIS_URL` — conexão com o Redis
+- `SEFAZ_CERT_PATH` e `SEFAZ_CERT_PASSPHRASE` — certificado A1 (.pfx) para o
+  modo `soap`
+- `CRON_EXPRESSION`, `SEFAZ_TIMEOUT_MS`, `SEFAZ_CONCURRENCY`,
+  `HISTORY_RETENTION_MS`, `RATE_LIMIT_MAX`
 
-### 🔧 Scripts
+Homologação não aparece: a página pública da SEFAZ cobre apenas produção, e o
+ambiente de homologação só é alcançável pelo modo `soap`.
 
-| Comando | Descrição |
-| ------- | --------- |
-| `pnpm dev` | Sobe os apps em modo desenvolvimento |
-| `pnpm build` | Builda todos os pacotes/apps |
-| `pnpm test` | Roda os testes (Vitest) |
-| `pnpm typecheck` | Checagem de tipos (project references) |
-| `pnpm lint` | ESLint |
-| `pnpm --filter @monitor-sefaz/collector collect <dir>` | Gera `status.json` / `summary.json` / `history.json` |
+## Desenvolvimento
 
-### 🔐 Variáveis de ambiente
+Monorepo TypeScript gerenciado com pnpm e Turborepo.
 
-Veja [`.env.example`](.env.example). As principais:
+    packages/catalog     UFs, cStat, endpoints e o mapa UF -> autorizador
+    packages/core        motor de coleta: consenso multi-fonte e SOAP
+    packages/contracts   schemas Zod e DTOs compartilhados
+    apps/collector       CLI que gera os JSONs versionados
+    apps/worker          Cloudflare Worker de coleta ao vivo
+    apps/api             API Fastify self-host: scheduler, REST, SSE e Redis
+    apps/web             dashboard React + Vite
 
-| Variável | Padrão | Uso |
-| -------- | ------ | --- |
-| `VITE_API_BASE_URL` | _(vazio)_ | Front: definido → API/Worker ao vivo; vazio → JSONs estáticos |
-| `STATUS_SOURCE` | `hybrid` | Self-host: `hybrid` (consenso multi-fonte), `availability` (só scraping) ou `soap` |
-| `REDIS_URL` | `redis://localhost:6379` | Self-host |
-| `SEFAZ_CERT_PATH` / `SEFAZ_CERT_PASSPHRASE` | _(vazio)_ | Certificado A1 para o modo `soap` (mTLS) |
+Comandos, a partir da raiz:
 
-## 🏗️ Arquitetura
+    pnpm build        builda todos os pacotes e apps
+    pnpm dev          sobe os apps em modo desenvolvimento
+    pnpm test         roda os testes (Vitest)
+    pnpm typecheck    checagem de tipos
+    pnpm lint         ESLint
 
-Monorepo TypeScript (**pnpm + Turborepo**), em classes seguindo SOLID e Clean
-Code. Interface em PT-BR; código, contratos e APIs em inglês.
+As respostas da SEFAZ são mockadas por fixtures em `packages/core/test`, de modo
+que os testes nunca dependem da rede.
 
-```
-packages/
-  catalog/     dados do MOC: UFs, cStat, endpoints e mapa UF→autorizador
-  core/        motor: consenso multi-fonte (SVRS + Receita + IntegraNotas) + SOAP (Envelope/Parser/Checker)
-  contracts/   schemas Zod + DTOs compartilhados (single source of truth)
-apps/
-  collector/   CLI → gera os JSONs versionados (usado pelo GitHub Actions)
-  worker/      Cloudflare Worker → scraping ao vivo com CORS
-  api/         Fastify self-host → scheduler + REST + SSE + Redis
-  web/         React + Vite → status page (fonte de dados plugável)
-```
+## Referências
 
-> **Como obtém os dados sem certificado:** o monitor cruza fontes públicas (sem
-> mTLS) por consenso com precedência oficial — o portal do **SVRS**
-> (`dfe-portal.svrs.rs.gov.br`) e a **página oficial da Receita**
-> (`disponibilidade.aspx`) decidem o estado de cada serviço; o **IntegraNotas**
-> (API JSON) preenche as UFs/documentos que as oficiais não publicam. MDF-e e
-> DC-e são centralizados no SVRS, então derivam do estado desse autorizador.
+Portais oficiais de disponibilidade e fontes que o monitor consome:
 
-## 🧪 Testes
+- [Portal Nacional da NF-e — Disponibilidade](https://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx)
+- [Portal Nacional do CT-e — Disponibilidade](https://www.cte.fazenda.gov.br/portal/disponibilidade.aspx)
+- [Portal de Documentos Fiscais Eletrônicos do SVRS](https://dfe-portal.svrs.rs.gov.br)
+- [IntegraNotas — Monitor SEFAZ](https://integranotas.com.br/doc/sefaz/monitor)
 
-```bash
-pnpm test
-```
+## Contribuindo
 
-As respostas da SEFAZ são mockadas por fixtures em `packages/core/test/fixtures/`
-— o CI **nunca** bate na SEFAZ real.
+Contribuições são bem-vindas. O fluxo de desenvolvimento, os padrões de código e
+o passo a passo para adicionar um documento ou autorizador estão em
+[CONTRIBUTING.md](CONTRIBUTING.md). Para relatar uma falha de segurança, veja
+[SECURITY.md](SECURITY.md).
 
-## 🤝 Contribuindo
-
-Contribuições são bem-vindas! Veja o [CONTRIBUTING.md](CONTRIBUTING.md) para o
-fluxo de desenvolvimento, padrões de código e como adicionar um novo documento
-ou autorizador. Encontrou uma falha de segurança? Veja [SECURITY.md](SECURITY.md).
-
-## 🧰 Tech Stack
-
-**Core / Back-end:** TypeScript · Fastify · ioredis · cheerio · axios · Zod
-**Front-end:** React · Vite · TanStack Query
-**Infra:** pnpm · Turborepo · Vitest · Docker · Cloudflare Workers · GitHub Actions
-
-## ❓ Perguntas frequentes
-
-**Preciso de certificado digital A1?**
-Não para o uso padrão — a fonte é a página pública de disponibilidade. O
-certificado só é necessário no modo `soap` (consulta direta aos webservices).
-
-**Os dados são em tempo real?**
-No GitHub Pages, atualizam de hora em hora (cron do Actions; a granularidade
-sub-horária não é honrada de forma confiável pelo agendador do GitHub). Nos modos
-Worker e self-host, são ao vivo / a cada checagem do scheduler.
-
-**Posso hospedar a minha própria instância?**
-Sim — em qualquer um dos três modos. Faça um fork e ajuste a URL do Pages, ou
-suba via Docker / Cloudflare.
-
-**Por que homologação não aparece?**
-A página pública da SEFAZ só cobre produção. Homologação só é alcançável pelo
-modo `soap` (com rede e certificado).
-
-## 📄 Licença
+## Licença
 
 [MIT](LICENSE) © Felipe Sauer
-
----
-
-<div align="center">
-
-Dados: [Portal Nacional da NF-e](https://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx) ·
-projeto independente, **não afiliado** à SEFAZ ou à Receita Federal.
-
-</div>
