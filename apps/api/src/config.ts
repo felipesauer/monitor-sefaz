@@ -9,8 +9,10 @@ export interface AppConfig {
   readonly environments: ('production' | 'homologation')[];
   /**
    * Fonte de status:
-   * - `hybrid`: IntegraNotas (JSON) + fallback ao scraping — padrão. Mesmo motor
-   *   do collector e do worker, para os números baterem entre as três pontas.
+   * - `hybrid`: consenso multi-fonte com precedência oficial (`ConsensusCollector`
+   *   — SVRS e página da Receita decidem o estado, o IntegraNotas preenche as
+   *   lacunas) — padrão. Mesmo motor do collector e do worker, para os números
+   *   baterem entre as três pontas.
    * - `availability`: só o scraping da página oficial (pública, sem cert).
    * - `soap`: consulta SOAP direta (exige rede/cert A1).
    */

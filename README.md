@@ -58,7 +58,7 @@ A forma mais simples é abrir o site:
 
 ### 🌐 **[felipesauer.github.io/monitor-sefaz](https://felipesauer.github.io/monitor-sefaz/)**
 
-Os dados são atualizados automaticamente a cada 15 minutos por um GitHub Actions.
+Os dados são atualizados automaticamente de hora em hora por um GitHub Actions.
 Clique em qualquer serviço para ver o histórico de uptime e latência.
 
 ## ⚙️ Rodando localmente
@@ -167,8 +167,9 @@ Não para o uso padrão — a fonte é a página pública de disponibilidade. O
 certificado só é necessário no modo `soap` (consulta direta aos webservices).
 
 **Os dados são em tempo real?**
-No GitHub Pages, atualizam a cada 15 min (cron do Actions). Nos modos Worker e
-self-host, são ao vivo / a cada checagem do scheduler.
+No GitHub Pages, atualizam de hora em hora (cron do Actions; a granularidade
+sub-horária não é honrada de forma confiável pelo agendador do GitHub). Nos modos
+Worker e self-host, são ao vivo / a cada checagem do scheduler.
 
 **Posso hospedar a minha própria instância?**
 Sim — em qualquer um dos três modos. Faça um fork e ajuste a URL do Pages, ou

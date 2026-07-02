@@ -20,21 +20,21 @@ type DocumentEndpoints = Record<EnvironmentKey, EndpointMap>;
 const NFE_ENDPOINTS: DocumentEndpoints = {
   production: {
     AM: 'https://nfe.sefaz.am.gov.br/services2/services/NfeStatusServico2',
-    BA: 'https://nfe.sefaz.ba.gov.br/webservices/NfeStatusServico2/NfeStatusServico2.asmx',
+    BA: 'https://nfe.sefaz.ba.gov.br/webservices/NFeStatusServico4/NFeStatusServico4.asmx',
     CE: 'https://nfe.sefaz.ce.gov.br/nfe2/services/NFeStatusServico4',
     GO: 'https://nfe.sefaz.go.gov.br/nfe/services/NFeStatusServico4',
     MG: 'https://nfe.fazenda.mg.gov.br/nfe2/services/NFeStatusServico4',
-    MS: 'https://nfe.sefaz.ms.gov.br/ws2/NfeStatusServico2.asmx',
+    MS: 'https://nfe.sefaz.ms.gov.br/ws/NFeStatusServico4',
     MT: 'https://nfe.sefaz.mt.gov.br/nfews/v2/services/Nfews',
     PA: 'https://app.sefa.pa.gov.br/sfz-nfe-web/webservices/NfeStatusServico2',
-    PE: 'https://nfenw.sefaz.pe.gov.br/ws/NfeStatusServico2.asmx',
+    PE: 'https://nfe.sefaz.pe.gov.br/nfe-service/services/NFeStatusServico4',
     PR: 'https://nfe.sefa.pr.gov.br/nfe/NFeStatusServico4',
-    RS: 'https://nfe.sefazrs.rs.gov.br/ws/NfeStatus/NfeStatus2.asmx',
-    SP: 'https://nfe.fazenda.sp.gov.br/ws/nfestatus.asmx',
+    RS: 'https://nfe.svrs.rs.gov.br/ws/NfeStatusServico/NfeStatusServico4.asmx',
+    SP: 'https://nfe.fazenda.sp.gov.br/ws/NFeStatusServico4.asmx',
     SVAN: 'https://www.sefazvirtual.fazenda.gov.br/NFeStatusServico4/NFeStatusServico4.asmx',
-    SVRS: 'https://nfe.svrs.rs.gov.br/ws/NfeStatus/NfeStatus2.asmx',
+    SVRS: 'https://nfe.svrs.rs.gov.br/ws/NfeStatusServico/NfeStatusServico4.asmx',
     SVCAN: 'https://www.svc.fazenda.gov.br/NFeStatusServico4/NFeStatusServico4.asmx',
-    SVCRS: 'https://nfe.svrs.rs.gov.br/ws/NfeStatus/NfeStatus2.asmx',
+    SVCRS: 'https://nfe.svrs.rs.gov.br/ws/NfeStatusServico/NfeStatusServico4.asmx',
     AN: 'https://www.nfe.fazenda.gov.br/NFeStatusServico4/NFeStatusServico4.asmx',
   },
   homologation: {
@@ -43,17 +43,17 @@ const NFE_ENDPOINTS: DocumentEndpoints = {
     CE: 'https://nfeh.sefaz.ce.gov.br/nfe2/services/NFeStatusServico4',
     GO: 'https://homologacao.nfe.sefaz.go.gov.br/nfe/services/NFeStatusServico4',
     MG: 'https://hnfe.fazenda.mg.gov.br/nfe2/services/NFeStatusServico4',
-    MS: 'https://homologacao.nfe.sefaz.ms.gov.br/ws2/NfeStatusServico2.asmx',
+    MS: 'https://hom.nfe.sefaz.ms.gov.br/ws/NFeStatusServico4',
     MT: 'https://homologacao.sefaz.mt.gov.br/nfews/v2/services/Nfews',
     PA: 'https://app.sefa.pa.gov.br/sfz-nfe-web-hml/webservices/NfeStatusServico2',
-    PE: 'https://nfehomolog.sefaz.pe.gov.br/ws/NfeStatusServico2.asmx',
+    PE: 'https://nfe.sefaz.pe.gov.br/nfe-service/services/NFeStatusServico4',
     PR: 'https://homologacao.nfe.sefa.pr.gov.br/nfe/NFeStatusServico4',
-    RS: 'https://nfe-homologacao.sefazrs.rs.gov.br/ws/NfeStatus/NfeStatus2.asmx',
-    SP: 'https://homologacao.nfe.fazenda.sp.gov.br/ws/nfestatus.asmx',
+    RS: 'https://nfe-homologacao.svrs.rs.gov.br/ws/NfeStatusServico/NfeStatusServico4.asmx',
+    SP: 'https://homologacao.nfe.fazenda.sp.gov.br/ws/NFeStatusServico4.asmx',
     SVAN: 'https://hom.sefazvirtual.fazenda.gov.br/NFeStatusServico4/NFeStatusServico4.asmx',
-    SVRS: 'https://nfe-homologacao.svrs.rs.gov.br/ws/NfeStatus/NfeStatus2.asmx',
+    SVRS: 'https://nfe-homologacao.svrs.rs.gov.br/ws/NfeStatusServico/NfeStatusServico4.asmx',
     SVCAN: 'https://hom.svc.fazenda.gov.br/NFeStatusServico4/NFeStatusServico4.asmx',
-    SVCRS: 'https://nfe-homologacao.svrs.rs.gov.br/ws/NfeStatus/NfeStatus2.asmx',
+    SVCRS: 'https://nfe-homologacao.svrs.rs.gov.br/ws/NfeStatusServico/NfeStatusServico4.asmx',
     AN: 'https://hom.nfe.fazenda.gov.br/NFeStatusServico4/NFeStatusServico4.asmx',
   },
 };
@@ -68,10 +68,10 @@ const CTE_ENDPOINTS: DocumentEndpoints = {
     MS: 'https://producao.cte.ms.gov.br/ws/CTeStatusServicoV4',
     MT: 'https://cte.sefaz.mt.gov.br/ctews2/services/CTeStatusServicoV4',
     PR: 'https://cte.fazenda.pr.gov.br/cte4/CTeStatusServicoV4',
-    RS: 'https://cte.svrs.rs.gov.br/ws/CTeStatusServico/CTeStatusServico.asmx',
+    RS: 'https://cte.svrs.rs.gov.br/ws/CTeStatusServicoV4/CTeStatusServicoV4.asmx',
     SP: 'https://nfe.fazenda.sp.gov.br/CTeWS/WS/CTeStatusServicoV4.asmx',
-    SVRS: 'https://cte.svrs.rs.gov.br/ws/CTeStatusServico/CTeStatusServico.asmx',
-    SVCRS: 'https://cte.svrs.rs.gov.br/ws/CTeStatusServico/CTeStatusServico.asmx',
+    SVRS: 'https://cte.svrs.rs.gov.br/ws/CTeStatusServicoV4/CTeStatusServicoV4.asmx',
+    SVCRS: 'https://cte.svrs.rs.gov.br/ws/CTeStatusServicoV4/CTeStatusServicoV4.asmx',
     SVCAN: 'https://www.cte.fazenda.gov.br/CTeStatusServicoV4/CTeStatusServicoV4.asmx',
     AN: 'https://www.cte.fazenda.gov.br/CTeStatusServicoV4/CTeStatusServicoV4.asmx',
   },
@@ -80,10 +80,10 @@ const CTE_ENDPOINTS: DocumentEndpoints = {
     MS: 'https://homologacao.cte.ms.gov.br/ws/CTeStatusServicoV4',
     MT: 'https://homologacao.cte.sefaz.mt.gov.br/ctews2/services/CTeStatusServicoV4',
     PR: 'https://homologacao.cte.fazenda.pr.gov.br/cte4/CTeStatusServicoV4',
-    RS: 'https://cte-homologacao.svrs.rs.gov.br/ws/CTeStatusServico/CTeStatusServico.asmx',
+    RS: 'https://cte-homologacao.svrs.rs.gov.br/ws/CTeStatusServicoV4/CTeStatusServicoV4.asmx',
     SP: 'https://homologacao.nfe.fazenda.sp.gov.br/CTeWS/WS/CTeStatusServicoV4.asmx',
-    SVRS: 'https://cte-homologacao.svrs.rs.gov.br/ws/CTeStatusServico/CTeStatusServico.asmx',
-    SVCRS: 'https://cte-homologacao.svrs.rs.gov.br/ws/CTeStatusServico/CTeStatusServico.asmx',
+    SVRS: 'https://cte-homologacao.svrs.rs.gov.br/ws/CTeStatusServicoV4/CTeStatusServicoV4.asmx',
+    SVCRS: 'https://cte-homologacao.svrs.rs.gov.br/ws/CTeStatusServicoV4/CTeStatusServicoV4.asmx',
     SVCAN: 'https://hom.cte.fazenda.gov.br/CTeStatusServicoV4/CTeStatusServicoV4.asmx',
     AN: 'https://hom.cte.fazenda.gov.br/CTeStatusServicoV4/CTeStatusServicoV4.asmx',
   },
@@ -105,15 +105,17 @@ const MDFE_ENDPOINTS: DocumentEndpoints = {
 };
 
 /**
- * Endpoints DC-e (Declaração de Conteúdo eletrônica). Documento novo,
- * centralizado no SVRS.
+ * Endpoints DC-e (Declaração de Conteúdo eletrônica). Documento novo: o ambiente
+ * nacional da DC-e passou a ser hospedado pela SEFAZ-PR (`dce.fazenda.pr.gov.br`),
+ * não mais em `dce.svrs.rs.gov.br` (host descontinuado). O autorizador continua
+ * sendo o SVRS no catálogo (mapa UF→autorizador), só a URL do WS migrou.
  */
 const DCE_ENDPOINTS: DocumentEndpoints = {
   production: {
-    SVRS: 'https://dce.svrs.rs.gov.br/ws/dceStatusServico/dceStatusServico.asmx',
+    SVRS: 'https://dce.fazenda.pr.gov.br/dce/DCeStatusServico',
   },
   homologation: {
-    SVRS: 'https://dce-homologacao.svrs.rs.gov.br/ws/dceStatusServico/dceStatusServico.asmx',
+    SVRS: 'https://homologacao.dce.fazenda.pr.gov.br/dce/DCeStatusServico',
   },
 };
 

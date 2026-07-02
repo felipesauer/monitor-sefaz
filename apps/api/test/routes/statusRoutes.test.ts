@@ -97,6 +97,12 @@ describe('statusRoutes', () => {
     expect(res.statusCode).toBe(404);
   });
 
+  it('GET /api/v1/status/:document/:uf normaliza document/uf minúsculos', async () => {
+    const res = await app.inject({ method: 'GET', url: '/api/v1/status/nfe/sp' });
+    expect(res.statusCode).toBe(200);
+    expect(res.json().id).toBe('NFe:SP');
+  });
+
   it('GET /api/v1/services/:id/uptime retorna uptime conforme schema', async () => {
     const res = await app.inject({
       method: 'GET',

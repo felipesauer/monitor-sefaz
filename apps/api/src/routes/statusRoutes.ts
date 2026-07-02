@@ -1,5 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import {
+  DocumentType,
   historyQuerySchema,
   statusQuerySchema,
   type EnvironmentValue,
@@ -7,6 +8,16 @@ import {
 import type { StatusStore } from '../store/StatusStore.js';
 import { SummaryService } from '../services/SummaryService.js';
 import { UptimeCalculator } from '../services/UptimeCalculator.js';
+
+/**
+ * Resolve o parâmetro de documento da rota para o valor canônico do enum
+ * (case-insensitive): "nfe"/"NFE" → `DocumentType.NFe`. Retorna `undefined` se
+ * não corresponder a nenhum documento conhecido.
+ */
+function normalizeDocument(raw: string): DocumentType | undefined {
+  const lower = raw.toLowerCase();
+  return Object.values(DocumentType).find((d) => d.toLowerCase() === lower);
+}
 
 export interface StatusRoutesDeps {
   readonly store: StatusStore;
@@ -41,7 +52,11 @@ export function registerStatusRoutes(app: FastifyInstance, deps: StatusRoutesDep
     '/api/v1/status/:document/:uf',
     async (request, reply) => {
       const env = statusQuerySchema.parse(request.query).env;
-      const id = `${request.params.document}:${request.params.uf.toUpperCase()}`;
+      // Normaliza o document para o enum canônico do catálogo (case-sensitive,
+      // ex.: "NFe") — o cliente pode passar "nfe"; a uf idem. Sem isso o id não
+      // casaria com o armazenado (`NFe:SP`) e a rota devolveria 404 espúrio.
+      const document = normalizeDocument(request.params.document);
+      const id = `${document ?? request.params.document}:${request.params.uf.toUpperCase()}`;
       const service = await store.getService(env, id);
       if (!service) {
         return reply.code(404).send({ message: 'Serviço não encontrado' });
