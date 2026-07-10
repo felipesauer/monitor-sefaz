@@ -66,4 +66,23 @@ describe('formatters', () => {
       toDiscordPayload(recovered).embeds[0]!.color
     );
   });
+
+  it('DAILY_DIGEST mostra os NÚMEROS do resumo (não só o título)', () => {
+    const digest: NotificationEventDTO = {
+      type: 'DAILY_DIGEST',
+      occurredAt: AT,
+      payload: { total: 135, operational: 130, availability: 96.3, degradedSources: ['availability'] },
+    };
+    const desc = toDiscordPayload(digest).embeds[0]!.description;
+    expect(desc).toContain('96.3%');
+    expect(desc).toContain('130/135');
+    expect(desc).toContain('availability'); // fonte degradada listada
+  });
+
+  it('Slack tolera occurredAt inválido (ts vira 0, não NaN)', () => {
+    const bad: NotificationEventDTO = { ...down, occurredAt: 'não-é-data' };
+    const p = toSlackPayload(bad);
+    expect(p.attachments[0]!.ts).toBe(0);
+    expect(Number.isNaN(p.attachments[0]!.ts)).toBe(false);
+  });
 });

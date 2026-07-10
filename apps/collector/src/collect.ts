@@ -241,18 +241,25 @@ async function main(): Promise<void> {
   // DEPOIS de publicar os JSONs — uma falha de entrega não deve impedir a coleta.
   const notifier = new Notifier(parseNotifierConfig(process.env));
   if (notifier.enabled) {
-    const digest = buildDigestEvent(
-      summary,
-      parseDigestHour(process.env.NOTIFY_DIGEST_HOUR),
-      new Date(generatedAt)
-    );
-    const events = [
-      ...buildNotificationEvents(previousHistory, services, summary.sources, generatedAt),
-      ...technicalNoteEvents(freshNotes, generatedAt),
-      ...(digest ? [digest] : []),
-    ];
-    const { sent, failed } = await notifier.notify(events);
-    console.log(`Notificações: ${events.length} eventos, ${sent} entregues, ${failed} falharam`);
+    // Envolto em try/catch: os JSONs já foram publicados acima. Uma falha aqui
+    // (montagem de evento, entrega) NÃO deve marcar o job como vermelho nem
+    // impedir a coleta — apenas registra o aviso.
+    try {
+      const digest = buildDigestEvent(
+        summary,
+        parseDigestHour(process.env.NOTIFY_DIGEST_HOUR),
+        new Date(generatedAt)
+      );
+      const events = [
+        ...buildNotificationEvents(previousHistory, services, summary.sources, generatedAt),
+        ...technicalNoteEvents(freshNotes, generatedAt),
+        ...(digest ? [digest] : []),
+      ];
+      const { sent, failed } = await notifier.notify(events);
+      console.log(`Notificações: ${events.length} eventos, ${sent} entregues, ${failed} falharam`);
+    } catch (err) {
+      console.warn(`Notificação falhou (coleta preservada): ${err instanceof Error ? err.message : err}`);
+    }
   }
 }
 

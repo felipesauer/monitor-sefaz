@@ -70,7 +70,18 @@ export class Scheduler {
         const key = `${env}:${service.id}`;
         const previous = this.lastState.get(key);
         if (previous !== undefined) {
-          prev.push({ ...service, state: previous as ServiceStatusDTO['state'] });
+          // Reconstrói o estado anterior carregando SÓ o `state` de fato antigo;
+          // os demais campos (cStat/source/latency) do snapshot atual são apenas
+          // preenchimento identitário (id/uf/document não mudam para o mesmo
+          // serviço). O `cStat`/`source` reais de antes não são guardados no
+          // lastState — e o diff só compara `state`, então não os inventamos:
+          // zeramos cStat/source para não passar valores enganosos.
+          prev.push({
+            ...service,
+            state: previous as ServiceStatusDTO['state'],
+            cStat: null,
+            source: undefined,
+          });
         }
         this.lastState.set(key, service.state);
         return previous !== undefined && previous !== service.state;

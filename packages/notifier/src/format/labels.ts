@@ -37,5 +37,14 @@ export function describeEvent(event: NotificationEventDTO): string {
     const title = typeof event.payload?.title === 'string' ? event.payload.title : 'Nota Técnica';
     return title;
   }
+  if (event.type === 'DAILY_DIGEST') {
+    const p = event.payload ?? {};
+    const avail = typeof p.availability === 'number' ? `${p.availability}%` : '—';
+    const op = typeof p.operational === 'number' ? p.operational : '—';
+    const total = typeof p.total === 'number' ? p.total : '—';
+    const degraded = Array.isArray(p.degradedSources) ? p.degradedSources : [];
+    const degradedTxt = degraded.length > 0 ? ` · fontes degradadas: ${degraded.join(', ')}` : '';
+    return `Disponibilidade ${avail} · ${op}/${total} no ar${degradedTxt}`;
+  }
   return labelFor(event.type).title;
 }

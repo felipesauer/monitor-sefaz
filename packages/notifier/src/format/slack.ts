@@ -25,8 +25,11 @@ export function toSlackPayload(event: NotificationEventDTO): SlackPayload {
         color: toHex(label.color),
         title: label.title,
         text: describeEvent(event),
-        // Slack usa epoch em segundos; occurredAt é ISO. Date.parse é puro.
-        ts: Math.floor(Date.parse(event.occurredAt) / 1000),
+        // Slack usa epoch em segundos; occurredAt é ISO. Guarda contra data
+        // inválida (Date.parse → NaN viraria "ts":null no JSON): cai em 0.
+        ts: Number.isNaN(Date.parse(event.occurredAt))
+          ? 0
+          : Math.floor(Date.parse(event.occurredAt) / 1000),
       },
     ],
   };
