@@ -7,7 +7,8 @@
     "typecheck": "tsc -b tsconfig.json",
     "lint": "eslint src",
     "test": "vitest run --passWithNoTests",
-    "collect": "tsx src/collect.ts"
+    "collect": "tsx src/collect.ts",
+    "drift-check": "tsx src/drift-check.ts"
   },
   "dependencies": {
     "@monitor-sefaz/catalog": "workspace:*",

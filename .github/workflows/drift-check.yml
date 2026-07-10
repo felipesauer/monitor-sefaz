@@ -1,0 +1,50 @@
+name: Guard de drift (fontes ao vivo)
+
+# Health-check do PARSER contra o HTML REAL do portal. As fixtures dos testes são
+# estáticas e não pegam quando a SEFAZ muda o layout; este job faz uma coleta ao
+# vivo (1 fetch por fonte) e avisa se alguma fonte OFICIAL cair abaixo do piso de
+# cobertura — sinal de que o parser parou de casar (drift).
+#
+# É NON-BLOCKING e SEPARADO do pipeline: não roda no push nem antes do deploy, e
+# uma falha aqui não impede coleta nem publicação. Só sinaliza (anotação + run
+# vermelho opcional) para o mantenedor investigar.
+on:
+  schedule:
+    # 1x/dia (06:23 UTC). Não precisa de mais — drift de layout é raro e o objetivo
+    # é detecção, não monitoramento contínuo. Minuto quebrado evita a hora cheia.
+    - cron: '23 6 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: drift-check
+  cancel-in-progress: true
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      # continue-on-error: o resultado é capturado no id do step; o job não é
+      # abortado por um drift. A conclusão do step (success/failure) fica visível.
+      - name: Verificar drift ao vivo
+        id: drift
+        continue-on-error: true
+        run: pnpm --filter @monitor-sefaz/collector drift-check
+
+      - name: Anotar quando houver drift
+        if: steps.drift.outcome == 'failure'
+        run: |
+          echo "::warning title=Drift detectado::Uma fonte oficial veio abaixo do piso de cobertura na coleta ao vivo. Provável mudança de HTML do portal — verifique os parsers (veja o log do passo anterior)."
+          # Marca o job como falho para o run aparecer vermelho (visibilidade),
+          # sem afetar coleta/deploy (workflows independentes).
+          exit 1
