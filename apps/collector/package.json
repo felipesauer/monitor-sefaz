@@ -12,7 +12,8 @@
   "dependencies": {
     "@monitor-sefaz/catalog": "workspace:*",
     "@monitor-sefaz/contracts": "workspace:*",
-    "@monitor-sefaz/core": "workspace:*"
+    "@monitor-sefaz/core": "workspace:*",
+    "@monitor-sefaz/notifier": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",

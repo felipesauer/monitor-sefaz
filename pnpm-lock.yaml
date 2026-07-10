@@ -105,6 +105,9 @@ importers:
       '@monitor-sefaz/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@monitor-sefaz/notifier':
+        specifier: workspace:*
+        version: link:../../packages/notifier
     devDependencies:
       '@types/node':
         specifier: ^22.10.2

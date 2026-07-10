@@ -25,9 +25,11 @@
       "@monitor-sefaz/core": ["./packages/core/src/index.ts"],
       "@monitor-sefaz/catalog": ["./packages/catalog/src/index.ts"],
       "@monitor-sefaz/contracts": ["./packages/contracts/src/index.ts"],
+      "@monitor-sefaz/notifier": ["./packages/notifier/src/index.ts"],
       "@monitor-sefaz/core/*": ["./packages/core/src/*"],
       "@monitor-sefaz/catalog/*": ["./packages/catalog/src/*"],
-      "@monitor-sefaz/contracts/*": ["./packages/contracts/src/*"]
+      "@monitor-sefaz/contracts/*": ["./packages/contracts/src/*"],
+      "@monitor-sefaz/notifier/*": ["./packages/notifier/src/*"]
     }
   }
 }

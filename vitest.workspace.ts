@@ -5,4 +5,5 @@ export default defineWorkspace([
   'apps/api',
   'apps/web',
   'apps/worker',
+  'apps/collector',
 ]);

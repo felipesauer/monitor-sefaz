@@ -15,6 +15,8 @@ import {
   type SummaryDTO,
 } from '@monitor-sefaz/contracts';
 import type { SourceHealth } from '@monitor-sefaz/core';
+import { Notifier, parseNotifierConfig } from '@monitor-sefaz/notifier';
+import { buildNotificationEvents } from './notifyEvents.js';
 
 /** Retenção do histórico estático (ms). Padrão 7 dias. */
 const RETENTION_MS = Number(process.env.HISTORY_RETENTION_MS ?? 7 * 24 * 60 * 60 * 1000);
@@ -175,7 +177,10 @@ async function main(): Promise<void> {
 
   const snapshot: StatusSnapshotDTO = { environment: 'production', generatedAt, services };
   const summary = buildSummary(services, generatedAt, sourceHealth);
-  const history = appendHistory(loadHistory(join(outDir, 'history.json')), services, generatedAt);
+  // Carrega o histórico ANTES do append: o último ponto de cada série é o estado
+  // anterior contra o qual detectamos transições para notificar.
+  const previousHistory = loadHistory(join(outDir, 'history.json'));
+  const history = appendHistory(previousHistory, services, generatedAt);
 
   writeFileSync(join(outDir, 'status.json'), JSON.stringify(snapshot, null, 2));
   writeFileSync(join(outDir, 'summary.json'), JSON.stringify(summary, null, 2));
@@ -184,6 +189,16 @@ async function main(): Promise<void> {
   console.log(
     `Coletado: ${services.length} serviços (${summary.operational} operacionais) → ${outDir}`
   );
+
+  // Notificação (opcional): compara com o estado anterior do histórico e dispara
+  // os eventos aos canais configurados. Sem nenhuma var NOTIFY_*, é no-op. Roda
+  // DEPOIS de publicar os JSONs — uma falha de entrega não deve impedir a coleta.
+  const notifier = new Notifier(parseNotifierConfig(process.env));
+  if (notifier.enabled) {
+    const events = buildNotificationEvents(previousHistory, services, summary.sources, generatedAt);
+    const { sent, failed } = await notifier.notify(events);
+    console.log(`Notificações: ${events.length} eventos, ${sent} entregues, ${failed} falharam`);
+  }
 }
 
 void main();
