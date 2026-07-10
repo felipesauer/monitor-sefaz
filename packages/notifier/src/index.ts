@@ -17,3 +17,7 @@ export { DiscordChannel } from './channels/DiscordChannel.js';
 export { SlackChannel } from './channels/SlackChannel.js';
 export { TelegramChannel } from './channels/TelegramChannel.js';
 export { WebhookChannel } from './channels/WebhookChannel.js';
+
+// Config + orquestrador
+export { parseNotifierConfig, type Env, type NotifierConfig } from './config.js';
+export { Notifier, type NotifyResult } from './Notifier.js';
