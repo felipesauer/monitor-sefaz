@@ -40,4 +40,22 @@ describe('TechnicalNotesCard', () => {
     fireEvent.click(screen.getByRole('button'));
     expect(screen.getByText('NT-5')).toBeInTheDocument();
   });
+
+  it('não vira botão quando cabe no preview (sem controle interativo enganoso)', () => {
+    render(<TechnicalNotesCard notes={[note('NT-a'), note('NT-b')]} previewCount={5} />);
+    // 2 notas <= previewCount 5: header estático, sem role=button nem aria-expanded
+    expect(screen.queryByRole('button')).toBeNull();
+    expect(screen.getByText('NT-a')).toBeInTheDocument();
+    expect(screen.getByText('NT-b')).toBeInTheDocument();
+  });
+
+  it('notas de mesmo título e sem link não colidem (keys distintas por firstSeenAt+índice)', () => {
+    // Duas NTs idênticas em título e link: não deve dar warning de key nem sumir uma.
+    const dup: TechnicalNoteDTO[] = [
+      { title: 'NT igual', link: null, firstSeenAt: '2026-07-10T00:00:00.000Z' },
+      { title: 'NT igual', link: null, firstSeenAt: '2026-07-10T00:00:00.000Z' },
+    ];
+    render(<TechnicalNotesCard notes={dup} />);
+    expect(screen.getAllByText('NT igual')).toHaveLength(2);
+  });
 });

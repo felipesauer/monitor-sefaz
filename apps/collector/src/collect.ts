@@ -261,25 +261,34 @@ async function main(): Promise<void> {
       const statePath = join(outDir, 'notifier-state.json');
       const state = loadNotifierState(statePath);
       const now = new Date(generatedAt);
+      const events = [
+        ...buildNotificationEvents(previousHistory, services, summary.sources, generatedAt),
+        ...technicalNoteEvents(freshNotes, generatedAt),
+      ];
+      const { sent, failed } = await notifier.notify(events);
+      console.log(`Notificações: ${events.length} eventos, ${sent} entregues, ${failed} falharam`);
+
+      // Digest enviado SEPARADAMENTE para saber se ELE foi de fato entregue: só
+      // então marcamos o dia como concluído. Isso evita "perder" o digest quando
+      // nenhum canal entregou (rede caiu) ou quando NOTIFY_EVENTS o filtra — nesses
+      // casos `digestSent === 0` e o state não avança, então uma próxima rodada do
+      // mesmo dia tenta de novo.
       const digest = buildDigestEvent(
         summary,
         parseDigestHour(process.env.NOTIFY_DIGEST_HOUR),
         now,
         state.lastDigestDate
       );
-      const events = [
-        ...buildNotificationEvents(previousHistory, services, summary.sources, generatedAt),
-        ...technicalNoteEvents(freshNotes, generatedAt),
-        ...(digest ? [digest] : []),
-      ];
-      const { sent, failed } = await notifier.notify(events);
-      console.log(`Notificações: ${events.length} eventos, ${sent} entregues, ${failed} falharam`);
-      // Marca o digest do dia como enviado (idempotência), só após tentar entregar.
       if (digest) {
-        writeFileSync(
-          statePath,
-          JSON.stringify({ ...state, lastDigestDate: utcDate(now) }, null, 2)
-        );
+        const { sent: digestSent } = await notifier.notify([digest]);
+        if (digestSent > 0) {
+          writeFileSync(
+            statePath,
+            JSON.stringify({ ...state, lastDigestDate: utcDate(now) }, null, 2)
+          );
+        } else {
+          console.warn('Digest não entregue a nenhum canal; não marcado como enviado (tentará de novo).');
+        }
       }
     } catch (err) {
       console.warn(`Notificação falhou (coleta preservada): ${err instanceof Error ? err.message : err}`);
