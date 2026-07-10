@@ -8,6 +8,7 @@ import {
   CheckerFactory,
   type ClientCertificate,
 } from '@monitor-sefaz/core';
+import { Notifier, parseNotifierConfig } from '@monitor-sefaz/notifier';
 import { loadConfig } from './config.js';
 import { buildApp } from './app.js';
 import { RedisStatusStore } from './store/RedisStatusStore.js';
@@ -93,11 +94,18 @@ async function main(): Promise<void> {
     logger: true,
   });
 
+  // Notificador externo (opcional): ativo só se houver NOTIFY_* no ambiente.
+  const notifier = new Notifier(parseNotifierConfig(process.env));
+  if (notifier.enabled) {
+    app.log.info('Notificações externas habilitadas');
+  }
+
   const scheduler = new Scheduler(
     source,
     store,
     { cronExpression: config.cronExpression, environments: config.environments },
-    { info: (m) => app.log.info(m), error: (m) => app.log.error(m) }
+    { info: (m) => app.log.info(m), error: (m) => app.log.error(m) },
+    notifier
   );
 
   const shutdown = async (): Promise<void> => {

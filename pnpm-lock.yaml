@@ -53,6 +53,9 @@ importers:
       '@monitor-sefaz/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@monitor-sefaz/notifier':
+        specifier: workspace:*
+        version: link:../../packages/notifier
       axios:
         specifier: ^1.7.9
         version: 1.16.1
