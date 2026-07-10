@@ -5,6 +5,7 @@ export type { UF, AuthorizerCode } from '@monitor-sefaz/catalog';
 // Domínio
 export * from './domain/types.js';
 export * from './domain/errors.js';
+export { backoffMs, defaultSleeper, type Sleeper } from './domain/retry.js';
 
 // Envelopes (Strategy por documento)
 export type { EnvelopeBuilder, EnvelopeParams } from './envelopes/EnvelopeBuilder.js';
@@ -52,6 +53,7 @@ export {
   AvailabilityParser,
   DOCUMENT_COLUMNS,
   type AvailabilityRow,
+  type AvailabilityParseResult,
   type ColumnLayout,
 } from './availability/AvailabilityParser.js';
 export {
@@ -89,4 +91,9 @@ export { createHttpSvrsFetcher } from './svrs/httpFetcher.js';
 export { SvrsCollector } from './svrs/SvrsCollector.js';
 
 // Consenso multi-fonte (precedência oficial)
-export { ConsensusCollector, type ConsensusSource } from './consensus/ConsensusCollector.js';
+export {
+  ConsensusCollector,
+  type ConsensusSource,
+  type SourceHealth,
+  type ConsensusResult,
+} from './consensus/ConsensusCollector.js';

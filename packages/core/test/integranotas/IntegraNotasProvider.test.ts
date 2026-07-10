@@ -51,18 +51,21 @@ describe('IntegraNotasProvider', () => {
     expect(fetchLatencyMs).toBe(137);
   });
 
+  // Sleeper fake para os testes de erro não dormirem os retries de verdade.
+  const skipSleep = async (): Promise<void> => {};
+
   it('lança quando o payload não tem dados.labels', async () => {
-    const provider = new IntegraNotasProvider(async () => '{"dados":{}}');
+    const provider = new IntegraNotasProvider(async () => '{"dados":{}}', undefined, skipSleep);
     await expect(provider.fetch(DocumentType.NFe)).rejects.toThrow();
   });
 
   it('lança quando há labels/backgroundColor mas falta o array data', async () => {
     // Sem essa guarda, todas as UFs virariam Error silenciosamente (tMed=-1) e o
-    // fallback do híbrido nunca dispararia.
+    // consenso não saberia que a fonte falhou.
     const payload = JSON.stringify({
       dados: { labels: ['SP', 'RJ'], backgroundColor: ['', ''] },
     });
-    const provider = new IntegraNotasProvider(async () => payload);
+    const provider = new IntegraNotasProvider(async () => payload, undefined, skipSleep);
     await expect(provider.fetch(DocumentType.NFe)).rejects.toThrow(/incompleto/);
   });
 
@@ -70,7 +73,7 @@ describe('IntegraNotasProvider', () => {
     const payload = JSON.stringify({
       dados: { labels: ['SP', 'RJ'], backgroundColor: ['', ''], data: [1] },
     });
-    const provider = new IntegraNotasProvider(async () => payload);
+    const provider = new IntegraNotasProvider(async () => payload, undefined, skipSleep);
     await expect(provider.fetch(DocumentType.NFe)).rejects.toThrow(/incompleto|desalinhad/);
   });
 
@@ -78,7 +81,7 @@ describe('IntegraNotasProvider', () => {
     const payload = JSON.stringify({
       dados: { labels: ['SP', 'RJ'], backgroundColor: [''], data: [1, 1] },
     });
-    const provider = new IntegraNotasProvider(async () => payload);
+    const provider = new IntegraNotasProvider(async () => payload, undefined, skipSleep);
     await expect(provider.fetch(DocumentType.NFe)).rejects.toThrow(/desalinhad|incompleto/);
   });
 
@@ -86,7 +89,7 @@ describe('IntegraNotasProvider', () => {
     const payload = JSON.stringify({
       dados: { labels: ['SP', 'RJ'], backgroundColor: ['', ''], data: [1, 1], normal: [1] },
     });
-    const provider = new IntegraNotasProvider(async () => payload);
+    const provider = new IntegraNotasProvider(async () => payload, undefined, skipSleep);
     await expect(provider.fetch(DocumentType.NFe)).rejects.toThrow(/desalinhad|incompleto/);
   });
 
@@ -96,5 +99,47 @@ describe('IntegraNotasProvider', () => {
     expect(docs).toContain(DocumentType.MDFe);
     expect(docs).toContain(DocumentType.DCe);
     expect(docs).toHaveLength(5);
+  });
+
+  // Sleeper fake: não dorme de verdade, só registra os atrasos pedidos.
+  const noSleep = (delays: number[]) => async (ms: number) => {
+    delays.push(ms);
+  };
+  const fixedRandom = (): number => 0.5; // jitter neutro → backoff = 500 × attempt
+
+  it('faz retry com backoff e tem sucesso após uma falha transitória', async () => {
+    const delays: number[] = [];
+    let calls = 0;
+    const provider = new IntegraNotasProvider(
+      async () => {
+        calls += 1;
+        if (calls === 1) throw new Error('ECONNRESET transitório');
+        return nfeFixture;
+      },
+      () => 0,
+      noSleep(delays),
+      fixedRandom
+    );
+    const { rows } = await provider.fetch(DocumentType.NFe);
+    expect(calls).toBe(2); // falhou 1×, sucesso na 2ª
+    expect(rows).toHaveLength(27);
+    expect(delays).toEqual([500]); // um backoff entre a 1ª e a 2ª tentativa
+  });
+
+  it('lança após esgotar as tentativas (parse estrito preservado)', async () => {
+    const delays: number[] = [];
+    let calls = 0;
+    const provider = new IntegraNotasProvider(
+      async () => {
+        calls += 1;
+        throw new Error('sempre falha');
+      },
+      () => 0,
+      noSleep(delays),
+      fixedRandom
+    );
+    await expect(provider.fetch(DocumentType.NFe)).rejects.toThrow(/sempre falha/);
+    expect(calls).toBe(3); // attempts=3 por padrão
+    expect(delays).toEqual([500, 1000]); // backoff só ENTRE tentativas, não após a última
   });
 });

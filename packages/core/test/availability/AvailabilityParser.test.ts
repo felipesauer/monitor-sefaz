@@ -79,4 +79,53 @@ describe('AvailabilityParser', () => {
   it('ignora HTML sem tabela de status', () => {
     expect(parser.parse('<html><body><p>sem tabela</p></body></html>')).toEqual([]);
   });
+
+  describe('resolução por cabeçalho (defensivo a mudança de layout)', () => {
+    it('nas páginas reais, resolve as colunas pelo cabeçalho (headerMatched)', () => {
+      const nfe = new AvailabilityParser(DocumentType.NFe).parseWithDiagnostics(
+        loadAvailability('nfe-disponibilidade.html')
+      );
+      const cte = new AvailabilityParser(DocumentType.CTe).parseWithDiagnostics(
+        loadAvailability('cte-disponibilidade.html')
+      );
+      expect(nfe.headerMatched).toBe(true);
+      expect(cte.headerMatched).toBe(true);
+      expect(nfe.rows.length).toBeGreaterThanOrEqual(12);
+      expect(cte.rows.length).toBeGreaterThanOrEqual(6);
+    });
+
+    it('acha a coluna certa pelo cabeçalho mesmo com layout deslocado', () => {
+      // Cabeçalho diz que "Status Serviço" é a coluna 3 (não a 5 do layout NF-e).
+      // Uma coluna nova foi inserida; o índice fixo leria a coluna errada.
+      const html = `<table>
+        <tr><th>Autorizador</th><th>Coluna Nova</th><th>Autorização</th>
+            <th>Status Serviço</th><th>Retorno</th><th>Consulta</th><th>Tempo Médio</th></tr>
+        <tr>
+          <td>SP</td>
+          <td><img src="bola_vermelho.png"></td>
+          <td><img src="bola_vermelho.png"></td>
+          <td><img src="bola_verde.png"></td>
+          <td><img src="bola_vermelho.png"></td>
+          <td><img src="bola_vermelho.png"></td>
+          <td>2</td>
+        </tr></table>`;
+      // Parser com layout NF-e (statusIndex fixo=5), mas o cabeçalho manda.
+      const res = new AvailabilityParser(DocumentType.NFe).parseWithDiagnostics(html);
+      expect(res.headerMatched).toBe(true);
+      expect(res.rows[0]?.state).toBe(ServiceState.Operational); // coluna 3 (verde), não a 5
+      expect(res.rows[0]?.tMedSeconds).toBe(2); // "Tempo Médio" achado na coluna 6
+    });
+
+    it('cai no índice fixo e sinaliza headerMatched=false quando não há cabeçalho', () => {
+      // HTML sem <th>: não dá para validar o layout → fallback + sinal de drift.
+      const html = `<table><tr>
+        <td>SP</td><td><img src="bola_verde.png"></td><td><img src="bola_verde.png"></td>
+        <td><img src="bola_verde.png"></td><td><img src="bola_verde.png"></td>
+        <td><img src="bola_verde.png"></td><td>1</td>
+      </tr></table>`;
+      const res = new AvailabilityParser(DocumentType.NFe).parseWithDiagnostics(html);
+      expect(res.headerMatched).toBe(false); // sem cabeçalho → possível drift
+      expect(res.rows[0]?.state).toBe(ServiceState.Operational); // fallback índice 5 ainda funciona
+    });
+  });
 });

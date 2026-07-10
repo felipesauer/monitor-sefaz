@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { backoffMs } from '../../src/availability/AvailabilityProvider.js';
+import { backoffMs } from '../../src/domain/retry.js';
 
 describe('backoffMs', () => {
   it('é linear na tentativa (base 500ms × attempt) sem jitter', () => {

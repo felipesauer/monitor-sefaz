@@ -97,6 +97,26 @@ export const summaryGroupSchema = z.object({
   availability: z.number(),
 });
 
+/**
+ * Saúde de UMA fonte na última coleta. `degraded` sinaliza DRIFT: uma fonte que
+ * normalmente cobre a maior parte do catálogo veio muito abaixo do piso — indício
+ * de que o portal mudou o HTML e o parser parou de casar, em vez de uma queda real
+ * da SEFAZ (que retornaria os serviços com estado DOWN/ERROR, não ausentes).
+ */
+export const sourceHealthSchema = z.object({
+  source: statusSourceSchema,
+  official: z.boolean(),
+  /** Serviços que a fonte devolveu nesta coleta. */
+  collected: z.number(),
+  /** Total de serviços do catálogo (referência de cobertura). */
+  expected: z.number(),
+  /** collected / expected, 0..1, arredondado a 3 casas. */
+  coverage: z.number(),
+  /** coverage abaixo do piso → provável drift do portal. */
+  degraded: z.boolean(),
+});
+export type SourceHealthDTO = z.infer<typeof sourceHealthSchema>;
+
 export const summarySchema = z.object({
   environment: environmentSchema,
   generatedAt: z.string(),
@@ -107,6 +127,11 @@ export const summarySchema = z.object({
   avgLatencyMs: z.number().nullable(),
   byDocument: z.array(summaryGroupSchema),
   byAuthorizer: z.array(summaryGroupSchema),
+  /**
+   * Diagnóstico por fonte da última coleta (opcional para retrocompat com
+   * summaries antigos que não o traziam). Base do sinal de drift.
+   */
+  sources: z.array(sourceHealthSchema).optional(),
 });
 export type SummaryDTO = z.infer<typeof summarySchema>;
 

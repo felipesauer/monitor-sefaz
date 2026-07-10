@@ -10,9 +10,11 @@ import {
   type HistoryFileDTO,
   type HistoryPointDTO,
   type ServiceStatusDTO,
+  type SourceHealthDTO,
   type StatusSnapshotDTO,
   type SummaryDTO,
 } from '@monitor-sefaz/contracts';
+import type { SourceHealth } from '@monitor-sefaz/core';
 
 /** Retenção do histórico estático (ms). Padrão 7 dias. */
 const RETENTION_MS = Number(process.env.HISTORY_RETENTION_MS ?? 7 * 24 * 60 * 60 * 1000);
@@ -23,7 +25,31 @@ const RETENTION_MS = Number(process.env.HISTORY_RETENTION_MS ?? 7 * 24 * 60 * 60
  */
 const MIN_COVERAGE_RATIO = Number(process.env.MIN_COVERAGE_RATIO ?? DEFAULT_MIN_COVERAGE_RATIO);
 
-function buildSummary(services: ServiceStatusDTO[], generatedAt: string): SummaryDTO {
+/**
+ * Converte a saúde por fonte do consenso (core) para o DTO do contrato. O `source`
+ * do core é o rótulo livre da fonte; no consenso padrão coincide com o enum
+ * `statusSource` (svrs/availability/integranotas). Fontes com rótulo fora do enum
+ * são descartadas do diagnóstico (não quebram o summary).
+ */
+function toSourceHealthDTOs(sources: SourceHealth[]): SourceHealthDTO[] {
+  const KNOWN = new Set(['integranotas', 'availability', 'svrs']);
+  return sources
+    .filter((s) => KNOWN.has(s.source))
+    .map((s) => ({
+      source: s.source as SourceHealthDTO['source'],
+      official: s.official,
+      collected: s.collected,
+      expected: s.expected,
+      coverage: s.coverage,
+      degraded: s.degraded,
+    }));
+}
+
+function buildSummary(
+  services: ServiceStatusDTO[],
+  generatedAt: string,
+  sources?: SourceHealth[]
+): SummaryDTO {
   const total = services.length;
   const operational = services.filter((s) => isUp(s.state)).length;
   const group = (keyOf: (s: ServiceStatusDTO) => string): SummaryDTO['byDocument'] => {
@@ -54,6 +80,7 @@ function buildSummary(services: ServiceStatusDTO[], generatedAt: string): Summar
     avgLatencyMs: averageLatency(latencies),
     byDocument: group((s) => s.document),
     byAuthorizer: group((s) => s.authorizer),
+    ...(sources ? { sources: toSourceHealthDTOs(sources) } : {}),
   };
 }
 
@@ -112,14 +139,14 @@ async function main(): Promise<void> {
   // Fonte multi-fonte com precedência oficial: SVRS e página oficial da Receita
   // (oficiais) decidem o estado; o IntegraNotas (mais completo) preenche as UFs
   // que as oficiais não publicam.
-  const collector = ConsensusCollector.createForNode();
-  const collected = await collector.collect();
+  const catalog = new Catalog();
+  const collector = ConsensusCollector.createForNode(catalog, MIN_COVERAGE_RATIO);
+  const { services: collected, sources: sourceHealth } = await collector.collectWithDiagnostics();
 
   // Guarda de piso: se a coleta veio muito abaixo do catálogo, ambas as fontes
   // provavelmente falharam. Abortar com erro (sem escrever) faz o git não ver
   // diff — o último snapshot bom permanece — e o GitHub Actions falha visível,
   // em vez de publicar services:[] / availability:0 silenciosamente.
-  const catalog = new Catalog();
   if (!catalog.meetsCoverageFloor(collected.length, Environment.Production, MIN_COVERAGE_RATIO)) {
     const expected = catalog.listAll(Environment.Production).length;
     console.error(
@@ -147,7 +174,7 @@ async function main(): Promise<void> {
   }));
 
   const snapshot: StatusSnapshotDTO = { environment: 'production', generatedAt, services };
-  const summary = buildSummary(services, generatedAt);
+  const summary = buildSummary(services, generatedAt, sourceHealth);
   const history = appendHistory(loadHistory(join(outDir, 'history.json')), services, generatedAt);
 
   writeFileSync(join(outDir, 'status.json'), JSON.stringify(snapshot, null, 2));

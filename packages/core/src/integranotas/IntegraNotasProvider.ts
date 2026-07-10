@@ -1,5 +1,6 @@
 import { DocumentType, type UF } from '@monitor-sefaz/catalog';
 import { ServiceState } from '../domain/types.js';
+import { backoffMs, defaultSleeper, type Sleeper } from '../domain/retry.js';
 
 /** Status por UF de um documento, como exposto pelo IntegraNotas. */
 export interface IntegraNotasRow {
@@ -88,18 +89,47 @@ export class IntegraNotasProvider {
   constructor(
     private readonly fetcher: IntegraNotasFetcher,
     /** Relógio em ms; injetável para os testes serem determinísticos. */
-    private readonly now: () => number = () => Date.now()
+    private readonly now: () => number = () => Date.now(),
+    /** Sleeper do backoff entre tentativas; injetável para os testes não dormirem. */
+    private readonly sleep: Sleeper = defaultSleeper,
+    /** Fonte de aleatoriedade do jitter; injetável para o backoff ser determinístico. */
+    private readonly random: () => number = Math.random
   ) {}
 
   public supportedDocuments(): DocumentType[] {
     return Object.keys(INTEGRANOTAS_DOCUMENTS) as DocumentType[];
   }
 
-  public async fetch(document: DocumentType): Promise<IntegraNotasFetchResult> {
+  /**
+   * Busca e parseia a disponibilidade de um documento. Tenta algumas vezes com
+   * backoff: o IntegraNotas é a única fonte que cobre UF-a-UF de forma completa
+   * (preenche as lacunas das oficiais no consenso), então uma falha transitória
+   * de rede aqui deixaria várias UFs sem dado. Como nas demais fontes ao vivo, se
+   * todas as tentativas falharem LANÇA — o `IntegraNotasCollector` então pula o
+   * documento (parse estrito, para não mascarar as fontes oficiais).
+   */
+  public async fetch(document: DocumentType, attempts = 3): Promise<IntegraNotasFetchResult> {
     const slug = INTEGRANOTAS_DOCUMENTS[document];
     if (!slug) {
       return { rows: [], fetchLatencyMs: 0 };
     }
+
+    let lastError: unknown;
+    for (let attempt = 1; attempt <= attempts; attempt += 1) {
+      try {
+        return await this.fetchOnce(slug);
+      } catch (err) {
+        lastError = err;
+      }
+      if (attempt < attempts) {
+        await this.sleep(backoffMs(attempt, this.random));
+      }
+    }
+    throw lastError instanceof Error ? lastError : new Error(String(lastError));
+  }
+
+  /** Uma única tentativa: fetch cronometrado + parse estrito dos arrays paralelos. */
+  private async fetchOnce(slug: string): Promise<IntegraNotasFetchResult> {
     // Cronometra a requisição: esta é a latência de REDE real do documento — a
     // métrica que o front exibe. O tMed do IntegraNotas é tempo médio da SEFAZ
     // em segundos inteiros (grosseiro: 0/1/6s), inútil como latência.
@@ -112,7 +142,7 @@ export class IntegraNotasProvider {
     // backgroundColor[i], normal[i], svc[i]). Se qualquer um desalinhar, lemos o
     // estado/flags de OUTRA UF ou caímos em Error silencioso. Por isso exigimos
     // que todos os presentes tenham o mesmo comprimento de labels; senão lança e
-    // o HybridCollector pula o documento (e cai no fallback se necessário).
+    // o IntegraNotasCollector pula o documento (o consenso segue com as demais fontes).
     const n = d?.labels?.length;
     const lenMismatch = (a?: unknown[]): boolean => Array.isArray(a) && a.length !== n;
     if (
