@@ -6,6 +6,7 @@ import {
   type SourceHealthDTO,
 } from '@monitor-sefaz/contracts';
 import { detectTransitions } from '@monitor-sefaz/notifier';
+import { KNOWN_UNREACHABLE_SOURCES } from './driftCheck.js';
 
 /**
  * Reconstrói o "estado anterior" por serviço a partir do history.json: o ÚLTIMO
@@ -40,9 +41,11 @@ export function previousFromHistory(
 
 /**
  * Eventos SOURCE_DEGRADED para as fontes OFICIAIS que vieram degradadas nesta
- * coleta (drift do portal). Emite por-coleta enquanto a fonte seguir degradada —
- * o filtro NOTIFY_EVENTS e a natureza rara do drift evitam ruído; deduplicar para
- * "só na transição" exigiria persistir o health anterior (melhoria futura).
+ * coleta (drift do portal). Fontes com indisponibilidade estrutural conhecida
+ * (`KNOWN_UNREACHABLE_SOURCES` — ex.: a Receita, bloqueada nos IPs do Actions)
+ * são ignoradas: degradam sempre por infra, não por drift, e alertar a cada
+ * coleta seria ruído que mascararia um drift real. Emite por-coleta enquanto a
+ * fonte seguir degradada; o filtro NOTIFY_EVENTS controla o resto.
  */
 export function sourceDegradedEvents(
   sources: SourceHealthDTO[] | undefined,
@@ -50,7 +53,7 @@ export function sourceDegradedEvents(
 ): NotificationEventDTO[] {
   if (!sources) return [];
   return sources
-    .filter((s) => s.official && s.degraded)
+    .filter((s) => s.official && s.degraded && !KNOWN_UNREACHABLE_SOURCES.has(s.source))
     .map((s) => ({
       type: 'SOURCE_DEGRADED' as const,
       source: s.source,

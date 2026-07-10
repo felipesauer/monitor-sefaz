@@ -71,13 +71,22 @@ describe('sourceDegradedEvents', () => {
     degraded,
   });
 
-  it('emite só para fontes OFICIAIS degradadas', () => {
+  it('emite só para fontes OFICIAIS degradadas e NÃO isentas', () => {
     const events = sourceDegradedEvents(
-      [src('svrs', true, false), src('availability', true, true), src('integranotas', false, true)],
+      [
+        src('svrs', true, true), // oficial degradada, não isenta → evento
+        src('availability', true, true), // oficial degradada, MAS isenta (bloqueio de IP) → sem evento
+        src('integranotas', false, true), // não-oficial → sem evento
+      ],
       AT
     );
     expect(events).toHaveLength(1);
-    expect(events[0]).toMatchObject({ type: 'SOURCE_DEGRADED', source: 'availability' });
+    expect(events[0]).toMatchObject({ type: 'SOURCE_DEGRADED', source: 'svrs' });
+  });
+
+  it('availability degradada não gera evento (fonte inalcançável conhecida)', () => {
+    const events = sourceDegradedEvents([src('availability', true, true)], AT);
+    expect(events).toEqual([]);
   });
 
   it('sem sources retorna vazio', () => {
@@ -90,12 +99,12 @@ describe('buildNotificationEvents', () => {
     const h = history({ 'NFe:SP': ['OPERATIONAL'], 'NFe:RJ': ['OPERATIONAL'] });
     const services = [svc('NFe:SP', 'DOWN'), svc('NFe:RJ', 'OPERATIONAL')];
     const sources: SourceHealthDTO[] = [
-      { source: 'availability', official: true, collected: 0, expected: 135, coverage: 0, degraded: true },
+      { source: 'svrs', official: true, collected: 3, expected: 135, coverage: 0.02, degraded: true },
     ];
     const events = buildNotificationEvents(h, services, sources, AT);
     const types = events.map((e) => e.type);
     expect(types).toContain('SERVICE_DOWN'); // SP: OPERATIONAL → DOWN
-    expect(types).toContain('SOURCE_DEGRADED'); // availability degradada
+    expect(types).toContain('SOURCE_DEGRADED'); // svrs degradada (não isenta)
     expect(types).not.toContain('SERVICE_RECOVERED'); // RJ não mudou
   });
 

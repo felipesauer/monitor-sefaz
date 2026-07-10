@@ -8,8 +8,7 @@
     "lint": "eslint src",
     "test": "vitest run --passWithNoTests",
     "collect": "tsx src/collect.ts",
-    "drift-check": "tsx src/drift-check.ts",
-    "debug-availability": "tsx src/debug-availability.ts"
+    "drift-check": "tsx src/drift-check.ts"
   },
   "dependencies": {
     "@monitor-sefaz/catalog": "workspace:*",
