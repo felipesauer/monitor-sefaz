@@ -25,7 +25,11 @@ qual autorizador atende cada estado (próprio, SVRS, SVAN e demais):
 - DC-e — Declaração de Conteúdo eletrônica
 
 Cada serviço é classificado em um de quatro estados: operacional (cStat 107),
-instável (108), indisponível (109) ou sem dados.
+instável (108), indisponível (109) ou sem dados. Contingência (operando via SVC)
+é distinguida à parte.
+
+Além da disponibilidade, o monitor acompanha as **Notas Técnicas** publicadas no
+portal da NF-e, exibidas no dashboard.
 
 ## Como obtém os dados
 
@@ -40,6 +44,25 @@ no SVRS, então derivam do estado desse autorizador.
 A consulta SOAP direta aos webservices (modo `soap`) fornece dados mais ricos,
 mas exige saída de rede e, em vários autorizadores, um certificado A1. Ela é
 opcional e desativada por padrão.
+
+Cada coleta também mede a **cobertura por fonte** e sinaliza quando uma fonte
+oficial fica degradada (cobertura abaixo do piso) — indício de que o portal
+mudou o HTML e o parser parou de casar. É o sinal que distingue "a fonte parou
+de responder" de "o serviço da SEFAZ caiu".
+
+## Notificações
+
+Opcionalmente, o monitor envia alertas quando o estado muda — serviço caiu ou
+voltou, entrou ou saiu de contingência, saiu uma Nota Técnica nova, ou uma fonte
+oficial degradou — além de um resumo diário. Os canais suportados são **Discord,
+Slack, Telegram e um webhook genérico** (JSON cru), cada um ativado apenas quando
+suas variáveis de ambiente estão presentes. Sem nenhuma configuração, a
+notificação fica desligada e nada muda no pipeline.
+
+As variáveis (`NOTIFY_DISCORD_WEBHOOK_URL`, `NOTIFY_SLACK_WEBHOOK_URL`,
+`NOTIFY_TELEGRAM_BOT_TOKEN` + `NOTIFY_TELEGRAM_CHAT_ID`, `NOTIFY_WEBHOOK_URL`,
+`NOTIFY_EVENTS`, `NOTIFY_DIGEST_HOUR`) estão documentadas em `.env.example`.
+Funciona tanto no caminho estático (via GitHub Actions) quanto no self-host (API).
 
 ## Uso
 
@@ -97,8 +120,9 @@ ambiente de homologação só é alcançável pelo modo `soap`.
 Monorepo TypeScript gerenciado com pnpm e Turborepo.
 
     packages/catalog     UFs, cStat, endpoints e o mapa UF -> autorizador
-    packages/core        motor de coleta: consenso multi-fonte e SOAP
+    packages/core        motor de coleta: consenso multi-fonte, SOAP e notas técnicas
     packages/contracts   schemas Zod e DTOs compartilhados
+    packages/notifier    detecção de transições e canais de notificação
     apps/collector       CLI que gera os JSONs versionados
     apps/worker          Cloudflare Worker de coleta ao vivo
     apps/api             API Fastify self-host: scheduler, REST, SSE e Redis
@@ -113,7 +137,10 @@ Comandos, a partir da raiz:
     pnpm lint         ESLint
 
 As respostas da SEFAZ são mockadas por fixtures em `packages/core/test`, de modo
-que os testes nunca dependem da rede.
+que os testes nunca dependem da rede. O GitHub Actions roda lint, typecheck e
+testes em cada pull request. Um workflow separado e não-bloqueante faz uma coleta
+ao vivo periódica e alerta se uma fonte oficial degradar — capturando o drift do
+portal que as fixtures estáticas, por serem fixas, não pegam.
 
 ## Referências
 
