@@ -97,6 +97,26 @@ export const summaryGroupSchema = z.object({
   availability: z.number(),
 });
 
+/**
+ * Saúde de UMA fonte na última coleta. `degraded` sinaliza DRIFT: uma fonte que
+ * normalmente cobre a maior parte do catálogo veio muito abaixo do piso — indício
+ * de que o portal mudou o HTML e o parser parou de casar, em vez de uma queda real
+ * da SEFAZ (que retornaria os serviços com estado DOWN/ERROR, não ausentes).
+ */
+export const sourceHealthSchema = z.object({
+  source: statusSourceSchema,
+  official: z.boolean(),
+  /** Serviços que a fonte devolveu nesta coleta. */
+  collected: z.number(),
+  /** Total de serviços do catálogo (referência de cobertura). */
+  expected: z.number(),
+  /** collected / expected, 0..1, arredondado a 3 casas. */
+  coverage: z.number(),
+  /** coverage abaixo do piso → provável drift do portal. */
+  degraded: z.boolean(),
+});
+export type SourceHealthDTO = z.infer<typeof sourceHealthSchema>;
+
 export const summarySchema = z.object({
   environment: environmentSchema,
   generatedAt: z.string(),
@@ -107,8 +127,74 @@ export const summarySchema = z.object({
   avgLatencyMs: z.number().nullable(),
   byDocument: z.array(summaryGroupSchema),
   byAuthorizer: z.array(summaryGroupSchema),
+  /**
+   * Diagnóstico por fonte da última coleta (opcional para retrocompat com
+   * summaries antigos que não o traziam). Base do sinal de drift.
+   */
+  sources: z.array(sourceHealthSchema).optional(),
 });
 export type SummaryDTO = z.infer<typeof summarySchema>;
+
+/**
+ * Tipos de evento de notificação. Cada transição de estado relevante ou sinal
+ * operacional vira um destes; os canais (Discord/Slack/...) formatam por tipo.
+ * - SERVICE_DOWN/RECOVERED: serviço saiu/voltou ao ar (via `isUp`).
+ * - CONTINGENCY_ENTERED/EXITED: entrou/saiu de contingência (SVC). Independente
+ *   de DOWN/RECOVERED — contingência conta como "no ar", então os dois podem
+ *   coexistir numa mesma coleta.
+ * - TECHNICAL_NOTE: nova Nota Técnica publicada (Fase 6).
+ * - SOURCE_DEGRADED: uma fonte oficial ficou degradada (sinal de drift, Fase 8).
+ * - DAILY_DIGEST: resumo periódico de saúde (Fase 7).
+ */
+export const notificationEventTypeSchema = z.enum([
+  'SERVICE_DOWN',
+  'SERVICE_RECOVERED',
+  'CONTINGENCY_ENTERED',
+  'CONTINGENCY_EXITED',
+  'TECHNICAL_NOTE',
+  'SOURCE_DEGRADED',
+  'DAILY_DIGEST',
+]);
+export type NotificationEventType = z.infer<typeof notificationEventTypeSchema>;
+
+/**
+ * Um evento de notificação. Campos específicos são opcionais porque variam por
+ * tipo: transições de serviço preenchem serviceId/uf/document/estados; um digest
+ * ou uma nota técnica usam `payload` livre.
+ */
+export const notificationEventSchema = z.object({
+  type: notificationEventTypeSchema,
+  /** `{document}:{uf}` quando o evento é de um serviço específico. */
+  serviceId: z.string().optional(),
+  uf: z.string().optional(),
+  document: documentTypeSchema.optional(),
+  previousState: serviceStateSchema.optional(),
+  currentState: serviceStateSchema.optional(),
+  cStat: z.number().nullable().optional(),
+  /** Fonte associada (ex.: qual fonte degradou em SOURCE_DEGRADED). */
+  source: statusSourceSchema.optional(),
+  /** ISO 8601 — quando o evento foi detectado. */
+  occurredAt: z.string(),
+  /** Dados livres por tipo (ex.: título/link de NT, números do digest). */
+  payload: z.record(z.unknown()).optional(),
+});
+export type NotificationEventDTO = z.infer<typeof notificationEventSchema>;
+
+/** Uma Nota Técnica conhecida (persistida para dedup entre coletas). */
+export const technicalNoteSchema = z.object({
+  title: z.string(),
+  link: z.string().nullable(),
+  /** ISO 8601 — quando o monitor viu esta NT pela primeira vez. */
+  firstSeenAt: z.string(),
+});
+export type TechnicalNoteDTO = z.infer<typeof technicalNoteSchema>;
+
+/** Arquivo versionado com as NTs já vistas (fonte da dedup). */
+export const technicalNotesFileSchema = z.object({
+  updatedAt: z.string(),
+  notes: z.array(technicalNoteSchema),
+});
+export type TechnicalNotesFileDTO = z.infer<typeof technicalNotesFileSchema>;
 
 /** Períodos suportados pela consulta de histórico curto. */
 // '1h'/'6h' foram removidos: com a cadência real de coleta (~3h/ponto) rendem

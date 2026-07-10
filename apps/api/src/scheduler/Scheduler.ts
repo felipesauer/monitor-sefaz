@@ -1,5 +1,6 @@
 import cron, { type ScheduledTask } from 'node-cron';
-import { type EnvironmentValue } from '@monitor-sefaz/contracts';
+import { type EnvironmentValue, type ServiceStatusDTO } from '@monitor-sefaz/contracts';
+import { detectTransitions, type Notifier } from '@monitor-sefaz/notifier';
 import type { StatusStore } from '../store/StatusStore.js';
 import type { StatusSource } from '../sources/StatusSource.js';
 
@@ -28,7 +29,9 @@ export class Scheduler {
     private readonly source: StatusSource,
     private readonly store: StatusStore,
     private readonly options: SchedulerOptions,
-    private readonly logger: SchedulerLogger
+    private readonly logger: SchedulerLogger,
+    /** Notificador opcional; quando habilitado, dispara eventos de transição. */
+    private readonly notifier?: Notifier
   ) {}
 
   /** Inicia o cron e dispara uma rodada imediata. */
@@ -60,15 +63,41 @@ export class Scheduler {
         return;
       }
 
+      // Reconstrói o estado ANTERIOR (para o diff de eventos) e detecta os serviços
+      // que mudaram — tudo lendo o lastState antes de atualizá-lo.
+      const prev: ServiceStatusDTO[] = [];
       const changed = services.filter((service) => {
         const key = `${env}:${service.id}`;
         const previous = this.lastState.get(key);
+        if (previous !== undefined) {
+          // Reconstrói o estado anterior carregando SÓ o `state` de fato antigo;
+          // os demais campos (cStat/source/latency) do snapshot atual são apenas
+          // preenchimento identitário (id/uf/document não mudam para o mesmo
+          // serviço). O `cStat`/`source` reais de antes não são guardados no
+          // lastState — e o diff só compara `state`, então não os inventamos:
+          // zeramos cStat/source para não passar valores enganosos.
+          prev.push({
+            ...service,
+            state: previous as ServiceStatusDTO['state'],
+            cStat: null,
+            source: undefined,
+          });
+        }
         this.lastState.set(key, service.state);
         return previous !== undefined && previous !== service.state;
       });
 
       await this.store.saveSnapshot(env, services);
       await this.store.publishUpdates(env, changed);
+
+      // Notificação externa (opcional): reusa a MESMA detecção de transições do
+      // caminho do collector, mantendo uma só semântica de eventos. No-op se o
+      // Notifier não tiver canais configurados.
+      if (this.notifier?.enabled && changed.length > 0) {
+        const events = detectTransitions(prev, services, new Date().toISOString());
+        const { sent, failed } = await this.notifier.notify(events);
+        this.logger.info(`Notificações ${env}: ${events.length} eventos, ${sent} ok, ${failed} falha`);
+      }
 
       this.logger.info(
         `Rodada ${env} [${this.source.name}]: ${services.length} serviços, ${changed.length} mudança(s)`

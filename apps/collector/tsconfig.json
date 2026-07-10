@@ -9,6 +9,7 @@
   "references": [
     { "path": "../../packages/catalog" },
     { "path": "../../packages/core" },
-    { "path": "../../packages/contracts" }
+    { "path": "../../packages/contracts" },
+    { "path": "../../packages/notifier" }
   ]
 }

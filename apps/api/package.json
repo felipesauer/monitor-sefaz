@@ -15,6 +15,7 @@
     "@monitor-sefaz/catalog": "workspace:*",
     "@monitor-sefaz/contracts": "workspace:*",
     "@monitor-sefaz/core": "workspace:*",
+    "@monitor-sefaz/notifier": "workspace:*",
     "@fastify/cors": "^10.0.1",
     "@fastify/rate-limit": "^10.2.1",
     "@fastify/static": "^8.0.3",

@@ -1,5 +1,10 @@
 import { describe, it, expect, vi } from 'vitest';
-import type { EnvironmentValue, ServiceStatusDTO } from '@monitor-sefaz/contracts';
+import type {
+  EnvironmentValue,
+  NotificationEventDTO,
+  ServiceStatusDTO,
+} from '@monitor-sefaz/contracts';
+import type { Notifier } from '@monitor-sefaz/notifier';
 import { Scheduler } from '../../src/scheduler/Scheduler.js';
 import type { StatusStore } from '../../src/store/StatusStore.js';
 import type { StatusSource } from '../../src/sources/StatusSource.js';
@@ -75,5 +80,43 @@ describe('Scheduler', () => {
 
     await scheduler.runOnce('homologation');
     expect(store.saveSnapshot).not.toHaveBeenCalled();
+  });
+
+  it('notifica os eventos de transição, mas não no baseline', async () => {
+    const store = makeStore();
+    const notify = vi.fn(async () => ({ sent: 1, failed: 0 }));
+    const notifier = { enabled: true, notify } as unknown as Notifier;
+    const scheduler = new Scheduler(
+      makeSource(['OPERATIONAL', 'DOWN']),
+      store,
+      opts,
+      logger,
+      notifier
+    );
+
+    await scheduler.runOnce('production'); // baseline: sem changed → não notifica
+    expect(notify).not.toHaveBeenCalled();
+
+    await scheduler.runOnce('production'); // OPERATIONAL → DOWN
+    expect(notify).toHaveBeenCalledOnce();
+    const events = notify.mock.calls[0]![0] as NotificationEventDTO[];
+    expect(events.map((e) => e.type)).toEqual(['SERVICE_DOWN']);
+  });
+
+  it('não chama notify quando o Notifier está desabilitado', async () => {
+    const store = makeStore();
+    const notify = vi.fn(async () => ({ sent: 0, failed: 0 }));
+    const notifier = { enabled: false, notify } as unknown as Notifier;
+    const scheduler = new Scheduler(
+      makeSource(['OPERATIONAL', 'DOWN']),
+      store,
+      opts,
+      logger,
+      notifier
+    );
+
+    await scheduler.runOnce('production');
+    await scheduler.runOnce('production');
+    expect(notify).not.toHaveBeenCalled();
   });
 });

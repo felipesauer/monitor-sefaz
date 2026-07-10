@@ -11,6 +11,17 @@ export interface AvailabilityRow {
 }
 
 /**
+ * Resultado do parse com diagnóstico de layout. `headerMatched` indica se a coluna
+ * de status foi resolvida pelo TEXTO do cabeçalho (robusto a mudança de layout) ou
+ * se caímos no índice fixo — um `false` com página não-vazia é indício de DRIFT do
+ * HTML da SEFAZ, sinal que o consenso pode transformar em alerta.
+ */
+export interface AvailabilityParseResult {
+  readonly rows: AvailabilityRow[];
+  readonly headerMatched: boolean;
+}
+
+/**
  * Layout de colunas da tabela de disponibilidade — VARIA por documento.
  * `statusIndex` é a coluna "Status Serviço"; `tMedIndex` é a coluna "Tempo Médio".
  *
@@ -41,6 +52,37 @@ function colorToState(src: string): ServiceState | null {
   if (src.includes('bola_amarela')) return ServiceState.SlowDown;
   if (src.includes('bola_vermelh')) return ServiceState.Down;
   return null;
+}
+
+/** Normaliza texto de cabeçalho: minúsculo, sem acento e sem não-letras. */
+function normalizeHeader(raw: string): string {
+  return raw
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '') // remove diacríticos
+    .replace(/[^a-z]/g, ''); // "Status Serviço4" → "statusservico"
+}
+
+/**
+ * Descobre os índices das colunas "Status Serviço" e "Tempo Médio" pelo TEXTO do
+ * cabeçalho (`<th>`), tolerante a inserção/remoção de colunas pela SEFAZ. Retorna
+ * `null` quando o cabeçalho não casa (aí o chamador usa o índice fixo como
+ * fallback e sinaliza que o layout pode ter mudado).
+ */
+function findColumnsByHeader(
+  headerCells: string[]
+): { statusIndex: number; tMedIndex: number } | null {
+  const norm = headerCells.map(normalizeHeader);
+  // Casa por âncoras ASCII estáveis ("status", "tempo") em vez do texto completo:
+  // a página vem em latin-1 e "Serviço"/"Médio" chegam como mojibake ("serviao"),
+  // mas "Status" e "Tempo" não têm acento e sobrevivem à decodificação.
+  const statusIndex = norm.findIndex((h) => h.includes('status'));
+  const tMedIndex = norm.findIndex((h) => h.includes('tempo'));
+  if (statusIndex < 0) {
+    return null; // sem a coluna-chave, não confiamos no cabeçalho
+  }
+  // tMed pode não existir em alguns layouts; -1 é aceitável (vira null no parse).
+  return { statusIndex, tMedIndex };
 }
 
 function normalizeAuthorizer(raw: string): AuthorizerCode {
@@ -75,9 +117,33 @@ export class AvailabilityParser {
   }
 
   public parse(html: string): AvailabilityRow[] {
+    return this.parseWithDiagnostics(html).rows;
+  }
+
+  /**
+   * Como `parse`, mas informa se a coluna de status foi resolvida pelo cabeçalho
+   * (`headerMatched: true`) ou pelo índice fixo de fallback. Prefere SEMPRE o
+   * cabeçalho — casar "Status Serviço"/"Tempo Médio" pelo texto sobrevive à
+   * SEFAZ inserir/remover colunas; o índice fixo só entra quando o cabeçalho não
+   * casa, e nesse caso `headerMatched: false` sinaliza possível drift.
+   */
+  public parseWithDiagnostics(html: string): AvailabilityParseResult {
     const $ = cheerio.load(html);
+
+    // Tenta resolver as colunas pelo cabeçalho da PRIMEIRA linha que tem <th>.
+    let resolved: { statusIndex: number; tMedIndex: number } | null = null;
+    $('tr').each((_, tr) => {
+      if (resolved) return;
+      const ths = $(tr).find('th');
+      if (ths.length > 2) {
+        const headers = ths.map((_i, th) => $(th).text()).get();
+        resolved = findColumnsByHeader(headers);
+      }
+    });
+
+    const headerMatched = resolved !== null;
+    const { statusIndex, tMedIndex } = resolved ?? this.layout;
     const rows: AvailabilityRow[] = [];
-    const { statusIndex, tMedIndex } = this.layout;
 
     $('tr').each((_, tr) => {
       const cells = $(tr).find('td');
@@ -96,7 +162,9 @@ export class AvailabilityParser {
         return; // coluna sem bolinha de status → não é uma linha de dados
       }
 
-      const tMedText = cells.eq(tMedIndex).text().trim();
+      // tMedIndex pode ser -1 (cabeçalho sem "Tempo Médio"): eq(-1) não casa,
+      // texto vazio → tMedSeconds null. Comportamento correto, sem exceção.
+      const tMedText = tMedIndex >= 0 ? cells.eq(tMedIndex).text().trim() : '';
       const tMedMatch = tMedText.match(/\d+/);
 
       rows.push({
@@ -106,6 +174,6 @@ export class AvailabilityParser {
       });
     });
 
-    return rows;
+    return { rows, headerMatched };
   }
 }

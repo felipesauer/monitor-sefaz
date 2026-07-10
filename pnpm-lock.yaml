@@ -53,6 +53,9 @@ importers:
       '@monitor-sefaz/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@monitor-sefaz/notifier':
+        specifier: workspace:*
+        version: link:../../packages/notifier
       axios:
         specifier: ^1.7.9
         version: 1.16.1
@@ -105,6 +108,9 @@ importers:
       '@monitor-sefaz/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@monitor-sefaz/notifier':
+        specifier: workspace:*
+        version: link:../../packages/notifier
     devDependencies:
       '@types/node':
         specifier: ^22.10.2
@@ -212,6 +218,16 @@ importers:
       tough-cookie:
         specifier: ^5.1.0
         version: 5.1.2
+    devDependencies:
+      '@types/node':
+        specifier: ^22.10.2
+        version: 22.19.19
+
+  packages/notifier:
+    dependencies:
+      '@monitor-sefaz/contracts':
+        specifier: workspace:*
+        version: link:../contracts
     devDependencies:
       '@types/node':
         specifier: ^22.10.2

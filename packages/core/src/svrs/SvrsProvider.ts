@@ -1,5 +1,5 @@
 import { DocumentType } from '@monitor-sefaz/catalog';
-import { backoffMs, type Sleeper } from '../availability/AvailabilityProvider.js';
+import { backoffMs, defaultSleeper, type Sleeper } from '../domain/retry.js';
 import { SvrsParser, type SvrsAuthorizerStatus } from './SvrsParser.js';
 
 /**
@@ -17,8 +17,6 @@ export const SVRS_URLS: Partial<Record<DocumentType, string>> = {
   [DocumentType.MDFe]: 'https://dfe-portal.svrs.rs.gov.br/Mdfe/Disponibilidade',
   [DocumentType.DCe]: 'https://dfe-portal.svrs.rs.gov.br/Mdfe/Disponibilidade',
 };
-
-const defaultSleeper: Sleeper = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
  * Transporte HTTP injetável (axios no Node via `createHttpSvrsFetcher`, fetch

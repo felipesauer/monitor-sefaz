@@ -44,6 +44,16 @@ jobs:
 
       - name: Coletar status
         run: pnpm --filter @monitor-sefaz/collector collect "$GITHUB_WORKSPACE/apps/web/public/data"
+        env:
+          # Notificações (opcional): definidas como secrets/vars do repositório.
+          # Ausentes → o collector é no-op de notificação (nenhum efeito).
+          NOTIFY_DISCORD_WEBHOOK_URL: ${{ secrets.NOTIFY_DISCORD_WEBHOOK_URL }}
+          NOTIFY_SLACK_WEBHOOK_URL: ${{ secrets.NOTIFY_SLACK_WEBHOOK_URL }}
+          NOTIFY_TELEGRAM_BOT_TOKEN: ${{ secrets.NOTIFY_TELEGRAM_BOT_TOKEN }}
+          NOTIFY_TELEGRAM_CHAT_ID: ${{ secrets.NOTIFY_TELEGRAM_CHAT_ID }}
+          NOTIFY_WEBHOOK_URL: ${{ secrets.NOTIFY_WEBHOOK_URL }}
+          NOTIFY_EVENTS: ${{ vars.NOTIFY_EVENTS }}
+          NOTIFY_DIGEST_HOUR: ${{ vars.NOTIFY_DIGEST_HOUR }}
 
       - name: Commitar dados atualizados
         run: |

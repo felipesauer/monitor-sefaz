@@ -2,7 +2,12 @@ import axios, { type AxiosInstance } from 'axios';
 import { wrapper } from 'axios-cookiejar-support';
 import { CookieJar } from 'tough-cookie';
 import { DocumentType } from '@monitor-sefaz/catalog';
+import { backoffMs, defaultSleeper, type Sleeper } from '../domain/retry.js';
 import { AvailabilityParser, type AvailabilityRow } from './AvailabilityParser.js';
+
+// Reexporta o backoff/Sleeper compartilhado para não quebrar importações antigas
+// que apontam para este módulo (ex.: SvrsProvider e os testes).
+export { backoffMs, type Sleeper };
 
 /**
  * URLs das páginas oficiais de disponibilidade de PRODUÇÃO, por documento, em
@@ -32,19 +37,6 @@ const BROWSER_UA =
  * loop de redirect sem cookies; por isso usamos um cookie jar e um User-Agent
  * de browser. Esta é a mesma estratégia de monitores públicos da SEFAZ.
  */
-/** Espera `ms` antes de resolver. Injetável para os testes não dormirem de verdade. */
-export type Sleeper = (ms: number) => Promise<void>;
-const defaultSleeper: Sleeper = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-/**
- * Atraso (ms) antes da próxima tentativa: linear (500ms × tentativa) com jitter
- * de ±20%. `attempt` é 1-based; `random` deve devolver [0,1). Função pura para
- * ser testável de forma determinística.
- */
-export function backoffMs(attempt: number, random: () => number = Math.random): number {
-  return Math.round(500 * attempt * (0.8 + random() * 0.4));
-}
-
 export class HttpAvailabilityProvider {
   private readonly http: AxiosInstance;
 
@@ -103,11 +95,20 @@ export class HttpAvailabilityProvider {
         try {
           const response = await this.http.get<ArrayBuffer>(url);
           const html = Buffer.from(response.data).toString('latin1');
-          const rows = parser.parse(html);
-          if (rows.length > 0) {
+          const { rows, headerMatched } = parser.parseWithDiagnostics(html);
+          // Só confiamos nas linhas se o layout foi VALIDADO pelo cabeçalho. Se o
+          // cabeçalho não casou (headerMatched=false), o HTML pode ter mudado e as
+          // linhas viriam de colunas erradas — tratamos como falha de parse, que
+          // esvazia esta fonte e a marca `degraded` no consenso (sinal de drift),
+          // em vez de publicar dado possivelmente incorreto em silêncio.
+          if (rows.length > 0 && headerMatched) {
             return rows;
           }
-          lastError = new Error(`resposta sem linhas de status (HTTP ${response.status})`);
+          lastError = new Error(
+            headerMatched
+              ? `resposta sem linhas de status (HTTP ${response.status})`
+              : `layout inesperado: cabeçalho não reconhecido (HTTP ${response.status})`
+          );
         } catch (err) {
           lastError = err;
         }
