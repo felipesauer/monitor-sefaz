@@ -5,6 +5,7 @@ import {
   type HistoryResponseDTO,
   type StatusSnapshotDTO,
   type SummaryDTO,
+  type TechnicalNotesFileDTO,
 } from '@monitor-sefaz/contracts';
 
 /** Mapa `id do serviço` → série de pontos, usado para os sparklines dos cards. */
@@ -28,6 +29,8 @@ export interface DataSource {
   getHistory(id: string, period: HistoryPeriod): Promise<HistoryResponseDTO>;
   /** Todas as séries de uma vez (para os sparklines dos cards). */
   getHistorySeries(): Promise<HistorySeries>;
+  /** Notas Técnicas publicadas no portal (conteúdo estático versionado). */
+  getTechnicalNotes(): Promise<TechnicalNotesFileDTO>;
 }
 
 export async function fetchJson(url: string): Promise<unknown> {

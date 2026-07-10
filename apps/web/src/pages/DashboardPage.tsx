@@ -5,6 +5,7 @@ import {
   useHistorySeries,
   useStatusSnapshot,
   useSummary,
+  useTechnicalNotes,
   POLL_INTERVAL_MS,
 } from '../hooks/useStatus.js';
 import { useTheme } from '../hooks/useTheme.js';
@@ -19,6 +20,7 @@ import { Footer } from '../components/Footer.js';
 import { StatusLegend } from '../components/StatusLegend.js';
 import { BrazilMap } from '../components/BrazilMap.js';
 import { HelpSection } from '../components/HelpSection.js';
+import { TechnicalNotesCard } from '../components/TechnicalNotesCard.js';
 import { STATE_SEVERITY } from '../components/serviceState.js';
 
 /** Estado agregado (pior) de uma UF entre os serviços visíveis — colore o chip. */
@@ -52,6 +54,7 @@ export function DashboardPage() {
   const status = useStatusSnapshot(refresh);
   const summary = useSummary(refresh);
   const series = useHistorySeries();
+  const technicalNotes = useTechnicalNotes();
 
   const all = status.data?.services ?? [];
 
@@ -154,6 +157,7 @@ export function DashboardPage() {
           <ServiceGrid services={visible} series={series.data ?? {}} onSelect={setSelected} />
         )}
 
+        <TechnicalNotesCard notes={technicalNotes.data?.notes ?? []} />
         <HelpSection />
       </main>
 

@@ -1,10 +1,12 @@
 import {
   historyFileSchema,
   summarySchema,
+  technicalNotesFileSchema,
   type HistoryPeriod,
   type HistoryResponseDTO,
   type StatusSnapshotDTO,
   type SummaryDTO,
+  type TechnicalNotesFileDTO,
 } from '@monitor-sefaz/contracts';
 import {
   fetchJson,
@@ -58,5 +60,18 @@ export class StaticDataSource implements DataSource {
   public async getHistorySeries(): Promise<HistorySeries> {
     const file = historyFileSchema.parse(await fetchJson(`${this.base}data/history.json`));
     return file.series;
+  }
+
+  public async getTechnicalNotes(): Promise<TechnicalNotesFileDTO> {
+    // Tolerante: o technical-notes.json só existe depois que a coleta de NTs
+    // roda com sucesso. Se faltar (404) ou vier inválido, devolve vazio em vez
+    // de derrubar o dashboard — a seção simplesmente não aparece.
+    try {
+      return technicalNotesFileSchema.parse(
+        await fetchJson(`${this.base}data/technical-notes.json`)
+      );
+    } catch {
+      return { updatedAt: new Date(0).toISOString(), notes: [] };
+    }
   }
 }

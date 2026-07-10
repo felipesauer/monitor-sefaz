@@ -39,6 +39,11 @@ export function detectTransitions(
   const prevById = new Map(prev.map((s) => [s.id, s]));
   const events: NotificationEventDTO[] = [];
 
+  // NOTA DE DESIGN — serviço que SOME de `next` (estava em `prev`, sumiu agora):
+  // deliberadamente NÃO gera evento. Tratá-lo como SERVICE_DOWN seria falso-alarme
+  // em coleta parcial (uma fonte deixou de cobrir aquela UF). E o caso real de
+  // "todas as fontes pararam de cobrir" já é sinalizado pelo SOURCE_DEGRADED do
+  // consenso (Fase 8). Iterar só `next` é, portanto, correto — não uma lacuna.
   for (const cur of next) {
     const before = prevById.get(cur.id);
     if (!before) {

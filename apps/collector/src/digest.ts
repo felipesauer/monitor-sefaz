@@ -1,20 +1,30 @@
 import type { NotificationEventDTO, SummaryDTO } from '@monitor-sefaz/contracts';
 
+/** Data UTC no formato YYYY-MM-DD (dia do último digest enviado). */
+export function utcDate(now: Date): string {
+  return now.toISOString().slice(0, 10);
+}
+
 /**
- * Decide se esta rodada deve emitir o resumo diário e, em caso afirmativo, monta o
- * evento DAILY_DIGEST a partir do summary. Função PURA (recebe a hora atual).
+ * Decide se esta rodada deve emitir o resumo diário e monta o evento DAILY_DIGEST.
+ * Função PURA (recebe a hora atual e a data do último digest).
  *
- * Gatilho SEM estado: o Actions roda de hora em hora, então emitimos o digest
- * apenas quando a hora UTC atual == `targetHour`. `targetHour` vem de
- * NOTIFY_DIGEST_HOUR (0–23); ausente/ inválido = digest desligado (retorna null).
- * Isso evita persistir "já enviei hoje" — a granularidade horária do cron basta.
+ * Gatilho IDEMPOTENTE por dia, robusto ao cron best-effort (~3h, irregular):
+ * emite quando a hora UTC atual é >= `targetHour` E ainda não houve digest hoje
+ * (`lastDigestDate !== hoje`). Assim:
+ * - se o cron PULAR a hora-alvo exata, o digest ainda sai na próxima rodada do dia;
+ * - se o cron rodar VÁRIAS vezes após a hora-alvo, só o primeiro do dia dispara.
+ * `targetHour` vem de NOTIFY_DIGEST_HOUR (0–23); ausente/inválido = desligado.
  */
 export function buildDigestEvent(
   summary: SummaryDTO,
   targetHour: number | null,
-  now: Date
+  now: Date,
+  lastDigestDate: string | null
 ): NotificationEventDTO | null {
-  if (targetHour === null || now.getUTCHours() !== targetHour) {
+  if (targetHour === null) return null;
+  const today = utcDate(now);
+  if (now.getUTCHours() < targetHour || lastDigestDate === today) {
     return null;
   }
   return {

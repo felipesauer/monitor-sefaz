@@ -41,3 +41,13 @@ export function useHistorySeries() {
     staleTime: POLL_INTERVAL_MS,
   });
 }
+
+/** Notas Técnicas do portal. Mudam raramente → polling lento. */
+export function useTechnicalNotes() {
+  return useQuery({
+    queryKey: ['technical-notes'],
+    queryFn: () => dataSource.getTechnicalNotes(),
+    refetchInterval: POLL_INTERVAL_MS * 5,
+    staleTime: POLL_INTERVAL_MS,
+  });
+}
