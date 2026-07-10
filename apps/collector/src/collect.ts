@@ -16,6 +16,8 @@ import {
   type HistoryPointDTO,
   type ServiceStatusDTO,
   type SourceHealthDTO,
+  notifierStateSchema,
+  type NotifierStateDTO,
   type StatusSnapshotDTO,
   type SummaryDTO,
   type TechnicalNoteDTO,
@@ -25,7 +27,7 @@ import type { SourceHealth } from '@monitor-sefaz/core';
 import { Notifier, parseNotifierConfig } from '@monitor-sefaz/notifier';
 import { buildNotificationEvents } from './notifyEvents.js';
 import { reconcileTechnicalNotes, technicalNoteEvents } from './technicalNotes.js';
-import { buildDigestEvent, parseDigestHour } from './digest.js';
+import { buildDigestEvent, parseDigestHour, utcDate } from './digest.js';
 
 /** Retenção do histórico estático (ms). Padrão 7 dias. */
 const RETENTION_MS = Number(process.env.HISTORY_RETENTION_MS ?? 7 * 24 * 60 * 60 * 1000);
@@ -114,6 +116,17 @@ function loadTechnicalNotes(path: string): TechnicalNotesFileDTO {
     return technicalNotesFileSchema.parse(JSON.parse(readFileSync(path, 'utf8')));
   } catch {
     return { updatedAt: new Date(0).toISOString(), notes: [] };
+  }
+}
+
+function loadNotifierState(path: string): NotifierStateDTO {
+  if (!existsSync(path)) {
+    return { lastDigestDate: null };
+  }
+  try {
+    return notifierStateSchema.parse(JSON.parse(readFileSync(path, 'utf8')));
+  } catch {
+    return { lastDigestDate: null };
   }
 }
 
@@ -245,10 +258,14 @@ async function main(): Promise<void> {
     // (montagem de evento, entrega) NÃO deve marcar o job como vermelho nem
     // impedir a coleta — apenas registra o aviso.
     try {
+      const statePath = join(outDir, 'notifier-state.json');
+      const state = loadNotifierState(statePath);
+      const now = new Date(generatedAt);
       const digest = buildDigestEvent(
         summary,
         parseDigestHour(process.env.NOTIFY_DIGEST_HOUR),
-        new Date(generatedAt)
+        now,
+        state.lastDigestDate
       );
       const events = [
         ...buildNotificationEvents(previousHistory, services, summary.sources, generatedAt),
@@ -257,6 +274,13 @@ async function main(): Promise<void> {
       ];
       const { sent, failed } = await notifier.notify(events);
       console.log(`Notificações: ${events.length} eventos, ${sent} entregues, ${failed} falharam`);
+      // Marca o digest do dia como enviado (idempotência), só após tentar entregar.
+      if (digest) {
+        writeFileSync(
+          statePath,
+          JSON.stringify({ ...state, lastDigestDate: utcDate(now) }, null, 2)
+        );
+      }
     } catch (err) {
       console.warn(`Notificação falhou (coleta preservada): ${err instanceof Error ? err.message : err}`);
     }

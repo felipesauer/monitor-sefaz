@@ -32,31 +32,41 @@ describe('parseDigestHour', () => {
   });
 });
 
-describe('buildDigestEvent', () => {
-  it('emite DAILY_DIGEST quando a hora UTC bate a hora-alvo', () => {
-    const ev = buildDigestEvent(summary, 8, new Date('2026-07-10T08:17:00.000Z'));
+describe('buildDigestEvent (idempotente por dia)', () => {
+  it('emite na hora-alvo quando ainda não houve digest hoje', () => {
+    const ev = buildDigestEvent(summary, 8, new Date('2026-07-10T08:17:00.000Z'), null);
     expect(ev).not.toBeNull();
     expect(ev!.type).toBe('DAILY_DIGEST');
     expect(ev!.payload).toMatchObject({
       total: 135,
       operational: 130,
-      failing: 5,
       availability: 96.3,
       degradedSources: ['availability'],
     });
   });
 
-  it('não emite fora da hora-alvo', () => {
-    expect(buildDigestEvent(summary, 8, new Date('2026-07-10T09:00:00.000Z'))).toBeNull();
+  it('emite mesmo APÓS a hora-alvo (cron pulou a hora exata) se não enviou hoje', () => {
+    // hora 11 > alvo 8, lastDigestDate de ontem → ainda deve sair (resolve o "pulo")
+    const ev = buildDigestEvent(summary, 8, new Date('2026-07-10T11:00:00.000Z'), '2026-07-09');
+    expect(ev).not.toBeNull();
+  });
+
+  it('NÃO reemite no mesmo dia (resolve a duplicação)', () => {
+    const ev = buildDigestEvent(summary, 8, new Date('2026-07-10T09:00:00.000Z'), '2026-07-10');
+    expect(ev).toBeNull();
+  });
+
+  it('não emite ANTES da hora-alvo', () => {
+    expect(buildDigestEvent(summary, 8, new Date('2026-07-10T07:59:00.000Z'), null)).toBeNull();
   });
 
   it('não emite quando desligado (targetHour null)', () => {
-    expect(buildDigestEvent(summary, null, new Date('2026-07-10T08:00:00.000Z'))).toBeNull();
+    expect(buildDigestEvent(summary, null, new Date('2026-07-10T08:00:00.000Z'), null)).toBeNull();
   });
 
-  it('degradedSources vazio quando não há sources ou nenhuma degradada', () => {
+  it('degradedSources vazio quando não há sources', () => {
     const clean = { ...summary, sources: undefined };
-    const ev = buildDigestEvent(clean, 8, new Date('2026-07-10T08:00:00.000Z'));
+    const ev = buildDigestEvent(clean, 8, new Date('2026-07-10T08:00:00.000Z'), null);
     expect(ev!.payload!.degradedSources).toEqual([]);
   });
 });

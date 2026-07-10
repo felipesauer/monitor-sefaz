@@ -196,6 +196,16 @@ export const technicalNotesFileSchema = z.object({
 });
 export type TechnicalNotesFileDTO = z.infer<typeof technicalNotesFileSchema>;
 
+/**
+ * Estado persistido do notificador entre execuções do collector (versionado).
+ * Hoje guarda só a data (YYYY-MM-DD UTC) do último resumo diário enviado, para
+ * o digest ser idempotente por dia mesmo com o cron irregular do Actions.
+ */
+export const notifierStateSchema = z.object({
+  lastDigestDate: z.string().nullable(),
+});
+export type NotifierStateDTO = z.infer<typeof notifierStateSchema>;
+
 /** Períodos suportados pela consulta de histórico curto. */
 // '1h'/'6h' foram removidos: com a cadência real de coleta (~3h/ponto) rendem
 // 0–2 amostras, deixando gráfico vazio e uptime sobre amostra única.
