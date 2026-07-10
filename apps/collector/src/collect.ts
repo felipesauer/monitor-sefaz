@@ -25,6 +25,7 @@ import type { SourceHealth } from '@monitor-sefaz/core';
 import { Notifier, parseNotifierConfig } from '@monitor-sefaz/notifier';
 import { buildNotificationEvents } from './notifyEvents.js';
 import { reconcileTechnicalNotes, technicalNoteEvents } from './technicalNotes.js';
+import { buildDigestEvent, parseDigestHour } from './digest.js';
 
 /** Retenção do histórico estático (ms). Padrão 7 dias. */
 const RETENTION_MS = Number(process.env.HISTORY_RETENTION_MS ?? 7 * 24 * 60 * 60 * 1000);
@@ -240,9 +241,15 @@ async function main(): Promise<void> {
   // DEPOIS de publicar os JSONs — uma falha de entrega não deve impedir a coleta.
   const notifier = new Notifier(parseNotifierConfig(process.env));
   if (notifier.enabled) {
+    const digest = buildDigestEvent(
+      summary,
+      parseDigestHour(process.env.NOTIFY_DIGEST_HOUR),
+      new Date(generatedAt)
+    );
     const events = [
       ...buildNotificationEvents(previousHistory, services, summary.sources, generatedAt),
       ...technicalNoteEvents(freshNotes, generatedAt),
+      ...(digest ? [digest] : []),
     ];
     const { sent, failed } = await notifier.notify(events);
     console.log(`Notificações: ${events.length} eventos, ${sent} entregues, ${failed} falharam`);
