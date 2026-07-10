@@ -3,6 +3,7 @@ import type {
   HistoryResponseDTO,
   StatusSnapshotDTO,
   SummaryDTO,
+  TechnicalNotesFileDTO,
 } from '@monitor-sefaz/contracts';
 import type { DataSource, HistorySeries, StatusFilters } from './DataSource.js';
 
@@ -46,5 +47,10 @@ export class HybridDataSource implements DataSource {
 
   public getHistorySeries(): Promise<HistorySeries> {
     return this.history.getHistorySeries();
+  }
+
+  public getTechnicalNotes(): Promise<TechnicalNotesFileDTO> {
+    // Conteúdo estático (como o histórico) — delega à fonte versionada.
+    return this.history.getTechnicalNotes();
   }
 }

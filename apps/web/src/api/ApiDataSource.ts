@@ -6,6 +6,7 @@ import {
   type HistoryResponseDTO,
   type StatusSnapshotDTO,
   type SummaryDTO,
+  type TechnicalNotesFileDTO,
 } from '@monitor-sefaz/contracts';
 import {
   fetchJson,
@@ -55,5 +56,14 @@ export class ApiDataSource implements DataSource {
    */
   public async getHistorySeries(): Promise<HistorySeries> {
     return {};
+  }
+
+  /**
+   * Como as séries: a API/Worker não serve as Notas Técnicas (é conteúdo estático
+   * versionado). No modo híbrido o `HybridDataSource` delega isto ao estático;
+   * aqui retornamos vazio para o modo self-host puro.
+   */
+  public async getTechnicalNotes(): Promise<TechnicalNotesFileDTO> {
+    return { updatedAt: new Date(0).toISOString(), notes: [] };
   }
 }
