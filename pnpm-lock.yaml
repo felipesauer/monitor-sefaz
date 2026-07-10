@@ -222,6 +222,10 @@ importers:
       '@monitor-sefaz/contracts':
         specifier: workspace:*
         version: link:../contracts
+    devDependencies:
+      '@types/node':
+        specifier: ^22.10.2
+        version: 22.19.19
 
 packages:
 
