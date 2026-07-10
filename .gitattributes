@@ -1,0 +1,3 @@
+# mnema: the audit log is append-only; merge with union so parallel
+# branches keep both sides instead of conflicting on the tail.
+.mnema/audit/*.jsonl merge=union

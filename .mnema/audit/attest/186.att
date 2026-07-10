@@ -1,0 +1,11 @@
+{
+  "version": "mnema-attest/v1",
+  "signerActor": "claude-code",
+  "signerFingerprint": "f3c6a67255a944c66c22dd191d61b751e2a8fbd6f45d194d28896e0ae6858b8d",
+  "projectHmacId": "56685387b1e8a31e230c89a9044edc05102bd600c53ee2ea07659be4621dfb2b",
+  "from": 145,
+  "to": 186,
+  "coveredHeadHash": "d61ffcf22fd829730a73bde8b680400daf1f3241ad4cdc9c0085900e2d606b35",
+  "contentRoot": "3d51fdd67e54d5c08748a7f8f86cf689595193d801fc95b4eab333a24d3bf0f8",
+  "signature": "2B+IjlOumQLM5MGUSBxle4w/iGzSBl6/xsy5SHZNZG8N/t7VMTC2f0U8SnedfCgU3E/1ph7G6caFp8bCI0YmBA=="
+}

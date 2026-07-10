@@ -15,3 +15,12 @@ packages/core/test-*.mjs
 
 # Cache do wrangler dev
 .wrangler/
+
+# mnema: ignore only the local cache (SQLite db, sync buffer,
+# attachments) and the personal config.local.json override. The
+# backlog/roadmap/sprint/memory/skill markdown and the audit log
+# under .mnema/ are the source of truth — commit them. The cache is
+# rebuildable from that markdown via `mnema sync`.
+.mnema/state/
+.mnema/config.local.json
+.mnema/audit/.audit.lock*

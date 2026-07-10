@@ -1,0 +1,62 @@
+{
+  "version": "1.0",
+  "mnema_version": "^0.12.0-alpha.0",
+  "project": {
+    "key": "MONITOR",
+    "name": "monitor-sefaz"
+  },
+  "paths": {
+    "state": ".mnema/state",
+    "audit": ".mnema/audit",
+    "backlog": ".mnema/backlog",
+    "sprints": ".mnema/sprints",
+    "roadmap": ".mnema/roadmap",
+    "memory": ".mnema/memory",
+    "skills": ".mnema/skills",
+    "commands": ".mnema/commands",
+    "workflows": ".mnema/workflows"
+  },
+  "workflow": "default",
+  "mode": "single",
+  "audit_strategy": "recent",
+  "audit_retention_months": 12,
+  "audit": {
+    "checkpoint": {
+      "events": 100,
+      "seconds": 3600
+    },
+    "anchor": {
+      "provider": "none",
+      "interval": {}
+    }
+  },
+  "enforcement_mode": "strict",
+  "sync": {
+    "mode": "hybrid",
+    "agent_buffer_flush_seconds": 30,
+    "agent_buffer_flush_count": 50,
+    "agent_buffer_flush_on_plan_complete": true
+  },
+  "features": {
+    "fts_search": true,
+    "attachments": true,
+    "knowledge": true,
+    "update_check": false
+  },
+  "aging": {
+    "stale_after_days": 3,
+    "orphan_run_after_hours": 24,
+    "sla_days": {},
+    "wip_limits": {}
+  },
+  "github": {
+    "done_pr_policy": "off"
+  },
+  "hooks": {
+    "on_task_done": [],
+    "on_task_transitioned": [],
+    "on_decision_accepted": [],
+    "on_sprint_closed": [],
+    "on_epic_closed": []
+  }
+}

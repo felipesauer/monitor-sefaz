@@ -1,0 +1,8 @@
+{
+  "version": "1.0",
+  "actor": "claude-code",
+  "algorithm": "ed25519",
+  "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA3lujpL6uXvDhCSUxZlEb4sT7EpM7uNiNVXjPSNwrYJY=\n-----END PUBLIC KEY-----\n",
+  "fingerprint": "f3c6a67255a944c66c22dd191d61b751e2a8fbd6f45d194d28896e0ae6858b8d",
+  "createdAt": "2026-07-10T12:06:28.615Z"
+}
