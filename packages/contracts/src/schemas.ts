@@ -180,6 +180,22 @@ export const notificationEventSchema = z.object({
 });
 export type NotificationEventDTO = z.infer<typeof notificationEventSchema>;
 
+/** Uma Nota Técnica conhecida (persistida para dedup entre coletas). */
+export const technicalNoteSchema = z.object({
+  title: z.string(),
+  link: z.string().nullable(),
+  /** ISO 8601 — quando o monitor viu esta NT pela primeira vez. */
+  firstSeenAt: z.string(),
+});
+export type TechnicalNoteDTO = z.infer<typeof technicalNoteSchema>;
+
+/** Arquivo versionado com as NTs já vistas (fonte da dedup). */
+export const technicalNotesFileSchema = z.object({
+  updatedAt: z.string(),
+  notes: z.array(technicalNoteSchema),
+});
+export type TechnicalNotesFileDTO = z.infer<typeof technicalNotesFileSchema>;
+
 /** Períodos suportados pela consulta de histórico curto. */
 // '1h'/'6h' foram removidos: com a cadência real de coleta (~3h/ponto) rendem
 // 0–2 amostras, deixando gráfico vazio e uptime sobre amostra única.

@@ -97,3 +97,15 @@ export {
   type SourceHealth,
   type ConsensusResult,
 } from './consensus/ConsensusCollector.js';
+
+// Notas Técnicas (lista de conteúdo do portal)
+export {
+  parseTechnicalNotes,
+  type TechnicalNote,
+} from './technical-notes/TechnicalNotesParser.js';
+export {
+  TechnicalNotesProvider,
+  TECHNICAL_NOTES_URL,
+  type TechnicalNotesFetcher,
+} from './technical-notes/TechnicalNotesProvider.js';
+export { createHttpTechnicalNotesFetcher } from './technical-notes/httpFetcher.js';

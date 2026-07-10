@@ -1,22 +1,30 @@
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { ConsensusCollector } from '@monitor-sefaz/core';
+import {
+  ConsensusCollector,
+  TechnicalNotesProvider,
+  createHttpTechnicalNotesFetcher,
+} from '@monitor-sefaz/core';
 import { Catalog, DEFAULT_MIN_COVERAGE_RATIO, Environment } from '@monitor-sefaz/catalog';
 import {
   averageLatency,
   fromEnvironment,
   historyFileSchema,
   isUp,
+  technicalNotesFileSchema,
   type HistoryFileDTO,
   type HistoryPointDTO,
   type ServiceStatusDTO,
   type SourceHealthDTO,
   type StatusSnapshotDTO,
   type SummaryDTO,
+  type TechnicalNoteDTO,
+  type TechnicalNotesFileDTO,
 } from '@monitor-sefaz/contracts';
 import type { SourceHealth } from '@monitor-sefaz/core';
 import { Notifier, parseNotifierConfig } from '@monitor-sefaz/notifier';
 import { buildNotificationEvents } from './notifyEvents.js';
+import { reconcileTechnicalNotes, technicalNoteEvents } from './technicalNotes.js';
 
 /** Retenção do histórico estático (ms). Padrão 7 dias. */
 const RETENTION_MS = Number(process.env.HISTORY_RETENTION_MS ?? 7 * 24 * 60 * 60 * 1000);
@@ -94,6 +102,36 @@ function loadHistory(path: string): HistoryFileDTO {
     return historyFileSchema.parse(JSON.parse(readFileSync(path, 'utf8')));
   } catch {
     return { updatedAt: new Date(0).toISOString(), series: {} };
+  }
+}
+
+function loadTechnicalNotes(path: string): TechnicalNotesFileDTO {
+  if (!existsSync(path)) {
+    return { updatedAt: new Date(0).toISOString(), notes: [] };
+  }
+  try {
+    return technicalNotesFileSchema.parse(JSON.parse(readFileSync(path, 'utf8')));
+  } catch {
+    return { updatedAt: new Date(0).toISOString(), notes: [] };
+  }
+}
+
+/**
+ * Coleta as Notas Técnicas e reconcilia com o arquivo versionado, devolvendo as
+ * NTs novas para notificar. Tolerante a falha: se a coleta de NTs falhar, NÃO
+ * derruba a coleta de status — apenas não há NT nova nesta rodada.
+ */
+async function collectTechnicalNotes(outDir: string, now: string): Promise<TechnicalNoteDTO[]> {
+  const path = join(outDir, 'technical-notes.json');
+  try {
+    const provider = new TechnicalNotesProvider(createHttpTechnicalNotesFetcher());
+    const scraped = await provider.fetch();
+    const { file, fresh } = reconcileTechnicalNotes(loadTechnicalNotes(path), scraped, now);
+    writeFileSync(path, JSON.stringify(file, null, 2));
+    return fresh;
+  } catch (err) {
+    console.warn(`Notas Técnicas: coleta falhou (${err instanceof Error ? err.message : err})`);
+    return [];
   }
 }
 
@@ -190,12 +228,22 @@ async function main(): Promise<void> {
     `Coletado: ${services.length} serviços (${summary.operational} operacionais) → ${outDir}`
   );
 
+  // Notas Técnicas: coleta própria (não afeta o piso de status). Atualiza o
+  // technical-notes.json versionado e devolve as NTs novas para notificar.
+  const freshNotes = await collectTechnicalNotes(outDir, generatedAt);
+  if (freshNotes.length > 0) {
+    console.log(`Notas Técnicas: ${freshNotes.length} nova(s)`);
+  }
+
   // Notificação (opcional): compara com o estado anterior do histórico e dispara
   // os eventos aos canais configurados. Sem nenhuma var NOTIFY_*, é no-op. Roda
   // DEPOIS de publicar os JSONs — uma falha de entrega não deve impedir a coleta.
   const notifier = new Notifier(parseNotifierConfig(process.env));
   if (notifier.enabled) {
-    const events = buildNotificationEvents(previousHistory, services, summary.sources, generatedAt);
+    const events = [
+      ...buildNotificationEvents(previousHistory, services, summary.sources, generatedAt),
+      ...technicalNoteEvents(freshNotes, generatedAt),
+    ];
     const { sent, failed } = await notifier.notify(events);
     console.log(`Notificações: ${events.length} eventos, ${sent} entregues, ${failed} falharam`);
   }
