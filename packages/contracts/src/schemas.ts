@@ -135,6 +135,51 @@ export const summarySchema = z.object({
 });
 export type SummaryDTO = z.infer<typeof summarySchema>;
 
+/**
+ * Tipos de evento de notificação. Cada transição de estado relevante ou sinal
+ * operacional vira um destes; os canais (Discord/Slack/...) formatam por tipo.
+ * - SERVICE_DOWN/RECOVERED: serviço saiu/voltou ao ar (via `isUp`).
+ * - CONTINGENCY_ENTERED/EXITED: entrou/saiu de contingência (SVC). Independente
+ *   de DOWN/RECOVERED — contingência conta como "no ar", então os dois podem
+ *   coexistir numa mesma coleta.
+ * - TECHNICAL_NOTE: nova Nota Técnica publicada (Fase 6).
+ * - SOURCE_DEGRADED: uma fonte oficial ficou degradada (sinal de drift, Fase 8).
+ * - DAILY_DIGEST: resumo periódico de saúde (Fase 7).
+ */
+export const notificationEventTypeSchema = z.enum([
+  'SERVICE_DOWN',
+  'SERVICE_RECOVERED',
+  'CONTINGENCY_ENTERED',
+  'CONTINGENCY_EXITED',
+  'TECHNICAL_NOTE',
+  'SOURCE_DEGRADED',
+  'DAILY_DIGEST',
+]);
+export type NotificationEventType = z.infer<typeof notificationEventTypeSchema>;
+
+/**
+ * Um evento de notificação. Campos específicos são opcionais porque variam por
+ * tipo: transições de serviço preenchem serviceId/uf/document/estados; um digest
+ * ou uma nota técnica usam `payload` livre.
+ */
+export const notificationEventSchema = z.object({
+  type: notificationEventTypeSchema,
+  /** `{document}:{uf}` quando o evento é de um serviço específico. */
+  serviceId: z.string().optional(),
+  uf: z.string().optional(),
+  document: documentTypeSchema.optional(),
+  previousState: serviceStateSchema.optional(),
+  currentState: serviceStateSchema.optional(),
+  cStat: z.number().nullable().optional(),
+  /** Fonte associada (ex.: qual fonte degradou em SOURCE_DEGRADED). */
+  source: statusSourceSchema.optional(),
+  /** ISO 8601 — quando o evento foi detectado. */
+  occurredAt: z.string(),
+  /** Dados livres por tipo (ex.: título/link de NT, números do digest). */
+  payload: z.record(z.unknown()).optional(),
+});
+export type NotificationEventDTO = z.infer<typeof notificationEventSchema>;
+
 /** Períodos suportados pela consulta de histórico curto. */
 // '1h'/'6h' foram removidos: com a cadência real de coleta (~3h/ponto) rendem
 // 0–2 amostras, deixando gráfico vazio e uptime sobre amostra única.
