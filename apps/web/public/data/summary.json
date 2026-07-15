@@ -1,11 +1,11 @@
 {
   "environment": "production",
-  "generatedAt": "2026-07-14T22:26:51.115Z",
+  "generatedAt": "2026-07-15T00:08:02.504Z",
   "total": 135,
   "operational": 135,
   "failing": 0,
   "availability": 100,
-  "avgLatencyMs": 328,
+  "avgLatencyMs": 233,
   "byDocument": [
     {
       "key": "CTe",
