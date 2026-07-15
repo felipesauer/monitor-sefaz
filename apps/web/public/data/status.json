@@ -1,6 +1,6 @@
 {
   "environment": "production",
-  "generatedAt": "2026-07-15T15:55:00.943Z",
+  "generatedAt": "2026-07-15T17:41:08.842Z",
   "services": [
     {
       "id": "NFe:AC",
@@ -11,11 +11,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 952,
+      "latencyMs": 823,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFe:AL",
@@ -26,11 +26,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 952,
+      "latencyMs": 823,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFe:AP",
@@ -41,11 +41,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 952,
+      "latencyMs": 823,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFe:CE",
@@ -56,11 +56,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 952,
+      "latencyMs": 823,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFe:DF",
@@ -71,11 +71,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 952,
+      "latencyMs": 823,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFe:ES",
@@ -86,11 +86,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 952,
+      "latencyMs": 823,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFe:PA",
@@ -101,11 +101,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 952,
+      "latencyMs": 823,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFe:PB",
@@ -116,11 +116,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 952,
+      "latencyMs": 823,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFe:PI",
@@ -131,11 +131,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 952,
+      "latencyMs": 823,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFe:RJ",
@@ -146,11 +146,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 952,
+      "latencyMs": 823,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFe:RN",
@@ -161,11 +161,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 952,
+      "latencyMs": 823,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFe:RO",
@@ -176,11 +176,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 952,
+      "latencyMs": 823,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFe:RR",
@@ -191,11 +191,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 952,
+      "latencyMs": 823,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFe:RS",
@@ -206,11 +206,11 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 952,
+      "latencyMs": 823,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:00",
+      "sourceCheckedAt": "14:40:29",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFe:SC",
@@ -221,11 +221,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 952,
+      "latencyMs": 823,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFe:SE",
@@ -236,11 +236,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 952,
+      "latencyMs": 823,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFe:TO",
@@ -251,11 +251,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 952,
+      "latencyMs": 823,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFCe:AC",
@@ -266,11 +266,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 359,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFCe:AL",
@@ -281,11 +281,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 359,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFCe:AP",
@@ -296,11 +296,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 359,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFCe:BA",
@@ -311,11 +311,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 359,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFCe:CE",
@@ -326,11 +326,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 359,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFCe:DF",
@@ -341,11 +341,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 359,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFCe:ES",
@@ -356,11 +356,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 359,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFCe:MA",
@@ -371,11 +371,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 359,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFCe:PA",
@@ -386,11 +386,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 359,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFCe:PB",
@@ -401,11 +401,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 359,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFCe:PE",
@@ -416,11 +416,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 359,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFCe:PI",
@@ -431,11 +431,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 359,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFCe:RJ",
@@ -446,11 +446,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 359,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFCe:RN",
@@ -461,11 +461,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 359,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFCe:RO",
@@ -476,11 +476,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 359,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFCe:RR",
@@ -491,11 +491,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 359,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFCe:RS",
@@ -506,11 +506,11 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 359,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:00",
+      "sourceCheckedAt": "14:40:29",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFCe:SC",
@@ -521,11 +521,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 359,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFCe:SE",
@@ -536,11 +536,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 359,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFCe:TO",
@@ -551,11 +551,11 @@
       "state": "OPERATIONAL",
       "cStat": 410,
       "xMotivo": null,
-      "latencyMs": 359,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:56",
+      "sourceCheckedAt": "14:41:08",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "CTe:AC",
@@ -566,11 +566,11 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 250,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:33",
+      "sourceCheckedAt": "14:41:06",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "CTe:AL",
@@ -581,11 +581,11 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 250,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:33",
+      "sourceCheckedAt": "14:41:06",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "CTe:AP",
@@ -596,11 +596,11 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 250,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:33",
+      "sourceCheckedAt": "14:41:06",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "CTe:AM",
@@ -611,11 +611,11 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 250,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:33",
+      "sourceCheckedAt": "14:41:06",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "CTe:BA",
@@ -626,11 +626,11 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 250,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:33",
+      "sourceCheckedAt": "14:41:06",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "CTe:CE",
@@ -641,11 +641,11 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 250,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:33",
+      "sourceCheckedAt": "14:41:06",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "CTe:DF",
@@ -656,11 +656,11 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 250,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:33",
+      "sourceCheckedAt": "14:41:06",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "CTe:ES",
@@ -671,11 +671,11 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 250,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:33",
+      "sourceCheckedAt": "14:41:06",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "CTe:GO",
@@ -686,11 +686,11 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 250,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:33",
+      "sourceCheckedAt": "14:41:06",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "CTe:MA",
@@ -701,11 +701,11 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 250,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:33",
+      "sourceCheckedAt": "14:41:06",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "CTe:PA",
@@ -716,11 +716,11 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 250,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:33",
+      "sourceCheckedAt": "14:41:06",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "CTe:PB",
@@ -731,11 +731,11 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 250,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:33",
+      "sourceCheckedAt": "14:41:06",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "CTe:PE",
@@ -746,11 +746,11 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 250,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:33",
+      "sourceCheckedAt": "14:41:06",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "CTe:PI",
@@ -761,11 +761,11 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 250,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:33",
+      "sourceCheckedAt": "14:41:06",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "CTe:RJ",
@@ -776,11 +776,11 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 250,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:33",
+      "sourceCheckedAt": "14:41:06",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "CTe:RN",
@@ -791,11 +791,11 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 250,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:33",
+      "sourceCheckedAt": "14:41:06",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "CTe:RO",
@@ -806,11 +806,11 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 250,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:33",
+      "sourceCheckedAt": "14:41:06",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "CTe:RR",
@@ -821,11 +821,11 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 250,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:33",
+      "sourceCheckedAt": "14:41:06",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "CTe:SC",
@@ -836,11 +836,11 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 250,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:33",
+      "sourceCheckedAt": "14:41:06",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "CTe:SE",
@@ -851,11 +851,11 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 250,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:33",
+      "sourceCheckedAt": "14:41:06",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "CTe:TO",
@@ -866,11 +866,11 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 250,
+      "latencyMs": 171,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:33",
+      "sourceCheckedAt": "14:41:06",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "MDFe:AC",
@@ -881,11 +881,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 210,
+      "latencyMs": 172,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "MDFe:AL",
@@ -896,11 +896,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 210,
+      "latencyMs": 172,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "MDFe:AP",
@@ -911,11 +911,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 210,
+      "latencyMs": 172,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "MDFe:AM",
@@ -926,11 +926,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 210,
+      "latencyMs": 172,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "MDFe:BA",
@@ -941,11 +941,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 210,
+      "latencyMs": 172,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "MDFe:CE",
@@ -956,11 +956,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 210,
+      "latencyMs": 172,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "MDFe:DF",
@@ -971,11 +971,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 210,
+      "latencyMs": 172,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "MDFe:ES",
@@ -986,11 +986,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 210,
+      "latencyMs": 172,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "MDFe:GO",
@@ -1001,11 +1001,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 210,
+      "latencyMs": 172,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "MDFe:MA",
@@ -1016,11 +1016,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 210,
+      "latencyMs": 172,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "MDFe:MG",
@@ -1031,11 +1031,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 210,
+      "latencyMs": 172,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "MDFe:MS",
@@ -1046,11 +1046,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 210,
+      "latencyMs": 172,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "MDFe:MT",
@@ -1061,11 +1061,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 210,
+      "latencyMs": 172,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "MDFe:PA",
@@ -1076,11 +1076,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 210,
+      "latencyMs": 172,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "MDFe:PB",
@@ -1091,11 +1091,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 210,
+      "latencyMs": 172,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "MDFe:PE",
@@ -1106,11 +1106,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 210,
+      "latencyMs": 172,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "MDFe:PI",
@@ -1121,11 +1121,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 210,
+      "latencyMs": 172,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "MDFe:PR",
@@ -1136,11 +1136,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 210,
+      "latencyMs": 172,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "MDFe:RJ",
@@ -1151,11 +1151,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 210,
+      "latencyMs": 172,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "MDFe:RN",
@@ -1166,11 +1166,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 210,
+      "latencyMs": 172,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "MDFe:RO",
@@ -1181,11 +1181,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 210,
+      "latencyMs": 172,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "MDFe:RR",
@@ -1196,11 +1196,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 210,
+      "latencyMs": 172,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "MDFe:RS",
@@ -1211,11 +1211,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 210,
+      "latencyMs": 172,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "MDFe:SC",
@@ -1226,11 +1226,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 210,
+      "latencyMs": 172,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "MDFe:SE",
@@ -1241,11 +1241,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 210,
+      "latencyMs": 172,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "MDFe:SP",
@@ -1256,11 +1256,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 210,
+      "latencyMs": 172,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "MDFe:TO",
@@ -1271,11 +1271,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 210,
+      "latencyMs": 172,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "DCe:AC",
@@ -1286,11 +1286,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 192,
+      "latencyMs": 178,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "DCe:AL",
@@ -1301,11 +1301,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 192,
+      "latencyMs": 178,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "DCe:AP",
@@ -1316,11 +1316,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 192,
+      "latencyMs": 178,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "DCe:AM",
@@ -1331,11 +1331,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 192,
+      "latencyMs": 178,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "DCe:BA",
@@ -1346,11 +1346,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 192,
+      "latencyMs": 178,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "DCe:CE",
@@ -1361,11 +1361,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 192,
+      "latencyMs": 178,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "DCe:DF",
@@ -1376,11 +1376,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 192,
+      "latencyMs": 178,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "DCe:ES",
@@ -1391,11 +1391,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 192,
+      "latencyMs": 178,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "DCe:GO",
@@ -1406,11 +1406,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 192,
+      "latencyMs": 178,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "DCe:MA",
@@ -1421,11 +1421,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 192,
+      "latencyMs": 178,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "DCe:MG",
@@ -1436,11 +1436,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 192,
+      "latencyMs": 178,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "DCe:MS",
@@ -1451,11 +1451,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 192,
+      "latencyMs": 178,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "DCe:MT",
@@ -1466,11 +1466,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 192,
+      "latencyMs": 178,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "DCe:PA",
@@ -1481,11 +1481,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 192,
+      "latencyMs": 178,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "DCe:PB",
@@ -1496,11 +1496,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 192,
+      "latencyMs": 178,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "DCe:PE",
@@ -1511,11 +1511,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 192,
+      "latencyMs": 178,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "DCe:PI",
@@ -1526,11 +1526,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 192,
+      "latencyMs": 178,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "DCe:PR",
@@ -1541,11 +1541,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 192,
+      "latencyMs": 178,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "DCe:RJ",
@@ -1556,11 +1556,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 192,
+      "latencyMs": 178,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "DCe:RN",
@@ -1571,11 +1571,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 192,
+      "latencyMs": 178,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "DCe:RO",
@@ -1586,11 +1586,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 192,
+      "latencyMs": 178,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "DCe:RR",
@@ -1601,11 +1601,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 192,
+      "latencyMs": 178,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "DCe:RS",
@@ -1616,11 +1616,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 192,
+      "latencyMs": 178,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "DCe:SC",
@@ -1631,11 +1631,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 192,
+      "latencyMs": 178,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "DCe:SE",
@@ -1646,11 +1646,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 192,
+      "latencyMs": 178,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "DCe:SP",
@@ -1661,11 +1661,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 192,
+      "latencyMs": 178,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "DCe:TO",
@@ -1676,11 +1676,11 @@
       "state": "OPERATIONAL",
       "cStat": 252,
       "xMotivo": null,
-      "latencyMs": 192,
+      "latencyMs": 178,
       "source": "svrs",
-      "sourceCheckedAt": "12:54:53",
+      "sourceCheckedAt": "14:40:55",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFe:AM",
@@ -1691,10 +1691,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 952,
+      "latencyMs": 823,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFe:BA",
@@ -1705,10 +1705,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 952,
+      "latencyMs": 823,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFe:GO",
@@ -1719,10 +1719,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 952,
+      "latencyMs": 823,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFe:MA",
@@ -1733,10 +1733,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 952,
+      "latencyMs": 823,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFe:MG",
@@ -1747,10 +1747,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 952,
+      "latencyMs": 823,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFe:MS",
@@ -1761,10 +1761,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 952,
+      "latencyMs": 823,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFe:MT",
@@ -1775,10 +1775,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 952,
+      "latencyMs": 823,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFe:PE",
@@ -1789,10 +1789,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 952,
+      "latencyMs": 823,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFe:PR",
@@ -1803,10 +1803,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 952,
+      "latencyMs": 823,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFe:SP",
@@ -1817,10 +1817,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 952,
+      "latencyMs": 823,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFCe:AM",
@@ -1831,10 +1831,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 359,
+      "latencyMs": 171,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFCe:GO",
@@ -1845,10 +1845,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 359,
+      "latencyMs": 171,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFCe:MG",
@@ -1859,10 +1859,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 359,
+      "latencyMs": 171,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFCe:MS",
@@ -1873,10 +1873,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 359,
+      "latencyMs": 171,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFCe:MT",
@@ -1887,10 +1887,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 359,
+      "latencyMs": 171,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFCe:PR",
@@ -1901,10 +1901,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 359,
+      "latencyMs": 171,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "NFCe:SP",
@@ -1915,10 +1915,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 359,
+      "latencyMs": 171,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "CTe:MG",
@@ -1929,10 +1929,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 250,
+      "latencyMs": 171,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "CTe:MS",
@@ -1943,10 +1943,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 250,
+      "latencyMs": 171,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "CTe:MT",
@@ -1957,10 +1957,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 250,
+      "latencyMs": 171,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "CTe:PR",
@@ -1971,10 +1971,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 250,
+      "latencyMs": 171,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "CTe:RS",
@@ -1985,10 +1985,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 250,
+      "latencyMs": 171,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     },
     {
       "id": "CTe:SP",
@@ -1999,10 +1999,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 250,
+      "latencyMs": 171,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-07-15T15:55:00.943Z"
+      "checkedAt": "2026-07-15T17:41:08.842Z"
     }
   ]
 }
