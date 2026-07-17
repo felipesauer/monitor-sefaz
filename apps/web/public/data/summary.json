@@ -1,17 +1,17 @@
 {
   "environment": "production",
-  "generatedAt": "2026-07-17T14:06:16.369Z",
+  "generatedAt": "2026-07-17T15:46:17.866Z",
   "total": 135,
-  "operational": 135,
-  "failing": 0,
-  "availability": 100,
-  "avgLatencyMs": 255,
+  "operational": 133,
+  "failing": 2,
+  "availability": 98.5,
+  "avgLatencyMs": 323,
   "byDocument": [
     {
       "key": "CTe",
       "total": 27,
-      "operational": 27,
-      "availability": 100
+      "operational": 26,
+      "availability": 96.3
     },
     {
       "key": "DCe",
@@ -28,8 +28,8 @@
     {
       "key": "NFCe",
       "total": 27,
-      "operational": 27,
-      "availability": 100
+      "operational": 26,
+      "availability": 96.3
     },
     {
       "key": "NFe",
@@ -84,8 +84,8 @@
     {
       "key": "PR",
       "total": 3,
-      "operational": 3,
-      "availability": 100
+      "operational": 1,
+      "availability": 33.3
     },
     {
       "key": "RS",
@@ -116,10 +116,10 @@
     {
       "source": "svrs",
       "official": true,
-      "collected": 0,
+      "collected": 112,
       "expected": 135,
-      "coverage": 0,
-      "degraded": true
+      "coverage": 0.83,
+      "degraded": false
     },
     {
       "source": "availability",
