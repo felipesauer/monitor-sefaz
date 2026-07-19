@@ -1,11 +1,11 @@
 {
   "environment": "production",
-  "generatedAt": "2026-07-19T00:12:50.388Z",
+  "generatedAt": "2026-07-19T03:59:29.592Z",
   "total": 135,
-  "operational": 135,
-  "failing": 0,
-  "availability": 100,
-  "avgLatencyMs": 260,
+  "operational": 134,
+  "failing": 1,
+  "availability": 99.3,
+  "avgLatencyMs": 263,
   "byDocument": [
     {
       "key": "CTe",
@@ -34,8 +34,8 @@
     {
       "key": "NFe",
       "total": 27,
-      "operational": 27,
-      "availability": 100
+      "operational": 26,
+      "availability": 96.3
     }
   ],
   "byAuthorizer": [
@@ -48,8 +48,8 @@
     {
       "key": "BA",
       "total": 1,
-      "operational": 1,
-      "availability": 100
+      "operational": 0,
+      "availability": 0
     },
     {
       "key": "GO",
@@ -116,10 +116,10 @@
     {
       "source": "svrs",
       "official": true,
-      "collected": 112,
+      "collected": 0,
       "expected": 135,
-      "coverage": 0.83,
-      "degraded": false
+      "coverage": 0,
+      "degraded": true
     },
     {
       "source": "availability",
