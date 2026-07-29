@@ -1,11 +1,11 @@
 {
   "environment": "production",
-  "generatedAt": "2026-07-29T06:47:41.974Z",
+  "generatedAt": "2026-07-29T09:59:47.811Z",
   "total": 135,
   "operational": 135,
   "failing": 0,
   "availability": 100,
-  "avgLatencyMs": 287,
+  "avgLatencyMs": 358,
   "byDocument": [
     {
       "key": "CTe",
@@ -116,10 +116,10 @@
     {
       "source": "svrs",
       "official": true,
-      "collected": 112,
+      "collected": 0,
       "expected": 135,
-      "coverage": 0.83,
-      "degraded": false
+      "coverage": 0,
+      "degraded": true
     },
     {
       "source": "availability",
