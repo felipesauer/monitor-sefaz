@@ -1,6 +1,6 @@
 {
   "environment": "production",
-  "generatedAt": "2026-08-01T13:59:19.379Z",
+  "generatedAt": "2026-08-01T15:30:26.036Z",
   "services": [
     {
       "id": "NFe:AC",
@@ -11,10 +11,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 1745,
-      "source": "availability",
+      "latencyMs": 965,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFe:AL",
@@ -25,24 +25,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 1745,
-      "source": "availability",
+      "latencyMs": 965,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "NFe:AP",
-      "document": "NFe",
-      "uf": "AP",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 1745,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFe:AM",
@@ -53,10 +39,24 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 1745,
-      "source": "availability",
+      "latencyMs": 965,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "NFe:AP",
+      "document": "NFe",
+      "uf": "AP",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 965,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFe:BA",
@@ -67,10 +67,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 1745,
-      "source": "availability",
+      "latencyMs": 965,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFe:CE",
@@ -81,10 +81,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 1745,
-      "source": "availability",
+      "latencyMs": 965,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFe:DF",
@@ -95,10 +95,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 1745,
-      "source": "availability",
+      "latencyMs": 965,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFe:ES",
@@ -109,10 +109,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 1745,
-      "source": "availability",
+      "latencyMs": 965,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFe:GO",
@@ -123,10 +123,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 1745,
-      "source": "availability",
+      "latencyMs": 965,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFe:MA",
@@ -137,10 +137,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 1745,
-      "source": "availability",
+      "latencyMs": 965,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFe:MG",
@@ -151,10 +151,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 1745,
-      "source": "availability",
+      "latencyMs": 965,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFe:MS",
@@ -165,10 +165,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 1745,
-      "source": "availability",
+      "latencyMs": 965,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFe:MT",
@@ -179,10 +179,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 1745,
-      "source": "availability",
+      "latencyMs": 965,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFe:PA",
@@ -193,10 +193,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 1745,
-      "source": "availability",
+      "latencyMs": 965,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFe:PB",
@@ -207,10 +207,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 1745,
-      "source": "availability",
+      "latencyMs": 965,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFe:PE",
@@ -221,10 +221,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 1745,
-      "source": "availability",
+      "latencyMs": 965,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFe:PI",
@@ -235,10 +235,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 1745,
-      "source": "availability",
+      "latencyMs": 965,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFe:PR",
@@ -249,10 +249,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 1745,
-      "source": "availability",
+      "latencyMs": 965,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFe:RJ",
@@ -263,10 +263,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 1745,
-      "source": "availability",
+      "latencyMs": 965,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFe:RN",
@@ -277,10 +277,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 1745,
-      "source": "availability",
+      "latencyMs": 965,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFe:RO",
@@ -291,10 +291,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 1745,
-      "source": "availability",
+      "latencyMs": 965,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFe:RR",
@@ -305,10 +305,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 1745,
-      "source": "availability",
+      "latencyMs": 965,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFe:RS",
@@ -319,10 +319,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 1745,
-      "source": "availability",
+      "latencyMs": 965,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFe:SC",
@@ -333,10 +333,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 1745,
-      "source": "availability",
+      "latencyMs": 965,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFe:SE",
@@ -347,10 +347,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 1745,
-      "source": "availability",
+      "latencyMs": 965,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFe:SP",
@@ -361,10 +361,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 1745,
-      "source": "availability",
+      "latencyMs": 965,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFe:TO",
@@ -375,10 +375,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 1745,
-      "source": "availability",
+      "latencyMs": 965,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFCe:AC",
@@ -389,10 +389,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
+      "latencyMs": 204,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFCe:AL",
@@ -403,24 +403,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
+      "latencyMs": 204,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "NFCe:AP",
-      "document": "NFCe",
-      "uf": "AP",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFCe:AM",
@@ -431,10 +417,24 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
+      "latencyMs": 204,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "NFCe:AP",
+      "document": "NFCe",
+      "uf": "AP",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 204,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFCe:BA",
@@ -445,10 +445,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
+      "latencyMs": 204,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFCe:CE",
@@ -459,10 +459,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
+      "latencyMs": 204,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFCe:DF",
@@ -473,10 +473,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
+      "latencyMs": 204,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFCe:ES",
@@ -487,10 +487,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
+      "latencyMs": 204,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFCe:GO",
@@ -501,10 +501,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
+      "latencyMs": 204,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFCe:MA",
@@ -515,10 +515,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
+      "latencyMs": 204,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFCe:MG",
@@ -529,10 +529,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
+      "latencyMs": 204,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFCe:MS",
@@ -543,10 +543,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
+      "latencyMs": 204,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFCe:MT",
@@ -557,10 +557,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
+      "latencyMs": 204,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFCe:PA",
@@ -571,10 +571,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
+      "latencyMs": 204,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFCe:PB",
@@ -585,10 +585,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
+      "latencyMs": 204,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFCe:PE",
@@ -599,10 +599,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
+      "latencyMs": 204,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFCe:PI",
@@ -613,10 +613,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
+      "latencyMs": 204,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFCe:PR",
@@ -627,10 +627,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
+      "latencyMs": 204,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFCe:RJ",
@@ -641,10 +641,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
+      "latencyMs": 204,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFCe:RN",
@@ -655,10 +655,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
+      "latencyMs": 204,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFCe:RO",
@@ -669,10 +669,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
+      "latencyMs": 204,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFCe:RR",
@@ -683,10 +683,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
+      "latencyMs": 204,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFCe:RS",
@@ -697,10 +697,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
+      "latencyMs": 204,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFCe:SC",
@@ -711,10 +711,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
+      "latencyMs": 204,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFCe:SE",
@@ -725,10 +725,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
+      "latencyMs": 204,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFCe:SP",
@@ -739,10 +739,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
+      "latencyMs": 204,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "NFCe:TO",
@@ -753,766 +753,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
+      "latencyMs": 204,
+      "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "MDFe:AC",
-      "document": "MDFe",
-      "uf": "AC",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "MDFe:AL",
-      "document": "MDFe",
-      "uf": "AL",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "MDFe:AP",
-      "document": "MDFe",
-      "uf": "AP",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "MDFe:AM",
-      "document": "MDFe",
-      "uf": "AM",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "MDFe:BA",
-      "document": "MDFe",
-      "uf": "BA",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "MDFe:CE",
-      "document": "MDFe",
-      "uf": "CE",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "MDFe:DF",
-      "document": "MDFe",
-      "uf": "DF",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "MDFe:ES",
-      "document": "MDFe",
-      "uf": "ES",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "MDFe:GO",
-      "document": "MDFe",
-      "uf": "GO",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "MDFe:MA",
-      "document": "MDFe",
-      "uf": "MA",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "MDFe:MG",
-      "document": "MDFe",
-      "uf": "MG",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "MDFe:MS",
-      "document": "MDFe",
-      "uf": "MS",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "MDFe:MT",
-      "document": "MDFe",
-      "uf": "MT",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "MDFe:PA",
-      "document": "MDFe",
-      "uf": "PA",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "MDFe:PB",
-      "document": "MDFe",
-      "uf": "PB",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "MDFe:PE",
-      "document": "MDFe",
-      "uf": "PE",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "MDFe:PI",
-      "document": "MDFe",
-      "uf": "PI",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "MDFe:PR",
-      "document": "MDFe",
-      "uf": "PR",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "MDFe:RJ",
-      "document": "MDFe",
-      "uf": "RJ",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "MDFe:RN",
-      "document": "MDFe",
-      "uf": "RN",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "MDFe:RO",
-      "document": "MDFe",
-      "uf": "RO",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "MDFe:RR",
-      "document": "MDFe",
-      "uf": "RR",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "MDFe:RS",
-      "document": "MDFe",
-      "uf": "RS",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "MDFe:SC",
-      "document": "MDFe",
-      "uf": "SC",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "MDFe:SE",
-      "document": "MDFe",
-      "uf": "SE",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "MDFe:SP",
-      "document": "MDFe",
-      "uf": "SP",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "MDFe:TO",
-      "document": "MDFe",
-      "uf": "TO",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "DCe:AC",
-      "document": "DCe",
-      "uf": "AC",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "DCe:AL",
-      "document": "DCe",
-      "uf": "AL",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "DCe:AP",
-      "document": "DCe",
-      "uf": "AP",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "DCe:AM",
-      "document": "DCe",
-      "uf": "AM",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "DCe:BA",
-      "document": "DCe",
-      "uf": "BA",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "DCe:CE",
-      "document": "DCe",
-      "uf": "CE",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "DCe:DF",
-      "document": "DCe",
-      "uf": "DF",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "DCe:ES",
-      "document": "DCe",
-      "uf": "ES",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "DCe:GO",
-      "document": "DCe",
-      "uf": "GO",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "DCe:MA",
-      "document": "DCe",
-      "uf": "MA",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "DCe:MG",
-      "document": "DCe",
-      "uf": "MG",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "DCe:MS",
-      "document": "DCe",
-      "uf": "MS",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "DCe:MT",
-      "document": "DCe",
-      "uf": "MT",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "DCe:PA",
-      "document": "DCe",
-      "uf": "PA",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "DCe:PB",
-      "document": "DCe",
-      "uf": "PB",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "DCe:PE",
-      "document": "DCe",
-      "uf": "PE",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "DCe:PI",
-      "document": "DCe",
-      "uf": "PI",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "DCe:PR",
-      "document": "DCe",
-      "uf": "PR",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "DCe:RJ",
-      "document": "DCe",
-      "uf": "RJ",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "DCe:RN",
-      "document": "DCe",
-      "uf": "RN",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "DCe:RO",
-      "document": "DCe",
-      "uf": "RO",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "DCe:RR",
-      "document": "DCe",
-      "uf": "RR",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "DCe:RS",
-      "document": "DCe",
-      "uf": "RS",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "DCe:SC",
-      "document": "DCe",
-      "uf": "SC",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "DCe:SE",
-      "document": "DCe",
-      "uf": "SE",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "DCe:SP",
-      "document": "DCe",
-      "uf": "SP",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
-    },
-    {
-      "id": "DCe:TO",
-      "document": "DCe",
-      "uf": "TO",
-      "authorizer": "SVRS",
-      "environment": "production",
-      "state": "OPERATIONAL",
-      "cStat": 107,
-      "xMotivo": null,
-      "latencyMs": 871,
-      "source": "availability",
-      "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "CTe:AC",
@@ -1523,10 +767,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 139,
+      "latencyMs": 208,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "CTe:AL",
@@ -1537,10 +781,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 139,
+      "latencyMs": 208,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "CTe:AM",
@@ -1551,10 +795,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 139,
+      "latencyMs": 208,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "CTe:AP",
@@ -1565,10 +809,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 139,
+      "latencyMs": 208,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "CTe:BA",
@@ -1579,10 +823,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 139,
+      "latencyMs": 208,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "CTe:CE",
@@ -1593,10 +837,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 139,
+      "latencyMs": 208,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "CTe:DF",
@@ -1607,10 +851,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 139,
+      "latencyMs": 208,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "CTe:ES",
@@ -1621,10 +865,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 139,
+      "latencyMs": 208,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "CTe:GO",
@@ -1635,10 +879,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 139,
+      "latencyMs": 208,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "CTe:MA",
@@ -1649,10 +893,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 139,
+      "latencyMs": 208,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "CTe:MG",
@@ -1663,10 +907,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 139,
+      "latencyMs": 208,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "CTe:MS",
@@ -1677,10 +921,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 139,
+      "latencyMs": 208,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "CTe:MT",
@@ -1691,10 +935,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 139,
+      "latencyMs": 208,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "CTe:PA",
@@ -1705,10 +949,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 139,
+      "latencyMs": 208,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "CTe:PB",
@@ -1719,10 +963,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 139,
+      "latencyMs": 208,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "CTe:PE",
@@ -1733,10 +977,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 139,
+      "latencyMs": 208,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "CTe:PI",
@@ -1747,10 +991,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 139,
+      "latencyMs": 208,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "CTe:PR",
@@ -1761,10 +1005,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 139,
+      "latencyMs": 208,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "CTe:RJ",
@@ -1775,10 +1019,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 139,
+      "latencyMs": 208,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "CTe:RN",
@@ -1789,10 +1033,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 139,
+      "latencyMs": 208,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "CTe:RO",
@@ -1803,10 +1047,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 139,
+      "latencyMs": 208,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "CTe:RR",
@@ -1817,10 +1061,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 139,
+      "latencyMs": 208,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "CTe:RS",
@@ -1831,10 +1075,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 139,
+      "latencyMs": 208,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "CTe:SC",
@@ -1845,10 +1089,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 139,
+      "latencyMs": 208,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "CTe:SE",
@@ -1859,10 +1103,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 139,
+      "latencyMs": 208,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "CTe:SP",
@@ -1873,10 +1117,10 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 139,
+      "latencyMs": 208,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     },
     {
       "id": "CTe:TO",
@@ -1887,10 +1131,766 @@
       "state": "OPERATIONAL",
       "cStat": 107,
       "xMotivo": null,
-      "latencyMs": 139,
+      "latencyMs": 208,
       "source": "integranotas",
       "error": null,
-      "checkedAt": "2026-08-01T13:59:19.379Z"
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "MDFe:AC",
+      "document": "MDFe",
+      "uf": "AC",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 207,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "MDFe:AL",
+      "document": "MDFe",
+      "uf": "AL",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 207,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "MDFe:AM",
+      "document": "MDFe",
+      "uf": "AM",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 207,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "MDFe:AP",
+      "document": "MDFe",
+      "uf": "AP",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 207,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "MDFe:BA",
+      "document": "MDFe",
+      "uf": "BA",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 207,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "MDFe:CE",
+      "document": "MDFe",
+      "uf": "CE",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 207,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "MDFe:DF",
+      "document": "MDFe",
+      "uf": "DF",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 207,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "MDFe:ES",
+      "document": "MDFe",
+      "uf": "ES",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 207,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "MDFe:GO",
+      "document": "MDFe",
+      "uf": "GO",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 207,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "MDFe:MA",
+      "document": "MDFe",
+      "uf": "MA",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 207,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "MDFe:MG",
+      "document": "MDFe",
+      "uf": "MG",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 207,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "MDFe:MS",
+      "document": "MDFe",
+      "uf": "MS",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 207,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "MDFe:MT",
+      "document": "MDFe",
+      "uf": "MT",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 207,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "MDFe:PA",
+      "document": "MDFe",
+      "uf": "PA",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 207,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "MDFe:PB",
+      "document": "MDFe",
+      "uf": "PB",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 207,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "MDFe:PE",
+      "document": "MDFe",
+      "uf": "PE",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 207,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "MDFe:PI",
+      "document": "MDFe",
+      "uf": "PI",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 207,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "MDFe:PR",
+      "document": "MDFe",
+      "uf": "PR",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 207,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "MDFe:RJ",
+      "document": "MDFe",
+      "uf": "RJ",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 207,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "MDFe:RN",
+      "document": "MDFe",
+      "uf": "RN",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 207,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "MDFe:RO",
+      "document": "MDFe",
+      "uf": "RO",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 207,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "MDFe:RR",
+      "document": "MDFe",
+      "uf": "RR",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 207,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "MDFe:RS",
+      "document": "MDFe",
+      "uf": "RS",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 207,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "MDFe:SC",
+      "document": "MDFe",
+      "uf": "SC",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 207,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "MDFe:SE",
+      "document": "MDFe",
+      "uf": "SE",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 207,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "MDFe:SP",
+      "document": "MDFe",
+      "uf": "SP",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 207,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "MDFe:TO",
+      "document": "MDFe",
+      "uf": "TO",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 207,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "DCe:AC",
+      "document": "DCe",
+      "uf": "AC",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 202,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "DCe:AL",
+      "document": "DCe",
+      "uf": "AL",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 202,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "DCe:AM",
+      "document": "DCe",
+      "uf": "AM",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 202,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "DCe:AP",
+      "document": "DCe",
+      "uf": "AP",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 202,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "DCe:BA",
+      "document": "DCe",
+      "uf": "BA",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 202,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "DCe:CE",
+      "document": "DCe",
+      "uf": "CE",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 202,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "DCe:DF",
+      "document": "DCe",
+      "uf": "DF",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 202,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "DCe:ES",
+      "document": "DCe",
+      "uf": "ES",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 202,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "DCe:GO",
+      "document": "DCe",
+      "uf": "GO",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 202,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "DCe:MA",
+      "document": "DCe",
+      "uf": "MA",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 202,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "DCe:MG",
+      "document": "DCe",
+      "uf": "MG",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 202,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "DCe:MS",
+      "document": "DCe",
+      "uf": "MS",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 202,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "DCe:MT",
+      "document": "DCe",
+      "uf": "MT",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 202,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "DCe:PA",
+      "document": "DCe",
+      "uf": "PA",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 202,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "DCe:PB",
+      "document": "DCe",
+      "uf": "PB",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 202,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "DCe:PE",
+      "document": "DCe",
+      "uf": "PE",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 202,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "DCe:PI",
+      "document": "DCe",
+      "uf": "PI",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 202,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "DCe:PR",
+      "document": "DCe",
+      "uf": "PR",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 202,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "DCe:RJ",
+      "document": "DCe",
+      "uf": "RJ",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 202,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "DCe:RN",
+      "document": "DCe",
+      "uf": "RN",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 202,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "DCe:RO",
+      "document": "DCe",
+      "uf": "RO",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 202,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "DCe:RR",
+      "document": "DCe",
+      "uf": "RR",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 202,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "DCe:RS",
+      "document": "DCe",
+      "uf": "RS",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 202,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "DCe:SC",
+      "document": "DCe",
+      "uf": "SC",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 202,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "DCe:SE",
+      "document": "DCe",
+      "uf": "SE",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 202,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "DCe:SP",
+      "document": "DCe",
+      "uf": "SP",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 202,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
+    },
+    {
+      "id": "DCe:TO",
+      "document": "DCe",
+      "uf": "TO",
+      "authorizer": "SVRS",
+      "environment": "production",
+      "state": "OPERATIONAL",
+      "cStat": 107,
+      "xMotivo": null,
+      "latencyMs": 202,
+      "source": "integranotas",
+      "error": null,
+      "checkedAt": "2026-08-01T15:30:26.036Z"
     }
   ]
 }
