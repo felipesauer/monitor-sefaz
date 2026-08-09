@@ -1,11 +1,11 @@
 {
   "environment": "production",
-  "generatedAt": "2026-08-09T17:50:07.606Z",
+  "generatedAt": "2026-08-09T19:05:06.963Z",
   "total": 135,
   "operational": 135,
   "failing": 0,
   "availability": 100,
-  "avgLatencyMs": 1481,
+  "avgLatencyMs": 257,
   "byDocument": [
     {
       "key": "CTe",
@@ -116,18 +116,18 @@
     {
       "source": "svrs",
       "official": true,
-      "collected": 27,
+      "collected": 112,
       "expected": 135,
-      "coverage": 0.2,
-      "degraded": true
+      "coverage": 0.83,
+      "degraded": false
     },
     {
       "source": "availability",
       "official": true,
-      "collected": 135,
+      "collected": 0,
       "expected": 135,
-      "coverage": 1,
-      "degraded": false
+      "coverage": 0,
+      "degraded": true
     },
     {
       "source": "integranotas",
