@@ -1,16 +1,16 @@
 {
   "environment": "production",
-  "generatedAt": "2026-08-10T02:37:13.673Z",
-  "total": 112,
-  "operational": 112,
+  "generatedAt": "2026-08-10T04:57:57.944Z",
+  "total": 135,
+  "operational": 135,
   "failing": 0,
   "availability": 100,
-  "avgLatencyMs": 0,
+  "avgLatencyMs": 295,
   "byDocument": [
     {
       "key": "CTe",
-      "total": 21,
-      "operational": 21,
+      "total": 27,
+      "operational": 27,
       "availability": 100
     },
     {
@@ -27,22 +27,82 @@
     },
     {
       "key": "NFCe",
-      "total": 20,
-      "operational": 20,
+      "total": 27,
+      "operational": 27,
       "availability": 100
     },
     {
       "key": "NFe",
-      "total": 17,
-      "operational": 17,
+      "total": 27,
+      "operational": 27,
       "availability": 100
     }
   ],
   "byAuthorizer": [
     {
-      "key": "RS",
+      "key": "AM",
       "total": 2,
       "operational": 2,
+      "availability": 100
+    },
+    {
+      "key": "BA",
+      "total": 1,
+      "operational": 1,
+      "availability": 100
+    },
+    {
+      "key": "GO",
+      "total": 2,
+      "operational": 2,
+      "availability": 100
+    },
+    {
+      "key": "MG",
+      "total": 3,
+      "operational": 3,
+      "availability": 100
+    },
+    {
+      "key": "MS",
+      "total": 3,
+      "operational": 3,
+      "availability": 100
+    },
+    {
+      "key": "MT",
+      "total": 3,
+      "operational": 3,
+      "availability": 100
+    },
+    {
+      "key": "PE",
+      "total": 1,
+      "operational": 1,
+      "availability": 100
+    },
+    {
+      "key": "PR",
+      "total": 3,
+      "operational": 3,
+      "availability": 100
+    },
+    {
+      "key": "RS",
+      "total": 3,
+      "operational": 3,
+      "availability": 100
+    },
+    {
+      "key": "SP",
+      "total": 3,
+      "operational": 3,
+      "availability": 100
+    },
+    {
+      "key": "SVAN",
+      "total": 1,
+      "operational": 1,
       "availability": 100
     },
     {
@@ -56,10 +116,10 @@
     {
       "source": "svrs",
       "official": true,
-      "collected": 112,
+      "collected": 0,
       "expected": 135,
-      "coverage": 0.83,
-      "degraded": false
+      "coverage": 0,
+      "degraded": true
     },
     {
       "source": "availability",
@@ -72,10 +132,10 @@
     {
       "source": "integranotas",
       "official": false,
-      "collected": 0,
+      "collected": 135,
       "expected": 135,
-      "coverage": 0,
-      "degraded": true
+      "coverage": 1,
+      "degraded": false
     }
   ]
 }
