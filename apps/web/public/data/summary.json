@@ -1,11 +1,11 @@
 {
   "environment": "production",
-  "generatedAt": "2026-08-11T12:00:11.296Z",
+  "generatedAt": "2026-08-11T13:46:08.537Z",
   "total": 135,
   "operational": 135,
   "failing": 0,
   "availability": 100,
-  "avgLatencyMs": 1332,
+  "avgLatencyMs": 270,
   "byDocument": [
     {
       "key": "CTe",
@@ -124,10 +124,10 @@
     {
       "source": "availability",
       "official": true,
-      "collected": 135,
+      "collected": 0,
       "expected": 135,
-      "coverage": 1,
-      "degraded": false
+      "coverage": 0,
+      "degraded": true
     },
     {
       "source": "integranotas",
