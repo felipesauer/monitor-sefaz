@@ -1,11 +1,11 @@
 {
   "environment": "production",
-  "generatedAt": "2026-08-29T18:36:11.611Z",
+  "generatedAt": "2026-08-29T21:47:23.075Z",
   "total": 135,
-  "operational": 134,
-  "failing": 1,
-  "availability": 99.3,
-  "avgLatencyMs": 331,
+  "operational": 107,
+  "failing": 28,
+  "availability": 79.3,
+  "avgLatencyMs": 276,
   "byDocument": [
     {
       "key": "CTe",
@@ -16,8 +16,8 @@
     {
       "key": "DCe",
       "total": 27,
-      "operational": 27,
-      "availability": 100
+      "operational": 0,
+      "availability": 0
     },
     {
       "key": "MDFe",
@@ -108,18 +108,18 @@
     {
       "key": "SVRS",
       "total": 110,
-      "operational": 110,
-      "availability": 100
+      "operational": 83,
+      "availability": 75.5
     }
   ],
   "sources": [
     {
       "source": "svrs",
       "official": true,
-      "collected": 112,
+      "collected": 0,
       "expected": 135,
-      "coverage": 0.83,
-      "degraded": false
+      "coverage": 0,
+      "degraded": true
     },
     {
       "source": "availability",
