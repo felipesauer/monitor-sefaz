@@ -1,11 +1,11 @@
 {
   "environment": "production",
-  "generatedAt": "2026-08-30T00:24:49.641Z",
+  "generatedAt": "2026-08-30T06:45:57.623Z",
   "total": 135,
-  "operational": 135,
-  "failing": 0,
-  "availability": 100,
-  "avgLatencyMs": 259,
+  "operational": 134,
+  "failing": 1,
+  "availability": 99.3,
+  "avgLatencyMs": 1769,
   "byDocument": [
     {
       "key": "CTe",
@@ -34,8 +34,8 @@
     {
       "key": "NFe",
       "total": 27,
-      "operational": 27,
-      "availability": 100
+      "operational": 26,
+      "availability": 96.3
     }
   ],
   "byAuthorizer": [
@@ -78,8 +78,8 @@
     {
       "key": "PE",
       "total": 1,
-      "operational": 1,
-      "availability": 100
+      "operational": 0,
+      "availability": 0
     },
     {
       "key": "PR",
@@ -124,10 +124,10 @@
     {
       "source": "availability",
       "official": true,
-      "collected": 0,
+      "collected": 135,
       "expected": 135,
-      "coverage": 0,
-      "degraded": true
+      "coverage": 1,
+      "degraded": false
     },
     {
       "source": "integranotas",
