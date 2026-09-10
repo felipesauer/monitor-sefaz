@@ -51,9 +51,9 @@ describe('postJson (entrega robusta)', () => {
 
   it('lança após as 2 tentativas falharem (HTTP 500)', async () => {
     const { fetch, calls } = recordingFetch([500, 500]);
-    await expect(
-      postJson('https://x', {}, { fetchImpl: fetch, sleep: noSleep })
-    ).rejects.toThrow(/HTTP 500/);
+    await expect(postJson('https://x', {}, { fetchImpl: fetch, sleep: noSleep })).rejects.toThrow(
+      /HTTP 500/
+    );
     expect(calls).toHaveLength(2);
   });
 

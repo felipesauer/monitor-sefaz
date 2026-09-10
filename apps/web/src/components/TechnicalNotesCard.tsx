@@ -60,10 +60,7 @@ export function TechnicalNotesCard({ notes, previewCount = 5 }: Props) {
 
       <ul className="flex flex-col gap-3 border-t px-4 py-4">
         {visible.map((note, i) => (
-          <li
-            key={`${note.firstSeenAt}|${note.title}|${i}`}
-            className="text-sm leading-relaxed"
-          >
+          <li key={`${note.firstSeenAt}|${note.title}|${i}`} className="text-sm leading-relaxed">
             {note.link ? (
               <a
                 href={note.link}

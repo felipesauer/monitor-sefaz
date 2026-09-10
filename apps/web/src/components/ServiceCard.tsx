@@ -63,15 +63,24 @@ export function ServiceCard({ service, spark = [], onSelect }: ServiceCardProps)
 
         <span
           className="flex shrink-0 items-center gap-1.5 rounded-full px-2 py-1 text-[11px] font-medium"
-          style={{ background: `color-mix(in srgb, ${meta.color} 14%, transparent)`, color: meta.color }}
+          style={{
+            background: `color-mix(in srgb, ${meta.color} 14%, transparent)`,
+            color: meta.color,
+          }}
         >
           {service.state === 'OPERATIONAL' && (
             <span className="relative flex h-2 w-2">
               <span
                 className="absolute inline-flex h-full w-full rounded-full opacity-75"
-                style={{ background: meta.color, animation: 'ping 1.5s cubic-bezier(0,0,0.2,1) infinite' }}
+                style={{
+                  background: meta.color,
+                  animation: 'ping 1.5s cubic-bezier(0,0,0.2,1) infinite',
+                }}
               />
-              <span className="relative inline-flex h-2 w-2 rounded-full" style={{ background: meta.color }} />
+              <span
+                className="relative inline-flex h-2 w-2 rounded-full"
+                style={{ background: meta.color }}
+              />
             </span>
           )}
           {meta.label}

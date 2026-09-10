@@ -18,10 +18,7 @@ describe('computeUptime', () => {
   });
 
   it('conta DOWN/ERROR como queda', () => {
-    const points = [
-      pt('2026-06-28T00:00:00Z', 'OPERATIONAL'),
-      pt('2026-06-28T03:00:00Z', 'DOWN'),
-    ];
+    const points = [pt('2026-06-28T00:00:00Z', 'OPERATIONAL'), pt('2026-06-28T03:00:00Z', 'DOWN')];
     expect(computeUptime(points, '24h').uptime).toBe(50);
   });
 

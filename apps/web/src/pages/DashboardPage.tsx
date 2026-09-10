@@ -78,9 +78,7 @@ export function DashboardPage() {
     );
   }, [docScoped, selectedUfs]);
 
-  const selectedLive = selected
-    ? (all.find((s) => s.id === selected.id) ?? selected)
-    : null;
+  const selectedLive = selected ? (all.find((s) => s.id === selected.id) ?? selected) : null;
 
   const toggleUf = (uf: string): void =>
     setSelectedUfs((prev) => {

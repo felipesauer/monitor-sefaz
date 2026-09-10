@@ -18,7 +18,11 @@ export function UptimeBar({ points }: UptimeBarProps) {
     );
   }
   return (
-    <div className="flex h-9 items-stretch gap-px" role="img" aria-label="Histórico de disponibilidade">
+    <div
+      className="flex h-9 items-stretch gap-px"
+      role="img"
+      aria-label="Histórico de disponibilidade"
+    >
       {points.map((point, index) => (
         <span
           key={`${point.timestamp}-${index}`}

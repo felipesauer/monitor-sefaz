@@ -99,10 +99,7 @@ export {
 } from './consensus/ConsensusCollector.js';
 
 // Notas Técnicas (lista de conteúdo do portal)
-export {
-  parseTechnicalNotes,
-  type TechnicalNote,
-} from './technical-notes/TechnicalNotesParser.js';
+export { parseTechnicalNotes, type TechnicalNote } from './technical-notes/TechnicalNotesParser.js';
 export {
   TechnicalNotesProvider,
   TECHNICAL_NOTES_URL,

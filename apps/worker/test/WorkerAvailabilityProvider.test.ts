@@ -87,7 +87,10 @@ describe('WorkerAvailabilityProvider — paridade com o caminho Node', () => {
     const bytes = Uint8Array.from(driftHtml, (c) => c.charCodeAt(0));
     globalThis.fetch = (async () => new Response(bytes, { status: 200 })) as typeof fetch;
 
-    const provider = new WorkerAvailabilityProvider(async () => {}, () => 0.5);
+    const provider = new WorkerAvailabilityProvider(
+      async () => {},
+      () => 0.5
+    );
     // Sem cabeçalho reconhecível em nenhuma tentativa → lança (fonte vazia).
     await expect(provider.fetch(DocumentType.NFe)).rejects.toThrow(/layout inesperado/);
   });

@@ -76,7 +76,10 @@ export function FilterBar({
       {open && (
         <div className="mt-4">
           <div className="mb-2 flex items-center justify-between">
-            <h2 className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--text-dim)' }}>
+            <h2
+              className="text-xs font-semibold uppercase tracking-wide"
+              style={{ color: 'var(--text-dim)' }}
+            >
               Filtrar por estado
             </h2>
             {selectedUfs.size > 0 && (
@@ -104,9 +107,7 @@ export function FilterBar({
                   className="rounded-md border px-2.5 py-1 font-mono text-xs font-medium transition-all"
                   style={{
                     borderColor: color,
-                    background: active
-                      ? color
-                      : `color-mix(in srgb, ${color} 12%, transparent)`,
+                    background: active ? color : `color-mix(in srgb, ${color} 12%, transparent)`,
                     color: active ? '#fff' : 'var(--text)',
                   }}
                 >

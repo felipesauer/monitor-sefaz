@@ -1,11 +1,6 @@
 import type { Redis } from 'ioredis';
 import type { EnvironmentValue, HistoryPointDTO, ServiceStatusDTO } from '@monitor-sefaz/contracts';
-import {
-  PERIOD_MS,
-  UPDATES_CHANNEL,
-  type HistoryPeriod,
-  type StatusStore,
-} from './StatusStore.js';
+import { PERIOD_MS, UPDATES_CHANNEL, type HistoryPeriod, type StatusStore } from './StatusStore.js';
 
 /**
  * Implementação de `StatusStore` sobre Redis.
@@ -85,6 +80,9 @@ export class RedisStatusStore implements StatusStore {
     if (changed.length === 0) {
       return;
     }
-    await this.redis.publish(UPDATES_CHANNEL, JSON.stringify({ environment: env, services: changed }));
+    await this.redis.publish(
+      UPDATES_CHANNEL,
+      JSON.stringify({ environment: env, services: changed })
+    );
   }
 }

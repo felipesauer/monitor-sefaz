@@ -13,8 +13,22 @@ const summary: SummaryDTO = {
   byDocument: [],
   byAuthorizer: [],
   sources: [
-    { source: 'svrs', official: true, collected: 112, expected: 135, coverage: 0.83, degraded: false },
-    { source: 'availability', official: true, collected: 0, expected: 135, coverage: 0, degraded: true },
+    {
+      source: 'svrs',
+      official: true,
+      collected: 112,
+      expected: 135,
+      coverage: 0.83,
+      degraded: false,
+    },
+    {
+      source: 'availability',
+      official: true,
+      collected: 0,
+      expected: 135,
+      coverage: 0,
+      degraded: true,
+    },
   ],
 };
 

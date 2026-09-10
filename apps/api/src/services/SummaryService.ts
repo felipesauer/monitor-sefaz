@@ -17,7 +17,11 @@ function availability(bucket: Bucket): number {
 
 /** Calcula o resumo agregado de disponibilidade a partir do snapshot. */
 export class SummaryService {
-  public build(env: EnvironmentValue, services: ServiceStatusDTO[], generatedAt: string): SummaryDTO {
+  public build(
+    env: EnvironmentValue,
+    services: ServiceStatusDTO[],
+    generatedAt: string
+  ): SummaryDTO {
     const total = services.length;
     const operational = services.filter((s) => isUp(s.state)).length;
     const failing = total - operational;

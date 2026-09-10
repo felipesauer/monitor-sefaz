@@ -1,0 +1,13 @@
+# Dados gerados pelo coletor: reescritos a cada rodada do GitHub Actions.
+# Formatá-los não traz benefício e cria conflito de rebase toda vez que uma
+# coleta acontece enquanto há trabalho em andamento.
+apps/web/public/data/
+
+# Fixtures: são cópias fiéis de respostas reais da SEFAZ. Reformatar
+# descaracterizaria justamente o que elas existem para reproduzir.
+packages/core/test/fixtures/
+
+node_modules/
+dist/
+coverage/
+pnpm-lock.yaml

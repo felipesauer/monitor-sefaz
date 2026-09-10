@@ -17,10 +17,8 @@ import { KNOWN_UNREACHABLE_SOURCES } from './driftCheck.js';
 export function previousFromHistory(
   history: HistoryFileDTO
 ): Pick<ServiceStatusDTO, 'id' | 'uf' | 'document' | 'state' | 'cStat' | 'source'>[] {
-  const prev: Pick<
-    ServiceStatusDTO,
-    'id' | 'uf' | 'document' | 'state' | 'cStat' | 'source'
-  >[] = [];
+  const prev: Pick<ServiceStatusDTO, 'id' | 'uf' | 'document' | 'state' | 'cStat' | 'source'>[] =
+    [];
   for (const [id, points] of Object.entries(history.series)) {
     const last = points[points.length - 1];
     if (!last) continue;

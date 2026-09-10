@@ -30,13 +30,11 @@ function buildChecker(client: SoapClient): StatusChecker {
 describe('StatusChecker', () => {
   it('retorna Operational com latência medida quando cStat é 107', async () => {
     const client: SoapClient = {
-      post: vi.fn(
-        async (): Promise<SoapResponse> => ({
-          status: 200,
-          body: loadFixture('nfe-107.xml'),
-          latencyMs: 42,
-        })
-      ),
+      post: vi.fn(async (): Promise<SoapResponse> => ({
+        status: 200,
+        body: loadFixture('nfe-107.xml'),
+        latencyMs: 42,
+      })),
     };
     const result = await buildChecker(client).check(target);
 
@@ -78,13 +76,9 @@ describe('StatusChecker', () => {
 
   it('retorna Error quando o documento não tem builder/parser registrado', async () => {
     const client: SoapClient = { post: vi.fn() };
-    const checker = new StatusChecker(
-      new Map(),
-      new Map(),
-      client,
-      new StatusClassifier(),
-      { now: () => 0 }
-    );
+    const checker = new StatusChecker(new Map(), new Map(), client, new StatusClassifier(), {
+      now: () => 0,
+    });
     const result = await checker.check(target);
 
     expect(result.state).toBe(ServiceState.Error);

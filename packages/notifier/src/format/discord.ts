@@ -15,8 +15,7 @@ export interface DiscordPayload {
 /** Formata um evento como embed do Discord (função pura). */
 export function toDiscordPayload(event: NotificationEventDTO): DiscordPayload {
   const label = labelFor(event.type);
-  const footer =
-    event.source !== undefined ? { text: `fonte: ${event.source}` } : undefined;
+  const footer = event.source !== undefined ? { text: `fonte: ${event.source}` } : undefined;
   return {
     embeds: [
       {

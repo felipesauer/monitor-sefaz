@@ -26,7 +26,9 @@ function buildPaths(values: number[]): { line: string; area: string } {
     return [x, y] as const;
   });
 
-  const line = points.map(([x, y], i) => `${i === 0 ? 'M' : 'L'}${x.toFixed(2)} ${y.toFixed(2)}`).join(' ');
+  const line = points
+    .map(([x, y], i) => `${i === 0 ? 'M' : 'L'}${x.toFixed(2)} ${y.toFixed(2)}`)
+    .join(' ');
   const area = `${line} L${W} ${H} L0 ${H} Z`;
   return { line, area };
 }

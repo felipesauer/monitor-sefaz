@@ -2,11 +2,7 @@ import { describe, it, expect } from 'vitest';
 import type { SourceHealth } from '@monitor-sefaz/core';
 import { evaluateDrift } from '../src/driftCheck.js';
 
-const src = (
-  source: string,
-  official: boolean,
-  degraded: boolean
-): SourceHealth => ({
+const src = (source: string, official: boolean, degraded: boolean): SourceHealth => ({
   source,
   official,
   collected: degraded ? 3 : 130,
@@ -46,10 +42,7 @@ describe('evaluateDrift', () => {
   });
 
   it('terceiro (não-oficial) degradado NÃO conta como drift', () => {
-    const r = evaluateDrift([
-      src('svrs', true, false),
-      src('integranotas', false, true),
-    ]);
+    const r = evaluateDrift([src('svrs', true, false), src('integranotas', false, true)]);
     expect(r.drift).toBe(false);
     expect(r.degradedOfficial).toEqual([]);
   });

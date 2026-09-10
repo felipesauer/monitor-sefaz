@@ -2,7 +2,11 @@ import { describe, it, expect } from 'vitest';
 import type { HistoryPointDTO, ServiceStateValue } from '@monitor-sefaz/contracts';
 import { UptimeCalculator } from '../../src/services/UptimeCalculator.js';
 
-function point(state: ServiceStateValue, latencyMs = 100, ts = '2026-06-02T11:00:00.000Z'): HistoryPointDTO {
+function point(
+  state: ServiceStateValue,
+  latencyMs = 100,
+  ts = '2026-06-02T11:00:00.000Z'
+): HistoryPointDTO {
   return { timestamp: ts, state, cStat: state === 'OPERATIONAL' ? 107 : 109, latencyMs };
 }
 
@@ -45,16 +49,16 @@ describe('UptimeCalculator', () => {
     });
 
     it('mantém incidente aberto (endedAt nulo) quando ainda não recuperou', () => {
-      const incidents = calc.deriveIncidents('NFe:SP', [
-        point('OPERATIONAL', 1),
-        point('DOWN', 0),
-      ]);
+      const incidents = calc.deriveIncidents('NFe:SP', [point('OPERATIONAL', 1), point('DOWN', 0)]);
       expect(incidents).toHaveLength(1);
       expect(incidents[0]?.endedAt).toBeNull();
     });
 
     it('não gera incidente quando sempre operacional', () => {
-      const incidents = calc.deriveIncidents('NFe:SP', [point('OPERATIONAL'), point('OPERATIONAL')]);
+      const incidents = calc.deriveIncidents('NFe:SP', [
+        point('OPERATIONAL'),
+        point('OPERATIONAL'),
+      ]);
       expect(incidents).toHaveLength(0);
     });
   });

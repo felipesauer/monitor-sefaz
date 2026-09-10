@@ -68,11 +68,7 @@ export class AxiosSoapClient implements SoapClient {
     });
   }
 
-  public async post(
-    url: string,
-    body: string,
-    options: SoapRequestOptions
-  ): Promise<SoapResponse> {
+  public async post(url: string, body: string, options: SoapRequestOptions): Promise<SoapResponse> {
     const start = this.now();
     const response = await this.http.post(url, body, { timeout: options.timeoutMs });
     const latencyMs = this.now() - start;
