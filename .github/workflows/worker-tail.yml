@@ -1,16 +1,19 @@
-name: Diagnóstico do Worker (tail)
+name: Diagnóstico do Worker
 
-# Uso pontual: captura os logs do Worker por ~6 minutos, tempo suficiente para
-# pegar ao menos um disparo do cron de 5 min. Existe porque o token da conta
-# Cloudflare só está disponível como secret do repositório.
+# Uso pontual: inspeciona o estado do Worker na conta Cloudflare (schedules
+# registrados e chaves no KV). Existe porque o token só está disponível como
+# secret do repositório.
 on:
   workflow_dispatch: {}
 
 permissions:
   contents: read
 
+env:
+  ACCOUNT: 2b862d45490666c8ff3d5dc48ed3fcda
+
 jobs:
-  tail:
+  inspect:
     runs-on: ubuntu-latest
     if: github.repository == 'felipesauer/monitor-sefaz'
     steps:
@@ -22,10 +25,27 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
 
-      - name: Tail (6 min)
+      - name: Schedules registrados
+        env:
+          TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          echo "--- GET .../schedules"
+          curl -s -H "Authorization: Bearer $TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT/workers/scripts/monitor-sefaz/schedules" \
+            | python3 -m json.tool
+
+      - name: Chaves no KV
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        # timeout encerra o stream; || true para o passo não falhar por SIGTERM.
         run: |
-          timeout 360 pnpm --filter @monitor-sefaz/worker exec \
-            wrangler tail monitor-sefaz --format=pretty || true
+          pnpm --filter @monitor-sefaz/worker exec \
+            wrangler kv key list --namespace-id 9707ccc4e6894e0a8a29f9bc56e4d081 || true
+
+      - name: Subdomínio / rotas do Worker
+        env:
+          TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          echo "--- subdomain"
+          curl -s -H "Authorization: Bearer $TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT/workers/scripts/monitor-sefaz/subdomain" \
+            | python3 -m json.tool || true
