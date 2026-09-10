@@ -1,5 +1,5 @@
-import { Area, AreaChart, ResponsiveContainer } from 'recharts';
 import type { HistoryPointDTO, ServiceStatusDTO } from '@monitor-sefaz/contracts';
+import { Sparkline } from './Sparkline.js';
 import { STATE_META } from './serviceState.js';
 import { DOC_LABEL, UF_NAME, formatLatency } from '../lib/labels.js';
 
@@ -113,25 +113,11 @@ export function ServiceCard({ service, spark = [], onSelect }: ServiceCardProps)
 
       <div className="h-[44px] w-full">
         {sparkData.length >= 2 ? (
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={sparkData} margin={{ top: 4, right: 0, bottom: 0, left: 0 }}>
-              <defs>
-                <linearGradient id={`spark-${service.id}`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor={meta.color} stopOpacity={0.35} />
-                  <stop offset="100%" stopColor={meta.color} stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <Area
-                type="monotone"
-                dataKey="v"
-                stroke={meta.color}
-                strokeWidth={2}
-                fill={`url(#spark-${service.id})`}
-                isAnimationActive={false}
-                dot={false}
-              />
-            </AreaChart>
-          </ResponsiveContainer>
+          <Sparkline
+            values={sparkData.map((d) => d.v)}
+            color={meta.color}
+            gradientId={`spark-${service.id}`}
+          />
         ) : (
           <div
             className="flex h-full items-center justify-center text-[10px]"

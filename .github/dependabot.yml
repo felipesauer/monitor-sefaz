@@ -1,0 +1,73 @@
+version: 2
+
+# Sem isto, nada avisa quando uma dependência ganha correção de segurança: a
+# auditoria acusava 1 crítica e 35 altas acumuladas silenciosamente.
+#
+# As atualizações vêm AGRUPADAS de propósito. Num monorepo com 9 workspaces,
+# um PR por pacote geraria dezenas de PRs por semana e o ruído faria o
+# mantenedor ignorar todos — inclusive os de segurança. Agrupamos por natureza
+# do risco: patch/minor entram juntas (baixo risco, merge quase automático) e
+# cada major vem sozinha, para ser lida com atenção.
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '09:00'
+      timezone: America/Sao_Paulo
+    open-pull-requests-limit: 5
+    versioning-strategy: increase
+    commit-message:
+      prefix: chore
+      include: scope
+    labels:
+      - dependencies
+    groups:
+      # Ferramental de desenvolvimento: não vai para produção, agrupar é seguro.
+      dev-tooling:
+        patterns:
+          - '@types/*'
+          - 'eslint*'
+          - 'typescript*'
+          - 'vitest'
+          - '@vitejs/*'
+          - 'vite'
+          - 'prettier'
+          - 'turbo'
+          - 'jsdom'
+          - '@testing-library/*'
+        update-types:
+          - minor
+          - patch
+      # Runtime: o que realmente roda no Worker, na API e no dashboard.
+      runtime:
+        patterns:
+          - '*'
+        exclude-patterns:
+          - '@types/*'
+          - 'eslint*'
+          - 'typescript*'
+          - 'vitest'
+          - '@vitejs/*'
+          - 'vite'
+          - 'prettier'
+          - 'turbo'
+          - 'jsdom'
+          - '@testing-library/*'
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: ci
+    labels:
+      - dependencies
+    groups:
+      actions:
+        patterns:
+          - '*'

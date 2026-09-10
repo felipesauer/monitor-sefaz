@@ -3,10 +3,76 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Monitor SEFAZ — Status em Tempo Real (NF-e, NFC-e, CT-e, MDF-e, DC-e)</title>
+    <meta
+      name="description"
+      content="A SEFAZ está fora do ar? Veja o status em tempo real dos webservices de NF-e, NFC-e, CT-e, MDF-e e DC-e nas 27 UFs. Monitor open-source, gratuito e sem necessidade de certificado digital."
+    />
+    <link rel="canonical" href="%SITE_URL%" />
+
+    <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
+    <link rel="apple-touch-icon" href="%BASE_URL%apple-touch-icon.png" />
+    <link rel="manifest" href="%BASE_URL%site.webmanifest" />
+    <meta name="theme-color" content="#0b1220" />
+
+    <!-- Open Graph / Twitter: sem isto, o link compartilhado no WhatsApp ou no
+         LinkedIn aparece como texto cru, sem título, resumo ou imagem. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Monitor SEFAZ" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:url" content="%SITE_URL%" />
+    <meta property="og:title" content="Monitor SEFAZ — a SEFAZ está fora do ar?" />
+    <meta
+      property="og:description"
+      content="Status em tempo real dos webservices da SEFAZ: NF-e, NFC-e, CT-e, MDF-e e DC-e nas 27 UFs. Open-source e sem certificado digital."
+    />
+    <meta property="og:image" content="%SITE_URL%og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Monitor SEFAZ: 135 serviços, 27 UFs, cadência de 5 minutos."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Monitor SEFAZ — a SEFAZ está fora do ar?" />
+    <meta
+      name="twitter:description"
+      content="Status em tempo real dos webservices da SEFAZ: NF-e, NFC-e, CT-e, MDF-e e DC-e nas 27 UFs."
+    />
+    <meta name="twitter:image" content="%SITE_URL%og-image.png" />
+
+    <!-- Dados estruturados: ajudam o buscador a entender que isto é uma
+         ferramenta de consulta, e não uma página institucional qualquer. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Monitor SEFAZ",
+        "url": "%SITE_URL%",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web",
+        "inLanguage": "pt-BR",
+        "description": "Monitor de disponibilidade dos webservices da SEFAZ para NF-e, NFC-e, CT-e, MDF-e e DC-e nas 27 UFs.",
+        "license": "https://opensource.org/licenses/MIT",
+        "isAccessibleForFree": true,
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "BRL" }
+      }
+    </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Conteúdo pré-render mínimo: a SPA o substitui no primeiro paint. Serve
+           para que um leitor sem JS (ou um crawler que não executa script) ainda
+           receba o essencial em vez de uma página em branco. -->
+      <noscript>
+        <h1>Monitor SEFAZ</h1>
+        <p>
+          Status dos webservices da SEFAZ (NF-e, NFC-e, CT-e, MDF-e e DC-e) nas 27 UFs. Este
+          painel precisa de JavaScript para exibir os dados ao vivo.
+        </p>
+      </noscript>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
