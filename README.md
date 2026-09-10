@@ -123,7 +123,9 @@ No modo self-host, a API expõe (base `/api/v1`):
 
 O Cloudflare Worker expõe um subconjunto ao vivo (`/summary`, `/health`, o
 snapshot completo e o histórico acumulado em `/history` e
-`/services/:id/history`).
+`/services/:id/history`). Também aceita `/collect`, que grava uma amostra sob
+demanda — o mesmo caminho do Cron Trigger, recusando chamadas mais frequentes
+que a própria cadência de coleta.
 
 ## Cadência da coleta
 
@@ -249,7 +251,7 @@ Comandos, a partir da raiz:
     pnpm typecheck    checagem de tipos
     pnpm lint         ESLint
 
-São **244 testes** (Vitest), com as respostas da SEFAZ mockadas por fixtures em
+São **250 testes** (Vitest), com as respostas da SEFAZ mockadas por fixtures em
 `packages/core/test` — os testes nunca dependem da rede. O CI roda lint, typecheck
 e testes em cada pull request; um workflow separado e não-bloqueante faz uma coleta
 ao vivo periódica e alerta se uma fonte oficial degradar, capturando o drift do
