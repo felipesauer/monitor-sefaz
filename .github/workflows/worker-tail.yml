@@ -1,0 +1,31 @@
+name: Diagnóstico do Worker (tail)
+
+# Uso pontual: captura os logs do Worker por ~6 minutos, tempo suficiente para
+# pegar ao menos um disparo do cron de 5 min. Existe porque o token da conta
+# Cloudflare só está disponível como secret do repositório.
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  tail:
+    runs-on: ubuntu-latest
+    if: github.repository == 'felipesauer/monitor-sefaz'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Tail (6 min)
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        # timeout encerra o stream; || true para o passo não falhar por SIGTERM.
+        run: |
+          timeout 360 pnpm --filter @monitor-sefaz/worker exec \
+            wrangler tail monitor-sefaz --format=pretty || true
