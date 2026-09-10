@@ -121,14 +121,37 @@ No modo self-host, a API expõe (base `/api/v1`):
 | GET | `/incidents` | Incidentes derivados da série |
 | GET | `/stream` | **SSE** — deltas de mudança de estado em tempo real |
 
-O Cloudflare Worker expõe um subconjunto ao vivo (`/summary`, `/health` e o
-snapshot completo).
+O Cloudflare Worker expõe um subconjunto ao vivo (`/summary`, `/health`, o
+snapshot completo e o histórico acumulado em `/history` e
+`/services/:id/history`).
+
+## Cadência da coleta
+
+O status exibido é sempre **ao vivo** — cada carregamento consulta as fontes na
+hora. O que precisa ser acumulado é o **histórico**, e ele vem de duas origens
+com resoluções bem diferentes:
+
+| Origem | Cadência | Retenção | Papel |
+|---|---|---|---|
+| **Cloudflare Worker** (Cron Trigger + KV) | **5 min** — 288 pontos/dia | 72h | Fonte primária do histórico |
+| **GitHub Actions** (JSONs versionados) | ~4h na prática | 7 dias | Rede de segurança, e o modo sem infra |
+
+O cron do GitHub Actions é declarado de hora em hora, mas é *best-effort*: na
+série real medimos gap mediano de **~4h** (p90 de 5h28). Com ~6 coletas por dia,
+uma barra de uptime de 24h era desenhada com 7 amostras e uma queda de poucas
+horas podia passar inteira entre duas coletas. O Cron Trigger do Worker resolve
+isso — a resolução passa a ser a do incidente, não a do agendador.
+
+O histórico do Worker é guardado num **formato compacto** (`packages/contracts`):
+o estado vira *run-length* (segmento novo só quando muda) e a latência é agregada
+por hora. Isso mantém 72h × 135 serviços em ~230 KB numa única chave de KV — 288
+escritas/dia, dentro do free tier — em vez dos megabytes que um ponto por
+checagem exigiria. A SPA expande de volta para pontos, na resolução que cada
+componente precisa.
 
 ## Uso
 
-A forma mais simples é acessar o site publicado. Os dados são atualizados de hora
-em hora por um GitHub Actions (a granularidade sub-horária não é honrada de forma
-confiável pelo agendador do GitHub).
+A forma mais simples é acessar o site publicado.
 
 Para rodar localmente é necessário Node 20+ e pnpm.
 
@@ -147,9 +170,17 @@ O mesmo motor de coleta alimenta três formas de rodar:
 **SPA estática (GitHub Pages).** Um GitHub Actions coleta e versiona os JSONs; a SPA
 apenas os lê. Não requer infraestrutura.
 
-**Cloudflare Worker.** O Worker faz a coleta ao vivo com CORS e a SPA o consome.
+**Cloudflare Worker.** O Worker faz a coleta ao vivo com CORS, e um Cron Trigger
+acumula o histórico de 5 em 5 minutos no Workers KV.
 
-    pnpm --filter @monitor-sefaz/worker deploy   # requer wrangler login
+    # 1. Crie o namespace do histórico e cole o id em apps/worker/wrangler.toml
+    pnpm --filter @monitor-sefaz/worker exec wrangler kv namespace create HISTORY
+
+    # 2. Deploy (requer wrangler login)
+    pnpm --filter @monitor-sefaz/worker deploy
+
+Sem o binding `HISTORY` o Worker continua funcionando, apenas sem acumular
+histórico: `/history` responde 501 e a SPA cai no JSON estático.
 
 **Self-host.** API Fastify com Redis, scheduler e SSE, servindo o dashboard. É o
 único modo com histórico persistido, tempo real e suporte ao modo SOAP+A1.
@@ -197,7 +228,7 @@ Comandos, a partir da raiz:
     pnpm typecheck    checagem de tipos
     pnpm lint         ESLint
 
-São **214 testes** (Vitest), com as respostas da SEFAZ mockadas por fixtures em
+São **237 testes** (Vitest), com as respostas da SEFAZ mockadas por fixtures em
 `packages/core/test` — os testes nunca dependem da rede. O CI roda lint, typecheck
 e testes em cada pull request; um workflow separado e não-bloqueante faz uma coleta
 ao vivo periódica e alerta se uma fonte oficial degradar, capturando o drift do
