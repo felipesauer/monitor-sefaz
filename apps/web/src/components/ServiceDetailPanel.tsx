@@ -1,10 +1,15 @@
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { X, Info } from 'lucide-react';
 import { DocumentType, type HistoryPeriod, type ServiceStatusDTO } from '@monitor-sefaz/contracts';
 import { useServiceHistory } from '../hooks/useStatus.js';
 import { StatusBadge } from './StatusBadge.js';
 import { UptimeBar } from './UptimeBar.js';
-import { LatencyChart } from './LatencyChart.js';
+// Único ponto do app que ainda usa Recharts (522 KB / 151 KB gzip). O painel
+// de detalhe só abre quando o usuário clica num serviço, então a biblioteca sai
+// do carregamento inicial e só é buscada nesse momento.
+const LatencyChart = lazy(() =>
+  import('./LatencyChart.js').then((m) => ({ default: m.LatencyChart }))
+);
 import { DOC_LABEL, DOC_DESCRIPTION, UF_NAME } from '../lib/labels.js';
 import { computeUptime, maxGapMs } from '../lib/uptime.js';
 
@@ -129,7 +134,13 @@ export function ServiceDetailPanel({ service, onClose }: ServiceDetailPanelProps
 
         <div>
           <h3 className="mb-2 text-sm font-semibold">Latência</h3>
-          <LatencyChart points={points} />
+          <Suspense
+            fallback={
+              <div className="h-40 w-full animate-pulse rounded" style={{ background: 'var(--surface-2)' }} />
+            }
+          >
+            <LatencyChart points={points} />
+          </Suspense>
         </div>
       </aside>
     </div>

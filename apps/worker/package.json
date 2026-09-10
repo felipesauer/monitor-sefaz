@@ -16,7 +16,7 @@
     "@monitor-sefaz/core": "workspace:*"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20241218.0",
-    "wrangler": "^3.99.0"
+    "@cloudflare/workers-types": "^5.20260910.1",
+    "wrangler": "^4.131.0"
   }
 }

@@ -228,7 +228,7 @@ Comandos, a partir da raiz:
     pnpm typecheck    checagem de tipos
     pnpm lint         ESLint
 
-São **237 testes** (Vitest), com as respostas da SEFAZ mockadas por fixtures em
+São **244 testes** (Vitest), com as respostas da SEFAZ mockadas por fixtures em
 `packages/core/test` — os testes nunca dependem da rede. O CI roda lint, typecheck
 e testes em cada pull request; um workflow separado e não-bloqueante faz uma coleta
 ao vivo periódica e alerta se uma fonte oficial degradar, capturando o drift do

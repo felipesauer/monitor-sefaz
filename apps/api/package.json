@@ -12,27 +12,27 @@
     "start": "tsx src/server.ts"
   },
   "dependencies": {
+    "@fastify/cors": "^11.3.0",
+    "@fastify/rate-limit": "^11.2.0",
+    "@fastify/static": "^10.1.3",
     "@monitor-sefaz/catalog": "workspace:*",
     "@monitor-sefaz/contracts": "workspace:*",
     "@monitor-sefaz/core": "workspace:*",
     "@monitor-sefaz/notifier": "workspace:*",
-    "@fastify/cors": "^10.0.1",
-    "@fastify/rate-limit": "^10.2.1",
-    "@fastify/static": "^8.0.3",
-    "axios": "^1.7.9",
+    "axios": "^1.20.0",
     "axios-cookiejar-support": "^5.0.5",
-    "cheerio": "^1.0.0",
-    "fast-xml-parser": "^4.5.1",
-    "fastify": "^5.2.0",
-    "ioredis": "^5.4.2",
+    "cheerio": "^1.2.0",
+    "fast-xml-parser": "^4.5.7",
+    "fastify": "^5.12.3",
+    "ioredis": "^5.11.1",
     "node-cron": "^3.0.3",
-    "tough-cookie": "^5.1.0",
-    "tsx": "^4.19.2",
-    "zod": "^3.24.1"
+    "tough-cookie": "^5.1.2",
+    "tsx": "^4.23.13",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@types/node": "^22.10.2",
+    "@types/node": "^22.20.2",
     "@types/node-cron": "^3.0.11",
-    "ioredis-mock": "^8.9.0"
+    "ioredis-mock": "^8.13.1"
   }
 }

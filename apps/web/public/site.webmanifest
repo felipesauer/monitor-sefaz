@@ -1,0 +1,15 @@
+{
+  "name": "Monitor SEFAZ",
+  "short_name": "Monitor SEFAZ",
+  "description": "Status dos webservices da SEFAZ (NF-e, NFC-e, CT-e, MDF-e, DC-e) nas 27 UFs.",
+  "lang": "pt-BR",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#0b1220",
+  "theme_color": "#0b1220",
+  "icons": [
+    { "src": "favicon.svg", "type": "image/svg+xml", "sizes": "any", "purpose": "any" },
+    { "src": "apple-touch-icon.png", "type": "image/png", "sizes": "180x180" }
+  ]
+}

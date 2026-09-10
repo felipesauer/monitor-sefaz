@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Monitor SEFAZ">
+  <rect width="64" height="64" rx="14" fill="#0b1220" />
+  <!-- Traço de heartbeat: a metáfora do monitor de disponibilidade. -->
+  <path
+    d="M6 34h11l6-15 9 30 7-19 5 9h14"
+    fill="none"
+    stroke="#22c07d"
+    stroke-width="5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>
