@@ -187,6 +187,34 @@ async function collectServices(): Promise<{ generatedAt: string; services: Servi
   return { generatedAt, services: collected.map((s) => toDTO(s, generatedAt)) };
 }
 
+/**
+ * Coleta uma rodada e a incorpora ao histórico em KV.
+ *
+ * Compartilhada pelo Cron Trigger e pela rota `/collect`, para que as duas
+ * exercitem exatamente o mesmo caminho — é o que torna a rota um teste honesto
+ * do que o cron faz, e um plano B se o agendador não disparar.
+ */
+async function collectIntoHistory(store: HistoryStore): Promise<number> {
+  const { services } = await collectServices();
+  const observations: HistoryObservation[] = services.map((s) => ({
+    id: s.id,
+    state: s.state,
+    cStat: s.cStat,
+    latencyMs: s.latencyMs,
+  }));
+  const history = await store.append(observations, Date.now());
+  return Object.keys(history.segments).length;
+}
+
+/**
+ * Intervalo mínimo entre gravações disparadas pela rota `/collect`.
+ *
+ * A rota é pública e cada chamada é uma escrita no KV (cota de 1.000/dia no
+ * free tier). Recusar o que chegar antes da própria cadência da coleta torna
+ * impossível esgotar a cota por ela, sem precisar de autenticação.
+ */
+const MIN_COLLECT_INTERVAL_MS = 4 * 60 * 1000;
+
 /** Rotas de histórico, servidas do KV (nunca disparam coleta). */
 async function handleHistory(pathname: string, url: URL, env: Env): Promise<Response | null> {
   if (!pathname.includes('/history')) return null;
@@ -230,6 +258,20 @@ export default {
     }
 
     try {
+      // Gravação sob demanda, com a mesma cadência do cron.
+      if (pathname.endsWith('/collect')) {
+        if (!env.HISTORY) {
+          return error('histórico indisponível: binding HISTORY não configurado', 501);
+        }
+        const store = new HistoryStore(env.HISTORY);
+        const current = await store.read(Date.now());
+        const sinceLast = Date.now() - Date.parse(current.updatedAt);
+        if (Object.keys(current.segments).length > 0 && sinceLast < MIN_COLLECT_INTERVAL_MS) {
+          return json({ skipped: true, sinceLastMs: sinceLast }, 0);
+        }
+        return json({ collected: true, series: await collectIntoHistory(store) }, 0);
+      }
+
       const fromHistory = await handleHistory(pathname, url, env);
       if (fromHistory) return fromHistory;
 
@@ -268,18 +310,8 @@ export default {
     const store = new HistoryStore(env.HISTORY);
     try {
       const started = Date.now();
-      const { services } = await collectServices();
-      const observations: HistoryObservation[] = services.map((s) => ({
-        id: s.id,
-        state: s.state,
-        cStat: s.cStat,
-        latencyMs: s.latencyMs,
-      }));
-      const history = await store.append(observations, Date.now());
-      console.log(
-        `Coleta agendada: ${observations.length} serviços em ${Date.now() - started}ms; ` +
-          `${Object.keys(history.segments).length} séries em KV.`
-      );
+      const series = await collectIntoHistory(store);
+      console.log(`Coleta agendada: ${series} séries em KV, em ${Date.now() - started}ms.`);
     } catch (err) {
       // Uma coleta que falha é um buraco na série, não um incidente: a
       // próxima rodada acontece em STEP_MS. Logamos e seguimos.
