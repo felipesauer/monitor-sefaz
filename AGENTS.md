@@ -1,4 +1,5 @@
 <!-- MNEMA:START -->
+
 # AGENTS.md
 
 Project: **monitor-sefaz** (`MONITOR`)
@@ -37,11 +38,11 @@ When a layer is available, prefer its MCP tools over the CLI mid-run, and prefer
 
 ## Recording what you learn
 
-**Use Mnema for this, not your own memory.** If your client has a built-in memory feature (a personal notes file, native recall), do **not** put durable facts about *this project* there: those stay on your machine, never reach a teammate, and leave no audit trail. Record them through the Mnema tools below — they are mirrored to `.md` in the repo and recorded in the hash-chained log, so the knowledge travels with the project and is provable. Your native memory is still fine for your own cross-project habits; project knowledge belongs in Mnema.
+**Use Mnema for this, not your own memory.** If your client has a built-in memory feature (a personal notes file, native recall), do **not** put durable facts about _this project_ there: those stay on your machine, never reach a teammate, and leave no audit trail. Record them through the Mnema tools below — they are mirrored to `.md` in the repo and recorded in the hash-chained log, so the knowledge travels with the project and is provable. Your native memory is still fine for your own cross-project habits; project knowledge belongs in Mnema.
 
 These are not optional housekeeping — they are how the next session (yours or a teammate’s) avoids relearning what you already know. Record as you work, not in a batch at the end. Concretely:
 
-- **Hit a non-obvious fact about *this* project** (a constraint, a convention, why something is the way it is)? Write a **memory** with `memory_record(slug, title, content, …)`. Upsert by slug — the latest content wins. Rule of thumb: if you would re-explain it to yourself next week, it is a memory.
+- **Hit a non-obvious fact about _this_ project** (a constraint, a convention, why something is the way it is)? Write a **memory** with `memory_record(slug, title, content, …)`. Upsert by slug — the latest content wins. Rule of thumb: if you would re-explain it to yourself next week, it is a memory.
 
 - **Worked out a repeatable procedure** (a sequence of steps you would follow again)? Write a **skill** with `skill_record(slug, name, description, content, …)`, and call `skill_use` each time you actually apply it so the useful ones rise. Use `mode='new_version'` for a disruptive rewrite; the default updates in place. An empty `skills/` after real work usually means this step was skipped — don’t.
 
