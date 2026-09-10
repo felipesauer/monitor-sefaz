@@ -249,35 +249,41 @@ export default {
   /**
    * Cron Trigger: coleta e acumula o histórico no KV.
    *
+   * A promise é aguardada AQUI, e não passada para `ctx.waitUntil`: no handler
+   * `scheduled` o runtime só garante vida ao Worker enquanto a promise
+   * RETORNADA pelo handler não resolve. Com waitUntil, o handler retornava na
+   * hora e a escrita no KV podia nunca acontecer.
+   *
    * É isto que dá memória ao Worker. Antes, o histórico vinha só do GitHub
    * Actions, cujo cron é best-effort e na prática entregava ~6 coletas/dia —
    * uma barra de uptime de 24h desenhada com 7 amostras, onde uma queda de
    * poucas horas podia passar inteira entre duas coletas. Na cadência de 5
    * minutos são 288 pontos/dia, e a resolução passa a ser a do incidente.
    */
-  async scheduled(_event: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
+  async scheduled(_event: ScheduledController, env: Env): Promise<void> {
     if (!env.HISTORY) {
       console.warn('Cron disparado sem o binding HISTORY; nada a acumular.');
       return;
     }
     const store = new HistoryStore(env.HISTORY);
-    ctx.waitUntil(
-      (async () => {
-        try {
-          const { services } = await collectServices();
-          const observations: HistoryObservation[] = services.map((s) => ({
-            id: s.id,
-            state: s.state,
-            cStat: s.cStat,
-            latencyMs: s.latencyMs,
-          }));
-          await store.append(observations, Date.now());
-        } catch (err) {
-          // Uma coleta que falha é um buraco na série, não um incidente: a
-          // próxima rodada acontece em STEP_MS. Logamos e seguimos.
-          console.error(`Coleta agendada falhou (retomando em ${STEP_MS / 60000} min):`, err);
-        }
-      })()
-    );
+    try {
+      const started = Date.now();
+      const { services } = await collectServices();
+      const observations: HistoryObservation[] = services.map((s) => ({
+        id: s.id,
+        state: s.state,
+        cStat: s.cStat,
+        latencyMs: s.latencyMs,
+      }));
+      const history = await store.append(observations, Date.now());
+      console.log(
+        `Coleta agendada: ${observations.length} serviços em ${Date.now() - started}ms; ` +
+          `${Object.keys(history.segments).length} séries em KV.`
+      );
+    } catch (err) {
+      // Uma coleta que falha é um buraco na série, não um incidente: a
+      // próxima rodada acontece em STEP_MS. Logamos e seguimos.
+      console.error(`Coleta agendada falhou (retomando em ${STEP_MS / 60000} min):`, err);
+    }
   },
 };
