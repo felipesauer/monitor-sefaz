@@ -41,7 +41,7 @@ const NFE_ENDPOINTS: DocumentEndpoints = {
     AM: 'https://homnfe.sefaz.am.gov.br/services2/services/NfeStatusServico2',
     BA: 'https://hnfe.sefaz.ba.gov.br/webservices/NfeStatusServico2/NfeStatusServico2.asmx',
     CE: 'https://nfeh.sefaz.ce.gov.br/nfe2/services/NFeStatusServico4',
-    GO: 'https://homologacao.nfe.sefaz.go.gov.br/nfe/services/NFeStatusServico4',
+    GO: 'https://homolog.sefaz.go.gov.br/nfe/services/NFeStatusServico4',
     MG: 'https://hnfe.fazenda.mg.gov.br/nfe2/services/NFeStatusServico4',
     MS: 'https://hom.nfe.sefaz.ms.gov.br/ws/NFeStatusServico4',
     MT: 'https://homologacao.sefaz.mt.gov.br/nfews/v2/services/Nfews',
@@ -78,7 +78,7 @@ const CTE_ENDPOINTS: DocumentEndpoints = {
   homologation: {
     MG: 'https://hcte.fazenda.mg.gov.br/cte/services/CTeStatusServicoV4',
     MS: 'https://homologacao.cte.ms.gov.br/ws/CTeStatusServicoV4',
-    MT: 'https://homologacao.cte.sefaz.mt.gov.br/ctews2/services/CTeStatusServicoV4',
+    MT: 'https://homologacao.sefaz.mt.gov.br/ctews2/services/CTeStatusServicoV4',
     PR: 'https://homologacao.cte.fazenda.pr.gov.br/cte4/CTeStatusServicoV4',
     RS: 'https://cte-homologacao.svrs.rs.gov.br/ws/CTeStatusServicoV4/CTeStatusServicoV4.asmx',
     SP: 'https://homologacao.nfe.fazenda.sp.gov.br/CTeWS/WS/CTeStatusServicoV4.asmx',
