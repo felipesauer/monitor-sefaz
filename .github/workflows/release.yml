@@ -57,10 +57,11 @@ jobs:
       - name: Criar PR de versão ou publicar
         uses: changesets/action@v2
         with:
-          version: pnpm changeset version
-          publish: pnpm changeset publish
-          commit: 'chore(release): versiona os pacotes'
-          title: 'chore(release): versiona os pacotes'
+          # A v2 da action renomeou estes inputs (version/publish/commit/title).
+          version-script: pnpm changeset version
+          publish-script: pnpm changeset publish
+          commit-message: 'chore(release): versiona os pacotes'
+          pr-title: 'chore(release): versiona os pacotes'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
