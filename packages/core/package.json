@@ -16,13 +16,13 @@
   },
   "dependencies": {
     "@monitor-sefaz/catalog": "workspace:*",
-    "axios": "^1.7.9",
+    "axios": "^1.20.0",
     "axios-cookiejar-support": "^5.0.5",
-    "cheerio": "^1.0.0",
-    "fast-xml-parser": "^4.5.1",
-    "tough-cookie": "^5.1.0"
+    "cheerio": "^1.2.0",
+    "fast-xml-parser": "^4.5.7",
+    "tough-cookie": "^5.1.2"
   },
   "devDependencies": {
-    "@types/node": "^22.10.2"
+    "@types/node": "^22.20.2"
   }
 }
