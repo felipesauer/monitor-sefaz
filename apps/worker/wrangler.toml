@@ -8,16 +8,28 @@ compatibility_flags = ["nodejs_compat"]
 #    nativo `deploy` que intercepta o script). Requer `wrangler login`.
 # A SPA aponta para a URL pública deste worker via VITE_API_BASE_URL.
 
-# Coleta agendada a cada 5 minutos: é o que dá HISTÓRICO ao Worker.
-# O cron do GitHub Actions é best-effort e entregava ~6 coletas/dia; aqui são
-# 288, e a barra de uptime passa a enxergar quedas curtas.
-[triggers]
-crons = ["*/5 * * * *"]
+# ─────────────────────────────────────────────────────────────────────────────
+# HISTÓRICO EM KV — desativado até o namespace existir.
+#
+# É o que dá memória ao Worker: um Cron Trigger de 5 minutos coleta e acumula
+# a série no KV (288 pontos/dia), em vez dos ~6/dia que o cron best-effort do
+# GitHub Actions entrega. O código já está pronto e testado; sem o binding, o
+# Worker segue stateless, `/history` responde 501 e a SPA usa o JSON estático.
+#
+# Para ativar, em duas etapas:
+#
+#   1. Crie o namespace e copie o id que ele imprime:
+#        pnpm --filter @monitor-sefaz/worker exec wrangler kv namespace create HISTORY
+#
+#   2. Descomente os dois blocos abaixo e cole o id em `id = "..."`.
+#
+# Custo: 288 escritas/dia contra o limite de 1.000/dia do free tier, e uma
+# única chave de ~230 KB (ver HistoryStore e o formato compacto em contracts).
+# ─────────────────────────────────────────────────────────────────────────────
 
-# Histórico compacto (uma única chave, ver HistoryStore). 288 escritas/dia,
-# dentro do free tier (1.000/dia).
-# Crie o namespace e cole o id abaixo:
-#   pnpm --filter @monitor-sefaz/worker exec wrangler kv namespace create HISTORY
-[[kv_namespaces]]
-binding = "HISTORY"
-id = "SUBSTITUA_PELO_ID_DO_NAMESPACE"
+# [triggers]
+# crons = ["*/5 * * * *"]
+
+# [[kv_namespaces]]
+# binding = "HISTORY"
+# id = "COLE_AQUI_O_ID_DO_NAMESPACE"

@@ -173,11 +173,14 @@ apenas os lê. Não requer infraestrutura.
 **Cloudflare Worker.** O Worker faz a coleta ao vivo com CORS, e um Cron Trigger
 acumula o histórico de 5 em 5 minutos no Workers KV.
 
-    # 1. Crie o namespace do histórico e cole o id em apps/worker/wrangler.toml
-    pnpm --filter @monitor-sefaz/worker exec wrangler kv namespace create HISTORY
-
-    # 2. Deploy (requer wrangler login)
+    # Deploy (requer wrangler login)
     pnpm --filter @monitor-sefaz/worker deploy
+
+O acúmulo em KV vem **desativado**, porque depende de um namespace que só existe
+na conta de quem faz o deploy. Para ligar, crie o namespace e descomente os dois
+blocos indicados em [`apps/worker/wrangler.toml`](apps/worker/wrangler.toml):
+
+    pnpm --filter @monitor-sefaz/worker exec wrangler kv namespace create HISTORY
 
 Sem o binding `HISTORY` o Worker continua funcionando, apenas sem acumular
 histórico: `/history` responde 501 e a SPA cai no JSON estático.
