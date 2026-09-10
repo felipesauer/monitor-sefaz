@@ -176,9 +176,8 @@ acumula o histórico de 5 em 5 minutos no Workers KV.
     # Deploy (requer wrangler login)
     pnpm --filter @monitor-sefaz/worker deploy
 
-O acúmulo em KV vem **desativado**, porque depende de um namespace que só existe
-na conta de quem faz o deploy. Para ligar, crie o namespace e descomente os dois
-blocos indicados em [`apps/worker/wrangler.toml`](apps/worker/wrangler.toml):
+O id do namespace de KV em [`apps/worker/wrangler.toml`](apps/worker/wrangler.toml)
+aponta para a conta do deploy oficial. Num fork, crie o seu e substitua:
 
     pnpm --filter @monitor-sefaz/worker exec wrangler kv namespace create HISTORY
 
