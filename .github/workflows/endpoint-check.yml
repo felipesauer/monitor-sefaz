@@ -1,0 +1,46 @@
+name: Sanidade dos endpoints (catálogo)
+
+# Verifica se os endpoints SOAP de packages/catalog ainda respondem no caminho
+# cadastrado. Existe porque esse pacote é PUBLICADO no npm: no modo padrão (sem
+# certificado) nada exercita essas URLs, então um webservice que muda de lugar
+# só apareceria para quem usa o pacote no modo SOAP — quando já é tarde.
+#
+# NON-BLOCKING, como o guard de drift: não roda no push, não bloqueia deploy nem
+# release. Só sinaliza para o mantenedor investigar.
+on:
+  schedule:
+    # Semanal (segunda, 07:41 UTC). Endpoint mudar de caminho é raro; o objetivo
+    # é detecção, não monitoramento.
+    - cron: '41 7 * * 1'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: endpoint-check
+  cancel-in-progress: true
+
+jobs:
+  endpoints:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Verificar endpoints
+        id: endpoints
+        continue-on-error: true
+        run: pnpm --filter @monitor-sefaz/collector endpoint-check
+
+      - name: Anotar quando houver endpoint inválido
+        if: steps.endpoints.outcome == 'failure'
+        run: |
+          echo "::warning title=Endpoint suspeito::Algum endpoint do catálogo respondeu 404/410 ou parou de resolver em DNS. Confirme no portal do autorizador e atualize packages/catalog/src/endpoints.ts (veja o log do passo anterior)."
+          # Run vermelho para dar visibilidade, sem afetar nenhum outro fluxo.
+          exit 1

@@ -86,11 +86,37 @@ Tudo é data-only em `@monitor-sefaz/catalog`:
 Os endpoints das SEFAZ mudam sem aviso; ao corrigir uma URL, confirme que o
 webservice responde e atualize os testes em `packages/catalog/test/`.
 
+Para conferir a lista inteira de uma vez:
+
+    pnpm --filter @monitor-sefaz/collector endpoint-check
+
+O check é raso de propósito — só verifica se há algo servindo naquele caminho,
+já que validar o serviço exigiria certificado A1. Ele distingue "o caminho
+mudou" (404/410 ou DNS que não resolve, e aí falha) de "não deu para saber"
+(timeout, ou TLS exigindo certificado de cliente, que não falha). Roda semanal
+no CI, sem bloquear nada.
+
+## Publicação no npm
+
+Os pacotes de `packages/` são publicados sob o escopo `@monitor-sefaz`. Se o
+seu PR mudar algum deles, gere um changeset:
+
+    pnpm changeset
+
+Escolha os pacotes, o tipo de bump e escreva o resumo pensando em quem
+**consome** o pacote. Detalhes em [.changeset/README.md](.changeset/README.md).
+
+Note que `main`, `types` e `exports` dos pacotes apontam para `src/` — é o que
+faz o monorepo funcionar sem build intermediário. O `publishConfig` os troca
+para `dist/` só no momento do publish; não mexa nesses campos sem entender essa
+distinção.
+
 ## Checklist do PR
 
 - [ ] `pnpm test`, `pnpm typecheck` e `pnpm lint` passam
 - [ ] Código formatado (`pnpm format`)
 - [ ] Testes cobrindo a mudança
+- [ ] Changeset (`pnpm changeset`), se mudou um pacote publicado
 - [ ] Documentação e README atualizados, se aplicável
 - [ ] Commits no padrão Conventional Commits
 

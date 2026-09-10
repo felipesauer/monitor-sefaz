@@ -220,6 +220,25 @@ Monorepo TypeScript (strict) gerenciado com pnpm e Turborepo.
 Os três caminhos (collector, worker e API) usam o **mesmo** motor de consenso e o
 **mesmo** piso de cobertura, para os números baterem entre as pontas.
 
+### Pacotes no npm
+
+Os quatro pacotes de `packages/` são publicados sob o escopo
+[`@monitor-sefaz`](https://www.npmjs.com/org/monitor-sefaz) e podem ser usados
+fora do projeto:
+
+| Pacote | Serve para |
+|---|---|
+| [`@monitor-sefaz/catalog`](packages/catalog) | Mapa UF → autorizador, endpoints dos webservices e tabela de cStat. Sem dependências. |
+| [`@monitor-sefaz/core`](packages/core) | Motor de coleta: consenso multi-fonte, parsers dos portais e consulta SOAP. |
+| [`@monitor-sefaz/contracts`](packages/contracts) | Schemas Zod e DTOs — úteis para validar as respostas da API pública. |
+| [`@monitor-sefaz/notifier`](packages/notifier) | Detecção de transições e canais de notificação. |
+
+    npm i @monitor-sefaz/catalog
+
+O versionamento usa [changesets](.changeset/README.md); a publicação é feita
+pelo workflow `release.yml`, com *provenance* via OIDC. Os apps não são
+publicados.
+
 Comandos, a partir da raiz:
 
     pnpm build        builda todos os pacotes e apps

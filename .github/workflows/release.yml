@@ -1,0 +1,69 @@
+name: Release (npm)
+
+# Publica os pacotes de packages/ no npm, sob o escopo @monitor-sefaz.
+#
+# Fluxo (changesets): um push na main com changesets pendentes faz este
+# workflow abrir/atualizar o PR "Version Packages" — que aplica os bumps de
+# versão e escreve os CHANGELOGs. Fazer merge DESSE PR dispara a publicação.
+# Nada é publicado direto de um push comum.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    # Forks não têm o NPM_TOKEN e não devem tentar publicar.
+    if: github.repository == 'felipesauer/monitor-sefaz'
+    permissions:
+      contents: write # criar o PR de versão e a tag
+      pull-requests: write
+      id-token: write # provenance (npm publish --provenance)
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # O changesets compara com o histórico para saber o que mudou.
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - run: pnpm install --frozen-lockfile
+
+      # Um pacote quebrado publicado é irreversível (o npm não permite
+      # republicar a mesma versão), então a verificação roda ANTES de publicar.
+      - name: Verificar
+        run: |
+          pnpm lint
+          pnpm typecheck
+          pnpm test
+
+      - name: Build dos pacotes publicáveis
+        # `files: ["dist", ...]` — sem este build o tarball sai vazio.
+        run: pnpm --filter "./packages/*" build
+
+      - name: Criar PR de versão ou publicar
+        uses: changesets/action@v1
+        with:
+          version: pnpm changeset version
+          publish: pnpm changeset publish
+          commit: 'chore(release): versiona os pacotes'
+          title: 'chore(release): versiona os pacotes'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # Vincula cada tarball a este workflow e a este commit, de forma
+          # verificável na página do pacote.
+          NPM_CONFIG_PROVENANCE: true
