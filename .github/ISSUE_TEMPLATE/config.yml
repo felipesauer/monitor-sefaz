@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Dúvida ou conversa
+    url: https://github.com/felipesauer/monitor-sefaz/discussions
+    about: Para perguntas e ideias em aberto, use as Discussions.
+  - name: Falha de segurança
+    url: https://github.com/felipesauer/monitor-sefaz/security/policy
+    about: Não abra issue pública — veja a política de segurança.

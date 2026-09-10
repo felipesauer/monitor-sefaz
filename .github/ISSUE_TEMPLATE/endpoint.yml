@@ -1,0 +1,47 @@
+name: Endpoint ou autorizador incorreto
+description: Uma URL de webservice mudou, ou uma UF está mapeada para o autorizador errado
+labels: [catalog]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Os endereços das SEFAZ mudam sem aviso, e o `@monitor-sefaz/catalog` é
+        publicado no npm — então esta correção ajuda mais gente do que parece.
+
+  - type: input
+    id: servico
+    attributes:
+      label: Documento e UF
+      placeholder: CTe / MT
+    validations:
+      required: true
+
+  - type: dropdown
+    id: ambiente
+    attributes:
+      label: Ambiente
+      options: [Produção, Homologação]
+    validations:
+      required: true
+
+  - type: input
+    id: atual
+    attributes:
+      label: Endereço no catálogo hoje
+    validations:
+      required: true
+
+  - type: input
+    id: correto
+    attributes:
+      label: Endereço correto
+    validations:
+      required: true
+
+  - type: input
+    id: fonte
+    attributes:
+      label: Fonte
+      description: Link do portal do autorizador ou do portal nacional que confirma.
+    validations:
+      required: true

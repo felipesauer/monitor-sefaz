@@ -10,6 +10,7 @@ desenvolvimento, os padrões do projeto e como estender o monitor.
   problema ou a sugestão. Para bugs, inclua passos para reproduzir.
 - Mudanças grandes: abra uma issue para discutir antes de investir tempo num PR.
 - Falhas de segurança: não abra issue pública — veja o [SECURITY.md](SECURITY.md).
+- Participar do projeto implica seguir o [Código de Conduta](CODE_OF_CONDUCT.md).
 
 ## Ambiente
 

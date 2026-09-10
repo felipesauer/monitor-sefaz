@@ -1,0 +1,23 @@
+name: Ideia ou melhoria
+description: Uma capacidade nova, ou algo que poderia funcionar melhor
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problema
+    attributes:
+      label: Que problema isto resolve
+      description: O problema, antes da solução — é o que permite avaliar alternativas.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposta
+    attributes:
+      label: O que você propõe
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternativas
+    attributes:
+      label: Alternativas consideradas

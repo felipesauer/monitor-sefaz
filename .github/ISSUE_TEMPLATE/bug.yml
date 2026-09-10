@@ -1,0 +1,54 @@
+name: Bug
+description: Algo não funciona como deveria
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Antes de abrir: se o problema é **um serviço da SEFAZ fora do ar**, isso
+        não é um bug do monitor — é o que ele existe para mostrar. Abra uma issue
+        quando o monitor exibir algo **diferente** do que a SEFAZ está reportando.
+
+  - type: textarea
+    id: o-que-acontece
+    attributes:
+      label: O que acontece
+      description: E o que você esperava que acontecesse.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproducao
+    attributes:
+      label: Como reproduzir
+      placeholder: |
+        1. Abrir o dashboard em ...
+        2. Filtrar por ...
+        3. O card mostra ...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: onde
+    attributes:
+      label: Onde
+      options:
+        - Site publicado (GitHub Pages)
+        - Self-host (API Fastify)
+        - Cloudflare Worker
+        - Um dos pacotes npm (@monitor-sefaz/*)
+        - Rodando localmente (pnpm dev)
+    validations:
+      required: true
+
+  - type: input
+    id: servico
+    attributes:
+      label: Serviço afetado
+      description: Documento e UF, se aplicável.
+      placeholder: NFe / SP
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Logs, prints ou qualquer outra pista
