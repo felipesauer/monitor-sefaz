@@ -1,5 +1,8 @@
 import {
+  compactHistorySchema,
+  expandAllSeries,
   historyResponseSchema,
+  LATENCY_BUCKET_MS,
   statusSnapshotSchema,
   summarySchema,
   type HistoryPeriod,
@@ -49,13 +52,16 @@ export class ApiDataSource implements DataSource {
   }
 
   /**
-   * A API/Worker não expõe todas as séries num único endpoint (seria caro). No
-   * uso padrão (GitHub Pages), o histórico vem do `HybridDataSource`, que delega
-   * isto à fonte estática. Aqui retornamos vazio — os cards apenas omitem o
-   * sparkline no modo self-host puro.
+   * Todas as séries de uma vez, para os sparklines dos cards.
+   *
+   * Vem do blob compacto do Worker (`/history`, acumulado no KV pelo cron).
+   * Expandimos na resolução GROSSA de 1h de propósito: são 135 séries, e na
+   * cadência real da coleta isso daria ~117 mil pontos só para desenhar
+   * sparklines de poucos pixels. O painel de detalhe pede a série fina à parte.
    */
   public async getHistorySeries(): Promise<HistorySeries> {
-    return {};
+    const history = compactHistorySchema.parse(await fetchJson(`${this.baseUrl}/api/v1/history`));
+    return expandAllSeries(history, { stepMs: LATENCY_BUCKET_MS });
   }
 
   /**

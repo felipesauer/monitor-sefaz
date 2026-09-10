@@ -8,11 +8,15 @@ import type {
 import type { DataSource, HistorySeries, StatusFilters } from './DataSource.js';
 
 /**
- * Combina duas fontes: status/summary vêm da fonte AO VIVO (Worker/API), e o
- * histórico vem da fonte ESTÁTICA (history.json acumulado pelo GitHub Actions).
+ * Combina duas fontes: a AO VIVO (Worker/API) e a ESTÁTICA (JSONs versionados
+ * pelo GitHub Actions), com a estática sempre como rede de segurança.
  *
- * Isso resolve o fato de o Worker ser stateless (cada request é um snapshot
- * novo, sem acúmulo) — o uptime ao longo do tempo só existe no JSON versionado.
+ * O histórico prefere a fonte ao vivo: desde que o Worker passou a acumular a
+ * série em KV (cron de 5 min), ela tem resolução muito melhor que o
+ * history.json do Actions, cujo cron best-effort entrega ~6 pontos/dia. Se o
+ * Worker não tiver o binding de KV, ou ainda não tiver janela acumulada, o
+ * estático assume — um monitor de disponibilidade não pode sair do ar junto
+ * com sua própria fonte.
  */
 export class HybridDataSource implements DataSource {
   constructor(
@@ -41,11 +45,25 @@ export class HybridDataSource implements DataSource {
     }
   }
 
-  public getHistory(id: string, period: HistoryPeriod): Promise<HistoryResponseDTO> {
+  public async getHistory(id: string, period: HistoryPeriod): Promise<HistoryResponseDTO> {
+    try {
+      const live = await this.live.getHistory(id, period);
+      if (live.points.length > 0) return live;
+    } catch (err) {
+      console.warn('Histórico ao vivo indisponível; usando o estático.', err);
+    }
     return this.history.getHistory(id, period);
   }
 
-  public getHistorySeries(): Promise<HistorySeries> {
+  public async getHistorySeries(): Promise<HistorySeries> {
+    try {
+      const live = await this.live.getHistorySeries();
+      // Um objeto vazio significa "ainda sem janela acumulada no KV" (ou um
+      // Worker sem o binding). Nesse caso o estático ainda é melhor que nada.
+      if (Object.keys(live).length > 0) return live;
+    } catch (err) {
+      console.warn('Séries ao vivo indisponíveis; usando o estático.', err);
+    }
     return this.history.getHistorySeries();
   }
 

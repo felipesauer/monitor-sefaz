@@ -6,7 +6,7 @@
   "scripts": {
     "typecheck": "tsc -b tsconfig.json",
     "lint": "eslint src",
-    "test": "vitest run --passWithNoTests",
+    "test": "vitest run",
     "dev": "wrangler dev",
     "deploy": "wrangler deploy"
   },

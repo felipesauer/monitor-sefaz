@@ -10,14 +10,26 @@ import {
 } from '@monitor-sefaz/core';
 import {
   averageLatency,
+  expandCompactHistory,
   fromEnvironment,
+  historyPeriodSchema,
   isUp,
+  PERIOD_MS,
+  type HistoryObservation,
+  type HistoryResponseDTO,
   type ServiceStatusDTO,
   type StatusSnapshotDTO,
   type SummaryDTO,
 } from '@monitor-sefaz/contracts';
 import { Catalog, Environment } from '@monitor-sefaz/catalog';
 import { WorkerAvailabilityProvider } from './WorkerAvailabilityProvider.js';
+import { HistoryStore, STEP_MS } from './HistoryStore.js';
+
+/** Bindings declarados no wrangler.toml. */
+export interface Env {
+  /** KV do histórico. Ausente em dev sem `--kv` → o Worker segue stateless. */
+  HISTORY?: KVNamespace;
+}
 
 /** Fetcher do IntegraNotas no runtime do Worker (fetch nativo + header XHR). */
 const integraNotasFetcher: IntegraNotasFetcher = async (url) => {
@@ -86,6 +98,13 @@ const CORS = {
 /** Cache curto na borda para não martelar a SEFAZ a cada request. */
 const CACHE_TTL_SECONDS = 60;
 
+/**
+ * Cache do histórico. Ele só muda quando o cron roda (5 em 5 min), então
+ * segurá-lo por 1 minuto na borda evita leituras repetidas do KV sem nunca
+ * servir algo mais velho que a própria cadência de coleta.
+ */
+const HISTORY_CACHE_TTL_SECONDS = 60;
+
 function toDTO(s: CollectedStatus, checkedAt: string): ServiceStatusDTO {
   return {
     id: `${s.document}:${s.uf}`,
@@ -138,53 +157,127 @@ function buildSummary(services: ServiceStatusDTO[], generatedAt: string): Summar
   };
 }
 
-function json(body: unknown): Response {
+function json(body: unknown, maxAge = CACHE_TTL_SECONDS): Response {
   return new Response(JSON.stringify(body), {
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
-      'Cache-Control': `public, max-age=${CACHE_TTL_SECONDS}`,
+      'Cache-Control': `public, max-age=${maxAge}`,
       ...CORS,
     },
   });
 }
 
+function error(message: string, status: number): Response {
+  return new Response(JSON.stringify({ error: message }), {
+    status,
+    headers: { 'Content-Type': 'application/json', ...CORS },
+  });
+}
+
+/** Coleta uma rodada completa, aplicando o piso de cobertura. */
+async function collectServices(): Promise<{ generatedAt: string; services: ServiceStatusDTO[] }> {
+  const generatedAt = new Date().toISOString();
+  const collected = await buildCollector().collect();
+
+  // Mesma guarda de piso do collector: coleta parcial não vira disponibilidade
+  // inflada servida como completa.
+  if (!new Catalog().meetsCoverageFloor(collected.length, Environment.Production)) {
+    throw new Error('coleta abaixo do piso de cobertura');
+  }
+  return { generatedAt, services: collected.map((s) => toDTO(s, generatedAt)) };
+}
+
+/** Rotas de histórico, servidas do KV (nunca disparam coleta). */
+async function handleHistory(pathname: string, url: URL, env: Env): Promise<Response | null> {
+  if (!pathname.includes('/history')) return null;
+  if (!env.HISTORY) {
+    return error('histórico indisponível: binding HISTORY não configurado', 501);
+  }
+  const store = new HistoryStore(env.HISTORY);
+  const history = await store.read(Date.now());
+
+  // /services/:id/history?period=24h — série de um serviço, resolução da coleta.
+  const single = /\/services\/([^/]+)\/history$/.exec(pathname);
+  if (single) {
+    const period = historyPeriodSchema.catch('24h').parse(url.searchParams.get('period'));
+    const id = decodeURIComponent(single[1]!);
+    const toMs = Date.parse(history.updatedAt);
+    const points = expandCompactHistory(history, id, {
+      fromMs: toMs - PERIOD_MS[period],
+      toMs,
+    });
+    const body: HistoryResponseDTO = { id, period, points };
+    return json(body, HISTORY_CACHE_TTL_SECONDS);
+  }
+
+  // /history — o blob compacto inteiro; a SPA expande o que precisar.
+  return json(history, HISTORY_CACHE_TTL_SECONDS);
+}
+
 export default {
-  async fetch(request: Request): Promise<Response> {
+  async fetch(request: Request, env: Env): Promise<Response> {
     if (request.method === 'OPTIONS') {
       return new Response(null, { headers: CORS });
     }
 
-    const { pathname } = new URL(request.url);
-    const collector = buildCollector();
+    const url = new URL(request.url);
+    const { pathname } = url;
+
+    // Antes de qualquer coleta: um health check que depende da SEFAZ responder
+    // não é health check. Estas rotas são baratas e sempre respondem.
+    if (pathname.endsWith('/health')) {
+      return json({ status: 'ok' });
+    }
 
     try {
-      const generatedAt = new Date().toISOString();
-      const collected = await collector.collect();
+      const fromHistory = await handleHistory(pathname, url, env);
+      if (fromHistory) return fromHistory;
 
-      // Mesma guarda de piso do collector: coleta parcial não vira disponibilidade
-      // inflada servida como completa — respondemos 502 (mesmo predicado e ratio).
-      if (!new Catalog().meetsCoverageFloor(collected.length, Environment.Production)) {
-        return new Response(
-          JSON.stringify({ error: 'coleta abaixo do piso de cobertura' }),
-          { status: 502, headers: { 'Content-Type': 'application/json', ...CORS } }
-        );
-      }
-
-      const services = collected.map((s) => toDTO(s, generatedAt));
+      const { generatedAt, services } = await collectServices();
 
       if (pathname.endsWith('/summary')) {
         return json(buildSummary(services, generatedAt));
       }
-      if (pathname.endsWith('/health')) {
-        return json({ status: 'ok' });
-      }
       const snapshot: StatusSnapshotDTO = { environment: 'production', generatedAt, services };
       return json(snapshot);
     } catch (err) {
-      return new Response(
-        JSON.stringify({ error: err instanceof Error ? err.message : 'erro' }),
-        { status: 502, headers: { 'Content-Type': 'application/json', ...CORS } }
-      );
+      const message = err instanceof Error ? err.message : 'erro';
+      return error(message, 502);
     }
+  },
+
+  /**
+   * Cron Trigger: coleta e acumula o histórico no KV.
+   *
+   * É isto que dá memória ao Worker. Antes, o histórico vinha só do GitHub
+   * Actions, cujo cron é best-effort e na prática entregava ~6 coletas/dia —
+   * uma barra de uptime de 24h desenhada com 7 amostras, onde uma queda de
+   * poucas horas podia passar inteira entre duas coletas. Na cadência de 5
+   * minutos são 288 pontos/dia, e a resolução passa a ser a do incidente.
+   */
+  async scheduled(_event: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
+    if (!env.HISTORY) {
+      console.warn('Cron disparado sem o binding HISTORY; nada a acumular.');
+      return;
+    }
+    const store = new HistoryStore(env.HISTORY);
+    ctx.waitUntil(
+      (async () => {
+        try {
+          const { services } = await collectServices();
+          const observations: HistoryObservation[] = services.map((s) => ({
+            id: s.id,
+            state: s.state,
+            cStat: s.cStat,
+            latencyMs: s.latencyMs,
+          }));
+          await store.append(observations, Date.now());
+        } catch (err) {
+          // Uma coleta que falha é um buraco na série, não um incidente: a
+          // próxima rodada acontece em STEP_MS. Logamos e seguimos.
+          console.error(`Coleta agendada falhou (retomando em ${STEP_MS / 60000} min):`, err);
+        }
+      })()
+    );
   },
 };
