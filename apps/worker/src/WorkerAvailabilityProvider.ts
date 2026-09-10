@@ -57,7 +57,9 @@ export class WorkerAvailabilityProvider {
             return rows;
           }
           lastError = new Error(
-            headerMatched ? 'resposta sem linhas de status' : 'layout inesperado: cabeçalho não reconhecido'
+            headerMatched
+              ? 'resposta sem linhas de status'
+              : 'layout inesperado: cabeçalho não reconhecido'
           );
         } catch (err) {
           lastError = err;

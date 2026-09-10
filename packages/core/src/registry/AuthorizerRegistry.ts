@@ -17,11 +17,7 @@ export interface AuthorizerRegistry {
 export class CatalogAuthorizerRegistry implements AuthorizerRegistry {
   constructor(private readonly catalog: Catalog = new Catalog()) {}
 
-  public resolve(
-    document: DocumentType,
-    uf: UF,
-    environment: Environment
-  ): ServiceTarget | null {
+  public resolve(document: DocumentType, uf: UF, environment: Environment): ServiceTarget | null {
     const entry = this.catalog.resolve(document, uf, environment);
     if (!entry) {
       return null;

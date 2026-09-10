@@ -287,11 +287,15 @@ async function main(): Promise<void> {
             JSON.stringify({ ...state, lastDigestDate: utcDate(now) }, null, 2)
           );
         } else {
-          console.warn('Digest não entregue a nenhum canal; não marcado como enviado (tentará de novo).');
+          console.warn(
+            'Digest não entregue a nenhum canal; não marcado como enviado (tentará de novo).'
+          );
         }
       }
     } catch (err) {
-      console.warn(`Notificação falhou (coleta preservada): ${err instanceof Error ? err.message : err}`);
+      console.warn(
+        `Notificação falhou (coleta preservada): ${err instanceof Error ? err.message : err}`
+      );
     }
   }
 }

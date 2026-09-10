@@ -30,12 +30,12 @@ Requer Node 20 ou superior e pnpm.
 2. Implemente a mudança com testes.
 3. Garanta que tudo passa:
 
-    ```bash
-    pnpm test
-    pnpm typecheck
-    pnpm lint
-    pnpm format        # aplica o Prettier
-    ```
+   ```bash
+   pnpm test
+   pnpm typecheck
+   pnpm lint
+   pnpm format        # aplica o Prettier
+   ```
 
 4. Faça commits no estilo
    [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`,
@@ -50,11 +50,11 @@ Requer Node 20 ou superior e pnpm.
   implementações.
 - Testes com Vitest, no formato:
 
-    ```ts
-    describe('Algo', () => {
-        it('faz tal coisa', () => {});
-    });
-    ```
+  ```ts
+  describe('Algo', () => {
+    it('faz tal coisa', () => {});
+  });
+  ```
 
 - Idioma: código, nomes, contratos e rotas em inglês; textos de interface e
   documentação em português.

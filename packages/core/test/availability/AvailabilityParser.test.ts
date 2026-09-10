@@ -31,11 +31,9 @@ describe('AvailabilityParser', () => {
     expect(sp?.state).toBe(ServiceState.Operational); // SP estava verde na captura
     // todo estado deve ser um ServiceState válido (não há nulos)
     for (const row of rows) {
-      expect([
-        ServiceState.Operational,
-        ServiceState.SlowDown,
-        ServiceState.Down,
-      ]).toContain(row.state);
+      expect([ServiceState.Operational, ServiceState.SlowDown, ServiceState.Down]).toContain(
+        row.state
+      );
     }
   });
 
@@ -46,11 +44,9 @@ describe('AvailabilityParser', () => {
     expect(rows.map((r) => r.authorizer)).toContain('SVRS');
     // Com o layout correto (coluna 2), todo estado é válido.
     for (const row of rows) {
-      expect([
-        ServiceState.Operational,
-        ServiceState.SlowDown,
-        ServiceState.Down,
-      ]).toContain(row.state);
+      expect([ServiceState.Operational, ServiceState.SlowDown, ServiceState.Down]).toContain(
+        row.state
+      );
     }
   });
 

@@ -44,7 +44,8 @@ describe('NFeStatusParser', () => {
   });
 
   it('lança MissingStatusNodeError quando falta o nó de retorno', () => {
-    const xml = '<?xml version="1.0"?><soap:Envelope xmlns:soap="x"><soap:Body></soap:Body></soap:Envelope>';
+    const xml =
+      '<?xml version="1.0"?><soap:Envelope xmlns:soap="x"><soap:Body></soap:Body></soap:Envelope>';
     expect(() => parser.parse(xml)).toThrow(MissingStatusNodeError);
   });
 });

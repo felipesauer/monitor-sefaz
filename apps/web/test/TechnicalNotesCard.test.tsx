@@ -22,7 +22,9 @@ describe('TechnicalNotesCard', () => {
   });
 
   it('nota com link vira âncora (target=_blank); sem link vira texto', () => {
-    render(<TechnicalNotesCard notes={[note('Com link', 'https://x/nt'), note('Sem link', null)]} />);
+    render(
+      <TechnicalNotesCard notes={[note('Com link', 'https://x/nt'), note('Sem link', null)]} />
+    );
     const anchor = screen.getByText('Com link').closest('a');
     expect(anchor).toHaveAttribute('href', 'https://x/nt');
     expect(anchor).toHaveAttribute('target', '_blank');

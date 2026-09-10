@@ -3,7 +3,10 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { DocumentType } from '@monitor-sefaz/catalog';
-import { IntegraNotasProvider, mapIntegraNotasState } from '../../src/integranotas/IntegraNotasProvider.js';
+import {
+  IntegraNotasProvider,
+  mapIntegraNotasState,
+} from '../../src/integranotas/IntegraNotasProvider.js';
 import { ServiceState } from '../../src/domain/types.js';
 
 const here = dirname(fileURLToPath(import.meta.url));

@@ -29,6 +29,9 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
 
+      - name: Formatação
+        run: pnpm format:check
+
       - name: Lint
         run: pnpm lint
 

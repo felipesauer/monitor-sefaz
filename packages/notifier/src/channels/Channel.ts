@@ -50,10 +50,7 @@ export async function postJson(
   let lastError: unknown;
   for (let attempt = 1; attempt <= 2; attempt += 1) {
     try {
-      const res = await withTimeout(
-        doFetch(url, { method: 'POST', headers, body }),
-        timeoutMs
-      );
+      const res = await withTimeout(doFetch(url, { method: 'POST', headers, body }), timeoutMs);
       if (res.ok) {
         return;
       }

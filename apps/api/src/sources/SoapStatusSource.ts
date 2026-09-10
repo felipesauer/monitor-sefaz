@@ -1,5 +1,9 @@
 import type { AuthorizerRegistry, BatchChecker } from '@monitor-sefaz/core';
-import { toEnvironment, type EnvironmentValue, type ServiceStatusDTO } from '@monitor-sefaz/contracts';
+import {
+  toEnvironment,
+  type EnvironmentValue,
+  type ServiceStatusDTO,
+} from '@monitor-sefaz/contracts';
 import { toServiceStatusDTO } from '../store/mappers.js';
 import type { StatusSource } from './StatusSource.js';
 

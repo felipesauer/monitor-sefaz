@@ -2,10 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import RedisMock from 'ioredis-mock';
 import type { Redis } from 'ioredis';
 import { UPDATES_CHANNEL } from '../../src/store/StatusStore.js';
-import {
-  StatusBroadcaster,
-  type UpdatePayload,
-} from '../../src/realtime/StatusBroadcaster.js';
+import { StatusBroadcaster, type UpdatePayload } from '../../src/realtime/StatusBroadcaster.js';
 
 describe('StatusBroadcaster', () => {
   let publisher: Redis;
@@ -57,8 +54,6 @@ describe('StatusBroadcaster', () => {
     await broadcaster.start();
     broadcaster.subscribe(() => {});
 
-    await expect(
-      publisher.publish(UPDATES_CHANNEL, 'not-json{')
-    ).resolves.toBeDefined();
+    await expect(publisher.publish(UPDATES_CHANNEL, 'not-json{')).resolves.toBeDefined();
   });
 });

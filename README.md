@@ -40,13 +40,13 @@ Os cinco documentos fiscais eletrônicos, nas 27 UFs — **135 serviços** no to
 
 Cada serviço é classificado em um de cinco estados:
 
-| Estado | Significado |
-|---|---|
-| **Operacional** | Serviço em operação (cStat 107). |
+| Estado           | Significado                                                         |
+| ---------------- | ------------------------------------------------------------------- |
+| **Operacional**  | Serviço em operação (cStat 107).                                    |
 | **Contingência** | Operando por ambiente de contingência (SVC) — ainda dá para emitir. |
-| **Instável** | Paralisação momentânea / lentidão (cStat 108). |
-| **Indisponível** | Paralisação sem previsão (cStat 109). |
-| **Sem dados** | Não foi possível ler o status naquele momento. |
+| **Instável**     | Paralisação momentânea / lentidão (cStat 108).                      |
+| **Indisponível** | Paralisação sem previsão (cStat 109).                               |
+| **Sem dados**    | Não foi possível ler o status naquele momento.                      |
 
 Também acompanha as **Notas Técnicas** publicadas no portal da NF-e, exibidas no
 dashboard.
@@ -82,13 +82,13 @@ notificação fica desligada** e o pipeline segue idêntico.
 
 Eventos:
 
-| Evento | Quando dispara |
-|---|---|
-| `SERVICE_DOWN` / `SERVICE_RECOVERED` | Um serviço saiu / voltou ao ar. |
-| `CONTINGENCY_ENTERED` / `CONTINGENCY_EXITED` | Entrou / saiu de contingência (SVC). |
-| `TECHNICAL_NOTE` | Nova Nota Técnica publicada no portal. |
-| `SOURCE_DEGRADED` | Uma fonte oficial ficou degradada (drift). |
-| `DAILY_DIGEST` | Resumo diário de saúde (opcional, por hora configurável). |
+| Evento                                       | Quando dispara                                            |
+| -------------------------------------------- | --------------------------------------------------------- |
+| `SERVICE_DOWN` / `SERVICE_RECOVERED`         | Um serviço saiu / voltou ao ar.                           |
+| `CONTINGENCY_ENTERED` / `CONTINGENCY_EXITED` | Entrou / saiu de contingência (SVC).                      |
+| `TECHNICAL_NOTE`                             | Nova Nota Técnica publicada no portal.                    |
+| `SOURCE_DEGRADED`                            | Uma fonte oficial ficou degradada (drift).                |
+| `DAILY_DIGEST`                               | Resumo diário de saúde (opcional, por hora configurável). |
 
 Canais: **Discord**, **Slack**, **Telegram** e **webhook genérico** (recebe o
 evento como JSON cru). As variáveis (`NOTIFY_DISCORD_WEBHOOK_URL`,
@@ -100,7 +100,7 @@ Actions) quanto no self-host (API).
 ## Dashboard
 
 - **Mapa do Brasil** clicável, cada UF colorida pelo pior estado agregado.
-- **Cards por serviço** com badge de estado, tempo de resposta e *sparkline* de latência.
+- **Cards por serviço** com badge de estado, tempo de resposta e _sparkline_ de latência.
 - **Histórico de uptime** (24h/72h) com barra estilo status-page e gráfico de latência.
 - **Filtros** por documento e por UF; **banner** de saúde geral.
 - **Três modos de layout** (Operação, Painel, Painel + métricas) e **tema claro/escuro**.
@@ -110,16 +110,16 @@ Actions) quanto no self-host (API).
 
 No modo self-host, a API expõe (base `/api/v1`):
 
-| Método | Rota | Retorna |
-|---|---|---|
-| GET | `/health` | `{ status: 'ok' }` |
-| GET | `/status` | Snapshot atual; filtros `?document=&uf=&env=` |
-| GET | `/status/:document/:uf` | Status de um serviço específico |
-| GET | `/summary` | Agregado: disponibilidade, no ar, com problema, latência média, por documento e por autorizador |
-| GET | `/services/:id/history` | Série histórica (`?period=24h\|72h`) |
-| GET | `/services/:id/uptime` | Uptime %, total de checagens, latência média |
-| GET | `/incidents` | Incidentes derivados da série |
-| GET | `/stream` | **SSE** — deltas de mudança de estado em tempo real |
+| Método | Rota                    | Retorna                                                                                         |
+| ------ | ----------------------- | ----------------------------------------------------------------------------------------------- |
+| GET    | `/health`               | `{ status: 'ok' }`                                                                              |
+| GET    | `/status`               | Snapshot atual; filtros `?document=&uf=&env=`                                                   |
+| GET    | `/status/:document/:uf` | Status de um serviço específico                                                                 |
+| GET    | `/summary`              | Agregado: disponibilidade, no ar, com problema, latência média, por documento e por autorizador |
+| GET    | `/services/:id/history` | Série histórica (`?period=24h\|72h`)                                                            |
+| GET    | `/services/:id/uptime`  | Uptime %, total de checagens, latência média                                                    |
+| GET    | `/incidents`            | Incidentes derivados da série                                                                   |
+| GET    | `/stream`               | **SSE** — deltas de mudança de estado em tempo real                                             |
 
 O Cloudflare Worker expõe um subconjunto ao vivo (`/summary`, `/health`, o
 snapshot completo e o histórico acumulado em `/history` e
@@ -131,19 +131,19 @@ O status exibido é sempre **ao vivo** — cada carregamento consulta as fontes 
 hora. O que precisa ser acumulado é o **histórico**, e ele vem de duas origens
 com resoluções bem diferentes:
 
-| Origem | Cadência | Retenção | Papel |
-|---|---|---|---|
-| **Cloudflare Worker** (Cron Trigger + KV) | **5 min** — 288 pontos/dia | 72h | Fonte primária do histórico |
-| **GitHub Actions** (JSONs versionados) | ~4h na prática | 7 dias | Rede de segurança, e o modo sem infra |
+| Origem                                    | Cadência                   | Retenção | Papel                                 |
+| ----------------------------------------- | -------------------------- | -------- | ------------------------------------- |
+| **Cloudflare Worker** (Cron Trigger + KV) | **5 min** — 288 pontos/dia | 72h      | Fonte primária do histórico           |
+| **GitHub Actions** (JSONs versionados)    | ~4h na prática             | 7 dias   | Rede de segurança, e o modo sem infra |
 
-O cron do GitHub Actions é declarado de hora em hora, mas é *best-effort*: na
+O cron do GitHub Actions é declarado de hora em hora, mas é _best-effort_: na
 série real medimos gap mediano de **~4h** (p90 de 5h28). Com ~6 coletas por dia,
 uma barra de uptime de 24h era desenhada com 7 amostras e uma queda de poucas
 horas podia passar inteira entre duas coletas. O Cron Trigger do Worker resolve
 isso — a resolução passa a ser a do incidente, não a do agendador.
 
 O histórico do Worker é guardado num **formato compacto** (`packages/contracts`):
-o estado vira *run-length* (segmento novo só quando muda) e a latência é agregada
+o estado vira _run-length_ (segmento novo só quando muda) e a latência é agregada
 por hora. Isso mantém 72h × 135 serviços em ~230 KB numa única chave de KV — 288
 escritas/dia, dentro do free tier — em vez dos megabytes que um ponto por
 checagem exigiria. A SPA expande de volta para pontos, na resolução que cada
@@ -226,17 +226,17 @@ Os quatro pacotes de `packages/` são publicados sob o escopo
 [`@monitor-sefaz`](https://www.npmjs.com/org/monitor-sefaz) e podem ser usados
 fora do projeto:
 
-| Pacote | Serve para |
-|---|---|
-| [`@monitor-sefaz/catalog`](packages/catalog) | Mapa UF → autorizador, endpoints dos webservices e tabela de cStat. Sem dependências. |
-| [`@monitor-sefaz/core`](packages/core) | Motor de coleta: consenso multi-fonte, parsers dos portais e consulta SOAP. |
-| [`@monitor-sefaz/contracts`](packages/contracts) | Schemas Zod e DTOs — úteis para validar as respostas da API pública. |
-| [`@monitor-sefaz/notifier`](packages/notifier) | Detecção de transições e canais de notificação. |
+| Pacote                                           | Serve para                                                                            |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------- |
+| [`@monitor-sefaz/catalog`](packages/catalog)     | Mapa UF → autorizador, endpoints dos webservices e tabela de cStat. Sem dependências. |
+| [`@monitor-sefaz/core`](packages/core)           | Motor de coleta: consenso multi-fonte, parsers dos portais e consulta SOAP.           |
+| [`@monitor-sefaz/contracts`](packages/contracts) | Schemas Zod e DTOs — úteis para validar as respostas da API pública.                  |
+| [`@monitor-sefaz/notifier`](packages/notifier)   | Detecção de transições e canais de notificação.                                       |
 
     npm i @monitor-sefaz/catalog
 
 O versionamento usa [changesets](.changeset/README.md); a publicação é feita
-pelo workflow `release.yml`, com *provenance* via OIDC. Os apps não são
+pelo workflow `release.yml`, com _provenance_ via OIDC. Os apps não são
 publicados.
 
 Comandos, a partir da raiz:

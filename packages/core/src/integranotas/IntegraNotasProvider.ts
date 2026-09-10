@@ -45,8 +45,33 @@ export const INTEGRANOTAS_DOCUMENTS: Partial<Record<DocumentType, string>> = {
 };
 
 const VALID_UFS = new Set<string>([
-  'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT', 'PA',
-  'PB', 'PE', 'PI', 'PR', 'RJ', 'RN', 'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO',
+  'AC',
+  'AL',
+  'AP',
+  'AM',
+  'BA',
+  'CE',
+  'DF',
+  'ES',
+  'GO',
+  'MA',
+  'MG',
+  'MS',
+  'MT',
+  'PA',
+  'PB',
+  'PE',
+  'PI',
+  'PR',
+  'RJ',
+  'RN',
+  'RO',
+  'RR',
+  'RS',
+  'SC',
+  'SE',
+  'SP',
+  'TO',
 ]);
 
 /**
@@ -164,7 +189,12 @@ export class IntegraNotasProvider {
         return;
       }
       const tMed = d.data?.[i] ?? -1;
-      const state = mapState(d.normal?.[i] ?? 0, d.svc?.[i] ?? null, d.backgroundColor![i] ?? '', tMed);
+      const state = mapState(
+        d.normal?.[i] ?? 0,
+        d.svc?.[i] ?? null,
+        d.backgroundColor![i] ?? '',
+        tMed
+      );
       rows.push({
         uf: code as UF,
         state,

@@ -49,7 +49,12 @@ describe('previousFromHistory', () => {
   it('usa o ÚLTIMO ponto de cada série como estado anterior', () => {
     const prev = previousFromHistory(history({ 'NFe:SP': ['OPERATIONAL', 'DOWN'] }));
     expect(prev).toHaveLength(1);
-    expect(prev[0]).toMatchObject({ id: 'NFe:SP', uf: 'SP', document: DocumentType.NFe, state: 'DOWN' });
+    expect(prev[0]).toMatchObject({
+      id: 'NFe:SP',
+      uf: 'SP',
+      document: DocumentType.NFe,
+      state: 'DOWN',
+    });
   });
 
   it('ignora ids malformados ou sem pontos', () => {
@@ -99,7 +104,14 @@ describe('buildNotificationEvents', () => {
     const h = history({ 'NFe:SP': ['OPERATIONAL'], 'NFe:RJ': ['OPERATIONAL'] });
     const services = [svc('NFe:SP', 'DOWN'), svc('NFe:RJ', 'OPERATIONAL')];
     const sources: SourceHealthDTO[] = [
-      { source: 'svrs', official: true, collected: 3, expected: 135, coverage: 0.02, degraded: true },
+      {
+        source: 'svrs',
+        official: true,
+        collected: 3,
+        expected: 135,
+        coverage: 0.02,
+        degraded: true,
+      },
     ];
     const events = buildNotificationEvents(h, services, sources, AT);
     const types = events.map((e) => e.type);

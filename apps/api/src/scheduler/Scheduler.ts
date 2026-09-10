@@ -96,7 +96,9 @@ export class Scheduler {
       if (this.notifier?.enabled && changed.length > 0) {
         const events = detectTransitions(prev, services, new Date().toISOString());
         const { sent, failed } = await this.notifier.notify(events);
-        this.logger.info(`Notificações ${env}: ${events.length} eventos, ${sent} ok, ${failed} falha`);
+        this.logger.info(
+          `Notificações ${env}: ${events.length} eventos, ${sent} ok, ${failed} falha`
+        );
       }
 
       this.logger.info(

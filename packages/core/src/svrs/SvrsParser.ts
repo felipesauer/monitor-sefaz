@@ -38,7 +38,12 @@ export interface SvrsAuthorizerStatus {
 function colorToState(style: string): ServiceState {
   const s = style.toLowerCase();
   if (s.includes('#3c763d') || s.includes('3c763d')) return ServiceState.Operational; // verde
-  if (s.includes('#8a6d3b') || s.includes('#f0ad4e') || s.includes('orange') || s.includes('#ec971f')) {
+  if (
+    s.includes('#8a6d3b') ||
+    s.includes('#f0ad4e') ||
+    s.includes('orange') ||
+    s.includes('#ec971f')
+  ) {
     return ServiceState.SlowDown; // âmbar/laranja — degradação
   }
   if (s.includes('#a94442') || s.includes('#d9534f') || s.includes('red')) {
@@ -54,7 +59,8 @@ function aggregateState(webServices: SvrsWebService[]): ServiceState {
   // 100%. Ordem de severidade: Down > SlowDown > Error > Operational.
   if (webServices.some((w) => w.state === ServiceState.Down)) return ServiceState.Down;
   if (webServices.some((w) => w.state === ServiceState.SlowDown)) return ServiceState.SlowDown;
-  if (webServices.every((w) => w.state === ServiceState.Operational)) return ServiceState.Operational;
+  if (webServices.every((w) => w.state === ServiceState.Operational))
+    return ServiceState.Operational;
   // Algum WS em Error mas nenhum Down/SlowDown: trata como degradação.
   return webServices.some((w) => w.state === ServiceState.Operational)
     ? ServiceState.SlowDown

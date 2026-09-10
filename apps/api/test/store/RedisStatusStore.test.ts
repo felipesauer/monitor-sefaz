@@ -30,7 +30,10 @@ describe('RedisStatusStore', () => {
 
   it('salva e lê o snapshot atual', async () => {
     const store = new RedisStatusStore(redis, () => 1_000_000);
-    await store.saveSnapshot('production', [makeService(), makeService({ id: 'NFe:MG', uf: 'MG' })]);
+    await store.saveSnapshot('production', [
+      makeService(),
+      makeService({ id: 'NFe:MG', uf: 'MG' }),
+    ]);
 
     const snapshot = await store.getSnapshot('production');
     expect(snapshot).toHaveLength(2);

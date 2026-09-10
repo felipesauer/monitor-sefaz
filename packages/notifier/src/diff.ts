@@ -1,14 +1,7 @@
-import {
-  isUp,
-  type NotificationEventDTO,
-  type ServiceStatusDTO,
-} from '@monitor-sefaz/contracts';
+import { isUp, type NotificationEventDTO, type ServiceStatusDTO } from '@monitor-sefaz/contracts';
 
 /** Um serviço com o mínimo que a detecção de transição precisa. */
-type ServiceLike = Pick<
-  ServiceStatusDTO,
-  'id' | 'uf' | 'document' | 'state' | 'cStat' | 'source'
->;
+type ServiceLike = Pick<ServiceStatusDTO, 'id' | 'uf' | 'document' | 'state' | 'cStat' | 'source'>;
 
 const CONTINGENCY = 'CONTINGENCY';
 

@@ -14,11 +14,7 @@ import {
   DCeStatusParser,
   MDFeStatusParser,
 } from '../parsers/DocumentStatusParsers.js';
-import {
-  AxiosSoapClient,
-  type ClientCertificate,
-  type SoapClient,
-} from '../checker/SoapClient.js';
+import { AxiosSoapClient, type ClientCertificate, type SoapClient } from '../checker/SoapClient.js';
 import { StatusClassifier } from '../checker/StatusClassifier.js';
 import { StatusChecker, type StatusCheckerOptions } from '../checker/StatusChecker.js';
 

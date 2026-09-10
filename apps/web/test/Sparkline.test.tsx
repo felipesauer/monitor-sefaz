@@ -36,7 +36,9 @@ describe('Sparkline', () => {
   });
 
   it('usa o gradiente pelo id recebido', () => {
-    const { container } = render(<Sparkline values={[1, 2]} color="#0f0" gradientId="spark-NFe:SP" />);
+    const { container } = render(
+      <Sparkline values={[1, 2]} color="#0f0" gradientId="spark-NFe:SP" />
+    );
     expect(container.querySelector('linearGradient')?.id).toBe('spark-NFe:SP');
     expect(paths(container)[0]!.getAttribute('fill')).toBe('url(#spark-NFe:SP)');
   });

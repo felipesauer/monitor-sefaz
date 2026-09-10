@@ -48,7 +48,10 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
           >
             <div
               className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
-              style={{ background: `color-mix(in srgb, ${card.color} 14%, transparent)`, color: card.color }}
+              style={{
+                background: `color-mix(in srgb, ${card.color} 14%, transparent)`,
+                color: card.color,
+              }}
             >
               <Icon className="h-5 w-5" />
             </div>

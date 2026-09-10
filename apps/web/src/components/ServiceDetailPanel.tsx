@@ -84,8 +84,8 @@ export function ServiceDetailPanel({ service, onClose }: ServiceDetailPanelProps
             <Info className="mt-0.5 h-4 w-4 shrink-0" />
             <span>
               MDF-e e DC-e são centralizados no ambiente nacional (SVRS). Este status
-              <strong> reflete o do autorizador SVRS</strong> — não é uma medição independente
-              por estado.
+              <strong> reflete o do autorizador SVRS</strong> — não é uma medição independente por
+              estado.
             </span>
           </div>
         )}
@@ -136,7 +136,10 @@ export function ServiceDetailPanel({ service, onClose }: ServiceDetailPanelProps
           <h3 className="mb-2 text-sm font-semibold">Latência</h3>
           <Suspense
             fallback={
-              <div className="h-40 w-full animate-pulse rounded" style={{ background: 'var(--surface-2)' }} />
+              <div
+                className="h-40 w-full animate-pulse rounded"
+                style={{ background: 'var(--surface-2)' }}
+              />
             }
           >
             <LatencyChart points={points} />

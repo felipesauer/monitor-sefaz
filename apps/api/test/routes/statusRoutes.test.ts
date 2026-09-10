@@ -116,7 +116,9 @@ describe('statusRoutes', () => {
 
   it('GET /api/v1/incidents retorna lista conforme schema', async () => {
     const res = await app.inject({ method: 'GET', url: '/api/v1/incidents?period=24h' });
-    const body = z.object({ period: z.string(), incidents: z.array(incidentSchema) }).parse(res.json());
+    const body = z
+      .object({ period: z.string(), incidents: z.array(incidentSchema) })
+      .parse(res.json());
     expect(Array.isArray(body.incidents)).toBe(true);
   });
 });

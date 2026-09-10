@@ -52,10 +52,7 @@ describe('reconcileTechnicalNotes', () => {
 
 describe('technicalNoteEvents', () => {
   it('gera um evento TECHNICAL_NOTE por NT nova com título/link no payload', () => {
-    const events = technicalNoteEvents(
-      [{ title: 'NT-9', link: 'http://x', firstSeenAt: AT }],
-      AT
-    );
+    const events = technicalNoteEvents([{ title: 'NT-9', link: 'http://x', firstSeenAt: AT }], AT);
     expect(events).toHaveLength(1);
     expect(events[0]).toMatchObject({
       type: 'TECHNICAL_NOTE',

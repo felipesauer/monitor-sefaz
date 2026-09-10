@@ -29,9 +29,7 @@ export class Notifier {
       return { sent: 0, failed: 0 };
     }
 
-    const selected = eventFilter
-      ? events.filter((e) => eventFilter.has(e.type))
-      : events;
+    const selected = eventFilter ? events.filter((e) => eventFilter.has(e.type)) : events;
 
     const deliveries: Array<Promise<void>> = [];
     for (const event of selected) {

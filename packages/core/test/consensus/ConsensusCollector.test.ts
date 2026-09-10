@@ -161,7 +161,11 @@ describe('ConsensusCollector', () => {
 
     it('collect() continua devolvendo só os serviços (retrocompat)', async () => {
       const consensus = new ConsensusCollector([
-        { name: 'svrs', official: true, collector: fake([status('SP', ServiceState.Operational, 'svrs')]) },
+        {
+          name: 'svrs',
+          official: true,
+          collector: fake([status('SP', ServiceState.Operational, 'svrs')]),
+        },
       ]);
       const out = await consensus.collect();
       expect(Array.isArray(out)).toBe(true);

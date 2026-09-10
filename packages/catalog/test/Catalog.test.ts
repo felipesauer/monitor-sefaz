@@ -37,7 +37,11 @@ describe('Catalog', () => {
   });
 
   it('centraliza MDF-e e DC-e no SVRS', () => {
-    expect(catalog.resolve(DocumentType.MDFe, 'PA', Environment.Production)?.authorizer).toBe('SVRS');
-    expect(catalog.resolve(DocumentType.DCe, 'PA', Environment.Production)?.authorizer).toBe('SVRS');
+    expect(catalog.resolve(DocumentType.MDFe, 'PA', Environment.Production)?.authorizer).toBe(
+      'SVRS'
+    );
+    expect(catalog.resolve(DocumentType.DCe, 'PA', Environment.Production)?.authorizer).toBe(
+      'SVRS'
+    );
   });
 });

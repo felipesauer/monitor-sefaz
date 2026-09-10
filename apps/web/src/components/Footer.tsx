@@ -3,7 +3,10 @@ import { Github } from 'lucide-react';
 /** Rodapé com fonte oficial, repositório e aviso de não-afiliação. */
 export function Footer() {
   return (
-    <footer className="mt-10 border-t pt-6 pb-10 text-center text-xs" style={{ color: 'var(--text-dim)' }}>
+    <footer
+      className="mt-10 border-t pt-6 pb-10 text-center text-xs"
+      style={{ color: 'var(--text-dim)' }}
+    >
       <div className="mx-auto flex max-w-7xl flex-col items-center gap-3 px-4">
         <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
           <a

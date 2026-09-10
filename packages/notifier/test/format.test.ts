@@ -71,7 +71,12 @@ describe('formatters', () => {
     const digest: NotificationEventDTO = {
       type: 'DAILY_DIGEST',
       occurredAt: AT,
-      payload: { total: 135, operational: 130, availability: 96.3, degradedSources: ['availability'] },
+      payload: {
+        total: 135,
+        operational: 130,
+        availability: 96.3,
+        degradedSources: ['availability'],
+      },
     };
     const desc = toDiscordPayload(digest).embeds[0]!.description;
     expect(desc).toContain('96.3%');

@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { DocumentType, ServiceState, type AvailabilityCollector, type CollectedStatus } from '@monitor-sefaz/core';
+import {
+  DocumentType,
+  ServiceState,
+  type AvailabilityCollector,
+  type CollectedStatus,
+} from '@monitor-sefaz/core';
 import { AvailabilityStatusSource } from '../../src/sources/AvailabilityStatusSource.js';
 
 const sample: CollectedStatus[] = [

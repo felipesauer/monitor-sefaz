@@ -27,12 +27,18 @@ describe('CatalogAuthorizerRegistry', () => {
 
   it('resolve CT-e de MG no autorizador próprio e de AC no SVRS', () => {
     expect(registry.resolve(DocumentType.CTe, 'MG', Environment.Production)?.authorizer).toBe('MG');
-    expect(registry.resolve(DocumentType.CTe, 'AC', Environment.Production)?.authorizer).toBe('SVRS');
+    expect(registry.resolve(DocumentType.CTe, 'AC', Environment.Production)?.authorizer).toBe(
+      'SVRS'
+    );
   });
 
   it('resolve MDF-e e DC-e centralizados no SVRS', () => {
-    expect(registry.resolve(DocumentType.MDFe, 'SP', Environment.Production)?.authorizer).toBe('SVRS');
-    expect(registry.resolve(DocumentType.DCe, 'SP', Environment.Production)?.authorizer).toBe('SVRS');
+    expect(registry.resolve(DocumentType.MDFe, 'SP', Environment.Production)?.authorizer).toBe(
+      'SVRS'
+    );
+    expect(registry.resolve(DocumentType.DCe, 'SP', Environment.Production)?.authorizer).toBe(
+      'SVRS'
+    );
   });
 
   it('listAll cobre NF-e e NFC-e (27 cada) e inclui os 5 documentos', () => {

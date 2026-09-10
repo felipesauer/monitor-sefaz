@@ -3,7 +3,11 @@ import {
   HttpAvailabilityProvider,
   type CollectedStatus,
 } from '@monitor-sefaz/core';
-import { fromEnvironment, type EnvironmentValue, type ServiceStatusDTO } from '@monitor-sefaz/contracts';
+import {
+  fromEnvironment,
+  type EnvironmentValue,
+  type ServiceStatusDTO,
+} from '@monitor-sefaz/contracts';
 import { Environment } from '@monitor-sefaz/catalog';
 import { serviceId } from '../store/mappers.js';
 import type { StatusSource } from './StatusSource.js';

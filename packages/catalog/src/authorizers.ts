@@ -75,9 +75,7 @@ const CENTRALIZED_SVRS = buildCentralizedSVRSMap();
  */
 export const DEFAULT_AUTHORIZER: AuthorizerCode = 'SVRS';
 
-export const UF_AUTHORIZERS: Readonly<
-  Record<DocumentType, Partial<Record<UF, AuthorizerCode>>>
-> = {
+export const UF_AUTHORIZERS: Readonly<Record<DocumentType, Partial<Record<UF, AuthorizerCode>>>> = {
   [DocumentType.NFe]: NFE_AUTHORIZERS,
   [DocumentType.NFCe]: NFCE_AUTHORIZERS,
   [DocumentType.CTe]: CTE_AUTHORIZERS,

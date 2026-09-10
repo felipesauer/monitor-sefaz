@@ -28,7 +28,11 @@ function runRounds(states: string[], startMs = T0) {
 
 describe('appendObservations', () => {
   it('cria um segmento na primeira observação', () => {
-    const h = appendObservations(emptyCompactHistory(new Date(T0).toISOString(), STEP), obs('OPERATIONAL'), T0);
+    const h = appendObservations(
+      emptyCompactHistory(new Date(T0).toISOString(), STEP),
+      obs('OPERATIONAL'),
+      T0
+    );
     expect(h.segments['NFe:SP']).toEqual([[T0, 'OPERATIONAL', 107]]);
   });
 
@@ -45,19 +49,31 @@ describe('appendObservations', () => {
   });
 
   it('cria segmento novo quando só o cStat muda', () => {
-    let h = appendObservations(emptyCompactHistory(new Date(T0).toISOString(), STEP), obs('OPERATIONAL', 100, 107), T0);
+    let h = appendObservations(
+      emptyCompactHistory(new Date(T0).toISOString(), STEP),
+      obs('OPERATIONAL', 100, 107),
+      T0
+    );
     h = appendObservations(h, obs('OPERATIONAL', 100, 108), T0 + STEP);
     expect(h.segments['NFe:SP']).toHaveLength(2);
   });
 
   it('agrega latência no bucket da hora corrente', () => {
-    let h = appendObservations(emptyCompactHistory(new Date(T0).toISOString(), STEP), obs('OPERATIONAL', 100), T0);
+    let h = appendObservations(
+      emptyCompactHistory(new Date(T0).toISOString(), STEP),
+      obs('OPERATIONAL', 100),
+      T0
+    );
     h = appendObservations(h, obs('OPERATIONAL', 200), T0 + STEP);
     expect(h.latency['NFe:SP']).toEqual([[T0, 150]]);
   });
 
   it('abre bucket novo quando vira a hora', () => {
-    let h = appendObservations(emptyCompactHistory(new Date(T0).toISOString(), STEP), obs('OPERATIONAL', 100), T0);
+    let h = appendObservations(
+      emptyCompactHistory(new Date(T0).toISOString(), STEP),
+      obs('OPERATIONAL', 100),
+      T0
+    );
     h = appendObservations(h, obs('OPERATIONAL', 300), T0 + LATENCY_BUCKET_MS);
     expect(h.latency['NFe:SP']).toEqual([
       [T0, 100],
@@ -85,7 +101,11 @@ describe('pruneCompactHistory', () => {
   it('PRESERVA o último segmento anterior ao corte, deslocado para a borda', () => {
     // Um serviço estável há dias tem seu único segmento muito antes do corte.
     // Se ele sumisse, o gráfico começaria "sem dados" em vez de "no ar".
-    let h = appendObservations(emptyCompactHistory(new Date(T0).toISOString(), STEP), obs('OPERATIONAL'), T0);
+    let h = appendObservations(
+      emptyCompactHistory(new Date(T0).toISOString(), STEP),
+      obs('OPERATIONAL'),
+      T0
+    );
     h = appendObservations(h, obs('OPERATIONAL'), T0 + 100 * STEP);
     const pruned = pruneCompactHistory(h, 10 * STEP);
     const cutoff = Date.parse(h.updatedAt) - 10 * STEP;
@@ -109,7 +129,14 @@ describe('expandCompactHistory', () => {
 
   it('reconstrói a fração de tempo fora do ar', () => {
     // 2 rodadas no ar, 2 fora, 2 no ar → 1/3 do tempo indisponível.
-    const h = runRounds(['OPERATIONAL', 'OPERATIONAL', 'DOWN', 'DOWN', 'OPERATIONAL', 'OPERATIONAL']);
+    const h = runRounds([
+      'OPERATIONAL',
+      'OPERATIONAL',
+      'DOWN',
+      'DOWN',
+      'OPERATIONAL',
+      'OPERATIONAL',
+    ]);
     const points = expandCompactHistory(h, 'NFe:SP');
     const down = points.filter((p) => p.state === 'DOWN').length;
     expect(points).toHaveLength(6);
