@@ -17,7 +17,7 @@
     "@monitor-sefaz/notifier": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "^22.10.2",
-    "tsx": "^4.19.2"
+    "@types/node": "^22.20.2",
+    "tsx": "^4.23.13"
   }
 }
