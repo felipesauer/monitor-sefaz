@@ -70,6 +70,6 @@
     "tough-cookie": "^5.1.2"
   },
   "devDependencies": {
-    "@types/node": "^22.20.2"
+    "@types/node": "^26.5.1"
   }
 }

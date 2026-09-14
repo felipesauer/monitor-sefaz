@@ -66,6 +66,6 @@
     "@monitor-sefaz/contracts": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "^22.20.2"
+    "@types/node": "^26.5.1"
   }
 }
