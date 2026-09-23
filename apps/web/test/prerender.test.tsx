@@ -118,6 +118,26 @@ describe('prerender', () => {
     expect(sitemap.match(new RegExp(`<lastmod>${LASTMOD}</lastmod>`, 'g'))).toHaveLength(28);
   });
 
+  it('gera o robots.txt com o sitemap da URL pública', () => {
+    const robots = file(files, 'robots.txt');
+    expect(robots).toContain('Sitemap: https://exemplo.com.br/monitor/sitemap.xml');
+    expect(robots).toContain('User-agent: *');
+  });
+
+  it('põe as tags de verificação em todas as páginas quando configuradas', () => {
+    const verified = prerender({
+      template: TEMPLATE,
+      lastmod: LASTMOD,
+      verification: { google: '<meta name="google-site-verification" content="g-123" />' },
+    });
+    const pages = verified.filter((f) => f.path.endsWith('index.html'));
+    expect(pages).toHaveLength(28);
+    for (const page of pages) {
+      expect(page.content).toContain('<meta name="google-site-verification" content="g-123" />');
+    }
+    expect(file(files, 'index.html')).not.toContain('google-site-verification');
+  });
+
   it('falha alto se o index.html perdeu os marcadores', () => {
     expect(() => prerender({ template: '<html></html>', lastmod: LASTMOD })).toThrow(
       /marcadores do prerender/

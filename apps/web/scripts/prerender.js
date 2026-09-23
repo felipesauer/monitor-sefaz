@@ -51,19 +51,28 @@ function contentLastModified() {
   return new Date().toISOString();
 }
 
-const { prerender } = await import(pathToFileURL(join(ssrDir, 'entry-server.js')).href);
 const lastmod = contentLastModified();
-const files = prerender({
-  template: readFileSync(join(distDir, 'index.html'), 'utf8'),
-  siteUrl: process.env.SITE_URL,
-  lastmod,
-});
+let files;
+try {
+  const { prerender } = await import(pathToFileURL(join(ssrDir, 'entry-server.js')).href);
+  files = prerender({
+    template: readFileSync(join(distDir, 'index.html'), 'utf8'),
+    siteUrl: process.env.SITE_URL,
+    lastmod,
+    verification: {
+      google: process.env.GOOGLE_SITE_VERIFICATION,
+      bing: process.env.BING_SITE_VERIFICATION,
+    },
+  });
+} finally {
+  // O bundle SSR só existe para este passo; não fica para trás nem se ele falhar.
+  rmSync(ssrDir, { recursive: true, force: true });
+}
 
 for (const file of files) {
   const target = join(distDir, file.path);
   mkdirSync(dirname(target), { recursive: true });
   writeFileSync(target, file.content);
 }
-rmSync(ssrDir, { recursive: true, force: true });
 
 console.log(`prerender: ${files.length} arquivos em dist/ (lastmod ${lastmod})`);

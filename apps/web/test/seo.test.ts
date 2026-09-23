@@ -1,6 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import { ALL_UFS } from '@monitor-sefaz/catalog';
-import { DEFAULT_SITE_URL, homeMeta, renderHead, resolveSiteUrl, ufMeta } from '../src/lib/seo.js';
+import {
+  DEFAULT_SITE_URL,
+  homeMeta,
+  renderHead,
+  resolveSiteUrl,
+  ufMeta,
+  verificationToken,
+} from '../src/lib/seo.js';
 
 describe('ufMeta', () => {
   const siteUrl = 'https://exemplo.com.br/';
@@ -85,5 +92,53 @@ describe('renderHead', () => {
     expect(head).toContain('content="aspas &quot; e &lt;tags&gt;"');
     expect(head).not.toContain('</script><script>');
     expect(head.match(/<\/script>/g)).toHaveLength(1);
+  });
+});
+
+describe('verificationToken', () => {
+  it('aceita o código puro', () => {
+    expect(verificationToken('X', 'abc123-XYZ_9')).toBe('abc123-XYZ_9');
+    expect(verificationToken('X', '  1234ABCD  ')).toBe('1234ABCD');
+  });
+
+  it('aceita a <meta> inteira, como o Search Console e o Bing a mostram', () => {
+    expect(
+      verificationToken('X', '<meta name="google-site-verification" content="rXOxyZounnZ-8Z7o" />')
+    ).toBe('rXOxyZounnZ-8Z7o');
+    expect(verificationToken('X', "<meta name='msvalidate.01' content='0123ABCD'>")).toBe(
+      '0123ABCD'
+    );
+  });
+
+  it('ignora a variável vazia ou ausente', () => {
+    expect(verificationToken('X', undefined)).toBeNull();
+    expect(verificationToken('X', '   ')).toBeNull();
+  });
+
+  it('falha alto com colagem que não é código', () => {
+    expect(() => verificationToken('GOOGLE_SITE_VERIFICATION', 'google123.html arquivo')).toThrow(
+      /GOOGLE_SITE_VERIFICATION/
+    );
+    expect(() => verificationToken('X', '<meta name="x" content="a<b">')).toThrow();
+  });
+});
+
+describe('descoberta do sitemap e verificação', () => {
+  const siteUrl = 'https://exemplo.com.br/';
+
+  it('aponta o sitemap em toda página', () => {
+    expect(renderHead(homeMeta(siteUrl), siteUrl)).toContain(
+      '<link rel="sitemap" type="application/xml" title="Sitemap" href="https://exemplo.com.br/sitemap.xml" />'
+    );
+  });
+
+  it('só escreve as tags de verificação quando configuradas', () => {
+    const without = renderHead(homeMeta(siteUrl), siteUrl);
+    expect(without).not.toContain('google-site-verification');
+    expect(without).not.toContain('msvalidate.01');
+
+    const withBoth = renderHead(homeMeta(siteUrl), siteUrl, { google: 'g-123', bing: 'B456' });
+    expect(withBoth).toContain('<meta name="google-site-verification" content="g-123" />');
+    expect(withBoth).toContain('<meta name="msvalidate.01" content="B456" />');
   });
 });

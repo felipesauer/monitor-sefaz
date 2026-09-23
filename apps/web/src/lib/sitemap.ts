@@ -7,6 +7,26 @@ function escapeXml(value: string): string {
 }
 
 /**
+ * robots.txt do site. Buscadores só o leem na raiz do domínio (RFC 9309): no
+ * GitHub Pages de projeto, em usuario.github.io/<repo>/robots.txt, ele é
+ * ignorado — o sitemap chega pelo Search Console, pelo Bing Webmaster e pelo
+ * <link rel="sitemap"> das páginas. Fica aqui para quando o site for servido
+ * na raiz de um domínio próprio.
+ */
+export function renderRobots(siteUrl: string): string {
+  return [
+    '# Buscadores só leem o robots.txt na raiz do domínio (RFC 9309). Num',
+    '# subcaminho, como o GitHub Pages de projeto, este arquivo é ignorado; ele',
+    '# passa a valer se o site for servido na raiz de um domínio próprio.',
+    'User-agent: *',
+    'Allow: /',
+    '',
+    `Sitemap: ${siteUrl}sitemap.xml`,
+    '',
+  ].join('\n');
+}
+
+/**
  * sitemap.xml das páginas publicadas.
  *
  * Só `loc` e `lastmod`: `changefreq` e `priority` são ignorados pelo Google e

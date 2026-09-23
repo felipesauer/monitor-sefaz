@@ -3,8 +3,8 @@ import { renderToString } from 'react-dom/server';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { App } from './App.js';
 import { ALL_PAGES, pagePath, type Page } from './lib/pages.js';
-import { pageMeta, renderHead, resolveSiteUrl } from './lib/seo.js';
-import { renderSitemap } from './lib/sitemap.js';
+import { pageMeta, renderHead, resolveSiteUrl, type SiteVerification } from './lib/seo.js';
+import { renderRobots, renderSitemap } from './lib/sitemap.js';
 
 /**
  * Entrada do pré-render, compilada pelo build SSR (`vite build --ssr`).
@@ -23,6 +23,8 @@ export interface PrerenderOptions {
   siteUrl?: string;
   /** Data da última mudança do conteúdo das páginas (lastmod do sitemap). */
   lastmod: string;
+  /** Códigos do Search Console e do Bing Webmaster, se configurados. */
+  verification?: SiteVerification;
 }
 
 export interface PrerenderedFile {
@@ -64,16 +66,21 @@ export function prerender({
   template,
   siteUrl: rawSiteUrl,
   lastmod,
+  verification,
 }: PrerenderOptions): PrerenderedFile[] {
   const siteUrl = resolveSiteUrl(rawSiteUrl);
   const pages = ALL_PAGES.map((page) => ({
     path: `${pagePath(page)}index.html`,
     content: fillTemplate(
       template,
-      renderHead(pageMeta(page, siteUrl, lastmod), siteUrl),
+      renderHead(pageMeta(page, siteUrl, lastmod), siteUrl, verification),
       renderApp(page)
     ),
   }));
   const urls = ALL_PAGES.map((page) => `${siteUrl}${pagePath(page)}`);
-  return [...pages, { path: 'sitemap.xml', content: renderSitemap(urls, lastmod) }];
+  return [
+    ...pages,
+    { path: 'sitemap.xml', content: renderSitemap(urls, lastmod) },
+    { path: 'robots.txt', content: renderRobots(siteUrl) },
+  ];
 }

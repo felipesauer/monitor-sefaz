@@ -130,13 +130,50 @@ function scriptJson(data: unknown): string {
   return JSON.stringify(data).replace(/</g, '\\u003c');
 }
 
+/**
+ * Códigos de verificação de propriedade: Google Search Console
+ * (google-site-verification) e Bing Webmaster Tools (msvalidate.01).
+ */
+export interface SiteVerification {
+  google?: string;
+  bing?: string;
+}
+
+/**
+ * Token de verificação a partir do que foi colado na variável de build: o
+ * token puro ou a <meta> inteira, como o Search Console e o Bing a exibem.
+ * Colagem sem jeito de token falha alto em vez de gerar uma tag que nunca
+ * verificaria.
+ */
+export function verificationToken(name: string, raw: string | undefined): string | null {
+  const value = raw?.trim();
+  if (!value) return null;
+  const token = /content\s*=\s*["']([^"']*)["']/i.exec(value)?.[1]?.trim() ?? value;
+  if (!/^[\w\-+/=.]+$/.test(token)) {
+    throw new Error(`${name} não parece um código de verificação: ${JSON.stringify(raw)}`);
+  }
+  return token;
+}
+
 /** Tags do <head> de uma página, na indentação do index.html. */
-export function renderHead(meta: PageMeta, siteUrl: string): string {
+export function renderHead(
+  meta: PageMeta,
+  siteUrl: string,
+  verification: SiteVerification = {}
+): string {
   const image = `${siteUrl}og-image.png`;
+  const google = verificationToken('GOOGLE_SITE_VERIFICATION', verification.google);
+  const bing = verificationToken('BING_SITE_VERIFICATION', verification.bing);
   const tags = [
     `<title>${escapeHtml(meta.title)}</title>`,
     `<meta name="description" content="${escapeHtml(meta.description)}" />`,
     `<link rel="canonical" href="${escapeHtml(meta.url)}" />`,
+    // O robots.txt não serve aqui: buscador só o lê na raiz do domínio, e o
+    // site mora num subcaminho do github.io. Não é padrão oficial, mas é o
+    // aviso que dá para deixar em cada página.
+    `<link rel="sitemap" type="application/xml" title="Sitemap" href="${escapeHtml(`${siteUrl}sitemap.xml`)}" />`,
+    ...(google ? [`<meta name="google-site-verification" content="${escapeHtml(google)}" />`] : []),
+    ...(bing ? [`<meta name="msvalidate.01" content="${escapeHtml(bing)}" />`] : []),
     // Open Graph / Twitter: sem isto, o link compartilhado no WhatsApp ou no
     // LinkedIn aparece como texto cru, sem título, resumo ou imagem.
     '<meta property="og:type" content="website" />',

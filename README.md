@@ -196,6 +196,17 @@ histórico: `/history` responde 501 e a SPA cai no JSON estático.
 O front escolhe a fonte de dados por variável de ambiente: com `VITE_API_BASE_URL`
 definida consome a API/Worker ao vivo; vazia, lê os JSONs estáticos.
 
+O build do site pré-renderiza a home e as páginas por UF, e lê mais três
+variáveis:
+
+- `SITE_URL`: URL pública absoluta, usada no canonical, no Open Graph e no
+  sitemap. O padrão é o deploy oficial.
+- `GOOGLE_SITE_VERIFICATION` / `BING_SITE_VERIFICATION`: códigos de
+  verificação do Google Search Console e do Bing Webmaster Tools. Viram as
+  meta tags `google-site-verification` e `msvalidate.01` em todas as páginas.
+  Aceitam o código puro ou a `<meta>` inteira, como o painel a mostra. No deploy
+  oficial, vêm das variáveis de repositório de mesmo nome.
+
 A API self-host lê as variáveis de um `.env` na raiz (veja [`.env.example`](.env.example)):
 
 - `STATUS_SOURCE` — `hybrid` (consenso multi-fonte, padrão), `availability` (só a
