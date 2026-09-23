@@ -14,7 +14,7 @@ desenvolvimento, os padrões do projeto e como estender o monitor.
 
 ## Ambiente
 
-Requer Node 20 ou superior e pnpm.
+Requer Node 22 ou superior e pnpm.
 
     pnpm install
 
