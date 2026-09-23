@@ -3,7 +3,7 @@
 [![Star no GitHub](https://img.shields.io/badge/%E2%AD%90_Star_no_GitHub-felipesauer%2Fmonitor--sefaz-f5c518?style=for-the-badge&logo=github)](https://github.com/felipesauer/monitor-sefaz)
 
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
-[![Node](https://img.shields.io/badge/node-%3E%3D20-brightgreen)](https://nodejs.org)
+[![Node](https://img.shields.io/badge/node-%3E%3D22-brightgreen)](https://nodejs.org)
 [![TypeScript](https://img.shields.io/badge/typescript-strict-3178c6)](https://www.typescriptlang.org)
 [![CI](https://img.shields.io/badge/CI-lint%20%C2%B7%20typecheck%20%C2%B7%20test-2ea44f)](.github/workflows/ci.yml)
 
@@ -183,7 +183,7 @@ componente precisa.
 
 A forma mais simples é acessar o site publicado.
 
-Para rodar localmente é necessário Node 20+ e pnpm.
+Para rodar localmente é necessário Node 22+ e pnpm.
 
     pnpm install
 

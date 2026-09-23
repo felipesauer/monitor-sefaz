@@ -20,7 +20,7 @@
     "@monitor-sefaz/core": "workspace:*",
     "@monitor-sefaz/notifier": "workspace:*",
     "axios": "^1.20.0",
-    "axios-cookiejar-support": "^5.0.5",
+    "axios-cookiejar-support": "^7.0.0",
     "cheerio": "^1.2.0",
     "fast-xml-parser": "^4.5.7",
     "fastify": "^5.12.5",
