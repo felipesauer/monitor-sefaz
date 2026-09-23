@@ -1,6 +1,6 @@
 {
   "name": "@monitor-sefaz/notifier",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Detecção de transições de estado e canais de notificação (Discord, Slack, Telegram, webhook) para o Monitor SEFAZ.",
   "keywords": [
     "sefaz",
