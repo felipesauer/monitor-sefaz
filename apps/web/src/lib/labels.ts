@@ -1,34 +1,11 @@
+import { ALL_UFS, UF_INFO } from '@monitor-sefaz/catalog';
+
 /** Rótulos amigáveis de UF e documento para a interface. */
 
-export const UF_NAME: Record<string, string> = {
-  AC: 'Acre',
-  AL: 'Alagoas',
-  AP: 'Amapá',
-  AM: 'Amazonas',
-  BA: 'Bahia',
-  CE: 'Ceará',
-  DF: 'Distrito Federal',
-  ES: 'Espírito Santo',
-  GO: 'Goiás',
-  MA: 'Maranhão',
-  MG: 'Minas Gerais',
-  MS: 'Mato Grosso do Sul',
-  MT: 'Mato Grosso',
-  PA: 'Pará',
-  PB: 'Paraíba',
-  PE: 'Pernambuco',
-  PI: 'Piauí',
-  PR: 'Paraná',
-  RJ: 'Rio de Janeiro',
-  RN: 'Rio Grande do Norte',
-  RO: 'Rondônia',
-  RR: 'Roraima',
-  RS: 'Rio Grande do Sul',
-  SC: 'Santa Catarina',
-  SE: 'Sergipe',
-  SP: 'São Paulo',
-  TO: 'Tocantins',
-};
+/** Nome por extenso de cada UF, lido do catalog (a fonte dos dados de UF). */
+export const UF_NAME: Record<string, string> = Object.fromEntries(
+  ALL_UFS.map((uf) => [uf, UF_INFO[uf].nome])
+);
 
 /** Rótulo de exibição de cada documento (com hífen, como o público espera). */
 export const DOC_LABEL: Record<string, string> = {

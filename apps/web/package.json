@@ -12,6 +12,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@monitor-sefaz/catalog": "workspace:*",
     "@monitor-sefaz/contracts": "workspace:*",
     "@tanstack/react-query": "^5.102.8",
     "lucide-react": "^0.468.0",

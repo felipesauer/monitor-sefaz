@@ -128,6 +128,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@monitor-sefaz/catalog':
+        specifier: workspace:*
+        version: link:../../packages/catalog
       '@monitor-sefaz/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
