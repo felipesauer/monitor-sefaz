@@ -6,6 +6,7 @@ import {
   renderHead,
   resolveSiteUrl,
   ufMeta,
+  googleVerificationFile,
   verificationToken,
 } from '../src/lib/seo.js';
 
@@ -140,5 +141,26 @@ describe('descoberta do sitemap e verificação', () => {
     const withBoth = renderHead(homeMeta(siteUrl), siteUrl, { google: 'g-123', bing: 'B456' });
     expect(withBoth).toContain('<meta name="google-site-verification" content="g-123" />');
     expect(withBoth).toContain('<meta name="msvalidate.01" content="B456" />');
+  });
+});
+
+describe('googleVerificationFile', () => {
+  it('reconhece o nome do arquivo do método "Arquivo HTML"', () => {
+    expect(googleVerificationFile(' google0123456789abcdef.html ')).toBe(
+      'google0123456789abcdef.html'
+    );
+  });
+
+  it('não confunde com o código da meta tag', () => {
+    expect(googleVerificationFile('rXOxyZounnZ-8Z7o')).toBeNull();
+    expect(googleVerificationFile(undefined)).toBeNull();
+  });
+
+  it('com o nome do arquivo, a meta tag do Google fica de fora', () => {
+    const siteUrl = 'https://exemplo.com.br/';
+    const head = renderHead(homeMeta(siteUrl), siteUrl, {
+      google: 'google0123456789abcdef.html',
+    });
+    expect(head).not.toContain('google-site-verification');
   });
 });

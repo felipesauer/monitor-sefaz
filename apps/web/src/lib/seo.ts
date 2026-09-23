@@ -155,6 +155,17 @@ export function verificationToken(name: string, raw: string | undefined): string
   return token;
 }
 
+/**
+ * Nome do arquivo do método "Arquivo HTML" do Search Console
+ * (google1a2b3c4d5e6f7a8b.html), quando é isso que veio no lugar do código da
+ * meta tag. O prerender grava o arquivo na raiz do site, e a meta tag fica de
+ * fora — com esse valor ela não verificaria nada.
+ */
+export function googleVerificationFile(raw: string | undefined): string | null {
+  const value = raw?.trim();
+  return value && /^google[0-9a-f]+\.html$/i.test(value) ? value : null;
+}
+
 /** Tags do <head> de uma página, na indentação do index.html. */
 export function renderHead(
   meta: PageMeta,
@@ -162,7 +173,9 @@ export function renderHead(
   verification: SiteVerification = {}
 ): string {
   const image = `${siteUrl}og-image.png`;
-  const google = verificationToken('GOOGLE_SITE_VERIFICATION', verification.google);
+  const google = googleVerificationFile(verification.google)
+    ? null
+    : verificationToken('GOOGLE_SITE_VERIFICATION', verification.google);
   const bing = verificationToken('BING_SITE_VERIFICATION', verification.bing);
   const tags = [
     `<title>${escapeHtml(meta.title)}</title>`,

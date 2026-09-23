@@ -3,7 +3,13 @@ import { renderToString } from 'react-dom/server';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { App } from './App.js';
 import { ALL_PAGES, pagePath, type Page } from './lib/pages.js';
-import { pageMeta, renderHead, resolveSiteUrl, type SiteVerification } from './lib/seo.js';
+import {
+  googleVerificationFile,
+  pageMeta,
+  renderHead,
+  resolveSiteUrl,
+  type SiteVerification,
+} from './lib/seo.js';
 import { renderRobots, renderSitemap } from './lib/sitemap.js';
 
 /**
@@ -78,9 +84,15 @@ export function prerender({
     ),
   }));
   const urls = ALL_PAGES.map((page) => `${siteUrl}${pagePath(page)}`);
+  // Método "Arquivo HTML" do Search Console: o arquivo na raiz da propriedade,
+  // com a linha exata que o Google procura.
+  const googleFile = googleVerificationFile(verification?.google);
   return [
     ...pages,
     { path: 'sitemap.xml', content: renderSitemap(urls, lastmod) },
     { path: 'robots.txt', content: renderRobots(siteUrl) },
+    ...(googleFile
+      ? [{ path: googleFile, content: `google-site-verification: ${googleFile}` }]
+      : []),
   ];
 }
