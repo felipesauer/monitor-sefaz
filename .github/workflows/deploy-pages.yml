@@ -21,8 +21,14 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  # Build e deploy no mesmo job, dentro da environment github-pages: variável
+  # de environment só chega a job que a referencia, e é o build que escreve o
+  # HTML (as tags de verificação, por exemplo).
+  deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -42,10 +48,11 @@ jobs:
         # VITE_API_BASE_URL → SPA consome o Cloudflare Worker ao vivo. A URL vem
         # da variável de repositório WORKER_URL (Settings → Variables); se ausente,
         # cai para os JSONs estáticos versionados.
-        # GOOGLE_SITE_VERIFICATION / BING_SITE_VERIFICATION → meta tags de
-        # verificação do Search Console e do Bing Webmaster. Valem como secret ou
-        # como variável de repositório (o código acaba público no HTML de todo
-        # jeito). Aceitam o código ou a <meta> inteira; ausentes, nada muda.
+        # GOOGLE_SITE_VERIFICATION / BING_SITE_VERIFICATION → verificação do
+        # Search Console e do Bing Webmaster. Valem como secret, variável do
+        # repositório ou variável da environment github-pages (o código acaba
+        # público no site de todo jeito). Aceitam o código, a <meta> inteira ou,
+        # no Google, o nome do arquivo HTML; ausentes, nada muda.
         env:
           BASE_PATH: /${{ github.event.repository.name }}/
           VITE_API_BASE_URL: ${{ vars.WORKER_URL }}
@@ -57,12 +64,5 @@ jobs:
         with:
           path: apps/web/dist
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
       - id: deployment
         uses: actions/deploy-pages@v5

@@ -146,6 +146,19 @@ describe('prerender', () => {
     expect(file(files, 'index.html')).not.toContain('google-site-verification');
   });
 
+  it('grava o arquivo de verificação do Google quando é esse o método', () => {
+    const verified = prerender({
+      template: TEMPLATE,
+      lastmod: LASTMOD,
+      verification: { google: 'google0123456789abcdef.html' },
+    });
+    expect(file(verified, 'google0123456789abcdef.html')).toBe(
+      'google-site-verification: google0123456789abcdef.html'
+    );
+    expect(file(verified, 'index.html')).not.toContain('google-site-verification');
+    expect(files.some((f) => f.path.startsWith('google'))).toBe(false);
+  });
+
   it('falha alto se o index.html perdeu os marcadores', () => {
     expect(() => prerender({ template: '<html></html>', lastmod: LASTMOD })).toThrow(
       /marcadores do prerender/

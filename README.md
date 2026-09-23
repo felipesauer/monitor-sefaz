@@ -234,8 +234,10 @@ variáveis:
 - `GOOGLE_SITE_VERIFICATION` / `BING_SITE_VERIFICATION`: códigos de
   verificação do Google Search Console e do Bing Webmaster Tools. Viram as
   meta tags `google-site-verification` e `msvalidate.01` em todas as páginas.
-  Aceitam o código puro ou a `<meta>` inteira, como o painel a mostra. No deploy
-  oficial, vêm do secret ou da variável de repositório de mesmo nome.
+  Aceitam o código puro ou a `<meta>` inteira, como o painel a mostra. No
+  Google, o nome do arquivo do método "Arquivo HTML" (`google….html`) também
+  serve: o build grava o arquivo na raiz do site. No deploy oficial, vêm de um
+  secret, de uma variável do repositório ou da environment `github-pages`.
 
 A API self-host lê as variáveis de um `.env` na raiz (veja [`.env.example`](.env.example)):
 
