@@ -1,6 +1,6 @@
 {
   "name": "@monitor-sefaz/catalog",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Catálogo dos documentos fiscais eletrônicos brasileiros: mapa UF → autorizador (SVRS, SVAN, SVC, AN), endpoints dos webservices e tabela de cStat.",
   "keywords": [
     "sefaz",

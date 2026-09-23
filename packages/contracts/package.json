@@ -1,6 +1,6 @@
 {
   "name": "@monitor-sefaz/contracts",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Schemas Zod e DTOs compartilhados do Monitor SEFAZ: status, histórico (compacto), resumo, incidentes e eventos de notificação.",
   "keywords": [
     "sefaz",

@@ -1,6 +1,6 @@
 {
   "name": "@monitor-sefaz/core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Motor de coleta de disponibilidade da SEFAZ: consenso multi-fonte com precedência oficial, parsers dos portais, envelopes SOAP e Notas Técnicas.",
   "keywords": [
     "sefaz",
