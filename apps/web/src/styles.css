@@ -6,6 +6,10 @@
  * temas), espelhando a abordagem de status pages modernas.
  */
 
+/* O tema escuro é a classe `dark` no <html> (aplicada antes do primeiro paint,
+   ver index.html), não a preferência do sistema: `dark:` segue a mesma regra. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-ok: oklch(0.68 0.18 152);
   --color-slow: oklch(0.78 0.16 75);

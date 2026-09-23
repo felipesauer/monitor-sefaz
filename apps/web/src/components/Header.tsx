@@ -1,11 +1,9 @@
 import { Activity, LayoutGrid, Moon, Pause, Play, RefreshCw, Sun } from 'lucide-react';
-import type { Theme } from '../hooks/useTheme.js';
 
 /** Modos de layout do painel (espelha o monitorsefaz). */
 export type LayoutMode = 'operation' | 'panel' | 'metrics';
 
 interface HeaderProps {
-  theme: Theme;
   onToggleTheme: () => void;
   layout: LayoutMode;
   onLayout: (mode: LayoutMode) => void;
@@ -24,7 +22,6 @@ const MODES: { value: LayoutMode; label: string }[] = [
 
 /** Cabeçalho: marca, modos de layout, atualização e controles. */
 export function Header({
-  theme,
   onToggleTheme,
   layout,
   onLayout,
@@ -124,7 +121,10 @@ export function Header({
             title="Alternar tema"
             aria-label="Alternar tema"
           >
-            {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            {/* O ícone segue a classe `dark` do <html> via CSS, não o estado do
+                React: assim ele já sai certo no HTML pré-renderizado. */}
+            <Sun className="hidden h-4 w-4 dark:block" />
+            <Moon className="h-4 w-4 dark:hidden" />
           </button>
         </div>
       </div>

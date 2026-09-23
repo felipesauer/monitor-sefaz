@@ -3,6 +3,7 @@ import type { ServiceStateValue } from '@monitor-sefaz/contracts';
 import { STATE_META } from './serviceState.js';
 import { UF_NAME } from '../lib/labels.js';
 import { BR_PATHS, BR_VIEWBOX } from '../lib/brazilGeo.js';
+import { useHydrated } from '../hooks/useHydrated.js';
 
 interface BrazilMapProps {
   /** Estado agregado (pior) de cada UF. */
@@ -83,6 +84,9 @@ const LABEL_STYLE = {
  * um GeoJSON de domínio público, simplificado para o tamanho do bundle.
  */
 export function BrazilMap({ ufStates, selectedUfs, onToggleUf }: BrazilMapProps) {
+  // Os paths somam ~275 KB e o mapa só funciona com JS: o HTML pré-renderizado
+  // leva só o <svg> vazio, que já reserva o espaço (sem salto de layout).
+  const paths: Record<string, string> = useHydrated() ? BR_PATHS : {};
   const stateByUf = new Map(ufStates.map((u) => [u.uf, u.state]));
   const hasSelection = selectedUfs.size > 0;
 
@@ -114,7 +118,7 @@ export function BrazilMap({ ufStates, selectedUfs, onToggleUf }: BrazilMapProps)
         role="group"
       >
         {/* Camada 1: polígonos clicáveis dos estados. */}
-        {Object.entries(BR_PATHS).map(([uf, d]) => {
+        {Object.entries(paths).map(([uf, d]) => {
           const color = colorOf(uf);
           const active = selectedUfs.has(uf);
           const dimmed = hasSelection && !active;
@@ -148,7 +152,7 @@ export function BrazilMap({ ufStates, selectedUfs, onToggleUf }: BrazilMapProps)
 
         {/* Camada 2: leader lines dos estados pequenos (atrás dos badges). */}
         {Object.entries(EXTERNAL).map(([uf, g]) => {
-          if (!BR_PATHS[uf]) return null;
+          if (!paths[uf]) return null;
           const pts = `${g.anchor[0]},${g.anchor[1]} ${g.elbow[0]},${g.elbow[1]} ${g.label[0]},${g.label[1]}`;
           return (
             <polyline
@@ -164,7 +168,7 @@ export function BrazilMap({ ufStates, selectedUfs, onToggleUf }: BrazilMapProps)
 
         {/* Camada 3: badges internos (sigla + bolinha no centróide). */}
         {Object.entries(INTERNAL).map(([uf, p]) => {
-          if (!BR_PATHS[uf]) return null;
+          if (!paths[uf]) return null;
           return (
             <g key={`in-${uf}`} style={{ pointerEvents: 'none' }} aria-hidden="true">
               <circle
@@ -192,7 +196,7 @@ export function BrazilMap({ ufStates, selectedUfs, onToggleUf }: BrazilMapProps)
 
         {/* Camada 4: badges externos (bolinha + sigla, alinhados à direita do rótulo). */}
         {Object.entries(EXTERNAL).map(([uf, g]) => {
-          if (!BR_PATHS[uf]) return null;
+          if (!paths[uf]) return null;
           const [lx, ly] = g.label;
           // texto right-aligned em lx; bolinha à esquerda do texto (recuo p/ caber a sigla de 2 letras).
           const dotCx = lx - 19;

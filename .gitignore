@@ -1,5 +1,7 @@
 node_modules/
 dist/
+# Bundle intermediário do pré-render (apps/web); o próprio build o apaga.
+dist-ssr/
 coverage/
 .turbo/
 *.tsbuildinfo

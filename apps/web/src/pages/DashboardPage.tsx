@@ -41,7 +41,7 @@ function aggregateUfStates(
 
 /** Página principal: status page de disponibilidade da SEFAZ (produção). */
 export function DashboardPage() {
-  const { theme, toggle } = useTheme();
+  const { toggle } = useTheme();
   const queryClient = useQueryClient();
 
   const [layout, setLayout] = useState<LayoutMode>('panel');
@@ -98,7 +98,6 @@ export function DashboardPage() {
   return (
     <div style={{ minHeight: '100vh' }}>
       <Header
-        theme={theme}
         onToggleTheme={toggle}
         layout={layout}
         onLayout={setLayout}
@@ -146,6 +145,18 @@ export function DashboardPage() {
             Carregando…
           </p>
         )}
+        <noscript>
+          <p className="text-center text-sm" style={{ color: 'var(--text-dim)' }}>
+            O status ao vivo precisa de JavaScript. Sem ele, consulte a{' '}
+            <a
+              href="https://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx"
+              style={{ color: 'var(--accent)' }}
+            >
+              página oficial de disponibilidade da SEFAZ
+            </a>
+            .
+          </p>
+        </noscript>
         {status.isError && (
           <p className="py-16 text-center text-sm" style={{ color: 'var(--down)' }}>
             Não foi possível carregar o status. Tente novamente.
