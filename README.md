@@ -235,7 +235,7 @@ variáveis:
   verificação do Google Search Console e do Bing Webmaster Tools. Viram as
   meta tags `google-site-verification` e `msvalidate.01` em todas as páginas.
   Aceitam o código puro ou a `<meta>` inteira, como o painel a mostra. No deploy
-  oficial, vêm das variáveis de repositório de mesmo nome.
+  oficial, vêm do secret ou da variável de repositório de mesmo nome.
 
 A API self-host lê as variáveis de um `.env` na raiz (veja [`.env.example`](.env.example)):
 

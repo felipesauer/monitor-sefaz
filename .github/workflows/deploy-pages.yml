@@ -43,13 +43,14 @@ jobs:
         # da variável de repositório WORKER_URL (Settings → Variables); se ausente,
         # cai para os JSONs estáticos versionados.
         # GOOGLE_SITE_VERIFICATION / BING_SITE_VERIFICATION → meta tags de
-        # verificação do Search Console e do Bing Webmaster, também variáveis de
-        # repositório. Aceitam o código ou a <meta> inteira; ausentes, nada muda.
+        # verificação do Search Console e do Bing Webmaster. Valem como secret ou
+        # como variável de repositório (o código acaba público no HTML de todo
+        # jeito). Aceitam o código ou a <meta> inteira; ausentes, nada muda.
         env:
           BASE_PATH: /${{ github.event.repository.name }}/
           VITE_API_BASE_URL: ${{ vars.WORKER_URL }}
-          GOOGLE_SITE_VERIFICATION: ${{ vars.GOOGLE_SITE_VERIFICATION }}
-          BING_SITE_VERIFICATION: ${{ vars.BING_SITE_VERIFICATION }}
+          GOOGLE_SITE_VERIFICATION: ${{ secrets.GOOGLE_SITE_VERIFICATION || vars.GOOGLE_SITE_VERIFICATION }}
+          BING_SITE_VERIFICATION: ${{ secrets.BING_SITE_VERIFICATION || vars.BING_SITE_VERIFICATION }}
         run: pnpm --filter "@monitor-sefaz/web..." build
 
       - uses: actions/upload-pages-artifact@v5
