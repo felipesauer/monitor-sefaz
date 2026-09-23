@@ -8,7 +8,7 @@
     "build": "tsc -b tsconfig.json && vite build && vite build --ssr src/entry-server.tsx --outDir dist-ssr && node scripts/prerender.js",
     "preview": "vite preview",
     "typecheck": "tsc -b tsconfig.json",
-    "lint": "eslint src",
+    "lint": "eslint src scripts",
     "test": "vitest run"
   },
   "dependencies": {
