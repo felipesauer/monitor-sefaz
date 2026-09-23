@@ -37,7 +37,14 @@ const entry = catalog.resolve(DocumentType.NFe, 'AC', Environment.Production);
 // Todas as 27 UFs de um documento, ou os 135 serviços de uma vez.
 catalog.list(DocumentType.CTe, Environment.Production); // 27 entradas
 catalog.listAll(Environment.Production); // 135 entradas
+
+// Para onde vai a NF-e de SP quando a contingência é ativada?
+catalog.resolveContingency(DocumentType.NFe, 'SP'); // 'SVCAN'
+catalog.resolveContingency(DocumentType.NFe, 'PR'); // 'SVCRS'
 ```
+
+Por ora só a NF-e tem contingência mapeada; para os demais documentos
+`resolveContingency` devolve `null`.
 
 Dados e constantes também são exportados diretamente:
 
@@ -48,7 +55,9 @@ import {
   CSTAT_OPERATIONAL, // 107
   CSTAT_SLOWDOWN, // 108
   CSTAT_DOWN, // 109
+  REGIONS, // as 5 regiões, na ordem do IBGE
   UF_AUTHORIZERS, // mapa documento → UF → autorizador
+  UF_CONTINGENCY_AUTHORIZERS, // mapa documento → UF → SVC (só NF-e)
   UF_INFO, // nome, código IBGE e região de cada UF
 } from '@monitor-sefaz/catalog';
 ```

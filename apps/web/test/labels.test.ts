@@ -1,5 +1,13 @@
 import { describe, it, expect } from 'vitest';
-import { formatLatency } from '../src/lib/labels.js';
+import { UF_NAME, formatLatency } from '../src/lib/labels.js';
+
+describe('UF_NAME', () => {
+  it('nomeia as 27 UFs a partir do catalog', () => {
+    expect(Object.keys(UF_NAME)).toHaveLength(27);
+    expect(UF_NAME.SP).toBe('São Paulo');
+    expect(UF_NAME.DF).toBe('Distrito Federal');
+  });
+});
 
 describe('formatLatency', () => {
   it('0 é medição legítima (resposta rápida), não "—"', () => {

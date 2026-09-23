@@ -7,7 +7,12 @@ import {
 } from './types.js';
 import { UF_INFO, ALL_UFS } from './uf-info.js';
 import { ENDPOINTS } from './endpoints.js';
-import { UF_AUTHORIZERS, DEFAULT_AUTHORIZER, VIRTUAL_AUTHORIZER_CUF } from './authorizers.js';
+import {
+  UF_AUTHORIZERS,
+  UF_CONTINGENCY_AUTHORIZERS,
+  DEFAULT_AUTHORIZER,
+  VIRTUAL_AUTHORIZER_CUF,
+} from './authorizers.js';
 
 /**
  * Fração mínima padrão do catálogo que uma coleta precisa cobrir para ser
@@ -42,6 +47,14 @@ export class Catalog {
   /** Resolve o autorizador responsável por uma UF em um dado documento. */
   public resolveAuthorizer(document: DocumentType, uf: UF): AuthorizerCode {
     return UF_AUTHORIZERS[document][uf] ?? DEFAULT_AUTHORIZER;
+  }
+
+  /**
+   * Ambiente de contingência (SVC) que atende a UF no documento, ou `null`
+   * quando o catálogo não o mapeia — hoje só a NF-e tem SVC mapeado.
+   */
+  public resolveContingency(document: DocumentType, uf: UF): AuthorizerCode | null {
+    return UF_CONTINGENCY_AUTHORIZERS[document]?.[uf] ?? null;
   }
 
   /**

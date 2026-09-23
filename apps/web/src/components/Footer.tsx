@@ -13,7 +13,7 @@ export function Footer() {
             className="inline-flex items-center gap-1.5 hover:underline"
             href="https://github.com/felipesauer/monitor-sefaz"
             target="_blank"
-            rel="noreferrer"
+            rel="noopener"
             style={{ color: 'var(--accent)' }}
           >
             <Github className="h-3.5 w-3.5" />

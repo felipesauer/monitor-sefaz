@@ -84,6 +84,34 @@ export const UF_AUTHORIZERS: Readonly<Record<DocumentType, Partial<Record<UF, Au
 };
 
 /**
+ * UFs cuja NF-e vai para o SVC-RS quando a contingência é ativada; as demais
+ * vão para o SVC-AN. Quem autoriza no SVRS fica no SVC-AN (o SVC-RS roda na
+ * mesma infraestrutura do SVRS) e o SVAN fica no SVC-RS; os autorizadores
+ * próprios se dividem entre os dois. Fonte: Portal Nacional da NF-e, "Relação
+ * de Serviços Web" (confere com nfephp-org/sped-nfe, src/Factories/Contingency.php).
+ */
+const NFE_SVCRS_UFS: UF[] = ['AM', 'BA', 'GO', 'MA', 'MS', 'MT', 'PE', 'PR'];
+
+function buildNFeContingencyMap(): Record<UF, AuthorizerCode> {
+  const map = {} as Record<UF, AuthorizerCode>;
+  for (const uf of ALL_UFS) {
+    map[uf] = NFE_SVCRS_UFS.includes(uf) ? 'SVCRS' : 'SVCAN';
+  }
+  return map;
+}
+
+/**
+ * Mapa documento → UF → ambiente de contingência (SVC). Por ora só a NF-e está
+ * mapeada: a NFC-e não usa SVC (a contingência dela é off-line) e o CT-e usa
+ * SVC-RS/SVC-SP, que o catálogo ainda não modela.
+ */
+export const UF_CONTINGENCY_AUTHORIZERS: Readonly<
+  Partial<Record<DocumentType, Partial<Record<UF, AuthorizerCode>>>>
+> = {
+  [DocumentType.NFe]: buildNFeContingencyMap(),
+};
+
+/**
  * Códigos IBGE (`cUF`) dos autorizadores virtuais/nacionais, usados no envelope
  * SOAP quando o alvo não corresponde a uma UF física.
  */

@@ -9,5 +9,5 @@
     "noEmit": false
   },
   "include": ["src"],
-  "references": [{ "path": "../../packages/contracts" }]
+  "references": [{ "path": "../../packages/catalog" }, { "path": "../../packages/contracts" }]
 }

@@ -36,6 +36,26 @@ describe('Catalog', () => {
     expect(entry?.url).toContain('CTeStatusServico');
   });
 
+  it('resolve a contingência SVC da NF-e por UF', () => {
+    expect(catalog.resolveContingency(DocumentType.NFe, 'SP')).toBe('SVCAN');
+    expect(catalog.resolveContingency(DocumentType.NFe, 'PR')).toBe('SVCRS');
+    expect(catalog.resolveContingency(DocumentType.NFe, 'AC')).toBe('SVCAN');
+  });
+
+  it('manda quem autoriza no SVRS para o SVC-AN e o SVAN para o SVC-RS', () => {
+    // O SVC-RS roda na infraestrutura do SVRS: contingenciar ali quem já
+    // depende do SVRS não protegeria nada.
+    for (const { uf, authorizer } of catalog.list(DocumentType.NFe, Environment.Production)) {
+      const svc = catalog.resolveContingency(DocumentType.NFe, uf);
+      if (authorizer === 'SVRS') expect(svc, uf).toBe('SVCAN');
+      if (authorizer === 'SVAN') expect(svc, uf).toBe('SVCRS');
+    }
+  });
+
+  it('não inventa SVC para documento sem contingência mapeada', () => {
+    expect(catalog.resolveContingency(DocumentType.NFCe, 'SP')).toBeNull();
+  });
+
   it('centraliza MDF-e e DC-e no SVRS', () => {
     expect(catalog.resolve(DocumentType.MDFe, 'PA', Environment.Production)?.authorizer).toBe(
       'SVRS'

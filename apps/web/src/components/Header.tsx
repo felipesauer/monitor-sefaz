@@ -1,19 +1,24 @@
 import { Activity, LayoutGrid, Moon, Pause, Play, RefreshCw, Sun } from 'lucide-react';
-import type { Theme } from '../hooks/useTheme.js';
+import { GitHubStarButton } from './GitHubStarButton.js';
 
 /** Modos de layout do painel (espelha o monitorsefaz). */
 export type LayoutMode = 'operation' | 'panel' | 'metrics';
 
 interface HeaderProps {
-  theme: Theme;
   onToggleTheme: () => void;
-  layout: LayoutMode;
-  onLayout: (mode: LayoutMode) => void;
+  /** Modos de layout do painel. As páginas por UF não têm: sem eles, o seletor some. */
+  layout?: LayoutMode;
+  onLayout?: (mode: LayoutMode) => void;
   generatedAt?: string;
   refreshLabel: string;
   paused: boolean;
   onTogglePause: () => void;
   onRefresh: () => void;
+  /**
+   * Nas páginas internas, a marca vira link para o painel e deixa o <h1> para
+   * o assunto da página.
+   */
+  homeHref?: string;
 }
 
 const MODES: { value: LayoutMode; label: string }[] = [
@@ -24,7 +29,6 @@ const MODES: { value: LayoutMode; label: string }[] = [
 
 /** Cabeçalho: marca, modos de layout, atualização e controles. */
 export function Header({
-  theme,
   onToggleTheme,
   layout,
   onLayout,
@@ -33,54 +37,68 @@ export function Header({
   paused,
   onTogglePause,
   onRefresh,
+  homeHref,
 }: HeaderProps) {
+  const Title = homeHref ? 'p' : 'h1';
+  const brand = (
+    <>
+      <div
+        className="flex h-10 w-10 items-center justify-center rounded-xl text-white"
+        style={{ background: 'var(--accent)' }}
+      >
+        <Activity className="h-5 w-5" />
+      </div>
+      <div>
+        <Title className="text-lg font-bold leading-tight">Monitor SEFAZ</Title>
+        <p className="text-xs" style={{ color: 'var(--text-dim)' }}>
+          Disponibilidade de NF-e, NFC-e, CT-e, MDF-e e DC-e
+        </p>
+      </div>
+    </>
+  );
+
   return (
     <header
       className="sticky top-0 z-20 border-b backdrop-blur"
       style={{ background: 'color-mix(in srgb, var(--bg) 85%, transparent)' }}
     >
       <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3 lg:flex-row lg:items-center lg:justify-between">
-        <div className="flex items-center gap-3">
-          <div
-            className="flex h-10 w-10 items-center justify-center rounded-xl text-white"
-            style={{ background: 'var(--accent)' }}
-          >
-            <Activity className="h-5 w-5" />
-          </div>
-          <div>
-            <h1 className="text-lg font-bold leading-tight">Monitor SEFAZ</h1>
-            <p className="text-xs" style={{ color: 'var(--text-dim)' }}>
-              Disponibilidade de NF-e, NFC-e, CT-e, MDF-e e DC-e
-            </p>
-          </div>
-        </div>
+        {homeHref ? (
+          <a href={homeHref} className="flex items-center gap-3">
+            {brand}
+          </a>
+        ) : (
+          <div className="flex items-center gap-3">{brand}</div>
+        )}
 
         <div className="flex flex-wrap items-center gap-2">
           {/* modos de layout */}
-          <div
-            className="inline-flex items-center gap-0.5 rounded-lg border p-0.5"
-            role="group"
-            aria-label="Modos de layout"
-            style={{ background: 'var(--surface-2)' }}
-          >
-            {MODES.map((m) => (
-              <button
-                key={m.value}
-                type="button"
-                onClick={() => onLayout(m.value)}
-                aria-pressed={layout === m.value}
-                className="flex items-center gap-1 rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors"
-                style={
-                  layout === m.value
-                    ? { background: 'var(--accent)', color: '#fff' }
-                    : { color: 'var(--text-dim)' }
-                }
-              >
-                <LayoutGrid className="h-3.5 w-3.5" />
-                {m.label}
-              </button>
-            ))}
-          </div>
+          {layout && onLayout && (
+            <div
+              className="inline-flex items-center gap-0.5 rounded-lg border p-0.5"
+              role="group"
+              aria-label="Modos de layout"
+              style={{ background: 'var(--surface-2)' }}
+            >
+              {MODES.map((m) => (
+                <button
+                  key={m.value}
+                  type="button"
+                  onClick={() => onLayout(m.value)}
+                  aria-pressed={layout === m.value}
+                  className="flex items-center gap-1 rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors"
+                  style={
+                    layout === m.value
+                      ? { background: 'var(--accent)', color: '#fff' }
+                      : { color: 'var(--text-dim)' }
+                  }
+                >
+                  <LayoutGrid className="h-3.5 w-3.5" />
+                  {m.label}
+                </button>
+              ))}
+            </div>
+          )}
 
           {/* atualização */}
           <div className="hidden text-right text-xs sm:block" style={{ color: 'var(--text-dim)' }}>
@@ -94,6 +112,8 @@ export function Header({
             )}
             <div className="text-[11px] opacity-80">{refreshLabel}</div>
           </div>
+
+          <GitHubStarButton />
 
           {/* controles */}
           <button
@@ -124,7 +144,10 @@ export function Header({
             title="Alternar tema"
             aria-label="Alternar tema"
           >
-            {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            {/* O ícone segue a classe `dark` do <html> via CSS, não o estado do
+                React: assim ele já sai certo no HTML pré-renderizado. */}
+            <Sun className="hidden h-4 w-4 dark:block" />
+            <Moon className="h-4 w-4 dark:hidden" />
           </button>
         </div>
       </div>

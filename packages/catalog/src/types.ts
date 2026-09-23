@@ -66,8 +66,12 @@ export type AuthorizerCode =
 /** Chave de ambiente em formato textual usada em configs/URLs. */
 export type EnvironmentKey = 'production' | 'homologation';
 
-/** Metadados de uma UF: código IBGE e nome por extenso. */
+/** Grandes regiões do IBGE. */
+export type Region = 'Norte' | 'Nordeste' | 'Sudeste' | 'Sul' | 'Centro-Oeste';
+
+/** Metadados de uma UF: código IBGE, nome por extenso e região. */
 export interface UFInfo {
   readonly cUF: number;
   readonly nome: string;
+  readonly regiao: Region;
 }
