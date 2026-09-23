@@ -105,6 +105,14 @@ describe('prerender', () => {
     expect(html).toContain('aria-current="page"');
   });
 
+  it('põe o botão de estrela no header de todas as páginas', () => {
+    for (const path of ['index.html', 'sefaz-sp/index.html', 'sefaz-am/index.html']) {
+      const html = file(files, path);
+      expect(html).toContain('href="https://github.com/felipesauer/monitor-sefaz" target="_blank"');
+      expect(html).toContain('Star no GitHub');
+    }
+  });
+
   it('liga a home às 27 páginas por UF', () => {
     const html = file(files, 'index.html');
     expect(new Set(html.match(/href="\/sefaz-[a-z]{2}\/"/g)).size).toBe(27);

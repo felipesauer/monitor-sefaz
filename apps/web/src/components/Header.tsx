@@ -1,4 +1,5 @@
 import { Activity, LayoutGrid, Moon, Pause, Play, RefreshCw, Sun } from 'lucide-react';
+import { GitHubStarButton } from './GitHubStarButton.js';
 
 /** Modos de layout do painel (espelha o monitorsefaz). */
 export type LayoutMode = 'operation' | 'panel' | 'metrics';
@@ -111,6 +112,8 @@ export function Header({
             )}
             <div className="text-[11px] opacity-80">{refreshLabel}</div>
           </div>
+
+          <GitHubStarButton />
 
           {/* controles */}
           <button
