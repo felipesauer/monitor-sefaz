@@ -1,4 +1,4 @@
-import { ALL_UFS, UF_INFO } from '@monitor-sefaz/catalog';
+import { ALL_UFS, UF_INFO, type UF } from '@monitor-sefaz/catalog';
 
 /** Rótulos amigáveis de UF e documento para a interface. */
 
@@ -6,6 +6,70 @@ import { ALL_UFS, UF_INFO } from '@monitor-sefaz/catalog';
 export const UF_NAME: Record<string, string> = Object.fromEntries(
   ALL_UFS.map((uf) => [uf, UF_INFO[uf].nome])
 );
+
+/**
+ * Artigo que o nome de cada UF pede ("o Acre", "a Bahia", "São Paulo"), para
+ * as frases das páginas por estado saírem naturais: "do Acre", "na Bahia",
+ * "em São Paulo". Segue a forma oficial ("Governo de Mato Grosso").
+ */
+const UF_ARTICLE: Record<UF, '' | 'o' | 'a'> = {
+  AC: 'o',
+  AL: '',
+  AP: 'o',
+  AM: 'o',
+  BA: 'a',
+  CE: 'o',
+  DF: 'o',
+  ES: 'o',
+  GO: '',
+  MA: 'o',
+  MG: '',
+  MS: '',
+  MT: '',
+  PA: 'o',
+  PB: 'a',
+  PE: '',
+  PI: 'o',
+  PR: 'o',
+  RJ: 'o',
+  RN: 'o',
+  RO: '',
+  RR: '',
+  RS: 'o',
+  SC: '',
+  SE: '',
+  SP: '',
+  TO: 'o',
+};
+
+const OF = { '': 'de', o: 'do', a: 'da' } as const;
+const IN = { '': 'em', o: 'no', a: 'na' } as const;
+
+/** "de São Paulo", "do Acre", "da Bahia". */
+export function ofUf(uf: UF): string {
+  return `${OF[UF_ARTICLE[uf]]} ${UF_INFO[uf].nome}`;
+}
+
+/** "em São Paulo", "no Acre", "na Bahia". */
+export function inUf(uf: UF): string {
+  return `${IN[UF_ARTICLE[uf]]} ${UF_INFO[uf].nome}`;
+}
+
+/** Nome por extenso dos autorizadores que não são a SEFAZ de uma UF. */
+export const AUTHORIZER_NAME: Record<string, string> = {
+  SVRS: 'Sefaz Virtual do Rio Grande do Sul',
+  SVAN: 'Sefaz Virtual do Ambiente Nacional',
+  AN: 'Ambiente Nacional',
+  SVCAN: 'Sefaz Virtual de Contingência do Ambiente Nacional',
+  SVCRS: 'Sefaz Virtual de Contingência do Rio Grande do Sul',
+};
+
+/** Sigla de exibição do autorizador: "SVC-AN" para SVCAN, "SEFAZ-SP" para SP. */
+export function authorizerLabel(code: string): string {
+  if (code === 'SVCAN') return 'SVC-AN';
+  if (code === 'SVCRS') return 'SVC-RS';
+  return code in AUTHORIZER_NAME ? code : `SEFAZ-${code}`;
+}
 
 /** Rótulo de exibição de cada documento (com hífen, como o público espera). */
 export const DOC_LABEL: Record<string, string> = {

@@ -2,7 +2,8 @@ import { StrictMode } from 'react';
 import { renderToString } from 'react-dom/server';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { App } from './App.js';
-import { homeMeta, renderHead, resolveSiteUrl } from './lib/seo.js';
+import { ALL_PAGES, pagePath, type Page } from './lib/pages.js';
+import { pageMeta, renderHead, resolveSiteUrl } from './lib/seo.js';
 import { renderSitemap } from './lib/sitemap.js';
 
 /**
@@ -34,13 +35,13 @@ const HEAD_START = '<!--app-head-->';
 const HEAD_END = '<!--/app-head-->';
 const BODY_SLOT = '<!--app-html-->';
 
-function renderApp(): string {
+function renderApp(page: Page): string {
   // Um QueryClient por render: nada do cache de uma página vaza para outra.
   const queryClient = new QueryClient();
   return renderToString(
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-        <App />
+        <App page={page} />
       </QueryClientProvider>
     </StrictMode>
   );
@@ -65,11 +66,14 @@ export function prerender({
   lastmod,
 }: PrerenderOptions): PrerenderedFile[] {
   const siteUrl = resolveSiteUrl(rawSiteUrl);
-  return [
-    {
-      path: 'index.html',
-      content: fillTemplate(template, renderHead(homeMeta(siteUrl), siteUrl), renderApp()),
-    },
-    { path: 'sitemap.xml', content: renderSitemap([siteUrl], lastmod) },
-  ];
+  const pages = ALL_PAGES.map((page) => ({
+    path: `${pagePath(page)}index.html`,
+    content: fillTemplate(
+      template,
+      renderHead(pageMeta(page, siteUrl, lastmod), siteUrl),
+      renderApp(page)
+    ),
+  }));
+  const urls = ALL_PAGES.map((page) => `${siteUrl}${pagePath(page)}`);
+  return [...pages, { path: 'sitemap.xml', content: renderSitemap(urls, lastmod) }];
 }

@@ -21,6 +21,8 @@ import { StatusLegend } from '../components/StatusLegend.js';
 import { BrazilMap } from '../components/BrazilMap.js';
 import { HelpSection } from '../components/HelpSection.js';
 import { TechnicalNotesCard } from '../components/TechnicalNotesCard.js';
+import { NoScriptNotice } from '../components/NoScriptNotice.js';
+import { UfDirectory } from '../components/UfDirectory.js';
 import { STATE_SEVERITY } from '../components/serviceState.js';
 
 /** Estado agregado (pior) de uma UF entre os serviços visíveis — colore o chip. */
@@ -145,18 +147,7 @@ export function DashboardPage() {
             Carregando…
           </p>
         )}
-        <noscript>
-          <p className="text-center text-sm" style={{ color: 'var(--text-dim)' }}>
-            O status ao vivo precisa de JavaScript. Sem ele, consulte a{' '}
-            <a
-              href="https://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx"
-              style={{ color: 'var(--accent)' }}
-            >
-              página oficial de disponibilidade da SEFAZ
-            </a>
-            .
-          </p>
-        </noscript>
+        <NoScriptNotice />
         {status.isError && (
           <p className="py-16 text-center text-sm" style={{ color: 'var(--down)' }}>
             Não foi possível carregar o status. Tente novamente.
@@ -165,6 +156,18 @@ export function DashboardPage() {
         {status.data && (
           <ServiceGrid services={visible} series={series.data ?? {}} onSelect={setSelected} />
         )}
+
+        <section
+          className="rounded-xl border p-4 sm:p-5"
+          style={{ background: 'var(--surface)', boxShadow: 'var(--shadow)' }}
+        >
+          <h2 className="text-sm font-semibold">Status da SEFAZ por estado</h2>
+          <p className="mb-4 mt-1 text-xs leading-relaxed" style={{ color: 'var(--text-dim)' }}>
+            Cada estado tem uma página com o status ao vivo, quem autoriza cada documento e o que
+            fazer quando a SEFAZ cai.
+          </p>
+          <UfDirectory />
+        </section>
 
         <TechnicalNotesCard notes={technicalNotes.data?.notes ?? []} />
         <HelpSection />

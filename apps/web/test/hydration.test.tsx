@@ -5,12 +5,13 @@ import { renderToString } from 'react-dom/server';
 import { hydrateRoot, type Root } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { App } from '../src/App.js';
+import { HOME, type Page } from '../src/lib/pages.js';
 
-function tree() {
+function tree(page: Page) {
   return (
     <StrictMode>
       <QueryClientProvider client={new QueryClient()}>
-        <App />
+        <App page={page} />
       </QueryClientProvider>
     </StrictMode>
   );
@@ -21,9 +22,9 @@ function tree() {
  * entre os dois markups vira erro de hidratação — e o React descartaria o HTML
  * pré-renderizado para renderizar tudo de novo no cliente.
  */
-async function hydrate(): Promise<{ container: HTMLElement; errors: unknown[] }> {
+async function hydrate(page: Page = HOME): Promise<{ container: HTMLElement; errors: unknown[] }> {
   const container = document.createElement('div');
-  container.innerHTML = renderToString(tree());
+  container.innerHTML = renderToString(tree(page));
   document.body.appendChild(container);
 
   const errors: unknown[] = [];
@@ -32,7 +33,7 @@ async function hydrate(): Promise<{ container: HTMLElement; errors: unknown[] }>
   });
   let root: Root | undefined;
   await act(async () => {
-    root = hydrateRoot(container, tree(), { onRecoverableError: (err) => errors.push(err) });
+    root = hydrateRoot(container, tree(page), { onRecoverableError: (err) => errors.push(err) });
   });
   consoleError.mockRestore();
   roots.push(root!);
@@ -62,6 +63,11 @@ describe('hidratação do HTML pré-renderizado', () => {
   it('hidrata igual com o tema escuro já aplicado no <html>', async () => {
     document.documentElement.classList.add('dark');
     const { errors } = await hydrate();
+    expect(errors).toEqual([]);
+  });
+
+  it('hidrata a página de uma UF sem divergência de markup', async () => {
+    const { errors } = await hydrate({ kind: 'uf', uf: 'SP' });
     expect(errors).toEqual([]);
   });
 

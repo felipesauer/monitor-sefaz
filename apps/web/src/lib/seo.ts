@@ -1,3 +1,7 @@
+import { UF_INFO, type UF } from '@monitor-sefaz/catalog';
+import { inUf } from './labels.js';
+import { pagePath, type Page } from './pages.js';
+
 /**
  * Metadados de cada página — title, description, canonical, Open Graph e
  * JSON-LD —, escritos no HTML pelo prerender. Ficam em código, e não no
@@ -57,6 +61,60 @@ export function homeMeta(siteUrl: string): PageMeta {
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'BRL' },
     },
   };
+}
+
+/**
+ * Página de uma UF. Título e descrição miram como a busca acontece — "sefaz sp
+ * fora do ar", "status nfe sefaz mg", "sefaz rs instável hoje" — e cabem no
+ * que o Google exibe (~60 e ~160 caracteres).
+ */
+export function ufMeta(uf: UF, siteUrl: string, lastmod: string): PageMeta {
+  const url = `${siteUrl}${pagePath({ kind: 'uf', uf })}`;
+  const sefaz = `SEFAZ-${uf}`;
+  const title = `${sefaz} fora do ar ou instável? Status da NF-e hoje`;
+  const description = `A ${sefaz} está fora do ar ou instável hoje? Veja ao vivo o status de NF-e, NFC-e, CT-e, MDF-e e DC-e ${inUf(uf)} e o que fazer em contingência.`;
+  return {
+    title,
+    description,
+    url,
+    ogTitle: `Status da ${sefaz} ao vivo — Monitor SEFAZ`,
+    ogDescription: description,
+    twitterDescription: description,
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'WebPage',
+          '@id': `${url}#webpage`,
+          url,
+          name: title,
+          description,
+          inLanguage: 'pt-BR',
+          dateModified: lastmod,
+          isPartOf: { '@type': 'WebSite', name: 'Monitor SEFAZ', url: siteUrl },
+          about: {
+            '@type': 'State',
+            name: UF_INFO[uf].nome,
+            alternateName: uf,
+            containedInPlace: { '@type': 'Country', name: 'Brasil' },
+          },
+          breadcrumb: { '@id': `${url}#breadcrumb` },
+        },
+        {
+          '@type': 'BreadcrumbList',
+          '@id': `${url}#breadcrumb`,
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Monitor SEFAZ', item: siteUrl },
+            { '@type': 'ListItem', position: 2, name: sefaz, item: url },
+          ],
+        },
+      ],
+    },
+  };
+}
+
+export function pageMeta(page: Page, siteUrl: string, lastmod: string): PageMeta {
+  return page.kind === 'home' ? homeMeta(siteUrl) : ufMeta(page.uf, siteUrl, lastmod);
 }
 
 function escapeHtml(value: string): string {
