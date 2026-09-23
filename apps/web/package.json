@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "typecheck": "tsc -b tsconfig.json",
     "lint": "eslint src scripts",
-    "test": "vitest run"
+    "test": "vitest run",
+    "readme": "node scripts/update-readme.js"
   },
   "dependencies": {
     "@monitor-sefaz/catalog": "workspace:*",

@@ -87,6 +87,11 @@ Tudo é data-only em `@monitor-sefaz/catalog`:
 Os endpoints das SEFAZ mudam sem aviso; ao corrigir uma URL, confirme que o
 webservice responde e atualize os testes em `packages/catalog/test/`.
 
+As páginas por UF do site e a seção "Status por estado" do README saem do
+catalog. As páginas se atualizam no build. O README precisa ser regenerado com
+`pnpm --filter @monitor-sefaz/web readme`, e um teste do web acusa quando ele
+fica desatualizado.
+
 Para conferir a lista inteira de uma vez:
 
     pnpm --filter @monitor-sefaz/collector endpoint-check

@@ -1,5 +1,7 @@
 # Monitor SEFAZ
 
+[![Star no GitHub](https://img.shields.io/badge/%E2%AD%90_Star_no_GitHub-felipesauer%2Fmonitor--sefaz-f5c518?style=for-the-badge&logo=github)](https://github.com/felipesauer/monitor-sefaz)
+
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D20-brightgreen)](https://nodejs.org)
 [![TypeScript](https://img.shields.io/badge/typescript-strict-3178c6)](https://www.typescriptlang.org)
@@ -12,6 +14,9 @@ avisa quando algo cai. Open-source, independente, sem afiliação com a SEFAZ ou
 Receita Federal.
 
 **→ [Acesse o monitor online](https://felipesauer.github.io/monitor-sefaz/)**
+
+Se o monitor te ajudou, [deixe uma ⭐ no repositório](https://github.com/felipesauer/monitor-sefaz):
+é o que faz o projeto aparecer para mais gente.
 
 ![Dashboard do Monitor SEFAZ](docs/dashboard.png)
 
@@ -50,6 +55,27 @@ Cada serviço é classificado em um de cinco estados:
 
 Também acompanha as **Notas Técnicas** publicadas no portal da NF-e, exibidas no
 dashboard.
+
+## Status por estado
+
+Cada UF tem uma página com o status ao vivo dos cinco documentos, quem autoriza
+cada um (a própria SEFAZ, o SVRS ou o SVAN) e o que fazer quando a SEFAZ cai.
+
+<!-- uf-pages:start — gerado de packages/catalog; atualize com `pnpm --filter @monitor-sefaz/web readme` -->
+
+| Norte                                                              | Nordeste                                                                     | Sudeste                                                                 | Sul                                                                        | Centro-Oeste                                                                |
+| ------------------------------------------------------------------ | ---------------------------------------------------------------------------- | ----------------------------------------------------------------------- | -------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| [Acre](https://felipesauer.github.io/monitor-sefaz/sefaz-ac/)      | [Alagoas](https://felipesauer.github.io/monitor-sefaz/sefaz-al/)             | [Espírito Santo](https://felipesauer.github.io/monitor-sefaz/sefaz-es/) | [Paraná](https://felipesauer.github.io/monitor-sefaz/sefaz-pr/)            | [Distrito Federal](https://felipesauer.github.io/monitor-sefaz/sefaz-df/)   |
+| [Amapá](https://felipesauer.github.io/monitor-sefaz/sefaz-ap/)     | [Bahia](https://felipesauer.github.io/monitor-sefaz/sefaz-ba/)               | [Minas Gerais](https://felipesauer.github.io/monitor-sefaz/sefaz-mg/)   | [Rio Grande do Sul](https://felipesauer.github.io/monitor-sefaz/sefaz-rs/) | [Goiás](https://felipesauer.github.io/monitor-sefaz/sefaz-go/)              |
+| [Amazonas](https://felipesauer.github.io/monitor-sefaz/sefaz-am/)  | [Ceará](https://felipesauer.github.io/monitor-sefaz/sefaz-ce/)               | [Rio de Janeiro](https://felipesauer.github.io/monitor-sefaz/sefaz-rj/) | [Santa Catarina](https://felipesauer.github.io/monitor-sefaz/sefaz-sc/)    | [Mato Grosso](https://felipesauer.github.io/monitor-sefaz/sefaz-mt/)        |
+| [Pará](https://felipesauer.github.io/monitor-sefaz/sefaz-pa/)      | [Maranhão](https://felipesauer.github.io/monitor-sefaz/sefaz-ma/)            | [São Paulo](https://felipesauer.github.io/monitor-sefaz/sefaz-sp/)      |                                                                            | [Mato Grosso do Sul](https://felipesauer.github.io/monitor-sefaz/sefaz-ms/) |
+| [Rondônia](https://felipesauer.github.io/monitor-sefaz/sefaz-ro/)  | [Paraíba](https://felipesauer.github.io/monitor-sefaz/sefaz-pb/)             |                                                                         |                                                                            |                                                                             |
+| [Roraima](https://felipesauer.github.io/monitor-sefaz/sefaz-rr/)   | [Pernambuco](https://felipesauer.github.io/monitor-sefaz/sefaz-pe/)          |                                                                         |                                                                            |                                                                             |
+| [Tocantins](https://felipesauer.github.io/monitor-sefaz/sefaz-to/) | [Piauí](https://felipesauer.github.io/monitor-sefaz/sefaz-pi/)               |                                                                         |                                                                            |                                                                             |
+|                                                                    | [Rio Grande do Norte](https://felipesauer.github.io/monitor-sefaz/sefaz-rn/) |                                                                         |                                                                            |                                                                             |
+|                                                                    | [Sergipe](https://felipesauer.github.io/monitor-sefaz/sefaz-se/)             |                                                                         |                                                                            |                                                                             |
+
+<!-- uf-pages:end -->
 
 ## Como obtém os dados
 
@@ -99,6 +125,8 @@ Actions) quanto no self-host (API).
 
 ## Dashboard
 
+- **Uma página por estado** (`/sefaz-sp/`, `/sefaz-mg/`…) com o status ao vivo da UF,
+  quem autoriza cada documento, a contingência da NF-e e links para as demais.
 - **Mapa do Brasil** clicável, cada UF colorida pelo pior estado agregado.
 - **Cards por serviço** com badge de estado, tempo de resposta e _sparkline_ de latência.
 - **Histórico de uptime** (24h/72h) com barra estilo status-page e gráfico de latência.
@@ -170,7 +198,9 @@ Para rodar localmente é necessário Node 20+ e pnpm.
 O mesmo motor de coleta alimenta três formas de rodar:
 
 **SPA estática (GitHub Pages).** Um GitHub Actions coleta e versiona os JSONs; a SPA
-apenas os lê. Não requer infraestrutura.
+apenas os lê. Não requer infraestrutura. O build pré-renderiza a home e as 27
+páginas por UF: o conteúdo chega no HTML, pronto para buscadores, e o status ao
+vivo vem depois, por fetch.
 
 **Cloudflare Worker.** O Worker faz a coleta ao vivo com CORS, e um Cron Trigger
 acumula o histórico de 5 em 5 minutos no Workers KV.
@@ -262,7 +292,7 @@ Comandos, a partir da raiz:
     pnpm typecheck    checagem de tipos
     pnpm lint         ESLint
 
-São **250 testes** (Vitest), com as respostas da SEFAZ mockadas por fixtures em
+São **308 testes** (Vitest), com as respostas da SEFAZ mockadas por fixtures em
 `packages/core/test` — os testes nunca dependem da rede. O CI roda lint, typecheck
 e testes em cada pull request; um workflow separado e não-bloqueante faz uma coleta
 ao vivo periódica e alerta se uma fonte oficial degradar, capturando o drift do
