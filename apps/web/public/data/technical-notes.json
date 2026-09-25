@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-25T07:56:10.079Z",
+  "updatedAt": "2026-09-25T13:54:38.718Z",
   "notes": [
     {
       "title": "Nota TÃ©cnica 2026.001 v.1.02b - Publicada em 31/07/2026",
@@ -1565,6 +1565,16 @@
       "title": "Nota TÃ©cnica 2026.009 v.1.00 - Publicada em 09/09/2026",
       "link": "https://www.nfe.fazenda.gov.br/portal/exibirArquivo.aspx?conteudo=ADlgg2xjMZI=",
       "firstSeenAt": "2026-09-09T19:49:40.438Z"
+    },
+    {
+      "title": "Nota TÃ©cnica 2021.003 - v.1.50 - Publicada em 25/09/2026",
+      "link": "https://www.nfe.fazenda.gov.br/portal/exibirArquivo.aspx?conteudo=AMQDYLGE6Is=",
+      "firstSeenAt": "2026-09-25T13:54:38.718Z"
+    },
+    {
+      "title": "Nota TÃ©cnica 2023.003 v.1.40 - Publicada em 25/09/2026",
+      "link": "https://www.nfe.fazenda.gov.br/portal/exibirArquivo.aspx?conteudo=JSxhEY85vRU=",
+      "firstSeenAt": "2026-09-25T13:54:38.718Z"
     }
   ]
 }
