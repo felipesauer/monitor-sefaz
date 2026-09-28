@@ -1,17 +1,17 @@
 {
   "environment": "production",
-  "generatedAt": "2026-09-28T17:42:09.375Z",
+  "generatedAt": "2026-09-28T23:21:03.884Z",
   "total": 135,
-  "operational": 119,
-  "failing": 16,
-  "availability": 88.1,
-  "avgLatencyMs": 1663,
+  "operational": 135,
+  "failing": 0,
+  "availability": 100,
+  "avgLatencyMs": 1395,
   "byDocument": [
     {
       "key": "CTe",
       "total": 27,
-      "operational": 24,
-      "availability": 88.9
+      "operational": 27,
+      "availability": 100
     },
     {
       "key": "DCe",
@@ -28,52 +28,52 @@
     {
       "key": "NFCe",
       "total": 27,
-      "operational": 21,
-      "availability": 77.8
+      "operational": 27,
+      "availability": 100
     },
     {
       "key": "NFe",
       "total": 27,
-      "operational": 20,
-      "availability": 74.1
+      "operational": 27,
+      "availability": 100
     }
   ],
   "byAuthorizer": [
     {
       "key": "AM",
       "total": 2,
-      "operational": 0,
-      "availability": 0
+      "operational": 2,
+      "availability": 100
     },
     {
       "key": "BA",
       "total": 1,
-      "operational": 0,
-      "availability": 0
+      "operational": 1,
+      "availability": 100
     },
     {
       "key": "GO",
       "total": 2,
-      "operational": 0,
-      "availability": 0
+      "operational": 2,
+      "availability": 100
     },
     {
       "key": "MG",
       "total": 3,
-      "operational": 1,
-      "availability": 33.3
+      "operational": 3,
+      "availability": 100
     },
     {
       "key": "MS",
       "total": 3,
-      "operational": 0,
-      "availability": 0
+      "operational": 3,
+      "availability": 100
     },
     {
       "key": "MT",
       "total": 3,
-      "operational": 0,
-      "availability": 0
+      "operational": 3,
+      "availability": 100
     },
     {
       "key": "PE",
@@ -84,8 +84,8 @@
     {
       "key": "PR",
       "total": 3,
-      "operational": 0,
-      "availability": 0
+      "operational": 3,
+      "availability": 100
     },
     {
       "key": "RS",
