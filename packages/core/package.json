@@ -66,7 +66,7 @@
     "axios": "^1.20.0",
     "axios-cookiejar-support": "^7.0.0",
     "cheerio": "^1.2.0",
-    "fast-xml-parser": "^4.5.7",
+    "fast-xml-parser": "^5.11.1",
     "tough-cookie": "^5.1.2"
   },
   "devDependencies": {
