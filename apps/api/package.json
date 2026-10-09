@@ -14,7 +14,7 @@
   "dependencies": {
     "@fastify/cors": "^11.3.0",
     "@fastify/rate-limit": "^11.2.0",
-    "@fastify/static": "^10.1.4",
+    "@fastify/static": "^10.1.5",
     "@monitor-sefaz/catalog": "workspace:*",
     "@monitor-sefaz/contracts": "workspace:*",
     "@monitor-sefaz/core": "workspace:*",
