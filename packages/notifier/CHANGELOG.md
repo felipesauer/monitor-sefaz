@@ -1,5 +1,12 @@
 # @monitor-sefaz/notifier
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [ad2d116]
+  - @monitor-sefaz/contracts@0.1.2
+
 ## 0.1.1
 
 ### Patch Changes
