@@ -120,6 +120,32 @@ const DCE_ENDPOINTS: DocumentEndpoints = {
 };
 
 /**
+ * Endpoints BP-e (Bilhete de Passagem Eletrônico, `BPeStatusServico`, v1.00).
+ * MG, MS, MT, PR e SP têm autorizador próprio; as demais UFs usam o SVRS.
+ * Fonte: "Relação de Serviços Web" do Portal do BP-e. A homologação de MG que o
+ * portal publica para o status aponta para o `BPeConsulta` (erro do portal); a
+ * URL abaixo segue o padrão dos demais serviços de MG, como no nfephp-org/sped-bpe.
+ */
+const BPE_ENDPOINTS: DocumentEndpoints = {
+  production: {
+    MG: 'https://bpe.fazenda.mg.gov.br/bpe/services/BPeStatusServico',
+    MS: 'https://bpe.fazenda.ms.gov.br/ws/BPeStatusServico',
+    MT: 'https://www.sefaz.mt.gov.br/bpe-ws/services/BPeStatusServico',
+    PR: 'https://bpe.fazenda.pr.gov.br/bpe/BPeStatusServico',
+    SP: 'https://bpe.fazenda.sp.gov.br/BPeWeb/services/BPeStatusServico.asmx',
+    SVRS: 'https://bpe.svrs.rs.gov.br/ws/bpeStatusServico/bpeStatusServico.asmx',
+  },
+  homologation: {
+    MG: 'https://hbpe.fazenda.mg.gov.br/bpe/services/BPeStatusServico',
+    MS: 'https://homologacao.bpe.ms.gov.br/ws/BPeStatusServico',
+    MT: 'https://homologacao.sefaz.mt.gov.br/bpe-ws/services/BPeStatusServico',
+    PR: 'https://homologacao.bpe.fazenda.pr.gov.br/bpe/BPeStatusServico',
+    SP: 'https://homologacao.bpe.fazenda.sp.gov.br/BPeWeb/services/BPeStatusServico.asmx',
+    SVRS: 'https://bpe-homologacao.svrs.rs.gov.br/ws/bpeStatusServico/bpeStatusServico.asmx',
+  },
+};
+
+/**
  * Registro de endpoints por documento. NFC-e reaproveita o webservice da NF-e
  * na consulta de status.
  */
@@ -129,4 +155,5 @@ export const ENDPOINTS: Readonly<Record<DocumentType, DocumentEndpoints>> = {
   [DocumentType.CTe]: CTE_ENDPOINTS,
   [DocumentType.MDFe]: MDFE_ENDPOINTS,
   [DocumentType.DCe]: DCE_ENDPOINTS,
+  [DocumentType.BPe]: BPE_ENDPOINTS,
 };

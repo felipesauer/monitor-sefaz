@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { DocumentType } from '@monitor-sefaz/catalog';
 import {
+  BPeStatusParser,
   CTeStatusParser,
   DCeStatusParser,
   MDFeStatusParser,
@@ -19,9 +20,16 @@ describe('DocumentStatusParsers', () => {
     expect(result.cStat).toBe(109);
   });
 
+  it('BPeStatusParser extrai cStat do nó retConsStatServBPe', () => {
+    const result = new BPeStatusParser().parse(loadFixture('bpe-107.xml'));
+    expect(result.cStat).toBe(107);
+    expect(result.xMotivo).toBe('Servico em Operacao');
+  });
+
   it('cada parser expõe o tipo de documento correto', () => {
     expect(new CTeStatusParser().document).toBe(DocumentType.CTe);
     expect(new MDFeStatusParser().document).toBe(DocumentType.MDFe);
     expect(new DCeStatusParser().document).toBe(DocumentType.DCe);
+    expect(new BPeStatusParser().document).toBe(DocumentType.BPe);
   });
 });

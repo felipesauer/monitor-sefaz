@@ -8,7 +8,7 @@
 [![CI](https://img.shields.io/badge/CI-lint%20%C2%B7%20typecheck%20%C2%B7%20test-2ea44f)](.github/workflows/ci.yml)
 
 Status page da disponibilidade dos webservices da SEFAZ para os documentos
-fiscais eletrônicos brasileiros — **NF-e, NFC-e, CT-e, MDF-e e DC-e, nas 27 UFs**.
+fiscais eletrônicos brasileiros — **NF-e, NFC-e, CT-e, MDF-e, DC-e e BP-e, nas 27 UFs**.
 Cruza fontes públicas por consenso, mostra o histórico de uptime num dashboard e
 avisa quando algo cai. Open-source, independente, sem afiliação com a SEFAZ ou a
 Receita Federal.
@@ -22,7 +22,7 @@ Se o monitor te ajudou, [deixe uma ⭐ no repositório](https://github.com/felip
 
 ## Destaques
 
-- **135 serviços monitorados** — os 5 documentos × 27 UFs, resolvendo sozinho qual
+- **162 serviços monitorados** — os 6 documentos × 27 UFs, resolvendo sozinho qual
   autorizador atende cada estado (próprio, SVRS, SVAN, Ambiente Nacional…).
 - **Consenso multi-fonte** — cruza três fontes com precedência para as oficiais, em
   vez de depender de uma só; se uma cai, as outras sustentam.
@@ -35,13 +35,14 @@ Se o monitor te ajudou, [deixe uma ⭐ no repositório](https://github.com/felip
 
 ## O que ele monitora
 
-Os cinco documentos fiscais eletrônicos, nas 27 UFs — **135 serviços** no total:
+Os seis documentos fiscais eletrônicos, nas 27 UFs — **162 serviços** no total:
 
 - NF-e — Nota Fiscal Eletrônica (modelo 55)
 - NFC-e — Nota Fiscal de Consumidor Eletrônica (modelo 65)
 - CT-e — Conhecimento de Transporte Eletrônico
 - MDF-e — Manifesto Eletrônico de Documentos Fiscais
 - DC-e — Declaração de Conteúdo eletrônica
+- BP-e — Bilhete de Passagem Eletrônico (modelo 63)
 
 Cada serviço é classificado em um de cinco estados:
 
@@ -58,7 +59,7 @@ dashboard.
 
 ## Status por estado
 
-Cada UF tem uma página com o status ao vivo dos cinco documentos, quem autoriza
+Cada UF tem uma página com o status ao vivo dos seis documentos, quem autoriza
 cada um (a própria SEFAZ, o SVRS ou o SVAN) e o que fazer quando a SEFAZ cai.
 
 <!-- uf-pages:start — gerado de packages/catalog; atualize com `pnpm --filter @monitor-sefaz/web readme` -->
@@ -88,7 +89,9 @@ por consenso, com precedência para as oficiais:
 
 As duas fontes oficiais decidem o estado de cada serviço; o IntegraNotas preenche
 as UFs e documentos que elas não publicam. MDF-e e DC-e são centralizados no SVRS,
-então derivam do estado desse autorizador. Uma fonte que falha não derruba as
+então derivam do estado desse autorizador. O BP-e vem da página de disponibilidade
+do BP-e no SVRS, que cobre as 22 UFs autorizadas ali; MG, MS, MT, PR e SP autorizam
+o BP-e em ambiente próprio, sem fonte pública, e só aparecem no modo `soap`. Uma fonte que falha não derruba as
 demais, e há um **piso de cobertura (75%)** abaixo do qual a coleta é considerada
 degradada e não é publicada — evitando exibir "tudo no ar" por engano.
 

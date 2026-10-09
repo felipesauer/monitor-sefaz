@@ -13,13 +13,14 @@ import {
 
 const catalog = new Catalog();
 
-/** Os cinco documentos, na ordem em que o site os apresenta. */
+/** Os seis documentos, na ordem em que o site os apresenta. */
 export const DOCUMENTS: readonly DocumentType[] = [
   DocumentType.NFe,
   DocumentType.NFCe,
   DocumentType.CTe,
   DocumentType.MDFe,
   DocumentType.DCe,
+  DocumentType.BPe,
 ];
 
 export interface UfAuthorization {

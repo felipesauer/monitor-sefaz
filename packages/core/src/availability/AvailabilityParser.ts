@@ -44,6 +44,8 @@ export const DOCUMENT_COLUMNS: Record<DocumentType, ColumnLayout> = {
   // MDF-e/DC-e são derivados do SVRS (sem página própria); layout não aplicável.
   [DocumentType.MDFe]: { statusIndex: 5, tMedIndex: 6 },
   [DocumentType.DCe]: { statusIndex: 5, tMedIndex: 6 },
+  // BP-e não tem página na Receita (só a do SVRS); layout não aplicável.
+  [DocumentType.BPe]: { statusIndex: 5, tMedIndex: 6 },
 };
 
 /** Mapeia a cor da "bolinha" de status para um `ServiceState`. */

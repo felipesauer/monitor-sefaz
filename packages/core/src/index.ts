@@ -16,6 +16,7 @@ export {
 export { CTeStatusEnvelopeBuilder } from './envelopes/CTeStatusEnvelopeBuilder.js';
 export { MDFeStatusEnvelopeBuilder } from './envelopes/MDFeStatusEnvelopeBuilder.js';
 export { DCeStatusEnvelopeBuilder } from './envelopes/DCeStatusEnvelopeBuilder.js';
+export { BPeStatusEnvelopeBuilder } from './envelopes/BPeStatusEnvelopeBuilder.js';
 
 // Parsers
 export type { ResponseParser, ParsedStatus } from './parsers/ResponseParser.js';
@@ -25,6 +26,7 @@ export {
   CTeStatusParser,
   MDFeStatusParser,
   DCeStatusParser,
+  BPeStatusParser,
 } from './parsers/DocumentStatusParsers.js';
 
 // Checker

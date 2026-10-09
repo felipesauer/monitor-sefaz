@@ -51,7 +51,7 @@ export function Header({
       <div>
         <Title className="text-lg font-bold leading-tight">Monitor SEFAZ</Title>
         <p className="text-xs" style={{ color: 'var(--text-dim)' }}>
-          Disponibilidade de NF-e, NFC-e, CT-e, MDF-e e DC-e
+          Disponibilidade de NF-e, NFC-e, CT-e, MDF-e, DC-e e BP-e
         </p>
       </div>
     </>

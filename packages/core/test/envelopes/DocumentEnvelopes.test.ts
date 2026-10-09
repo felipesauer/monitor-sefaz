@@ -3,6 +3,7 @@ import { Environment } from '@monitor-sefaz/catalog';
 import { CTeStatusEnvelopeBuilder } from '../../src/envelopes/CTeStatusEnvelopeBuilder.js';
 import { MDFeStatusEnvelopeBuilder } from '../../src/envelopes/MDFeStatusEnvelopeBuilder.js';
 import { DCeStatusEnvelopeBuilder } from '../../src/envelopes/DCeStatusEnvelopeBuilder.js';
+import { BPeStatusEnvelopeBuilder } from '../../src/envelopes/BPeStatusEnvelopeBuilder.js';
 
 describe('Document envelopes', () => {
   it('CT-e usa namespace cte, versão 4.00 e consStatServCte', () => {
@@ -31,6 +32,20 @@ describe('Document envelopes', () => {
       environment: Environment.Production,
     });
     expect(xml).toContain('http://www.portalfiscal.inf.br/dce');
+    expect(xml).toContain('<xServ>STATUS</xServ>');
+  });
+
+  it('BP-e usa namespace bpe, versão 1.00 e consStatServBPe', () => {
+    const xml = new BPeStatusEnvelopeBuilder().build({
+      cUF: 31,
+      environment: Environment.Production,
+    });
+    expect(xml).toContain('http://www.portalfiscal.inf.br/bpe/wsdl/BPeStatusServico');
+    expect(xml).toContain(
+      'consStatServBPe versao="1.00" xmlns="http://www.portalfiscal.inf.br/bpe"'
+    );
+    expect(xml).toContain('<cUF>31</cUF>');
+    expect(xml).toContain('<tpAmb>1</tpAmb>');
     expect(xml).toContain('<xServ>STATUS</xServ>');
   });
 });

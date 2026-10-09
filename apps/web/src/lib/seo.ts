@@ -35,15 +35,15 @@ export interface PageMeta {
 export function homeMeta(siteUrl: string): PageMeta {
   const ogTitle = 'Monitor SEFAZ — a SEFAZ está fora do ar?';
   return {
-    title: 'Monitor SEFAZ — Status em Tempo Real (NF-e, NFC-e, CT-e, MDF-e, DC-e)',
+    title: 'Monitor SEFAZ — Status em Tempo Real (NF-e, NFC-e, CT-e, MDF-e, DC-e, BP-e)',
     description:
-      'A SEFAZ está fora do ar? Veja o status em tempo real dos webservices de NF-e, NFC-e, CT-e, MDF-e e DC-e nas 27 UFs. Monitor open-source, gratuito e sem necessidade de certificado digital.',
+      'A SEFAZ está fora do ar? Veja o status em tempo real dos webservices de NF-e, NFC-e, CT-e, MDF-e, DC-e e BP-e nas 27 UFs. Monitor open-source, gratuito e sem necessidade de certificado digital.',
     url: siteUrl,
     ogTitle,
     ogDescription:
-      'Status em tempo real dos webservices da SEFAZ: NF-e, NFC-e, CT-e, MDF-e e DC-e nas 27 UFs. Open-source e sem certificado digital.',
+      'Status em tempo real dos webservices da SEFAZ: NF-e, NFC-e, CT-e, MDF-e, DC-e e BP-e nas 27 UFs. Open-source e sem certificado digital.',
     twitterDescription:
-      'Status em tempo real dos webservices da SEFAZ: NF-e, NFC-e, CT-e, MDF-e e DC-e nas 27 UFs.',
+      'Status em tempo real dos webservices da SEFAZ: NF-e, NFC-e, CT-e, MDF-e, DC-e e BP-e nas 27 UFs.',
     // Ajuda o buscador a entender que isto é uma ferramenta de consulta, e não
     // uma página institucional qualquer.
     jsonLd: {
@@ -55,7 +55,7 @@ export function homeMeta(siteUrl: string): PageMeta {
       operatingSystem: 'Web',
       inLanguage: 'pt-BR',
       description:
-        'Monitor de disponibilidade dos webservices da SEFAZ para NF-e, NFC-e, CT-e, MDF-e e DC-e nas 27 UFs.',
+        'Monitor de disponibilidade dos webservices da SEFAZ para NF-e, NFC-e, CT-e, MDF-e, DC-e e BP-e nas 27 UFs.',
       license: 'https://opensource.org/licenses/MIT',
       isAccessibleForFree: true,
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'BRL' },
@@ -72,7 +72,7 @@ export function ufMeta(uf: UF, siteUrl: string, lastmod: string): PageMeta {
   const url = `${siteUrl}${pagePath({ kind: 'uf', uf })}`;
   const sefaz = `SEFAZ-${uf}`;
   const title = `${sefaz} fora do ar ou instável? Status da NF-e hoje`;
-  const description = `A ${sefaz} está fora do ar ou instável hoje? Veja ao vivo o status de NF-e, NFC-e, CT-e, MDF-e e DC-e ${inUf(uf)} e o que fazer em contingência.`;
+  const description = `A ${sefaz} está fora do ar ou instável hoje? Veja o status de NF-e, NFC-e, CT-e, MDF-e, DC-e e BP-e ${inUf(uf)} e o que fazer em contingência.`;
   return {
     title,
     description,

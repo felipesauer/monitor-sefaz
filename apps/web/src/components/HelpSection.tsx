@@ -25,7 +25,7 @@ const FAQ: QA[] = [
   },
   {
     q: 'De onde vêm os dados e com que frequência?',
-    a: 'Consolidamos o monitoramento público de disponibilidade da SEFAZ (não exige certificado), por UF e para os 5 documentos. Se a fonte principal ficar indisponível, recorremos automaticamente à consulta da página oficial. O status na tela é atualizado ao vivo; o histórico é amostrado periodicamente (cerca de uma vez por hora), então janelas curtas de instabilidade podem não ser registradas no gráfico.',
+    a: 'Consolidamos o monitoramento público de disponibilidade da SEFAZ (não exige certificado), por UF e para os 6 documentos. Se a fonte principal ficar indisponível, recorremos automaticamente à consulta da página oficial. O status na tela é atualizado ao vivo; o histórico é amostrado periodicamente (cerca de uma vez por hora), então janelas curtas de instabilidade podem não ser registradas no gráfico.',
   },
 ];
 

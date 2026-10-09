@@ -133,7 +133,7 @@ function UfBanner({ uf, services }: { uf: UF; services: ServiceStatusDTO[] }) {
 }
 
 /**
- * Página de uma UF: status ao vivo dos cinco documentos no estado, mais o que
+ * Página de uma UF: status ao vivo dos seis documentos no estado, mais o que
  * não depende de JS — quem autoriza cada documento, o que fazer quando a
  * SEFAZ cai e links para as outras UFs. É ela que responde a buscas como
  * "sefaz sp fora do ar", que a home, genérica, não alcança.
@@ -193,8 +193,8 @@ export function UfPage({ uf }: { uf: UF }) {
           <h1 className="text-2xl font-bold leading-tight">Status da {sefaz} agora</h1>
           <p className="text-sm leading-relaxed" style={{ color: 'var(--text-dim)' }}>
             A SEFAZ {ofUf(uf)} está fora do ar ou instável? Acompanhe ao vivo a disponibilidade da
-            NF-e, NFC-e, CT-e, MDF-e e DC-e {inUf(uf)}, com o status lido das fontes públicas da
-            SEFAZ (sem certificado digital) e atualizado a cada minuto.
+            NF-e, NFC-e, CT-e, MDF-e, DC-e e BP-e {inUf(uf)}, com o status lido das fontes públicas
+            da SEFAZ (sem certificado digital) e atualizado a cada minuto.
           </p>
         </div>
 

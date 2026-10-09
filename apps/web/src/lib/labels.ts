@@ -78,6 +78,7 @@ export const DOC_LABEL: Record<string, string> = {
   CTe: 'CT-e',
   MDFe: 'MDF-e',
   DCe: 'DC-e',
+  BPe: 'BP-e',
 };
 
 /** Descrição curta de cada documento, para tooltips e o painel de detalhe. */
@@ -87,6 +88,7 @@ export const DOC_DESCRIPTION: Record<string, string> = {
   CTe: 'Conhecimento de Transporte Eletrônico — documenta a prestação de serviço de transporte de cargas.',
   MDFe: 'Manifesto Eletrônico de Documentos Fiscais — agrupa as notas/CT-e de uma carga em trânsito.',
   DCe: 'Declaração de Conteúdo eletrônica — usada no transporte de bens entre não contribuintes.',
+  BPe: 'Bilhete de Passagem Eletrônico — documenta a venda de passagem no transporte de passageiros (modelo 63).',
 };
 
 /**

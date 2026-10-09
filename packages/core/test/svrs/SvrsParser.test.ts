@@ -39,6 +39,15 @@ describe('SvrsParser', () => {
     expect(rows[0]!.webServices.length).toBeGreaterThan(0);
   });
 
+  it('extrai o autorizador único da página de BP-e, com o cStat do WS Status', () => {
+    const rows = new SvrsParser().parse(fixture('bpe-disponibilidade.html'));
+    expect(rows).toHaveLength(1);
+    expect(rows[0]!.authorizer).toBe('SVRS');
+    expect(rows[0]!.webServices.map((w) => w.operation)).toContain('WS Status');
+    expect(rows[0]!.state).toBe(ServiceState.Operational);
+    expect(rows[0]!.cStat).toBe(239);
+  });
+
   it('devolve [] para HTML sem tabela de webservices', () => {
     expect(new SvrsParser().parse('<html><body>nada</body></html>')).toEqual([]);
   });
