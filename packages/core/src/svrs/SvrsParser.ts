@@ -84,7 +84,12 @@ const STATUS_OP_RE = /\bWS\s+Status\b/i;
  * Layout observado:
  * - NF-e: duas seções `<h4>SEFAZ-RS</h4>` e `<h4>SEFAZ Virtual do RS</h4>`, cada
  *   uma com sua `<table>` de webservices.
- * - CT-e/MDF-e: uma única tabela de webservices (só o autorizador virtual SVRS).
+ * - CT-e/MDF-e/BP-e: uma única tabela de webservices (só o autorizador virtual SVRS).
+ *
+ * O estado do autorizador é o PIOR entre os seus WS, também no BP-e, cuja página
+ * lista as modalidades "BPe TA" e "BPe TM" ao lado do WS Status: se uma delas cai,
+ * as UFs atendidas pelo SVRS ficam fora do ar juntas. É conservador de propósito —
+ * a mesma regra dos outros documentos, em vez de uma exceção só para o BP-e.
  */
 export class SvrsParser {
   public parse(html: string): SvrsAuthorizerStatus[] {

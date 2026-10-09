@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Catalog, DocumentType, type UF } from '@monitor-sefaz/catalog';
+import { Catalog, DocumentType, Environment, type UF } from '@monitor-sefaz/catalog';
 import { ConsensusCollector } from '../../src/consensus/ConsensusCollector.js';
 import { ServiceState } from '../../src/domain/types.js';
 import type { CollectedStatus } from '../../src/availability/AvailabilityCollector.js';
@@ -135,6 +135,39 @@ describe('ConsensusCollector', () => {
       const thirdHealth = sources.find((s) => s.source === 'integranotas')!;
       expect(thirdHealth.collected).toBe(3);
       expect(thirdHealth.degraded).toBe(false); // 3 ≥ 2 → saudável
+    });
+
+    it('piso padrão (75%) sobre 162 serviços: 121 é o mínimo; perder um documento inteiro degrada', async () => {
+      // Medido na coleta real com o BP-e: svrs 134, availability 135, integranotas 135.
+      // Antes do BP-e eram 135 esperados (piso 101) e perder uma página de 27
+      // serviços ainda passava (108); agora cai abaixo do piso e vira drift.
+      const catalog = new Catalog();
+      const all = catalog.listAll(Environment.Production);
+      const take = (n: number): CollectedStatus[] =>
+        all.slice(0, n).map((e) => ({
+          document: e.document,
+          uf: e.uf,
+          authorizer: e.authorizer,
+          state: ServiceState.Operational,
+          cStat: null,
+          latencyMs: 0,
+          source: 'svrs' as const,
+        }));
+      const health = async (n: number): Promise<{ degraded: boolean; expected: number }> => {
+        const consensus = new ConsensusCollector(
+          [{ name: 'svrs', official: true, collector: fake(take(n)) }],
+          catalog
+        );
+        const { sources } = await consensus.collectWithDiagnostics();
+        return sources[0]!;
+      };
+
+      expect((await health(135)).expected).toBe(162);
+      expect((await health(134)).degraded).toBe(false);
+      expect((await health(135)).degraded).toBe(false);
+      expect((await health(121)).degraded).toBe(false); // floor(162 × 0,75)
+      expect((await health(120)).degraded).toBe(true);
+      expect((await health(135 - 27)).degraded).toBe(true); // perdeu um documento inteiro
     });
 
     it('uma fonte que lança fica com collected=0 e degraded=true', async () => {
