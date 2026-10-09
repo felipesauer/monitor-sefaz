@@ -24,6 +24,8 @@ import { TechnicalNotesCard } from '../components/TechnicalNotesCard.js';
 import { NoScriptNotice } from '../components/NoScriptNotice.js';
 import { UfDirectory } from '../components/UfDirectory.js';
 import { STATE_SEVERITY } from '../components/serviceState.js';
+import { ufsWithoutStatus } from '../lib/coverage.js';
+import { DOC_LABEL } from '../lib/labels.js';
 
 /** Estado agregado (pior) de uma UF entre os serviços visíveis — colore o chip. */
 function aggregateUfStates(
@@ -66,6 +68,13 @@ export function DashboardPage() {
     [all, docFilter]
   );
   const ufStates = useMemo(() => aggregateUfStates(docScoped), [docScoped]);
+
+  // UFs sem leitura do documento filtrado (ex.: BP-e em MG, MS, MT, PR e SP, que
+  // não têm fonte pública e só aparecem no modo `soap`).
+  const uncovered = useMemo(
+    () => (status.data && docFilter !== 'ALL' ? ufsWithoutStatus(all, docFilter) : []),
+    [status.data, all, docFilter]
+  );
 
   // Aplica documento + UFs selecionadas, ordenando por severidade (pior primeiro).
   const visible = useMemo(() => {
@@ -138,6 +147,13 @@ export function DashboardPage() {
             onToggleUf={toggleUf}
             onClearUfs={() => setSelectedUfs(new Set())}
           />
+        )}
+
+        {uncovered.length > 0 && docFilter !== 'ALL' && (
+          <p className="text-xs leading-relaxed" style={{ color: 'var(--text-dim)' }}>
+            Sem leitura de {DOC_LABEL[docFilter]} em {uncovered.join(', ')}; esses estados não
+            aparecem na lista.
+          </p>
         )}
 
         <StatusLegend />

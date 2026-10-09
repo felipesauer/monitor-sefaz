@@ -22,6 +22,7 @@ import {
   inUf,
   ofUf,
 } from '../lib/labels.js';
+import { documentsWithoutStatus } from '../lib/coverage.js';
 import { HOME, pageHref } from '../lib/pages.js';
 import {
   DOCUMENTS,
@@ -160,6 +161,14 @@ export function UfPage({ uf }: { uf: UF }) {
   );
   const selectedLive = selected ? (services.find((s) => s.id === selected.id) ?? selected) : null;
 
+  // Só depois de o snapshot chegar: no HTML pré-renderizado ele ainda não existe,
+  // e marcar tudo como "sem fonte" seria mentira.
+  const withoutStatus = useMemo(
+    () =>
+      status.data ? documentsWithoutStatus(status.data.services, uf) : new Set<DocumentType>(),
+    [status.data, uf]
+  );
+
   const sefaz = `SEFAZ-${uf}`;
   const svc = nfeContingency(uf);
   const homeHref = pageHref(HOME);
@@ -194,7 +203,8 @@ export function UfPage({ uf }: { uf: UF }) {
           <p className="text-sm leading-relaxed" style={{ color: 'var(--text-dim)' }}>
             A SEFAZ {ofUf(uf)} está fora do ar ou instável? Acompanhe ao vivo a disponibilidade da
             NF-e, NFC-e, CT-e, MDF-e, DC-e e BP-e {inUf(uf)}, com o status lido das fontes públicas
-            da SEFAZ (sem certificado digital) e atualizado a cada minuto.
+            da SEFAZ (sem certificado digital) e atualizado a cada minuto. Quando um documento não
+            tem leitura no estado, a tabela abaixo avisa.
           </p>
         </div>
 
@@ -257,6 +267,11 @@ export function UfPage({ uf }: { uf: UF }) {
                     <span className="mt-0.5 block text-xs" style={{ color: 'var(--text-dim)' }}>
                       {own ? 'Autorizador próprio do estado' : AUTHORIZER_NAME[authorizer]}
                     </span>
+                    {withoutStatus.has(document) && (
+                      <span className="mt-0.5 block text-xs" style={{ color: 'var(--text-dim)' }}>
+                        Sem leitura de status para este documento no estado.
+                      </span>
+                    )}
                   </td>
                 </tr>
               ))}
