@@ -18,3 +18,9 @@ export class DCeStatusParser extends AbstractRetConsParser {
   public readonly document = DocumentType.DCe;
   protected readonly retNodeName = 'retConsStatServ';
 }
+
+/** Parser da resposta de status BP-e (`retConsStatServBPe`). */
+export class BPeStatusParser extends AbstractRetConsParser {
+  public readonly document = DocumentType.BPe;
+  protected readonly retNodeName = 'retConsStatServBPe';
+}

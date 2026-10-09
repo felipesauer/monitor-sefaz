@@ -7,9 +7,11 @@ import {
 import { CTeStatusEnvelopeBuilder } from '../envelopes/CTeStatusEnvelopeBuilder.js';
 import { MDFeStatusEnvelopeBuilder } from '../envelopes/MDFeStatusEnvelopeBuilder.js';
 import { DCeStatusEnvelopeBuilder } from '../envelopes/DCeStatusEnvelopeBuilder.js';
+import { BPeStatusEnvelopeBuilder } from '../envelopes/BPeStatusEnvelopeBuilder.js';
 import type { ResponseParser } from '../parsers/ResponseParser.js';
 import { NFCeStatusParser, NFeStatusParser } from '../parsers/NFeStatusParser.js';
 import {
+  BPeStatusParser,
   CTeStatusParser,
   DCeStatusParser,
   MDFeStatusParser,
@@ -39,6 +41,7 @@ export class CheckerFactory {
       new CTeStatusEnvelopeBuilder(),
       new MDFeStatusEnvelopeBuilder(),
       new DCeStatusEnvelopeBuilder(),
+      new BPeStatusEnvelopeBuilder(),
     ];
     return new Map(builders.map((b) => [b.document, b]));
   }
@@ -50,6 +53,7 @@ export class CheckerFactory {
       new CTeStatusParser(),
       new MDFeStatusParser(),
       new DCeStatusParser(),
+      new BPeStatusParser(),
     ];
     return new Map(parsers.map((p) => [p.document, p]));
   }

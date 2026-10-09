@@ -101,7 +101,7 @@ describe('ConsensusCollector', () => {
   });
 
   describe('collectWithDiagnostics (sinal de drift)', () => {
-    // expected = 135 (5 docs × 27 UFs em produção). Com ratio 0.015, floor = 2:
+    // expected = 162 (6 docs × 27 UFs em produção). Com ratio 0.015, floor = 2:
     // uma fonte com 1 serviço fica degraded; com 2+ fica saudável. Assim testamos
     // os dois lados sem montar 100+ serviços à mão.
     const RATIO = 0.015;
@@ -129,8 +129,8 @@ describe('ConsensusCollector', () => {
 
       const svrsHealth = sources.find((s) => s.source === 'svrs')!;
       expect(svrsHealth.collected).toBe(1);
-      expect(svrsHealth.expected).toBe(135);
-      expect(svrsHealth.degraded).toBe(true); // 1 < floor(135*0.015)=2 → drift
+      expect(svrsHealth.expected).toBe(162);
+      expect(svrsHealth.degraded).toBe(true); // 1 < floor(162*0.015)=2 → drift
 
       const thirdHealth = sources.find((s) => s.source === 'integranotas')!;
       expect(thirdHealth.collected).toBe(3);

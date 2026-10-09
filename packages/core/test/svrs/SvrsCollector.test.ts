@@ -16,6 +16,7 @@ const fixtureFetcher: SvrsFetcher = async (url) => {
   if (url.includes('/Nfe/')) return fixture('nfe-disponibilidade.html');
   if (url.includes('/Cte/')) return fixture('cte-disponibilidade.html');
   if (url.includes('/Mdfe/')) return fixture('mdfe-disponibilidade.html');
+  if (url.includes('/Bpe/')) return fixture('bpe-disponibilidade.html');
   throw new Error(`URL inesperada: ${url}`);
 };
 
@@ -38,6 +39,20 @@ describe('SvrsCollector', () => {
     // MDF-e é nacional no SVRS: deve cobrir várias UFs.
     const mdfe = out.filter((s) => s.document === DocumentType.MDFe);
     expect(mdfe.length).toBeGreaterThan(1);
+  });
+
+  it('cobre o BP-e só nas UFs que o SVRS autoriza', async () => {
+    const collector = new SvrsCollector(new SvrsProvider(fixtureFetcher));
+    const bpe = (await collector.collect()).filter((s) => s.document === DocumentType.BPe);
+
+    // MG, MS, MT, PR e SP autorizam o BP-e em ambiente próprio, fora desta página.
+    expect(bpe).toHaveLength(22);
+    for (const uf of ['MG', 'MS', 'MT', 'PR', 'SP']) {
+      expect(bpe.some((s) => s.uf === uf)).toBe(false);
+    }
+    const rs = bpe.find((s) => s.uf === 'RS');
+    expect(rs?.authorizer).toBe('SVRS');
+    expect(rs?.state).toBe(ServiceState.Operational);
   });
 
   it('propaga o horário de aferição do SVRS em sourceCheckedAt', async () => {

@@ -66,7 +66,23 @@ function buildCentralizedSVRSMap(): Record<UF, AuthorizerCode> {
   return map;
 }
 
+/**
+ * UFs com autorizador BP-e próprio; as demais, inclusive o RS, delegam ao SVRS.
+ * Fonte: "Relação de Serviços Web" do Portal do BP-e (dfe-portal.svrs.rs.gov.br/Bpe/Servicos),
+ * que confere com nfephp-org/sped-bpe (storage/autorizadores.json).
+ */
+const BPE_OWN_AUTHORIZERS: UF[] = ['MG', 'MS', 'MT', 'PR', 'SP'];
+
+function buildBPeAuthorizerMap(): Record<UF, AuthorizerCode> {
+  const map = {} as Record<UF, AuthorizerCode>;
+  for (const uf of ALL_UFS) {
+    map[uf] = BPE_OWN_AUTHORIZERS.includes(uf) ? uf : 'SVRS';
+  }
+  return map;
+}
+
 const CTE_AUTHORIZERS = buildCTeAuthorizerMap();
+const BPE_AUTHORIZERS = buildBPeAuthorizerMap();
 const CENTRALIZED_SVRS = buildCentralizedSVRSMap();
 
 /**
@@ -81,6 +97,7 @@ export const UF_AUTHORIZERS: Readonly<Record<DocumentType, Partial<Record<UF, Au
   [DocumentType.CTe]: CTE_AUTHORIZERS,
   [DocumentType.MDFe]: CENTRALIZED_SVRS,
   [DocumentType.DCe]: CENTRALIZED_SVRS,
+  [DocumentType.BPe]: BPE_AUTHORIZERS,
 };
 
 /**

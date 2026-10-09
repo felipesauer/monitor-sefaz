@@ -56,6 +56,20 @@ describe('Catalog', () => {
     expect(catalog.resolveContingency(DocumentType.NFCe, 'SP')).toBeNull();
   });
 
+  it('resolve o BP-e nos cinco autorizadores próprios e manda o resto, inclusive o RS, ao SVRS', () => {
+    const own = catalog
+      .list(DocumentType.BPe, Environment.Production)
+      .filter((entry) => entry.authorizer !== 'SVRS')
+      .map((entry) => entry.uf)
+      .sort();
+    expect(own).toEqual(['MG', 'MS', 'MT', 'PR', 'SP']);
+    expect(catalog.resolveAuthorizer(DocumentType.BPe, 'RS')).toBe('SVRS');
+    expect(catalog.list(DocumentType.BPe, Environment.Production)).toHaveLength(27);
+    expect(catalog.resolve(DocumentType.BPe, 'MG', Environment.Production)?.url).toContain(
+      'BPeStatusServico'
+    );
+  });
+
   it('centraliza MDF-e e DC-e no SVRS', () => {
     expect(catalog.resolve(DocumentType.MDFe, 'PA', Environment.Production)?.authorizer).toBe(
       'SVRS'

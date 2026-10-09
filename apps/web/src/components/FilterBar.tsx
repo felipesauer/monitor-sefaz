@@ -24,6 +24,7 @@ const DOC_TABS: { value: DocumentFilter; label: string }[] = [
   { value: DocumentType.CTe, label: 'CT-e' },
   { value: DocumentType.MDFe, label: 'MDF-e' },
   { value: DocumentType.DCe, label: 'DC-e' },
+  { value: DocumentType.BPe, label: 'BP-e' },
 ];
 
 /** Barra de filtros recolhível: documento (abas) + estados (chips de UF). */

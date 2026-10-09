@@ -17,6 +17,7 @@ describe('ufAuthorizations', () => {
       [DocumentType.CTe, 'SP', true],
       [DocumentType.MDFe, 'SVRS', false],
       [DocumentType.DCe, 'SVRS', false],
+      [DocumentType.BPe, 'SP', true],
     ]);
     expect(ufAuthorizations('MA')[0]).toMatchObject({ authorizer: 'SVAN', own: false });
   });

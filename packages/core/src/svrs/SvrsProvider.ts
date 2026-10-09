@@ -5,7 +5,9 @@ import { SvrsParser, type SvrsAuthorizerStatus } from './SvrsParser.js';
 /**
  * URLs de PRODUÇÃO do portal de disponibilidade do SVRS, por documento. NF-e e
  * NFC-e compartilham a página da NF-e; DC-e roda no SVRS e usa a página da MDF-e
- * como melhor proxy oficial disponível (ambos são serviços do SVRS nacional).
+ * como melhor proxy oficial disponível (ambos são serviços do SVRS nacional). O
+ * BP-e tem página própria, que cobre só as UFs atendidas pelo SVRS: MG, MS, MT,
+ * PR e SP autorizam o BP-e em ambiente próprio, sem página pública.
  *
  * Diferente do `hom.` da Receita, o SVRS não separa o portal por ambiente aqui —
  * estas páginas refletem a disponibilidade de produção.
@@ -16,6 +18,7 @@ export const SVRS_URLS: Partial<Record<DocumentType, string>> = {
   [DocumentType.CTe]: 'https://dfe-portal.svrs.rs.gov.br/Cte/Disponibilidade',
   [DocumentType.MDFe]: 'https://dfe-portal.svrs.rs.gov.br/Mdfe/Disponibilidade',
   [DocumentType.DCe]: 'https://dfe-portal.svrs.rs.gov.br/Mdfe/Disponibilidade',
+  [DocumentType.BPe]: 'https://dfe-portal.svrs.rs.gov.br/Bpe/Disponibilidade',
 };
 
 /**
@@ -42,7 +45,7 @@ export class SvrsProvider {
     private readonly random: () => number = Math.random
   ) {}
 
-  /** Documentos que o SVRS cobre (todos os 5, via autorizador SVRS/SEFAZ-RS). */
+  /** Documentos que o SVRS cobre (todos os do catálogo, via autorizador SVRS/SEFAZ-RS). */
   public supportedDocuments(): DocumentType[] {
     return Object.keys(SVRS_URLS) as DocumentType[];
   }

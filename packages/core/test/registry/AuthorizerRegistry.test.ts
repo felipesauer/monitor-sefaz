@@ -41,7 +41,7 @@ describe('CatalogAuthorizerRegistry', () => {
     );
   });
 
-  it('listAll cobre NF-e e NFC-e (27 cada) e inclui os 5 documentos', () => {
+  it('listAll cobre NF-e e NFC-e (27 cada) e inclui os 6 documentos', () => {
     const all = registry.listAll(Environment.Production);
     expect(all.filter((t) => t.document === DocumentType.NFe)).toHaveLength(27);
     expect(all.filter((t) => t.document === DocumentType.NFCe)).toHaveLength(27);
@@ -53,6 +53,7 @@ describe('CatalogAuthorizerRegistry', () => {
         DocumentType.CTe,
         DocumentType.MDFe,
         DocumentType.DCe,
+        DocumentType.BPe,
       ])
     );
   });
