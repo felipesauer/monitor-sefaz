@@ -198,7 +198,7 @@ export function renderHead(
     `<meta property="og:image" content="${escapeHtml(image)}" />`,
     '<meta property="og:image:width" content="1200" />',
     '<meta property="og:image:height" content="630" />',
-    '<meta property="og:image:alt" content="Monitor SEFAZ: 135 serviços, 27 UFs, cadência de 5 minutos." />',
+    '<meta property="og:image:alt" content="Monitor SEFAZ: 162 serviços, 27 UFs, cadência de 5 minutos." />',
     '<meta name="twitter:card" content="summary_large_image" />',
     `<meta name="twitter:title" content="${escapeHtml(meta.ogTitle)}" />`,
     `<meta name="twitter:description" content="${escapeHtml(meta.twitterDescription)}" />`,

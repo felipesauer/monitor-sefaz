@@ -2,7 +2,7 @@
   "name": "monitor-sefaz",
   "version": "0.1.0",
   "private": true,
-  "description": "Monitor de disponibilidade em tempo real dos webservices SEFAZ para documentos fiscais eletrônicos (NF-e, NFC-e, CT-e, MDF-e, DC-e)",
+  "description": "Monitor de disponibilidade em tempo real dos webservices SEFAZ para documentos fiscais eletrônicos (NF-e, NFC-e, CT-e, MDF-e, DC-e, BP-e)",
   "license": "MIT",
   "type": "module",
   "engines": {

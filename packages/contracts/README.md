@@ -40,7 +40,7 @@ const snapshot = resilientStatusSnapshotSchema.parse(data); // serviços inváli
 
 O histórico acumulado pelo Worker não é um ponto por checagem: o estado é
 guardado como _run-length_ (segmento novo só quando muda) e a latência é
-agregada por hora. Isso mantém 72h de 135 serviços em ~230 KB em vez de
+agregada por hora. Isso mantém 72h de 162 serviços em ~275 KB em vez de
 megabytes, sem perder o instante exato de cada queda.
 
 ```ts
