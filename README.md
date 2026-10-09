@@ -91,8 +91,10 @@ As duas fontes oficiais decidem o estado de cada serviço; o IntegraNotas preenc
 as UFs e documentos que elas não publicam. MDF-e e DC-e são centralizados no SVRS,
 então derivam do estado desse autorizador. O BP-e vem da página de disponibilidade
 do BP-e no SVRS, que cobre as 22 UFs autorizadas ali; MG, MS, MT, PR e SP autorizam
-o BP-e em ambiente próprio, sem fonte pública, e só aparecem no modo `soap`. Uma fonte que falha não derruba as
-demais, e há um **piso de cobertura (75%)** abaixo do qual a coleta é considerada
+o BP-e em ambiente próprio, sem fonte pública, e só aparecem no modo `soap`. Nenhuma
+fonte pública mede a latência de rede do BP-e (o SVRS não a publica): o valor fica em
+0 e a tela o mostra como "<1 s", sem ser uma medição. Uma fonte que falha não derruba
+as demais, e há um **piso de cobertura (75%)** abaixo do qual a coleta é considerada
 degradada e não é publicada — evitando exibir "tudo no ar" por engano.
 
 Cada coleta mede a **cobertura por fonte** e marca quando uma fonte oficial fica
@@ -177,7 +179,7 @@ isso — a resolução passa a ser a do incidente, não a do agendador.
 
 O histórico do Worker é guardado num **formato compacto** (`packages/contracts`):
 o estado vira _run-length_ (segmento novo só quando muda) e a latência é agregada
-por hora. Isso mantém 72h × 135 serviços em ~230 KB numa única chave de KV — 288
+por hora. Isso mantém 72h × 162 serviços em ~275 KB numa única chave de KV — 288
 escritas/dia, dentro do free tier — em vez dos megabytes que um ponto por
 checagem exigiria. A SPA expande de volta para pontos, na resolução que cada
 componente precisa.

@@ -48,6 +48,21 @@ describe('SvrsParser', () => {
     expect(rows[0]!.cStat).toBe(239);
   });
 
+  it('um WS do BP-e fora derruba o estado do autorizador inteiro (pior caso vence)', () => {
+    // A página do BP-e lista "BPe TA" e "BPe TM" (modalidades) ao lado do WS
+    // Status. É a mesma regra dos demais documentos: se qualquer WS cai, o
+    // autorizador não está 100%, então as 22 UFs do SVRS ficam Down juntas.
+    const rows = fixture('bpe-disponibilidade.html').split('<tr>');
+    const tm = rows.findIndex((row) => row.includes('BPe TM'));
+    expect(tm).toBeGreaterThan(-1);
+    rows[tm] = rows[tm]!.replace('#3c763d', '#a94442');
+
+    const parsed = new SvrsParser().parse(rows.join('<tr>'));
+    expect(parsed[0]!.state).toBe(ServiceState.Down);
+    // O cStat representativo continua sendo o do WS Status.
+    expect(parsed[0]!.cStat).toBe(239);
+  });
+
   it('devolve [] para HTML sem tabela de webservices', () => {
     expect(new SvrsParser().parse('<html><body>nada</body></html>')).toEqual([]);
   });

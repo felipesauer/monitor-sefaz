@@ -1,7 +1,7 @@
 {
   "name": "Monitor SEFAZ",
   "short_name": "Monitor SEFAZ",
-  "description": "Status dos webservices da SEFAZ (NF-e, NFC-e, CT-e, MDF-e, DC-e) nas 27 UFs.",
+  "description": "Status dos webservices da SEFAZ (NF-e, NFC-e, CT-e, MDF-e, DC-e, BP-e) nas 27 UFs.",
   "lang": "pt-BR",
   "start_url": ".",
   "scope": ".",

@@ -61,14 +61,14 @@ describe('HistoryStore', () => {
     expect(after.segments['NFe:UF0']!.length).toBeLessThanOrEqual(2);
   });
 
-  it('mantém o blob pequeno com 135 serviços estáveis por 72h', async () => {
+  it('mantém o blob pequeno com 162 serviços estáveis por 72h', async () => {
     // O cenário real: 288 rodadas/dia × 3 dias, estado praticamente constante.
     // Se a compressão por segmento não funcionasse, isso explodiria o KV.
     const { kv, size } = fakeKV();
     const store = new HistoryStore(kv);
     const rounds = (RETENTION_MS / STEP_MS) | 0;
     for (let i = 0; i < rounds; i += 1) {
-      await store.append(observations('OPERATIONAL', 135), T0 + i * STEP_MS);
+      await store.append(observations('OPERATIONAL', 162), T0 + i * STEP_MS);
     }
     // Limite de valor do KV é 25 MB; ficamos ordens de grandeza abaixo.
     expect(size()).toBeLessThan(1_000_000);
