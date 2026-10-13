@@ -12,9 +12,9 @@
     "start": "tsx src/server.ts"
   },
   "dependencies": {
-    "@fastify/cors": "^11.3.0",
-    "@fastify/rate-limit": "^11.2.0",
-    "@fastify/static": "^10.1.5",
+    "@fastify/cors": "^11.3.1",
+    "@fastify/rate-limit": "^11.2.1",
+    "@fastify/static": "^10.1.6",
     "@monitor-sefaz/catalog": "workspace:*",
     "@monitor-sefaz/contracts": "workspace:*",
     "@monitor-sefaz/core": "workspace:*",
