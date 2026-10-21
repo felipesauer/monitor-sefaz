@@ -1,0 +1,3 @@
+# Managed by mnema: this file governs only mnema's own tree.
+# The record is signed bytes: never rewrite its line ends on checkout.
+* -text

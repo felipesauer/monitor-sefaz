@@ -18,6 +18,9 @@ packages/core/test-*.mjs
 # Cache do wrangler dev
 .wrangler/
 
+# Estudos e rascunhos locais de pesquisa: não são parte do produto.
+.study/
+
 # mnema: ignore only the local cache (SQLite db, sync buffer,
 # attachments) and the personal config.local.json override. The
 # backlog/roadmap/sprint/memory/skill markdown and the audit log
