@@ -1,11 +1,11 @@
 {
   "environment": "production",
-  "generatedAt": "2026-10-23T07:39:29.460Z",
+  "generatedAt": "2026-10-23T13:32:57.672Z",
   "total": 157,
   "operational": 157,
   "failing": 0,
   "availability": 100,
-  "avgLatencyMs": 794,
+  "avgLatencyMs": 1345,
   "byDocument": [
     {
       "key": "BPe",
