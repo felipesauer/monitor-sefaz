@@ -1,0 +1,8 @@
+# The record is signed bytes: do not let an outer .editorconfig reformat them.
+[*]
+insert_final_newline = unset
+trim_trailing_whitespace = unset
+end_of_line = unset
+charset = unset
+indent_style = unset
+indent_size = unset

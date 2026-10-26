@@ -1,0 +1,12 @@
+# Managed by mnema: this file governs only mnema's own tree.
+# The private subtree: this machine only, never shared.
+/private/
+# Machine-local key material: the private key and per-install ids never commit;
+# only the public keys (keys/*.pub) and the tails are proof the team needs.
+/keys/*.key
+/keys/*.inst
+/keys/*.anchor
+# Machinery, not record: the lock a writer holds while it appends, unlinked on the
+# way out; the projection a reader keeps; the heads a tail last cited. These two
+# persist, and losing them costs a rebuild or one repeated citation, never a proof.
+/locks/
