@@ -1,11 +1,11 @@
 {
   "environment": "production",
-  "generatedAt": "2026-10-30T23:00:53.953Z",
+  "generatedAt": "2026-10-31T02:28:55.862Z",
   "total": 157,
   "operational": 157,
   "failing": 0,
   "availability": 100,
-  "avgLatencyMs": 1021,
+  "avgLatencyMs": 872,
   "byDocument": [
     {
       "key": "BPe",
@@ -122,10 +122,10 @@
     {
       "source": "svrs",
       "official": true,
-      "collected": 117,
+      "collected": 134,
       "expected": 162,
-      "coverage": 0.722,
-      "degraded": true
+      "coverage": 0.827,
+      "degraded": false
     },
     {
       "source": "availability",
