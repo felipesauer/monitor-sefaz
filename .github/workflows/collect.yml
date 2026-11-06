@@ -8,7 +8,7 @@ on:
     # O cron do GitHub Actions é best-effort e quase nunca honra granularidade
     # sub-horária (com '7,37' observamos ~6 coletas/dia em vez de 48). Cadência
     # horária é disparada de forma muito mais consistente.
-    - cron: '17 * * * *'
+    - cron: '*/5 * * * *'
   workflow_dispatch: {}
 
 permissions:
