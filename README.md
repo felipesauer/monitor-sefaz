@@ -156,32 +156,32 @@ No modo self-host, a API expõe (base `/api/v1`):
 
 O Cloudflare Worker expõe um subconjunto ao vivo (`/summary`, `/health`, o
 snapshot completo e o histórico acumulado em `/history` e
-`/services/:id/history`). Também aceita `/collect`, que grava uma amostra sob
-demanda — o mesmo caminho do Cron Trigger, recusando chamadas mais frequentes
-que a própria cadência de coleta.
+`/services/:id/history`). A antiga rota `/collect` responde 410: a gravação do
+histórico saiu do Worker.
 
 ## Cadência da coleta
 
 O status exibido é sempre **ao vivo** — cada carregamento consulta as fontes na
-hora. O que precisa ser acumulado é o **histórico**, e ele vem de duas origens
-com resoluções bem diferentes:
+hora. O que precisa ser acumulado é o **histórico**. Ele é coletado no GitHub
+Actions a cada 5 minutos e guardado em dois lugares:
 
-| Origem                                    | Cadência                   | Retenção | Papel                                 |
-| ----------------------------------------- | -------------------------- | -------- | ------------------------------------- |
-| **Cloudflare Worker** (Cron Trigger + KV) | **5 min** — 288 pontos/dia | 72h      | Fonte primária do histórico           |
-| **GitHub Actions** (JSONs no Pages)       | ~4h na prática             | 7 dias   | Rede de segurança, e o modo sem infra |
+| Onde                            | Retenção       | Papel                              |
+| ------------------------------- | -------------- | ---------------------------------- |
+| **Workers KV** (via `/history`) | 72h            | Fonte primária do histórico na SPA |
+| **JSONs no Pages**              | 7 dias ou 2 MB | Reserva, e o modo sem infra        |
 
-O cron do GitHub Actions é declarado de hora em hora, mas é _best-effort_: na
-série real medimos gap mediano de **~4h** (p90 de 5h28). Com ~6 coletas por dia,
-uma barra de uptime de 24h era desenhada com 7 amostras e uma queda de poucas
-horas podia passar inteira entre duas coletas. O Cron Trigger do Worker resolve
-isso — a resolução passa a ser a do incidente, não a do agendador.
+Quem marca o ritmo é o Cron Trigger do Worker: a cada 5 minutos ele só dispara o
+`collect.yml` pela API do GitHub. A coleta em si não roda no Worker, porque no
+plano Workers Free cada execução agendada tem 10 ms de CPU e uma rodada gasta
+~160 ms; medido em 72h, 55% das execuções eram cortadas e o histórico ficava com
+buracos de horas. O cron do próprio Actions (`collect-schedule.yml`, de hora em
+hora, que na prática entrega uma execução a cada ~5h) fica como rede de
+segurança.
 
-Os JSONs do Actions não são commitados: cada coleta os publica direto no Pages,
-com o `history.json` limitado a 7 dias ou 2 MB, o que vier primeiro, e passa o
+Os JSONs não são commitados: cada coleta os publica direto no Pages e passa o
 estado para a seguinte pelo cache do Actions.
 
-O histórico do Worker é guardado num **formato compacto** (`packages/contracts`):
+O histórico do KV é guardado num **formato compacto** (`packages/contracts`):
 o estado vira _run-length_ (segmento novo só quando muda) e a latência é agregada
 por hora. Isso mantém 72h × 162 serviços em ~275 KB numa única chave de KV — 288
 escritas/dia, dentro do free tier — em vez dos megabytes que um ponto por
@@ -211,8 +211,16 @@ apenas os lê. Não requer infraestrutura. O build pré-renderiza a home e as 27
 páginas por UF: o conteúdo chega no HTML, pronto para buscadores, e o status ao
 vivo vem depois, por fetch.
 
-**Cloudflare Worker.** O Worker faz a coleta ao vivo com CORS, e um Cron Trigger
-acumula o histórico de 5 em 5 minutos no Workers KV.
+**Cloudflare Worker.** O Worker serve o status ao vivo com CORS e o histórico do
+Workers KV, e seu Cron Trigger dispara a coleta do Actions a cada 5 minutos. O
+despacho usa um token fine-grained do GitHub (só este repositório, Actions: read
+and write), guardado como secret:
+
+    pnpm --filter @monitor-sefaz/worker exec wrangler secret put GITHUB_DISPATCH_TOKEN
+
+A coleta grava o KV pela API REST do Cloudflare com o secret de repositório
+`CLOUDFLARE_KV_TOKEN` (Workers KV Storage: Edit) e a variável
+`CLOUDFLARE_ACCOUNT_ID`.
 
     # Deploy (requer wrangler login)
     pnpm --filter @monitor-sefaz/worker deploy
@@ -269,7 +277,7 @@ Monorepo TypeScript (strict) gerenciado com pnpm e Turborepo.
     packages/contracts   schemas Zod e DTOs compartilhados
     packages/notifier    detecção de transições e canais de notificação
     apps/collector       CLI que gera os JSONs publicados no Pages (GitHub Actions)
-    apps/worker          Cloudflare Worker de coleta ao vivo
+    apps/worker          Cloudflare Worker: status ao vivo, histórico do KV e despacho da coleta
     apps/api             API Fastify self-host: scheduler, REST, SSE e Redis
     apps/web             dashboard React + Vite
 

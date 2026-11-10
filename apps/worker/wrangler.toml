@@ -8,13 +8,21 @@ compatibility_flags = ["nodejs_compat"]
 #    nativo `deploy` que intercepta o script). Requer `wrangler login`.
 # A SPA aponta para a URL pública deste worker via VITE_API_BASE_URL.
 
-# Coleta agendada: é o que dá memória ao Worker. O cron do GitHub Actions é
-# best-effort e entregava ~6 coletas/dia (gap mediano de 4h), o que deixava a
-# barra de uptime de 24h com 7 amostras. Aqui são 288/dia.
+# Despachante: a cada 5 min o cron só pede ao GitHub uma execução do
+# collect.yml (o agendador do Actions é best-effort e entregava uma coleta a
+# cada ~5 h). A coleta em si não cabe aqui: no plano Free cada execução
+# agendada tem 10 ms de CPU, e uma rodada gasta ~160 ms.
 [triggers]
 crons = ["*/5 * * * *"]
 
-# Histórico compacto, numa única chave (ver HistoryStore): 288 escritas/dia
+# Repositório cujo collect.yml o cron dispara. O token vai como secret:
+#   pnpm --filter @monitor-sefaz/worker exec wrangler secret put GITHUB_DISPATCH_TOKEN
+# (fine-grained, só este repositório, Actions: read and write). Num fork, troque.
+[vars]
+GITHUB_REPOSITORY = "felipesauer/monitor-sefaz"
+
+# Histórico compacto, numa única chave (CompactHistoryStore, em contracts). O
+# Worker só o lê; quem grava é o collect.yml, pela API REST: 288 escritas/dia
 # contra o limite de 1.000/dia do free tier.
 #
 # Este id aponta para o namespace da conta que hospeda o deploy oficial. Num

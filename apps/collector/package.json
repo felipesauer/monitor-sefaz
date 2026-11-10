@@ -10,7 +10,8 @@
     "collect": "tsx src/collect.ts",
     "drift-check": "tsx src/drift-check.ts",
     "endpoint-check": "tsx src/endpoint-check.ts",
-    "sample-availability": "tsx src/sample-availability.ts"
+    "sample-availability": "tsx src/sample-availability.ts",
+    "kv-history": "tsx src/kv-history.ts"
   },
   "dependencies": {
     "@monitor-sefaz/catalog": "workspace:*",

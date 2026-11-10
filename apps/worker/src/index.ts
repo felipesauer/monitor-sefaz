@@ -15,7 +15,6 @@ import {
   historyPeriodSchema,
   isUp,
   PERIOD_MS,
-  type HistoryObservation,
   type HistoryResponseDTO,
   type ServiceStatusDTO,
   type StatusSnapshotDTO,
@@ -23,10 +22,11 @@ import {
 } from '@monitor-sefaz/contracts';
 import { Catalog, Environment } from '@monitor-sefaz/catalog';
 import { WorkerAvailabilityProvider } from './WorkerAvailabilityProvider.js';
-import { HistoryStore, STEP_MS } from './HistoryStore.js';
+import { historyStore } from './historyStore.js';
+import { dispatchCollect, type DispatchEnv } from './dispatch.js';
 
-/** Bindings declarados no wrangler.toml. */
-export interface Env {
+/** Bindings declarados no wrangler.toml, mais o secret do despachante. */
+export interface Env extends DispatchEnv {
   /** KV do histórico. Ausente em dev sem `--kv` → o Worker segue stateless. */
   HISTORY?: KVNamespace;
 }
@@ -187,42 +187,13 @@ async function collectServices(): Promise<{ generatedAt: string; services: Servi
   return { generatedAt, services: collected.map((s) => toDTO(s, generatedAt)) };
 }
 
-/**
- * Coleta uma rodada e a incorpora ao histórico em KV.
- *
- * Compartilhada pelo Cron Trigger e pela rota `/collect`, para que as duas
- * exercitem exatamente o mesmo caminho — é o que torna a rota um teste honesto
- * do que o cron faz, e um plano B se o agendador não disparar.
- */
-async function collectIntoHistory(store: HistoryStore): Promise<number> {
-  const { services } = await collectServices();
-  const observations: HistoryObservation[] = services.map((s) => ({
-    id: s.id,
-    state: s.state,
-    cStat: s.cStat,
-    latencyMs: s.latencyMs,
-  }));
-  const history = await store.append(observations, Date.now());
-  return Object.keys(history.segments).length;
-}
-
-/**
- * Intervalo mínimo entre gravações disparadas pela rota `/collect`.
- *
- * A rota é pública e cada chamada é uma escrita no KV (cota de 1.000/dia no
- * free tier). Recusar o que chegar antes da própria cadência da coleta torna
- * impossível esgotar a cota por ela, sem precisar de autenticação.
- */
-const MIN_COLLECT_INTERVAL_MS = 4 * 60 * 1000;
-
 /** Rotas de histórico, servidas do KV (nunca disparam coleta). */
 async function handleHistory(pathname: string, url: URL, env: Env): Promise<Response | null> {
   if (!pathname.includes('/history')) return null;
   if (!env.HISTORY) {
     return error('histórico indisponível: binding HISTORY não configurado', 501);
   }
-  const store = new HistoryStore(env.HISTORY);
-  const history = await store.read(Date.now());
+  const history = await historyStore(env.HISTORY).read(Date.now());
 
   // /services/:id/history?period=24h — série de um serviço, resolução da coleta.
   const single = /\/services\/([^/]+)\/history$/.exec(pathname);
@@ -258,18 +229,11 @@ export default {
     }
 
     try {
-      // Gravação sob demanda, com a mesma cadência do cron.
+      // A gravação sob demanda saiu daqui junto com a coleta agendada: quem
+      // grava o histórico agora é o GitHub Actions, e dois escritores na mesma
+      // chave do KV perderiam rodadas um do outro.
       if (pathname.endsWith('/collect')) {
-        if (!env.HISTORY) {
-          return error('histórico indisponível: binding HISTORY não configurado', 501);
-        }
-        const store = new HistoryStore(env.HISTORY);
-        const current = await store.read(Date.now());
-        const sinceLast = Date.now() - Date.parse(current.updatedAt);
-        if (Object.keys(current.segments).length > 0 && sinceLast < MIN_COLLECT_INTERVAL_MS) {
-          return json({ skipped: true, sinceLastMs: sinceLast }, 0);
-        }
-        return json({ collected: true, series: await collectIntoHistory(store) }, 0);
+        return error('a coleta saiu do Worker: o GitHub Actions grava o histórico', 410);
       }
 
       const fromHistory = await handleHistory(pathname, url, env);
@@ -289,33 +253,24 @@ export default {
   },
 
   /**
-   * Cron Trigger: coleta e acumula o histórico no KV.
+   * Cron Trigger: só despacha a coleta para o GitHub Actions.
+   *
+   * No plano Workers Free cada execução agendada tem 10 ms de CPU, e uma rodada
+   * de coleta gasta ~160 ms: medido em 72 h, 55% das execuções eram cortadas
+   * (`exceededResources`) e o histórico ficava com buracos de horas. A coleta
+   * foi para o Actions, que grava o histórico neste KV pela API REST; aqui fica
+   * só a chamada que a dispara, com CPU desprezível.
    *
    * A promise é aguardada AQUI, e não passada para `ctx.waitUntil`: no handler
    * `scheduled` o runtime só garante vida ao Worker enquanto a promise
-   * RETORNADA pelo handler não resolve. Com waitUntil, o handler retornava na
-   * hora e a escrita no KV podia nunca acontecer.
-   *
-   * É isto que dá memória ao Worker. Antes, o histórico vinha só do GitHub
-   * Actions, cujo cron é best-effort e na prática entregava ~6 coletas/dia —
-   * uma barra de uptime de 24h desenhada com 7 amostras, onde uma queda de
-   * poucas horas podia passar inteira entre duas coletas. Na cadência de 5
-   * minutos são 288 pontos/dia, e a resolução passa a ser a do incidente.
+   * RETORNADA pelo handler não resolve.
    */
   async scheduled(_event: ScheduledController, env: Env): Promise<void> {
-    if (!env.HISTORY) {
-      console.warn('Cron disparado sem o binding HISTORY; nada a acumular.');
-      return;
-    }
-    const store = new HistoryStore(env.HISTORY);
-    try {
-      const started = Date.now();
-      const series = await collectIntoHistory(store);
-      console.log(`Coleta agendada: ${series} séries em KV, em ${Date.now() - started}ms.`);
-    } catch (err) {
-      // Uma coleta que falha é um buraco na série, não um incidente: a
-      // próxima rodada acontece em STEP_MS. Logamos e seguimos.
-      console.error(`Coleta agendada falhou (retomando em ${STEP_MS / 60000} min):`, err);
+    const result = await dispatchCollect(env);
+    if (result.ok) {
+      console.log('Coleta despachada para o GitHub Actions.');
+    } else {
+      console.error(`Despacho da coleta falhou (${result.status ?? 'sem HTTP'}): ${result.detail}`);
     }
   },
 };
