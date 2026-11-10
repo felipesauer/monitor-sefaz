@@ -6,8 +6,8 @@ name: Coletar status SEFAZ
 # (history.json, technical-notes.json, notifier-state.json) passa pelo cache do
 # Actions; o site publicado é a reserva quando o cache está vazio.
 #
-# Só tem workflow_dispatch, de propósito. Quem dispara é o
-# `collect-schedule.yml` (de hora em hora) e, depois, o despachante do Worker.
+# Só tem workflow_dispatch, de propósito. Quem dispara é o Cron Trigger do
+# Worker (a cada 5 min) e, como rede de segurança, o `collect-schedule.yml`.
 # Um workflow com `schedule` é desligado pelo GitHub após 60 dias sem atividade
 # no repositório, e desligado ele não atende nem o disparo manual. Sem os
 # commits de dados, essa inatividade passa a ser possível.
@@ -68,6 +68,17 @@ jobs:
           NOTIFY_WEBHOOK_URL: ${{ secrets.NOTIFY_WEBHOOK_URL }}
           NOTIFY_EVENTS: ${{ vars.NOTIFY_EVENTS }}
           NOTIFY_DIGEST_HOUR: ${{ vars.NOTIFY_DIGEST_HOUR }}
+
+      - name: Gravar o histórico no KV do Worker
+        # O Worker lê esta chave para servir /history. Se falhar, o Pages ainda
+        # publica a rodada; o passo fica marcado para investigar.
+        continue-on-error: true
+        run: pnpm --filter @monitor-sefaz/collector kv-history "$GITHUB_WORKSPACE/$DATA_DIR"
+        env:
+          CLOUDFLARE_KV_TOKEN: ${{ secrets.CLOUDFLARE_KV_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          # O mesmo namespace do binding HISTORY em apps/worker/wrangler.toml.
+          KV_NAMESPACE_ID: 9707ccc4e6894e0a8a29f9bc56e4d081
 
       - name: Guardar o estado para a próxima coleta
         uses: actions/cache/save@v6

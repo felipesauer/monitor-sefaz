@@ -1,17 +1,30 @@
 import { describe, it, expect } from 'vitest';
-import { HistoryStore, RETENTION_MS, STEP_MS } from '../src/HistoryStore.js';
-import type { HistoryObservation } from '@monitor-sefaz/contracts';
+import {
+  COMPACT_HISTORY_KEY,
+  COMPACT_HISTORY_RETENTION_MS as RETENTION_MS,
+  COMPACT_HISTORY_STEP_MS as STEP_MS,
+  CompactHistoryStore,
+  type TextStore,
+} from '../src/compact-history-store.js';
+import type { HistoryObservation } from '../src/compact-history.js';
 
-/** KV mínimo em memória, só com o que o HistoryStore usa. */
+/** Armazenamento chave → texto em memória, com uma chave só. */
 function fakeKV(initial: string | null = null) {
   let value = initial;
+  const keys: string[] = [];
+  const kv: TextStore = {
+    get: async (key) => {
+      keys.push(key);
+      return value;
+    },
+    put: async (key, body) => {
+      keys.push(key);
+      value = body;
+    },
+  };
   return {
-    kv: {
-      get: async (_key: string, _type: 'json') => (value === null ? null : JSON.parse(value)),
-      put: async (_key: string, body: string) => {
-        value = body;
-      },
-    } as unknown as KVNamespace,
+    kv,
+    keys: () => keys,
     /** Bytes efetivamente gravados — a métrica que decide se cabe no free tier. */
     size: () => (value === null ? 0 : value.length),
     raw: () => value,
@@ -29,24 +42,38 @@ function observations(state: HistoryObservation['state'], count: number): Histor
   }));
 }
 
-describe('HistoryStore', () => {
+describe('CompactHistoryStore', () => {
   it('parte de um histórico vazio quando o KV não tem nada', async () => {
     const { kv } = fakeKV();
-    const history = await new HistoryStore(kv).read(T0);
+    const history = await new CompactHistoryStore(kv).read(T0);
     expect(history.segments).toEqual({});
     expect(history.stepMs).toBe(STEP_MS);
+  });
+
+  it('usa sempre a mesma chave', async () => {
+    const { kv, keys } = fakeKV();
+    await new CompactHistoryStore(kv).append(observations('OPERATIONAL', 1), T0);
+    expect(new Set(keys())).toEqual(new Set([COMPACT_HISTORY_KEY]));
+  });
+
+  it('recomeça a janela quando o texto nem é JSON, e avisa', async () => {
+    const { kv } = fakeKV('{"v":1,"cort');
+    const reasons: string[] = [];
+    const history = await new CompactHistoryStore(kv, (r) => reasons.push(r)).read(T0);
+    expect(history.segments).toEqual({});
+    expect(reasons).toEqual(['o texto gravado não é JSON']);
   });
 
   it('recomeça a janela quando o blob está corrompido, sem lançar', async () => {
     // Um blob inválido não pode travar a coleta para sempre.
     const { kv } = fakeKV(JSON.stringify({ v: 99, lixo: true }));
-    const history = await new HistoryStore(kv).read(T0);
+    const history = await new CompactHistoryStore(kv).read(T0);
     expect(history.segments).toEqual({});
   });
 
   it('acumula rodadas sucessivas', async () => {
     const { kv } = fakeKV();
-    const store = new HistoryStore(kv);
+    const store = new CompactHistoryStore(kv);
     await store.append(observations('OPERATIONAL', 3), T0);
     const after = await store.append(observations('DOWN', 3), T0 + STEP_MS);
     expect(after.segments['NFe:UF0']).toHaveLength(2);
@@ -54,7 +81,7 @@ describe('HistoryStore', () => {
 
   it('poda o que passou da retenção', async () => {
     const { kv } = fakeKV();
-    const store = new HistoryStore(kv);
+    const store = new CompactHistoryStore(kv);
     await store.append(observations('OPERATIONAL', 1), T0);
     const after = await store.append(observations('DOWN', 1), T0 + RETENTION_MS + STEP_MS);
     // O segmento antigo foi absorvido pela borda da janela, não duplicado.
@@ -65,7 +92,7 @@ describe('HistoryStore', () => {
     // O cenário real: 288 rodadas/dia × 3 dias, estado praticamente constante.
     // Se a compressão por segmento não funcionasse, isso explodiria o KV.
     const { kv, size } = fakeKV();
-    const store = new HistoryStore(kv);
+    const store = new CompactHistoryStore(kv);
     const rounds = (RETENTION_MS / STEP_MS) | 0;
     for (let i = 0; i < rounds; i += 1) {
       await store.append(observations('OPERATIONAL', 162), T0 + i * STEP_MS);
