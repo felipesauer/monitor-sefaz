@@ -176,7 +176,7 @@ export const notificationEventSchema = z.object({
   /** ISO 8601 — quando o evento foi detectado. */
   occurredAt: z.string(),
   /** Dados livres por tipo (ex.: título/link de NT, números do digest). */
-  payload: z.record(z.unknown()).optional(),
+  payload: z.record(z.string(), z.unknown()).optional(),
 });
 export type NotificationEventDTO = z.infer<typeof notificationEventSchema>;
 
