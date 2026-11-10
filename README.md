@@ -169,13 +169,17 @@ com resoluções bem diferentes:
 | Origem                                    | Cadência                   | Retenção | Papel                                 |
 | ----------------------------------------- | -------------------------- | -------- | ------------------------------------- |
 | **Cloudflare Worker** (Cron Trigger + KV) | **5 min** — 288 pontos/dia | 72h      | Fonte primária do histórico           |
-| **GitHub Actions** (JSONs versionados)    | ~4h na prática             | 7 dias   | Rede de segurança, e o modo sem infra |
+| **GitHub Actions** (JSONs no Pages)       | ~4h na prática             | 7 dias   | Rede de segurança, e o modo sem infra |
 
 O cron do GitHub Actions é declarado de hora em hora, mas é _best-effort_: na
 série real medimos gap mediano de **~4h** (p90 de 5h28). Com ~6 coletas por dia,
 uma barra de uptime de 24h era desenhada com 7 amostras e uma queda de poucas
 horas podia passar inteira entre duas coletas. O Cron Trigger do Worker resolve
 isso — a resolução passa a ser a do incidente, não a do agendador.
+
+Os JSONs do Actions não são commitados: cada coleta os publica direto no Pages,
+com o `history.json` limitado a 7 dias ou 2 MB, o que vier primeiro, e passa o
+estado para a seguinte pelo cache do Actions.
 
 O histórico do Worker é guardado num **formato compacto** (`packages/contracts`):
 o estado vira _run-length_ (segmento novo só quando muda) e a latência é agregada
@@ -264,7 +268,7 @@ Monorepo TypeScript (strict) gerenciado com pnpm e Turborepo.
     packages/core        motor de coleta: consenso multi-fonte, SOAP e notas técnicas
     packages/contracts   schemas Zod e DTOs compartilhados
     packages/notifier    detecção de transições e canais de notificação
-    apps/collector       CLI que gera os JSONs versionados (GitHub Actions)
+    apps/collector       CLI que gera os JSONs publicados no Pages (GitHub Actions)
     apps/worker          Cloudflare Worker de coleta ao vivo
     apps/api             API Fastify self-host: scheduler, REST, SSE e Redis
     apps/web             dashboard React + Vite

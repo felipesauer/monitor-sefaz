@@ -44,8 +44,9 @@ onde o repositório a impõe; "(sem check)" quer dizer que nada a verifica além
     commit na `main`, então segue Conventional Commits. (sem check): não há commitlint nem hook.
 12. **Branch**: parta de `main` com nome descritivo (`feat/minha-mudanca`); PR para `main` seguindo `.github/pull_request_template.md`
     (o que muda, como validar, checklist). (sem check)
-13. **Dados coletados**: `apps/web/public/data/` é escrito pelo workflow `collect.yml` (commit
-    `chore(data): atualiza status SEFAZ [skip ci]`, de hora em hora). Não edite nem commite esses JSONs à mão. (sem check)
+13. **Dados coletados**: o `collect.yml` publica os JSONs direto no GitHub Pages, sem commit; o estado entre coletas passa pelo cache
+    do Actions. Os arquivos de `apps/web/public/data/` no repositório ficaram congelados e servem só para desenvolvimento local:
+    não edite nem commite esses JSONs. (sem check)
 
 ## Nunca
 
@@ -59,7 +60,7 @@ onde o repositório a impõe; "(sem check)" quer dizer que nada a verifica além
 - `packages/contracts`: tipos compartilhados. `packages/catalog`: endpoints e autorizadores (só dados). `packages/core`: motor de
   coleta (consenso, parsers, envelopes SOAP, checkers). `packages/notifier`: notificações.
 - `apps/collector`: coleta e `endpoint-check`; `apps/web`: dashboard (Vite, pré-render); `apps/api`; `apps/worker`: Cloudflare Worker.
-- `.github/workflows/`: `ci.yml` (o portão), `collect.yml`, `deploy-pages.yml`, `deploy-worker.yml`, `drift-check.yml`, `endpoint-check.yml`, `release.yml`.
+- `.github/workflows/`: `ci.yml` (o portão), `collect.yml` (disparado por `collect-schedule.yml`), `deploy-pages.yml`, `deploy-worker.yml`, `drift-check.yml`, `endpoint-check.yml`, `release.yml`, `study-sampling.yml` (estudo, manual).
 - Guia humano: `CONTRIBUTING.md`.
 
 <!-- mnema:begin v4 (written by mnema; `mnema instructions --remove` takes it out) -->

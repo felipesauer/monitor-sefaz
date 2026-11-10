@@ -1,0 +1,26 @@
+name: Coletar status SEFAZ (agendado)
+
+# Rede de segurança: dispara o `collect.yml` de hora em hora. Fica num workflow
+# à parte porque o GitHub desliga workflows com `schedule` depois de 60 dias sem
+# atividade no repositório; se isso acontecer, só este se perde, e o
+# `collect.yml` continua atendendo os outros disparos.
+#
+# O cron do Actions é best-effort: na prática entrega uma execução a cada ~5 h,
+# não a cada hora. Para isso, o minuto 17 (fora da hora cheia) ajuda pouco, mas
+# não atrapalha.
+on:
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch: {}
+
+permissions:
+  actions: write
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Disparar a coleta
+        run: gh workflow run collect.yml --ref main --repo "$GITHUB_REPOSITORY"
+        env:
+          GH_TOKEN: ${{ github.token }}
