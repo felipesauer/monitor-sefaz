@@ -4,6 +4,11 @@ import { ConsensusCollector } from '../../src/consensus/ConsensusCollector.js';
 import { ServiceState } from '../../src/domain/types.js';
 import type { CollectedStatus } from '../../src/availability/AvailabilityCollector.js';
 import type { StatusCollectorLike } from '../../src/integranotas/HybridCollector.js';
+import { AvailabilityCollector } from '../../src/availability/AvailabilityCollector.js';
+import { IntegraNotasCollector } from '../../src/integranotas/IntegraNotasCollector.js';
+import { IntegraNotasProvider } from '../../src/integranotas/IntegraNotasProvider.js';
+import { SvrsCollector } from '../../src/svrs/SvrsCollector.js';
+import { SvrsProvider } from '../../src/svrs/SvrsProvider.js';
 
 function status(
   uf: UF,
@@ -190,6 +195,113 @@ describe('ConsensusCollector', () => {
       expect(svrsHealth.collected).toBe(0);
       expect(svrsHealth.degraded).toBe(true);
       expect(svrsHealth.official).toBe(true);
+    });
+
+    describe('expected por fonte (supportedDocuments)', () => {
+      const catalog = new Catalog();
+      const RECEITA_DOCS = [
+        DocumentType.NFe,
+        DocumentType.NFCe,
+        DocumentType.CTe,
+        DocumentType.MDFe,
+        DocumentType.DCe,
+      ];
+      const servicesOf = (documents: DocumentType[], n: number): CollectedStatus[] =>
+        documents
+          .flatMap((d) => catalog.list(d, Environment.Production))
+          .slice(0, n)
+          .map((e) => ({
+            document: e.document,
+            uf: e.uf,
+            authorizer: e.authorizer,
+            state: ServiceState.Operational,
+            cStat: null,
+            latencyMs: 0,
+            source: 'availability' as const,
+          }));
+      const declaring = (
+        documents: DocumentType[],
+        rows: CollectedStatus[]
+      ): StatusCollectorLike => ({
+        collect: async () => rows,
+        supportedDocuments: () => documents,
+      });
+      const healthOf = async (collector: StatusCollectorLike) => {
+        const consensus = new ConsensusCollector(
+          [{ name: 'availability', official: true, collector }],
+          catalog
+        );
+        return (await consensus.collectWithDiagnostics()).sources[0]!;
+      };
+
+      it('mede a fonte só sobre os documentos que ela declara', async () => {
+        const health = await healthOf(declaring([DocumentType.MDFe, DocumentType.DCe], []));
+        expect(health.expected).toBe(54);
+      });
+
+      it('um documento que a fonte não cobre não a derruba abaixo do piso', async () => {
+        // A Receita não publica o BP-e. Com o catálogo inteiro (162, piso 121), 120
+        // serviços dela viravam drift falso; sobre os 135 que ela cobre (piso 101),
+        // não.
+        const health = await healthOf(declaring(RECEITA_DOCS, servicesOf(RECEITA_DOCS, 120)));
+        expect(health).toMatchObject({ expected: 135, degraded: false });
+        expect(health.coverage).toBeCloseTo(0.889, 3);
+      });
+
+      it('perder páginas inteiras continua sendo drift', async () => {
+        // Sem as páginas da NF-e e da NFC-e: 135 − 54 = 81 < piso 101.
+        const health = await healthOf(declaring(RECEITA_DOCS, servicesOf(RECEITA_DOCS, 81)));
+        expect(health.degraded).toBe(true);
+      });
+
+      it('documentos repetidos na declaração contam uma vez só', async () => {
+        const health = await healthOf(declaring([DocumentType.MDFe, DocumentType.MDFe], []));
+        expect(health.expected).toBe(27);
+      });
+
+      it('os coletores do consenso padrão declaram os seus documentos', async () => {
+        const fail = async (): Promise<never> => {
+          throw new Error('sem rede no teste');
+        };
+        const consensus = new ConsensusCollector(
+          [
+            {
+              name: 'svrs',
+              official: true,
+              collector: new SvrsCollector(new SvrsProvider(fail, async () => {}), catalog),
+            },
+            {
+              name: 'availability',
+              official: true,
+              collector: new AvailabilityCollector(
+                {
+                  supportedDocuments: () => [DocumentType.NFe, DocumentType.NFCe, DocumentType.CTe],
+                  fetch: fail,
+                },
+                catalog
+              ),
+            },
+            {
+              name: 'integranotas',
+              official: false,
+              collector: new IntegraNotasCollector(
+                new IntegraNotasProvider(
+                  fail,
+                  () => 0,
+                  async () => {}
+                ),
+                catalog
+              ),
+            },
+          ],
+          catalog
+        );
+        const { sources } = await consensus.collectWithDiagnostics();
+        const expected = Object.fromEntries(sources.map((s) => [s.source, s.expected]));
+        // SVRS: os 6 documentos (162). Receita: NF-e, NFC-e e CT-e, mais MDF-e e
+        // DC-e derivados (135). IntegraNotas: os 5 documentos da API, sem BP-e (135).
+        expect(expected).toEqual({ svrs: 162, availability: 135, integranotas: 135 });
+      });
     });
 
     it('collect() continua devolvendo só os serviços (retrocompat)', async () => {

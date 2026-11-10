@@ -41,6 +41,11 @@ export class IntegraNotasCollector {
     return new IntegraNotasCollector(new IntegraNotasProvider(fetcher), catalog);
   }
 
+  /** Documentos que a API do IntegraNotas publica. */
+  public supportedDocuments(): DocumentType[] {
+    return this.provider.supportedDocuments();
+  }
+
   public async collect(): Promise<CollectedStatus[]> {
     const out: CollectedStatus[] = [];
 
