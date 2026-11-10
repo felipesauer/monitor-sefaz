@@ -13,3 +13,7 @@ dist-ssr/
 coverage/
 pnpm-lock.yaml
 .mnema/
+
+# Instruções geradas pelo mnema (`mnema instructions`): ele as reescreve a cada
+# atualização, então reformatá-las aqui só criaria diff a cada upgrade.
+.github/instructions/mnema-instructions.instructions.md
