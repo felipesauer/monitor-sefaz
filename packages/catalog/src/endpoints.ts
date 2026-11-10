@@ -6,11 +6,13 @@ import { DocumentType, type AuthorizerCode, type EnvironmentKey } from './types.
  *
  * A estrutura é `ENDPOINTS[documento][ambiente][autorizador] = url`.
  *
- * Observação de domínio: na consulta de status, NF-e e NFC-e compartilham o
- * mesmo webservice (`NFeStatusServico4`) — diferem apenas no modelo do documento
- * autorizado (55 vs 65). Por isso o mapa de NFC-e reaproveita as URLs da NF-e.
+ * Observação de domínio: NF-e e NFC-e usam o mesmo serviço (`NFeStatusServico4`),
+ * mas a maioria dos autorizadores publica a NFC-e num host próprio (`nfce.*`).
+ * Perguntar ao host da NF-e não diz nada sobre o da NFC-e, por isso cada uma tem
+ * o seu mapa.
  *
- * Fonte: Manual de Orientação do Contribuinte (MOC) e portais das SEFAZ.
+ * Fonte: "Relação de Serviços Web" do portal DFe do SVRS (dfe-portal.svrs.rs.gov.br,
+ * páginas /Nfe/Servicos e /Nfce/Servicos), conferida em 2026-11-10.
  * Estes valores mudam ocasionalmente; mantê-los aqui (data-only) permite
  * atualizá-los sem tocar no motor de consulta (`@monitor-sefaz/core`).
  */
@@ -19,17 +21,15 @@ type DocumentEndpoints = Record<EnvironmentKey, EndpointMap>;
 
 const NFE_ENDPOINTS: DocumentEndpoints = {
   production: {
-    AM: 'https://nfe.sefaz.am.gov.br/services2/services/NfeStatusServico2',
+    AM: 'https://nfe.sefaz.am.gov.br/services2/services/NfeStatusServico4',
     BA: 'https://nfe.sefaz.ba.gov.br/webservices/NFeStatusServico4/NFeStatusServico4.asmx',
-    CE: 'https://nfe.sefaz.ce.gov.br/nfe2/services/NFeStatusServico4',
     GO: 'https://nfe.sefaz.go.gov.br/nfe/services/NFeStatusServico4',
     MG: 'https://nfe.fazenda.mg.gov.br/nfe2/services/NFeStatusServico4',
     MS: 'https://nfe.sefaz.ms.gov.br/ws/NFeStatusServico4',
-    MT: 'https://nfe.sefaz.mt.gov.br/nfews/v2/services/Nfews',
-    PA: 'https://app.sefa.pa.gov.br/sfz-nfe-web/webservices/NfeStatusServico2',
+    MT: 'https://nfe.sefaz.mt.gov.br/nfews/v2/services/NfeStatusServico4',
     PE: 'https://nfe.sefaz.pe.gov.br/nfe-service/services/NFeStatusServico4',
     PR: 'https://nfe.sefa.pr.gov.br/nfe/NFeStatusServico4',
-    RS: 'https://nfe.svrs.rs.gov.br/ws/NfeStatusServico/NfeStatusServico4.asmx',
+    RS: 'https://nfe.sefazrs.rs.gov.br/ws/NfeStatusServico/NfeStatusServico4.asmx',
     SP: 'https://nfe.fazenda.sp.gov.br/ws/NFeStatusServico4.asmx',
     SVAN: 'https://www.sefazvirtual.fazenda.gov.br/NFeStatusServico4/NFeStatusServico4.asmx',
     SVRS: 'https://nfe.svrs.rs.gov.br/ws/NfeStatusServico/NfeStatusServico4.asmx',
@@ -38,23 +38,51 @@ const NFE_ENDPOINTS: DocumentEndpoints = {
     AN: 'https://www.nfe.fazenda.gov.br/NFeStatusServico4/NFeStatusServico4.asmx',
   },
   homologation: {
-    AM: 'https://homnfe.sefaz.am.gov.br/services2/services/NfeStatusServico2',
-    BA: 'https://hnfe.sefaz.ba.gov.br/webservices/NfeStatusServico2/NfeStatusServico2.asmx',
-    CE: 'https://nfeh.sefaz.ce.gov.br/nfe2/services/NFeStatusServico4',
+    AM: 'https://homnfe.sefaz.am.gov.br/services2/services/NfeStatusServico4',
+    BA: 'https://hnfe.sefaz.ba.gov.br/webservices/NFeStatusServico4/NFeStatusServico4.asmx',
     GO: 'https://homolog.sefaz.go.gov.br/nfe/services/NFeStatusServico4',
     MG: 'https://hnfe.fazenda.mg.gov.br/nfe2/services/NFeStatusServico4',
     MS: 'https://hom.nfe.sefaz.ms.gov.br/ws/NFeStatusServico4',
-    MT: 'https://homologacao.sefaz.mt.gov.br/nfews/v2/services/Nfews',
-    PA: 'https://app.sefa.pa.gov.br/sfz-nfe-web-hml/webservices/NfeStatusServico2',
-    PE: 'https://nfe.sefaz.pe.gov.br/nfe-service/services/NFeStatusServico4',
+    MT: 'https://homologacao.sefaz.mt.gov.br/nfews/v2/services/NfeStatusServico4',
+    PE: 'https://nfehomolog.sefaz.pe.gov.br/nfe-service/services/NFeStatusServico4',
     PR: 'https://homologacao.nfe.sefa.pr.gov.br/nfe/NFeStatusServico4',
-    RS: 'https://nfe-homologacao.svrs.rs.gov.br/ws/NfeStatusServico/NfeStatusServico4.asmx',
+    RS: 'https://nfe-homologacao.sefazrs.rs.gov.br/ws/NfeStatusServico/NfeStatusServico4.asmx',
     SP: 'https://homologacao.nfe.fazenda.sp.gov.br/ws/NFeStatusServico4.asmx',
     SVAN: 'https://hom.sefazvirtual.fazenda.gov.br/NFeStatusServico4/NFeStatusServico4.asmx',
     SVRS: 'https://nfe-homologacao.svrs.rs.gov.br/ws/NfeStatusServico/NfeStatusServico4.asmx',
     SVCAN: 'https://hom.svc.fazenda.gov.br/NFeStatusServico4/NFeStatusServico4.asmx',
     SVCRS: 'https://nfe-homologacao.svrs.rs.gov.br/ws/NfeStatusServico/NfeStatusServico4.asmx',
     AN: 'https://hom.nfe.fazenda.gov.br/NFeStatusServico4/NFeStatusServico4.asmx',
+  },
+};
+
+/**
+ * Endpoints NFC-e (modelo 65), por autorizador próprio e SVRS. Os hosts são os
+ * da NFC-e, não os da NF-e. MG não aparece na relação do SVRS; a URL dele vem do
+ * nfephp-org/sped-nfe (storage/wsnfe_4.00_mod65.xml), fonte secundária.
+ */
+const NFCE_ENDPOINTS: DocumentEndpoints = {
+  production: {
+    AM: 'https://nfce.sefaz.am.gov.br/nfce-services/services/NfeStatusServico4',
+    GO: 'https://nfe.sefaz.go.gov.br/nfe/services/NFeStatusServico4',
+    MG: 'https://nfce.fazenda.mg.gov.br/nfce/services/NFeStatusServico4',
+    MS: 'https://nfce.sefaz.ms.gov.br/ws/NFeStatusServico4',
+    MT: 'https://nfce.sefaz.mt.gov.br/nfcews/services/NfeStatusServico4',
+    PR: 'https://nfce.sefa.pr.gov.br/nfce/NFeStatusServico4',
+    RS: 'https://nfce.sefazrs.rs.gov.br/ws/NfeStatusServico/NfeStatusServico4.asmx',
+    SP: 'https://nfce.fazenda.sp.gov.br/ws/NFeStatusServico4.asmx',
+    SVRS: 'https://nfce.svrs.rs.gov.br/ws/NfeStatusServico/NfeStatusServico4.asmx',
+  },
+  homologation: {
+    AM: 'https://homnfce.sefaz.am.gov.br/nfce-services/services/NfeStatusServico4',
+    GO: 'https://homolog.sefaz.go.gov.br/nfe/services/NFeStatusServico4',
+    MG: 'https://hnfce.fazenda.mg.gov.br/nfce/services/NFeStatusServico4',
+    MS: 'https://hom.nfce.sefaz.ms.gov.br/ws/NFeStatusServico4',
+    MT: 'https://homologacao.sefaz.mt.gov.br/nfcews/services/NfeStatusServico4',
+    PR: 'https://homologacao.nfce.sefa.pr.gov.br/nfce/NFeStatusServico4',
+    RS: 'https://nfce-homologacao.sefazrs.rs.gov.br/ws/NfeStatusServico/NfeStatusServico4.asmx',
+    SP: 'https://homologacao.nfce.fazenda.sp.gov.br/ws/NFeStatusServico4.asmx',
+    SVRS: 'https://nfce-homologacao.svrs.rs.gov.br/ws/NfeStatusServico/NfeStatusServico4.asmx',
   },
 };
 
@@ -145,13 +173,10 @@ const BPE_ENDPOINTS: DocumentEndpoints = {
   },
 };
 
-/**
- * Registro de endpoints por documento. NFC-e reaproveita o webservice da NF-e
- * na consulta de status.
- */
+/** Registro de endpoints por documento. */
 export const ENDPOINTS: Readonly<Record<DocumentType, DocumentEndpoints>> = {
   [DocumentType.NFe]: NFE_ENDPOINTS,
-  [DocumentType.NFCe]: NFE_ENDPOINTS,
+  [DocumentType.NFCe]: NFCE_ENDPOINTS,
   [DocumentType.CTe]: CTE_ENDPOINTS,
   [DocumentType.MDFe]: MDFE_ENDPOINTS,
   [DocumentType.DCe]: DCE_ENDPOINTS,

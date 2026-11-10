@@ -30,6 +30,38 @@ describe('Catalog', () => {
     expect(entry?.url).toContain('homologacao');
   });
 
+  it('aponta a NF-e para o serviço de status da versão 4 em todos os autorizadores', () => {
+    for (const environment of [Environment.Production, Environment.Homologation]) {
+      for (const entry of catalog.list(DocumentType.NFe, environment)) {
+        expect(entry.url, `${entry.uf} (${entry.authorizer})`).toMatch(/StatusServico4/i);
+      }
+    }
+  });
+
+  it('separa o RS do SVRS na NF-e, como a relação oficial', () => {
+    const rs = catalog.resolve(DocumentType.NFe, 'RS', Environment.Production);
+    const ac = catalog.resolve(DocumentType.NFe, 'AC', Environment.Production);
+    expect(rs?.url).toContain('nfe.sefazrs.rs.gov.br');
+    expect(ac?.url).toContain('nfe.svrs.rs.gov.br');
+  });
+
+  it('dá à NFC-e os hosts dela, não os da NF-e', () => {
+    const differ = ['AM', 'MG', 'MS', 'MT', 'PR', 'RS', 'SP', 'AC'] as const;
+    for (const uf of differ) {
+      for (const environment of [Environment.Production, Environment.Homologation]) {
+        const nfe = catalog.resolve(DocumentType.NFe, uf, environment)!.url;
+        const nfce = catalog.resolve(DocumentType.NFCe, uf, environment)!.url;
+        expect(nfce, uf).not.toBe(nfe);
+        expect(nfce, uf).toContain('nfce');
+      }
+    }
+  });
+
+  it('mantém a NFC-e de GO no mesmo host da NF-e, como a relação oficial', () => {
+    const nfe = catalog.resolve(DocumentType.NFe, 'GO', Environment.Production)!.url;
+    expect(catalog.resolve(DocumentType.NFCe, 'GO', Environment.Production)!.url).toBe(nfe);
+  });
+
   it('resolve CT-e de SP no autorizador próprio', () => {
     const entry = catalog.resolve(DocumentType.CTe, 'SP', Environment.Production);
     expect(entry?.authorizer).toBe('SP');
