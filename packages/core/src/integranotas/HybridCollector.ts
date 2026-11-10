@@ -1,4 +1,4 @@
-import { Catalog } from '@monitor-sefaz/catalog';
+import { Catalog, type DocumentType } from '@monitor-sefaz/catalog';
 import {
   AvailabilityCollector,
   type CollectedStatus,
@@ -10,6 +10,11 @@ import { createHttpIntegraNotasFetcher } from './httpFetcher.js';
 /** Collector que produz `CollectedStatus[]`. */
 export interface StatusCollectorLike {
   collect(): Promise<CollectedStatus[]>;
+  /**
+   * Documentos que a fonte cobre. Com ele, o consenso mede a cobertura da fonte
+   * só sobre esses documentos; sem ele, sobre o catálogo inteiro.
+   */
+  supportedDocuments?(): DocumentType[];
 }
 
 /**

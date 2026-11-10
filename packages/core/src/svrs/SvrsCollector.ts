@@ -48,6 +48,11 @@ export class SvrsCollector {
     private readonly catalog = new Catalog()
   ) {}
 
+  /** Documentos com página de disponibilidade no SVRS. */
+  public supportedDocuments(): DocumentType[] {
+    return this.provider.supportedDocuments();
+  }
+
   public async collect(): Promise<CollectedStatus[]> {
     const out: CollectedStatus[] = [];
 

@@ -88,6 +88,13 @@ export class AvailabilityCollector {
     private readonly now: () => number = () => Date.now()
   ) {}
 
+  /** Documentos com página na Receita, mais os derivados do SVRS (MDF-e, DC-e). */
+  public supportedDocuments(): DocumentType[] {
+    return [
+      ...new Set([...this.provider.supportedDocuments(), ...AvailabilityCollector.SVRS_DERIVED]),
+    ];
+  }
+
   /**
    * Coleta o status de produção de todos os documentos cobertos.
    * Uma falha pontual num documento não derruba os demais.

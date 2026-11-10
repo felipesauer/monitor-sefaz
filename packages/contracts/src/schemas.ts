@@ -108,7 +108,10 @@ export const sourceHealthSchema = z.object({
   official: z.boolean(),
   /** Serviços que a fonte devolveu nesta coleta. */
   collected: z.number(),
-  /** Total de serviços do catálogo (referência de cobertura). */
+  /**
+   * Serviços do catálogo nos documentos que a fonte cobre (referência de
+   * cobertura); o catálogo inteiro quando a fonte não declara seus documentos.
+   */
   expected: z.number(),
   /** collected / expected, 0..1, arredondado a 3 casas. */
   coverage: z.number(),

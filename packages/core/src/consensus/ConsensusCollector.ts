@@ -21,11 +21,13 @@ export interface ConsensusSource {
 }
 
 /**
- * Saúde de uma fonte numa coleta — quanto do catálogo ela cobriu e se está
- * `degraded` (indício de drift do portal). `expected` é o total do catálogo, não
- * a cobertura teórica exata da fonte: o sinal que importa é uma fonte que costuma
- * trazer a maior parte dos serviços despencar para quase nada (parser parou de
- * casar após mudança de HTML), não medir sua fração ideal ao decimal.
+ * Saúde de uma fonte numa coleta — quanto ela cobriu e se está `degraded`
+ * (indício de drift do portal). `expected` são os serviços do catálogo nos
+ * documentos que a fonte declara cobrir (`supportedDocuments`), ou o catálogo
+ * inteiro quando ela não declara. Assim um documento que só parte das fontes
+ * publica não puxa as demais para baixo do piso. Não é a fração ideal exata da
+ * fonte (o SVRS, por exemplo, só publica as UFs que ele autoriza): o sinal que
+ * importa é uma fonte que costuma trazer a maior parte despencar para quase nada.
  */
 export interface SourceHealth {
   readonly source: string;
@@ -118,16 +120,17 @@ export class ConsensusCollector implements StatusCollectorLike {
       statuses: r.status === 'fulfilled' ? r.value : [],
     }));
 
-    const expected = this.catalog.listAll(Environment.Production).length;
-    const floor = Math.floor(expected * this.minCoverageRatio);
-    const sourceHealth: SourceHealth[] = results.map(({ source, statuses }) => ({
-      source: source.name,
-      official: source.official,
-      collected: statuses.length,
-      expected,
-      coverage: expected === 0 ? 0 : Number((statuses.length / expected).toFixed(3)),
-      degraded: statuses.length < floor,
-    }));
+    const sourceHealth: SourceHealth[] = results.map(({ source, statuses }) => {
+      const expected = this.expectedFor(source.collector);
+      return {
+        source: source.name,
+        official: source.official,
+        collected: statuses.length,
+        expected,
+        coverage: expected === 0 ? 0 : Number((statuses.length / expected).toFixed(3)),
+        degraded: statuses.length < Math.floor(expected * this.minCoverageRatio),
+      };
+    });
 
     const key = (s: CollectedStatus): string => `${s.document}:${s.uf}`;
     const winners = new Map<string, CollectedStatus>();
@@ -162,5 +165,17 @@ export class ConsensusCollector implements StatusCollectorLike {
     }
 
     return { services: [...winners.values()], sources: sourceHealth };
+  }
+
+  /** Serviços de produção nos documentos que a fonte cobre (ou o catálogo inteiro). */
+  private expectedFor(collector: StatusCollectorLike): number {
+    const documents = collector.supportedDocuments?.();
+    if (!documents) {
+      return this.catalog.listAll(Environment.Production).length;
+    }
+    return [...new Set(documents)].reduce(
+      (total, document) => total + this.catalog.list(document, Environment.Production).length,
+      0
+    );
   }
 }
