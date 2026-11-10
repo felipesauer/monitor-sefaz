@@ -28,9 +28,13 @@ import { Notifier, parseNotifierConfig } from '@monitor-sefaz/notifier';
 import { buildNotificationEvents } from './notifyEvents.js';
 import { reconcileTechnicalNotes, technicalNoteEvents } from './technicalNotes.js';
 import { buildDigestEvent, parseDigestHour, utcDate } from './digest.js';
+import { capHistoryBytes, DEFAULT_HISTORY_MAX_BYTES } from './historyCap.js';
 
 /** Retenção do histórico estático (ms). Padrão 7 dias. */
 const RETENTION_MS = Number(process.env.HISTORY_RETENTION_MS ?? 7 * 24 * 60 * 60 * 1000);
+
+/** Teto de tamanho do history.json publicado; os pontos mais antigos saem primeiro. */
+const HISTORY_MAX_BYTES = Number(process.env.HISTORY_MAX_BYTES ?? DEFAULT_HISTORY_MAX_BYTES);
 
 /**
  * Fração mínima do catálogo que uma coleta precisa cobrir para ser publicada.
@@ -232,7 +236,10 @@ async function main(): Promise<void> {
   // Carrega o histórico ANTES do append: o último ponto de cada série é o estado
   // anterior contra o qual detectamos transições para notificar.
   const previousHistory = loadHistory(join(outDir, 'history.json'));
-  const history = appendHistory(previousHistory, services, generatedAt);
+  const history = capHistoryBytes(
+    appendHistory(previousHistory, services, generatedAt),
+    HISTORY_MAX_BYTES
+  );
 
   writeFileSync(join(outDir, 'status.json'), JSON.stringify(snapshot, null, 2));
   writeFileSync(join(outDir, 'summary.json'), JSON.stringify(summary, null, 2));

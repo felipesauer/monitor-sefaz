@@ -1,7 +1,11 @@
 name: Deploy SPA (GitHub Pages)
 
 # Builda a SPA estática e publica no GitHub Pages. Roda quando o código do front
-# muda ou quando o coletor commita novos dados (apps/web/public/data).
+# muda, e é chamado pelo `collect.yml` a cada coleta, com os dados novos num
+# artefato. Os JSONs de apps/web/public/data não são mais commitados: quando não
+# vêm da coleta, saem do cache do Actions (o estado da última coleta) ou, com o
+# cache vazio, do próprio site publicado. Os do repositório ficaram congelados e
+# servem só para desenvolvimento local.
 on:
   push:
     branches: [main]
@@ -10,15 +14,18 @@ on:
       - 'packages/**'
       - '.github/workflows/deploy-pages.yml'
   workflow_dispatch: {}
+  workflow_call:
+    inputs:
+      data-artifact:
+        description: 'Nome do artefato com os JSONs da coleta desta execução'
+        type: string
+        required: false
+        default: ''
 
 permissions:
   contents: read
   pages: write
   id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: true
 
 jobs:
   # Build e deploy no mesmo job, dentro da environment github-pages: variável
@@ -26,6 +33,10 @@ jobs:
   # HTML (as tags de verificação, por exemplo).
   deploy:
     runs-on: ubuntu-latest
+    # Na fila, sem cancelar: um deploy de código não pode derrubar o de uma coleta.
+    concurrency:
+      group: pages
+      cancel-in-progress: false
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -43,11 +54,31 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
 
+      - name: Dados desta coleta
+        if: inputs.data-artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ inputs.data-artifact }}
+          path: apps/web/public/data
+
+      - name: Dados da última coleta (cache)
+        if: ${{ !inputs.data-artifact }}
+        id: state
+        uses: actions/cache/restore@v6
+        with:
+          path: apps/web/public/data
+          key: collect-data-deploy-${{ github.run_id }}
+          restore-keys: collect-data-
+
+      - name: Dados publicados (cache vazio)
+        if: ${{ !inputs.data-artifact && steps.state.outputs.cache-matched-key == '' }}
+        run: bash .github/scripts/restore-published-data.sh apps/web/public/data
+
       - name: Build SPA
         # BASE_PATH = "/<repo>/" para Pages de projeto.
         # VITE_API_BASE_URL → SPA consome o Cloudflare Worker ao vivo. A URL vem
         # da variável de repositório WORKER_URL (Settings → Variables); se ausente,
-        # cai para os JSONs estáticos versionados.
+        # cai para os JSONs estáticos publicados junto do site.
         # GOOGLE_SITE_VERIFICATION / BING_SITE_VERIFICATION → verificação do
         # Search Console e do Bing Webmaster. Valem como secret, variável do
         # repositório ou variável da environment github-pages (o código acaba

@@ -1,23 +1,32 @@
 name: Coletar status SEFAZ
 
-# Roda periodicamente, coleta o status da página oficial de disponibilidade e
-# commita os JSONs em apps/web/public/data/ — consumidos pela SPA no GitHub Pages.
+# Coleta o status das fontes públicas e publica os JSONs no GitHub Pages, SEM
+# commit: os dados não entram no histórico do git (o repositório pararia de
+# crescer só por causa deles). O estado de uma coleta para a seguinte
+# (history.json, technical-notes.json, notifier-state.json) passa pelo cache do
+# Actions; o site publicado é a reserva quando o cache está vazio.
+#
+# Só tem workflow_dispatch, de propósito. Quem dispara é o
+# `collect-schedule.yml` (de hora em hora) e, depois, o despachante do Worker.
+# Um workflow com `schedule` é desligado pelo GitHub após 60 dias sem atividade
+# no repositório, e desligado ele não atende nem o disparo manual. Sem os
+# commits de dados, essa inatividade passa a ser possível.
 on:
-  schedule:
-    # De hora em hora, no minuto 17 (fora da hora cheia, que é mais concorrida).
-    # O cron do GitHub Actions é best-effort e quase nunca honra granularidade
-    # sub-horária (com '7,37' observamos ~6 coletas/dia em vez de 48). Cadência
-    # horária é disparada de forma muito mais consistente.
-    - cron: '17 * * * *'
   workflow_dispatch: {}
 
 permissions:
-  contents: write
-  actions: write # para disparar o deploy do Pages após commitar os dados
+  contents: read
+  pages: write
+  id-token: write
 
+# Uma coleta por vez, inclusive o deploy: a seguinte parte do estado que esta
+# deixou no cache.
 concurrency:
   group: collect
   cancel-in-progress: false
+
+env:
+  DATA_DIR: apps/web/public/data
 
 jobs:
   collect:
@@ -33,18 +42,23 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - name: Sincronizar com o remoto
-        # Garante que a coleta parta do history.json MAIS RECENTE (outra rodada
-        # pode ter commitado nesse meio-tempo). Sem isso, o append parte de uma
-        # base velha e sobrescreve pontos no push.
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git pull --rebase --autostash origin main
+      - name: Restaurar o estado da última coleta
+        id: state
+        uses: actions/cache/restore@v6
+        with:
+          path: apps/web/public/data
+          key: collect-data-${{ github.run_id }}
+          restore-keys: collect-data-
+
+      - name: Usar os dados publicados (cache vazio)
+        if: steps.state.outputs.cache-matched-key == ''
+        run: bash .github/scripts/restore-published-data.sh "$DATA_DIR"
 
       - name: Coletar status
-        run: pnpm --filter @monitor-sefaz/collector collect "$GITHUB_WORKSPACE/apps/web/public/data"
+        run: pnpm --filter @monitor-sefaz/collector collect "$GITHUB_WORKSPACE/$DATA_DIR"
         env:
+          # Teto do history.json publicado (os pontos mais antigos saem primeiro).
+          HISTORY_MAX_BYTES: '2000000'
           # Notificações (opcional): definidas como secrets/vars do repositório.
           # Ausentes → o collector é no-op de notificação (nenhum efeito).
           NOTIFY_DISCORD_WEBHOOK_URL: ${{ secrets.NOTIFY_DISCORD_WEBHOOK_URL }}
@@ -55,34 +69,22 @@ jobs:
           NOTIFY_EVENTS: ${{ vars.NOTIFY_EVENTS }}
           NOTIFY_DIGEST_HOUR: ${{ vars.NOTIFY_DIGEST_HOUR }}
 
-      - name: Commitar dados atualizados
-        run: |
-          git add apps/web/public/data
-          if git diff --cached --quiet; then
-            echo "Sem mudanças nos dados."
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          git commit -m "chore(data): atualiza status SEFAZ [skip ci]"
-          # Push resiliente: se outra rodada commitou nesse intervalo, rebaseia e
-          # tenta de novo (evita a race condition que descartava pontos).
-          for attempt in 1 2 3; do
-            if git push; then
-              echo "changed=true" >> "$GITHUB_OUTPUT"
-              exit 0
-            fi
-            echo "push falhou (tentativa $attempt); rebaseando…"
-            git pull --rebase --autostash origin main || true
-          done
-          echo "Não foi possível dar push após 3 tentativas." >&2
-          exit 1
-        id: commit
+      - name: Guardar o estado para a próxima coleta
+        uses: actions/cache/save@v6
+        with:
+          path: apps/web/public/data
+          key: collect-data-${{ github.run_id }}
 
-      # O commit acima usa [skip ci] (evita loop), o que também impede o deploy
-      # automático. Quando houve mudança, disparamos o deploy do Pages
-      # explicitamente para republicar o history.json atualizado.
-      - name: Republicar SPA (history.json)
-        if: steps.commit.outputs.changed == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh workflow run deploy-pages.yml --ref main
+      - name: Entregar os dados ao deploy
+        uses: actions/upload-artifact@v7
+        with:
+          name: dados
+          path: apps/web/public/data
+          retention-days: 1
+
+  deploy:
+    needs: collect
+    uses: ./.github/workflows/deploy-pages.yml
+    with:
+      data-artifact: dados
+    secrets: inherit
