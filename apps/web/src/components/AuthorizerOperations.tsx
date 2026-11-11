@@ -1,5 +1,5 @@
 import type { AuthorizerDetailDTO } from '@monitor-sefaz/contracts';
-import { STATE_META } from './serviceState.js';
+import { STATE_META, stateTextColor } from './serviceState.js';
 import { authorizerLabel } from '../lib/labels.js';
 import {
   DETAIL_SOURCE_LABEL,
@@ -33,7 +33,7 @@ function OperationList({ detail }: { detail: AuthorizerDetailDTO }) {
               />
               <span className="truncate">{operationLabel(op.operation)}</span>
             </span>
-            <span className="shrink-0 text-xs" style={{ color: meta.color }}>
+            <span className="shrink-0 text-xs" style={{ color: stateTextColor(meta.color) }}>
               {meta.label}
               {op.sourceCheckedAt && (
                 <span style={{ color: 'var(--text-dim)' }}> · {op.sourceCheckedAt}</span>

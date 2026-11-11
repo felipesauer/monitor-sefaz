@@ -46,3 +46,13 @@ export const STATE_SEVERITY: Record<ServiceStateValue, number> = {
   CONTINGENCY: 1,
   OPERATIONAL: 0,
 };
+
+/**
+ * Cor de TEXTO de um estado: metade da cor do estado, metade do --text. A cor
+ * cheia serve para ícone, faixa e ponto, mas como texto pequeno sobre o fundo
+ * tingido ficava abaixo de 4,5:1 (o verde de "Operacional" dava 2,3:1). A
+ * mistura passa de 5:1 nos dois temas e mantém o tom do estado.
+ */
+export function stateTextColor(color: string): string {
+  return `color-mix(in oklch, ${color} 50%, var(--text))`;
+}

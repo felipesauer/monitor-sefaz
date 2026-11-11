@@ -1,6 +1,7 @@
 import { CheckCircle2, AlertTriangle, XCircle, CircleDashed } from 'lucide-react';
 import { isUp, type ServiceStatusDTO, type SummaryDTO } from '@monitor-sefaz/contracts';
 import { DOC_LABEL } from '../lib/labels.js';
+import { stateTextColor } from './serviceState.js';
 
 interface GlobalBannerProps {
   /** Ausente enquanto o resumo carrega: o banner ocupa o lugar com o mesmo tamanho. */
@@ -54,7 +55,8 @@ export function GlobalBanner({ summary, services = [] }: GlobalBannerProps) {
         </span>
         {affectedLabel && (
           <p className="mt-1 text-xs" style={{ color: 'var(--text-dim)' }}>
-            Com problema agora: <span style={{ color }}>{affectedLabel}</span>. O histórico é
+            Com problema agora:{' '}
+            <span style={{ color: stateTextColor(color) }}>{affectedLabel}</span>. O histórico é
             amostrado periodicamente — instabilidades curtas podem não constar nos gráficos.
           </p>
         )}
