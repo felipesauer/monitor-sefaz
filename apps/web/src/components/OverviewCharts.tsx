@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { formatTime } from '../lib/time.js';
 import type { DocumentType } from '@monitor-sefaz/catalog';
 import {
   isUp,
@@ -22,9 +23,6 @@ interface OverviewChartsProps {
 
 const PERIODS: HistoryPeriod[] = ['6h', '24h', '72h'];
 const BUCKETS = 48;
-
-const hhmm = (ms: number) =>
-  new Date(ms).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
 function median(values: number[]): number {
   const sorted = [...values].sort((a, b) => a - b);
@@ -115,7 +113,7 @@ export function OverviewCharts({ series, documents, end = Date.now() }: Overview
           <p className="text-xs" style={{ color: 'var(--text-dim)' }}>
             {loading
               ? 'Carregando o histórico…'
-              : `De ${hhmm(start)} até a última coleta, ${hhmm(end)}`}
+              : `De ${formatTime(start)} até a última coleta, ${formatTime(end)} (horário de Brasília)`}
           </p>
         </div>
         <div
@@ -179,7 +177,7 @@ export function OverviewCharts({ series, documents, end = Date.now() }: Overview
                           title={
                             loading
                               ? undefined
-                              : `${hhmm(b.start)}–${hhmm(b.end)} · ${b.state ? STATE_META[b.state].label : 'sem leitura'}`
+                              : `${formatTime(b.start)}–${formatTime(b.end)} · ${b.state ? STATE_META[b.state].label : 'sem leitura'}`
                           }
                           style={
                             loading
@@ -202,10 +200,34 @@ export function OverviewCharts({ series, documents, end = Date.now() }: Overview
               ))}
             </tbody>
           </table>
-          <p className="text-[11px]" style={{ color: 'var(--text-dim)' }}>
-            Cada faixa é {Math.round(PERIOD_MS[period] / BUCKETS / 60_000)} minutos. Faixa
-            hachurada: sem leitura naquele intervalo.
-          </p>
+          <ul
+            className="flex flex-wrap gap-x-3 gap-y-1 text-[11px]"
+            style={{ color: 'var(--text-dim)' }}
+            aria-label="Legenda"
+          >
+            {(['OPERATIONAL', 'CONTINGENCY', 'SLOWDOWN', 'DOWN', 'ERROR'] as const).map((state) => (
+              <li key={state} className="flex items-center gap-1">
+                <span
+                  className="inline-block h-2.5 w-2.5 rounded-[2px]"
+                  style={{ background: STATE_META[state].color }}
+                  aria-hidden="true"
+                />
+                {STATE_META[state].label}
+              </li>
+            ))}
+            <li className="flex items-center gap-1">
+              <span
+                className="inline-block h-2.5 w-2.5 rounded-[2px]"
+                style={{
+                  background:
+                    'repeating-linear-gradient(135deg, var(--surface-2) 0 3px, var(--border) 3px 4px)',
+                }}
+                aria-hidden="true"
+              />
+              Sem leitura
+            </li>
+            <li>· cada faixa: {Math.round(PERIOD_MS[period] / BUCKETS / 60_000)} min</li>
+          </ul>
         </div>
 
         <div className="flex min-w-0 flex-col gap-5">
@@ -252,7 +274,7 @@ export function OverviewCharts({ series, documents, end = Date.now() }: Overview
                     <span
                       key={p.start}
                       className="min-w-0 flex-1 rounded-t-[3px]"
-                      title={`${hhmm(p.start)} · ${p.count} ${p.count === 1 ? 'serviço' : 'serviços'} com problema`}
+                      title={`${formatTime(p.start)} · ${p.count} ${p.count === 1 ? 'serviço' : 'serviços'} com problema`}
                       style={{
                         height: p.count ? `${Math.max(8, (p.count / maxProblems) * 100)}%` : '2px',
                         background: p.count ? 'var(--down)' : 'var(--border)',

@@ -16,6 +16,9 @@ import { SummaryCards } from '../components/SummaryCards.js';
 import { FilterBar, type DocumentFilter } from '../components/FilterBar.js';
 import { UfSections } from '../components/UfSections.js';
 import { OverviewCharts } from '../components/OverviewCharts.js';
+import { IncidentList } from '../components/IncidentList.js';
+import { MaintenanceNotice } from '../components/MaintenanceNotice.js';
+import { deriveIncidents } from '../lib/incidents.js';
 import { ServiceDetailPanel } from '../components/ServiceDetailPanel.js';
 import { Footer } from '../components/Footer.js';
 import { StatusLegend } from '../components/StatusLegend.js';
@@ -56,6 +59,7 @@ export function DashboardPage() {
   const [docFilter, setDocFilter] = useState<DocumentFilter>('ALL');
   const [selectedUfs, setSelectedUfs] = useState<Set<string>>(new Set());
   const [selected, setSelected] = useState<ServiceStatusDTO | null>(null);
+  const [ufView, setUfView] = useState<'cards' | 'compact'>('cards');
 
   const refresh = paused ? false : POLL_INTERVAL_MS;
   const status = useStatusSnapshot(refresh);
@@ -93,6 +97,18 @@ export function DashboardPage() {
   }, [docScoped, selectedUfs]);
 
   const selectedLive = selected ? (all.find((s) => s.id === selected.id) ?? selected) : null;
+
+  // Ocorrências das últimas 72h, nos documentos e estados que os filtros deixam ver.
+  const incidents = useMemo(() => {
+    if (!series.data || !status.data) return [];
+    const end = Date.parse(status.data.generatedAt);
+    const authorizer = new Map(all.map((s) => [s.id, s.authorizer]));
+    const docs = new Set<string>(docFilter === 'ALL' ? DOCUMENTS : [docFilter]);
+    return deriveIncidents(series.data, (id) => authorizer.get(id), end - 72 * 3_600_000).filter(
+      (i) =>
+        docs.has(i.document) && (selectedUfs.size === 0 || i.ufs.some((uf) => selectedUfs.has(uf)))
+    );
+  }, [series.data, status.data, all, docFilter, selectedUfs]);
 
   // Agrupamento por estado (ADR-18): os documentos e os estados que os filtros deixam ver.
   const shownDocuments = docFilter === 'ALL' ? DOCUMENTS : [docFilter as DocumentType];
@@ -141,6 +157,7 @@ export function DashboardPage() {
         {(status.data || status.isLoading) && (
           <UpdateInfo generatedAt={status.data?.generatedAt} refreshIntervalMs={POLL_INTERVAL_MS} />
         )}
+        <MaintenanceNotice />
 
         {layout === 'metrics' && summary.data && <SummaryCards summary={summary.data} />}
 
@@ -149,6 +166,34 @@ export function DashboardPage() {
           documents={shownDocuments}
           end={status.data ? Date.parse(status.data.generatedAt) : undefined}
         />
+
+        <section
+          className="flex flex-col gap-3 rounded-xl border p-4 sm:p-5"
+          style={{ background: 'var(--surface)', boxShadow: 'var(--shadow)' }}
+          aria-labelledby="ocorrencias-title"
+        >
+          <div>
+            <h2 id="ocorrencias-title" className="text-sm font-semibold">
+              Ocorrências recentes
+            </h2>
+            <p className="text-xs" style={{ color: 'var(--text-dim)' }}>
+              Quedas e instabilidades nas últimas 72 horas, tiradas do histórico. Serviços do mesmo
+              autorizador que caíram juntos aparecem como uma ocorrência só.
+            </p>
+          </div>
+          {series.data && status.data ? (
+            <IncidentList
+              incidents={incidents}
+              showService
+              now={Date.parse(status.data.generatedAt)}
+              emptyText="Nenhuma queda ou instabilidade nas últimas 72 horas."
+            />
+          ) : (
+            <p className="text-sm" style={{ color: 'var(--text-dim)' }}>
+              Carregando o histórico…
+            </p>
+          )}
+        </section>
 
         {layout !== 'operation' && (
           <BrazilMap
@@ -201,7 +246,45 @@ export function DashboardPage() {
           </p>
         )}
         {status.data && (
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h2 className="text-sm font-semibold">Por estado</h2>
+            <div
+              className="flex gap-1 rounded-lg p-0.5"
+              style={{ background: 'var(--surface-2)' }}
+              role="group"
+              aria-label="Como mostrar os estados"
+            >
+              {(
+                [
+                  ['cards', 'Cards'],
+                  ['compact', 'Lista compacta'],
+                ] as const
+              ).map(([value, label]) => (
+                <button
+                  key={value}
+                  type="button"
+                  aria-pressed={ufView === value}
+                  onClick={() => setUfView(value)}
+                  className="rounded-md px-3 py-1 text-xs font-semibold transition-colors"
+                  style={
+                    ufView === value
+                      ? {
+                          background: 'var(--surface)',
+                          color: 'var(--text)',
+                          boxShadow: 'var(--shadow)',
+                        }
+                      : { color: 'var(--text-dim)' }
+                  }
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+        {status.data && (
           <UfSections
+            compact={ufView === 'compact'}
             services={visible}
             documents={shownDocuments}
             ufs={shownUfs}

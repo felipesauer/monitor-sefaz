@@ -1,4 +1,5 @@
 import { PERIOD_MS, type HistoryPeriod, type HistoryPointDTO } from '@monitor-sefaz/contracts';
+import { formatTime } from '../lib/time.js';
 import { STATE_META } from './serviceState.js';
 import { bucketTimeline } from '../lib/uptime.js';
 
@@ -10,9 +11,6 @@ interface UptimeBarProps {
   /** Quantas faixas de tempo a barra tem. */
   buckets?: number;
 }
-
-const hhmm = (ms: number) =>
-  new Date(ms).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
 /**
  * Barra de disponibilidade estilo status page: a janela dividida em faixas de
@@ -51,7 +49,7 @@ export function UptimeBar({ points, period, end = Date.now(), buckets = 48 }: Up
                       'repeating-linear-gradient(135deg, var(--surface-2) 0 3px, var(--border) 3px 4px)',
                   }
             }
-            title={`${hhmm(b.start)}–${hhmm(b.end)} · ${b.state ? `${STATE_META[b.state].label} (${b.points} leitura${b.points > 1 ? 's' : ''})` : 'sem leitura'}`}
+            title={`${formatTime(b.start)}–${formatTime(b.end)} · ${b.state ? `${STATE_META[b.state].label} (${b.points} leitura${b.points > 1 ? 's' : ''})` : 'sem leitura'}`}
           />
         ))}
       </div>
@@ -60,7 +58,7 @@ export function UptimeBar({ points, period, end = Date.now(), buckets = 48 }: Up
         style={{ color: 'var(--text-dim)' }}
         aria-hidden="true"
       >
-        <span>{hhmm(end - PERIOD_MS[period])}</span>
+        <span>{formatTime(end - PERIOD_MS[period])}</span>
         <span>agora</span>
       </div>
     </div>

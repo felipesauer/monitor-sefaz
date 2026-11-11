@@ -98,4 +98,34 @@ describe('UfSections', () => {
     expect(container.querySelectorAll('[aria-busy="true"]')).toHaveLength(4);
     expect(sectionTitles()).toEqual(['Acre', 'São Paulo']);
   });
+
+  it('no modo compacto mostra um botão por documento, com a disponibilidade de 24h no cabeçalho', () => {
+    const onSelect = vi.fn();
+    const pt = (iso: string, state: ServiceStatusDTO['state']) => ({
+      timestamp: iso,
+      state,
+      cStat: null,
+      latencyMs: 100,
+    });
+    render(
+      <UfSections
+        compact
+        services={[service('NFe', 'AC'), service('BPe', 'AC')]}
+        documents={DOCS}
+        ufs={['AC']}
+        series={{
+          'NFe:AC': [pt('2026-11-11T10:00:00Z', 'OPERATIONAL'), pt('2026-11-11T10:05:00Z', 'DOWN')],
+          'BPe:AC': [
+            pt('2026-11-11T10:00:00Z', 'OPERATIONAL'),
+            pt('2026-11-11T10:05:00Z', 'OPERATIONAL'),
+          ],
+        }}
+        onSelect={onSelect}
+      />
+    );
+    expect(screen.getByText('75% · 24h')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /BP-e/ }));
+    expect(onSelect).toHaveBeenCalledWith(expect.objectContaining({ id: 'BPe:AC' }));
+    expect(screen.queryByText('tempo de acesso')).toBeNull();
+  });
 });

@@ -1,11 +1,17 @@
 import type { ReactNode } from 'react';
 import { ButtonLink } from './ButtonLink.js';
 import type { DocumentType, UF } from '@monitor-sefaz/catalog';
-import { isUp, type ServiceStateValue, type ServiceStatusDTO } from '@monitor-sefaz/contracts';
+import {
+  isUp,
+  PERIOD_MS,
+  type ServiceStateValue,
+  type ServiceStatusDTO,
+} from '@monitor-sefaz/contracts';
 import type { HistorySeries } from '../api/DataSource.js';
 import { Sparkline } from './Sparkline.js';
 import { STATE_META, STATE_SEVERITY, stateTextColor } from './serviceState.js';
 import { authorizerLabel, DOC_LABEL, formatLatency, UF_NAME } from '../lib/labels.js';
+import { computeUptime } from '../lib/uptime.js';
 import { ufAuthorizations } from '../lib/ufFacts.js';
 import { pageHref } from '../lib/pages.js';
 
@@ -20,6 +26,8 @@ interface UfSectionsProps {
   onSelect: (service: ServiceStatusDTO) => void;
   /** O status ainda não chegou: cards de espera no lugar de todos. */
   loading?: boolean;
+  /** Uma linha por estado, com um botão por documento, em vez dos cards. */
+  compact?: boolean;
 }
 
 const flagSrc = (uf: string) => `${import.meta.env.BASE_URL}flags/${uf.toLowerCase()}.png`;
@@ -194,6 +202,7 @@ interface UfGroup {
   missing: { document: DocumentType; authorizer: string }[];
   worst: ServiceStateValue | null;
   failing: number;
+  uptime: number | null;
 }
 
 /**
@@ -208,7 +217,13 @@ export function UfSections({
   series,
   onSelect,
   loading,
+  compact,
 }: UfSectionsProps) {
+  // Fim da janela de 24h: a leitura mais recente das séries.
+  const end = Object.values(series).reduce(
+    (max, pts) => Math.max(max, Date.parse(pts.at(-1)?.timestamp ?? '') || 0),
+    0
+  );
   const groups: UfGroup[] = ufs.map((uf) => {
     const own = services
       .filter((s) => s.uf === uf && documents.includes(s.document as DocumentType))
@@ -225,7 +240,17 @@ export function UfSections({
       (w, s) => (!w || STATE_SEVERITY[s.state] > STATE_SEVERITY[w] ? s.state : w),
       null
     );
-    return { uf, services: own, missing, worst, failing: own.filter((s) => !isUp(s.state)).length };
+    const recent = own.flatMap((s) =>
+      (series[s.id] ?? []).filter((p) => Date.parse(p.timestamp) >= end - PERIOD_MS['24h'])
+    );
+    return {
+      uf,
+      services: own,
+      missing,
+      worst,
+      failing: own.filter((s) => !isUp(s.state)).length,
+      uptime: recent.length ? computeUptime(recent, '24h').uptime : null,
+    };
   });
 
   const byName = (a: UfGroup, b: UfGroup) =>
@@ -305,6 +330,15 @@ export function UfSections({
               >
                 {summary}
               </span>
+              {!loading && g.uptime !== null && (
+                <span
+                  className="hidden shrink-0 font-mono text-xs tabular-nums sm:inline"
+                  style={{ color: 'var(--text-dim)' }}
+                  title="Disponibilidade dos documentos do estado nas últimas 24 horas"
+                >
+                  {g.uptime}% · 24h
+                </span>
+              )}
               <ButtonLink
                 href={pageHref({ kind: 'uf', uf: g.uf })}
                 arrow
@@ -313,40 +347,81 @@ export function UfSections({
                 SEFAZ-{g.uf}
               </ButtonLink>
             </header>
-            <div
-              className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:[grid-template-columns:repeat(var(--cols),minmax(0,1fr))]"
-              style={{ '--cols': documents.length } as React.CSSProperties}
-            >
-              {loading
-                ? ufAuthorizations(g.uf)
-                    .filter((a) => documents.includes(a.document))
-                    .map((a) => (
-                      <PlaceholderCompactCard
-                        key={a.document}
-                        kind="loading"
-                        document={a.document}
-                        authorizer={a.authorizer}
-                      />
-                    ))
-                : [
-                    ...g.services.map((s) => (
-                      <ServiceCompactCard
-                        key={s.id}
-                        service={s}
-                        spark={series[s.id]}
-                        onSelect={onSelect}
-                      />
-                    )),
-                    ...g.missing.map((m) => (
-                      <PlaceholderCompactCard
-                        key={m.document}
-                        kind="no-source"
-                        document={m.document}
-                        authorizer={m.authorizer}
-                      />
-                    )),
-                  ]}
-            </div>
+            {compact && !loading ? (
+              <ul className="flex flex-wrap gap-1.5">
+                {g.services.map((sv) => {
+                  const meta = STATE_META[sv.state];
+                  return (
+                    <li key={sv.id}>
+                      <button
+                        type="button"
+                        onClick={() => onSelect(sv)}
+                        className="inline-flex min-h-8 items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-semibold transition-colors hover:brightness-95"
+                        style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}
+                        title={`${DOC_LABEL[sv.document] ?? sv.document}: ${meta.label}`}
+                      >
+                        <span
+                          className="inline-block h-2.5 w-2.5 rounded-full"
+                          style={{ background: meta.color }}
+                          aria-hidden="true"
+                        />
+                        {DOC_LABEL[sv.document] ?? sv.document}
+                        <span className="font-normal" style={{ color: stateTextColor(meta.color) }}>
+                          {meta.label}
+                        </span>
+                      </button>
+                    </li>
+                  );
+                })}
+                {g.missing.map((m) => (
+                  <li key={m.document}>
+                    <span
+                      className="inline-flex min-h-8 items-center gap-1.5 rounded-lg border border-dashed px-2.5 py-1 text-xs font-semibold"
+                      style={{ borderColor: 'var(--border)', color: 'var(--text-dim)' }}
+                      title="A fonte pública não traz este documento no estado."
+                    >
+                      {DOC_LABEL[m.document] ?? m.document}
+                      <span className="font-normal">sem leitura</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div
+                className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:[grid-template-columns:repeat(var(--cols),minmax(0,1fr))]"
+                style={{ '--cols': documents.length } as React.CSSProperties}
+              >
+                {loading
+                  ? ufAuthorizations(g.uf)
+                      .filter((a) => documents.includes(a.document))
+                      .map((a) => (
+                        <PlaceholderCompactCard
+                          key={a.document}
+                          kind="loading"
+                          document={a.document}
+                          authorizer={a.authorizer}
+                        />
+                      ))
+                  : [
+                      ...g.services.map((s) => (
+                        <ServiceCompactCard
+                          key={s.id}
+                          service={s}
+                          spark={series[s.id]}
+                          onSelect={onSelect}
+                        />
+                      )),
+                      ...g.missing.map((m) => (
+                        <PlaceholderCompactCard
+                          key={m.document}
+                          kind="no-source"
+                          document={m.document}
+                          authorizer={m.authorizer}
+                        />
+                      )),
+                    ]}
+              </div>
+            )}
           </section>
         );
       })}

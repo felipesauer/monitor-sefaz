@@ -13,6 +13,9 @@ import { AuthorizerOperations } from './AuthorizerOperations.js';
 import { UptimeBar } from './UptimeBar.js';
 import { ButtonLink } from './ButtonLink.js';
 import { UfChipLinks } from './UfChipLinks.js';
+import { IncidentList } from './IncidentList.js';
+import { MaintenanceNotice } from './MaintenanceNotice.js';
+import { deriveIncidents } from '../lib/incidents.js';
 import { LatencyChart } from './LatencyChart.js';
 import { STATE_META, stateTextColor } from './serviceState.js';
 import { detailFor, operationLabel, type ServiceDetailView } from '../lib/details.js';
@@ -338,6 +341,17 @@ export function ServiceDetailPanel({ service, onClose }: ServiceDetailPanelProps
             </p>
             <LatencyChart points={points} />
           </div>
+          <div>
+            <p className="mb-1.5 text-xs font-semibold" style={{ color: 'var(--text-dim)' }}>
+              Ocorrências no período
+            </p>
+            <IncidentList
+              incidents={deriveIncidents({ [service.id]: points }, () => service.authorizer, 0)}
+              now={Date.now()}
+              emptyText="Nenhuma queda ou instabilidade no período."
+              limit={8}
+            />
+          </div>
         </Section>
 
         {(view.primary || view.homologation) && (
@@ -351,6 +365,7 @@ export function ServiceDetailPanel({ service, onClose }: ServiceDetailPanelProps
         )}
 
         <Section title="Se cair" icon={<LifeBuoy className="h-4 w-4" aria-hidden="true" />}>
+          {service.authorizer === 'SVRS' && <MaintenanceNotice />}
           {svc ? (
             <div
               className="flex items-center justify-between gap-3 rounded-xl p-3"
