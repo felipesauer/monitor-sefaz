@@ -1,0 +1,69 @@
+name: Estudo — Lighthouse do painel
+
+# Mede o site publicado com o Lighthouse (desempenho, acessibilidade, boas
+# práticas e SEO; LCP, CLS, TBT), em mobile e desktop, para o estudo do novo
+# layout (.study/layout.md, M-L1) e para a medição final (E2).
+#
+# É ESTUDO, não produção: só roda quando disparado à mão, não usa segredo, não
+# commita nada. Cada página é medida 3 vezes por perfil e o resumo fica com a
+# mediana, porque uma rodada só do Lighthouse varia bastante. O resultado vai
+# para o resumo do job e para um artefato (relatórios JSON + summary.md).
+on:
+  workflow_dispatch:
+    inputs:
+      paths:
+        description: 'Caminhos sob o site, separados por vírgula ("/" é a home)'
+        default: '/,/sefaz-sp/,/sefaz-ba/,/sefaz-ac/'
+      runs:
+        description: 'Rodadas por página e perfil (a mediana vai para o resumo)'
+        default: '3'
+
+permissions:
+  contents: read
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Medir
+        env:
+          SITE: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+          PATHS: ${{ inputs.paths }}
+          RUNS: ${{ inputs.runs }}
+          OUT: ${{ runner.temp }}/lighthouse
+        run: |
+          mkdir -p "$OUT"
+          CHROME_PATH="$(command -v google-chrome || command -v chromium)"
+          export CHROME_PATH
+          IFS=',' read -ra list <<< "$PATHS"
+          for path in "${list[@]}"; do
+            name=$(echo "$path" | tr -d '/'); name=${name:-home}
+            for profile in mobile desktop; do
+              preset=()
+              [ "$profile" = desktop ] && preset=(--preset=desktop)
+              for run in $(seq 1 "$RUNS"); do
+                npx -y lighthouse@13.6.0 "$SITE$path" "${preset[@]}" \
+                  --quiet --output=json --output-path="$OUT/$name-$profile-$run.json" \
+                  --chrome-flags="--headless=new --no-sandbox" \
+                  || echo "::warning::falhou $name $profile rodada $run"
+              done
+            done
+          done
+
+      - name: Resumir
+        if: always()
+        run: node .github/scripts/lighthouse-summary.mjs "${{ runner.temp }}/lighthouse" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Guardar relatórios
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: lighthouse-${{ github.run_id }}
+          path: ${{ runner.temp }}/lighthouse
+          retention-days: 30
