@@ -2,12 +2,17 @@ import { mkdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import {
   ConsensusCollector,
+  DetailCollector,
+  HttpAvailabilityProvider,
   TechnicalNotesProvider,
   createHttpTechnicalNotesFetcher,
+  type AuthorizerDetail,
+  type PageLog,
 } from '@monitor-sefaz/core';
 import { Catalog, DEFAULT_MIN_COVERAGE_RATIO, Environment } from '@monitor-sefaz/catalog';
 import {
   averageLatency,
+  detailSnapshotSchema,
   fromEnvironment,
   historyFileSchema,
   isUp,
@@ -153,6 +158,34 @@ async function collectTechnicalNotes(outDir: string, now: string): Promise<Techn
   }
 }
 
+/**
+ * Camada de detalhe (ADR-2): as operações de cada autorizador, por ambiente, a
+ * partir das páginas que o consenso já baixou, mais as de homologação da Receita.
+ * Tolerante a falha: sem o detalhe, a coleta de status segue normalmente.
+ */
+async function writeDetails(
+  outDir: string,
+  pages: PageLog,
+  catalog: Catalog,
+  generatedAt: string
+): Promise<void> {
+  try {
+    const provider = new HttpAvailabilityProvider();
+    const details: AuthorizerDetail[] = await new DetailCollector(catalog).collect(
+      pages,
+      (url, document) => provider.fetchPage(url, document)
+    );
+    const file = detailSnapshotSchema.parse({
+      generatedAt,
+      authorizers: details.map((d) => ({ ...d, environment: fromEnvironment(d.environment) })),
+    });
+    writeFileSync(join(outDir, 'details.json'), JSON.stringify(file));
+    console.log(`Detalhe: ${file.authorizers.length} autorizadores × ambiente → details.json`);
+  } catch (err) {
+    console.warn(`Detalhe: falhou (${err instanceof Error ? err.message : err})`);
+  }
+}
+
 /** Append do snapshot atual no histórico, podando pontos fora da retenção. */
 function appendHistory(
   history: HistoryFileDTO,
@@ -198,7 +231,8 @@ async function main(): Promise<void> {
   // (oficiais) decidem o estado; o IntegraNotas (mais completo) preenche as UFs
   // que as oficiais não publicam.
   const catalog = new Catalog();
-  const collector = ConsensusCollector.createForNode(catalog, MIN_COVERAGE_RATIO);
+  const pages: PageLog = new Map();
+  const collector = ConsensusCollector.createForNode(catalog, MIN_COVERAGE_RATIO, pages);
   const { services: collected, sources: sourceHealth } = await collector.collectWithDiagnostics();
 
   // Guarda de piso: se a coleta veio muito abaixo do catálogo, ambas as fontes
@@ -248,6 +282,8 @@ async function main(): Promise<void> {
   console.log(
     `Coletado: ${services.length} serviços (${summary.operational} operacionais) → ${outDir}`
   );
+
+  await writeDetails(outDir, pages, catalog, generatedAt);
 
   // Notas Técnicas: coleta própria (não afeta o piso de status). Atualiza o
   // technical-notes.json versionado e devolve as NTs novas para notificar.

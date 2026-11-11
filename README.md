@@ -104,6 +104,13 @@ modo `soap`, e a latência dele também fica em 0. Uma fonte que falha não derr
 as demais, e há um **piso de cobertura (75%)** abaixo do qual a coleta é considerada
 degradada e não é publicada — evitando exibir "tudo no ar" por engano.
 
+Além do estado por UF, cada coleta publica o **detalhe por serviço** em
+`details.json`: as operações de cada autorizador (autorização, consulta, eventos,
+status…) como o SVRS e a Receita as publicam, em produção e, para NF-e e CT-e, em
+homologação. No CT-e, a Receita mostra ali também a recepção do CT-e OS e da GTV-e,
+que não têm consulta de status própria. O detalhe é lido das mesmas páginas que a
+coleta já baixa; só as duas páginas de homologação são buscadas a mais.
+
 Cada coleta mede a **cobertura por fonte** e marca quando uma fonte oficial fica
 degradada (cobertura abaixo do piso) — o sinal que distingue "a fonte parou de
 responder / mudou o HTML" de "o serviço da SEFAZ caiu".
