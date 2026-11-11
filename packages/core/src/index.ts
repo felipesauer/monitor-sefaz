@@ -18,6 +18,7 @@ export { MDFeStatusEnvelopeBuilder } from './envelopes/MDFeStatusEnvelopeBuilder
 export { DCeStatusEnvelopeBuilder } from './envelopes/DCeStatusEnvelopeBuilder.js';
 export { BPeStatusEnvelopeBuilder } from './envelopes/BPeStatusEnvelopeBuilder.js';
 export { NFComStatusEnvelopeBuilder } from './envelopes/NFComStatusEnvelopeBuilder.js';
+export { NF3eStatusEnvelopeBuilder } from './envelopes/NF3eStatusEnvelopeBuilder.js';
 
 // Parsers
 export type { ResponseParser, ParsedStatus } from './parsers/ResponseParser.js';
@@ -29,6 +30,7 @@ export {
   DCeStatusParser,
   BPeStatusParser,
   NFComStatusParser,
+  NF3eStatusParser,
 } from './parsers/DocumentStatusParsers.js';
 
 // Checker

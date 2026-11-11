@@ -8,7 +8,7 @@
 [![CI](https://img.shields.io/badge/CI-lint%20%C2%B7%20typecheck%20%C2%B7%20test-2ea44f)](.github/workflows/ci.yml)
 
 Status page da disponibilidade dos webservices da SEFAZ para os documentos
-fiscais eletrônicos brasileiros — **NF-e, NFC-e, CT-e, MDF-e, DC-e, BP-e e NFCom, nas 27 UFs**.
+fiscais eletrônicos brasileiros — **NF-e, NFC-e, CT-e, MDF-e, DC-e, BP-e, NFCom e NF3e, nas 27 UFs**.
 Cruza fontes públicas por consenso, mostra o histórico de uptime num dashboard e
 avisa quando algo cai. Open-source, independente, sem afiliação com a SEFAZ ou a
 Receita Federal.
@@ -22,7 +22,7 @@ Se o monitor te ajudou, [deixe uma ⭐ no repositório](https://github.com/felip
 
 ## Destaques
 
-- **189 serviços monitorados** — os 7 documentos × 27 UFs, resolvendo sozinho qual
+- **216 serviços monitorados** — os 8 documentos × 27 UFs, resolvendo sozinho qual
   autorizador atende cada estado (próprio, SVRS, SVAN, Ambiente Nacional…).
 - **Consenso multi-fonte** — cruza três fontes com precedência para as oficiais, em
   vez de depender de uma só; se uma cai, as outras sustentam.
@@ -35,7 +35,7 @@ Se o monitor te ajudou, [deixe uma ⭐ no repositório](https://github.com/felip
 
 ## O que ele monitora
 
-Os sete documentos fiscais eletrônicos, nas 27 UFs — **189 serviços** no total:
+Os oito documentos fiscais eletrônicos, nas 27 UFs — **216 serviços** no total:
 
 - NF-e — Nota Fiscal Eletrônica (modelo 55)
 - NFC-e — Nota Fiscal de Consumidor Eletrônica (modelo 65)
@@ -44,6 +44,7 @@ Os sete documentos fiscais eletrônicos, nas 27 UFs — **189 serviços** no tot
 - DC-e — Declaração de Conteúdo eletrônica
 - BP-e — Bilhete de Passagem Eletrônico (modelo 63)
 - NFCom — Nota Fiscal Fatura de Serviços de Comunicação Eletrônica (modelo 62)
+- NF3e — Nota Fiscal de Energia Elétrica Eletrônica (modelo 66)
 
 Cada serviço é classificado em um de cinco estados:
 
@@ -60,7 +61,7 @@ dashboard.
 
 ## Status por estado
 
-Cada UF tem uma página com o status ao vivo dos sete documentos, quem autoriza
+Cada UF tem uma página com o status ao vivo dos oito documentos, quem autoriza
 cada um (a própria SEFAZ, o SVRS ou o SVAN) e o que fazer quando a SEFAZ cai.
 
 <!-- uf-pages:start — gerado de packages/catalog; atualize com `pnpm --filter @monitor-sefaz/web readme` -->
@@ -97,7 +98,9 @@ fonte pública mede a latência de rede do BP-e (o SVRS não a publica): o valor
 0 e a tela o mostra como "<1 s", sem ser uma medição. A NFCom vem da página do SVRS
 para as 24 UFs autorizadas ali; MG, MS e MT autorizam em ambiente próprio, sem
 página oficial, e o estado deles vem do IntegraNotas, que publica a NFCom das 27 UFs
-(e dá a ela latência de rede medida). Uma fonte que falha não derruba
+(e dá a ela latência de rede medida). O NF3e, como o BP-e, só tem a página do SVRS,
+que cobre 23 UFs; MG, MS, MT e PR autorizam em ambiente próprio e só aparecem no
+modo `soap`, e a latência dele também fica em 0. Uma fonte que falha não derruba
 as demais, e há um **piso de cobertura (75%)** abaixo do qual a coleta é considerada
 degradada e não é publicada — evitando exibir "tudo no ar" por engano.
 
@@ -187,7 +190,7 @@ estado para a seguinte pelo cache do Actions.
 
 O histórico do KV é guardado num **formato compacto** (`packages/contracts`):
 o estado vira _run-length_ (segmento novo só quando muda) e a latência é agregada
-por hora. Isso mantém 72h × 189 serviços em ~230 KB numa única chave de KV — 288
+por hora. Isso mantém 72h × 216 serviços em ~260 KB numa única chave de KV — 288
 escritas/dia, dentro do free tier — em vez dos megabytes que um ponto por
 checagem exigiria. A SPA expande de volta para pontos, na resolução que cada
 componente precisa.

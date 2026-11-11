@@ -35,15 +35,16 @@ export interface PageMeta {
 export function homeMeta(siteUrl: string): PageMeta {
   const ogTitle = 'Monitor SEFAZ — a SEFAZ está fora do ar?';
   return {
-    title: 'Monitor SEFAZ — Status em Tempo Real (NF-e, NFC-e, CT-e, MDF-e, DC-e, BP-e, NFCom)',
+    title:
+      'Monitor SEFAZ — Status em Tempo Real (NF-e, NFC-e, CT-e, MDF-e, DC-e, BP-e, NFCom, NF3e)',
     description:
-      'A SEFAZ está fora do ar? Veja o status em tempo real dos webservices de NF-e, NFC-e, CT-e, MDF-e, DC-e, BP-e e NFCom nas 27 UFs. Monitor open-source, gratuito e sem necessidade de certificado digital.',
+      'A SEFAZ está fora do ar? Veja o status em tempo real dos webservices de NF-e, NFC-e, CT-e, MDF-e, DC-e, BP-e, NFCom e NF3e nas 27 UFs. Monitor open-source, gratuito e sem necessidade de certificado digital.',
     url: siteUrl,
     ogTitle,
     ogDescription:
-      'Status em tempo real dos webservices da SEFAZ: NF-e, NFC-e, CT-e, MDF-e, DC-e, BP-e e NFCom nas 27 UFs. Open-source e sem certificado digital.',
+      'Status em tempo real dos webservices da SEFAZ: NF-e, NFC-e, CT-e, MDF-e, DC-e, BP-e, NFCom e NF3e nas 27 UFs. Open-source e sem certificado digital.',
     twitterDescription:
-      'Status em tempo real dos webservices da SEFAZ: NF-e, NFC-e, CT-e, MDF-e, DC-e, BP-e e NFCom nas 27 UFs.',
+      'Status em tempo real dos webservices da SEFAZ: NF-e, NFC-e, CT-e, MDF-e, DC-e, BP-e, NFCom e NF3e nas 27 UFs.',
     // Ajuda o buscador a entender que isto é uma ferramenta de consulta, e não
     // uma página institucional qualquer.
     jsonLd: {
@@ -55,7 +56,7 @@ export function homeMeta(siteUrl: string): PageMeta {
       operatingSystem: 'Web',
       inLanguage: 'pt-BR',
       description:
-        'Monitor de disponibilidade dos webservices da SEFAZ para NF-e, NFC-e, CT-e, MDF-e, DC-e, BP-e e NFCom nas 27 UFs.',
+        'Monitor de disponibilidade dos webservices da SEFAZ para NF-e, NFC-e, CT-e, MDF-e, DC-e, BP-e, NFCom e NF3e nas 27 UFs.',
       license: 'https://opensource.org/licenses/MIT',
       isAccessibleForFree: true,
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'BRL' },
@@ -72,7 +73,7 @@ export function ufMeta(uf: UF, siteUrl: string, lastmod: string): PageMeta {
   const url = `${siteUrl}${pagePath({ kind: 'uf', uf })}`;
   const sefaz = `SEFAZ-${uf}`;
   const title = `${sefaz} fora do ar ou instável? Status da NF-e hoje`;
-  const description = `A ${sefaz} está fora do ar ou instável hoje? Veja o status de NF-e, NFC-e, CT-e, MDF-e, DC-e, BP-e e NFCom ${inUf(uf)} e o que fazer em contingência.`;
+  const description = `A ${sefaz} está fora do ar ou instável hoje? Status de NF-e, NFC-e, CT-e, MDF-e, DC-e, BP-e, NFCom e NF3e ${inUf(uf)} e o que fazer em contingência.`;
   return {
     title,
     description,
@@ -198,7 +199,7 @@ export function renderHead(
     `<meta property="og:image" content="${escapeHtml(image)}" />`,
     '<meta property="og:image:width" content="1200" />',
     '<meta property="og:image:height" content="630" />',
-    '<meta property="og:image:alt" content="Monitor SEFAZ: 189 serviços, 27 UFs, cadência de 5 minutos." />',
+    '<meta property="og:image:alt" content="Monitor SEFAZ: 216 serviços, 27 UFs, cadência de 5 minutos." />',
     '<meta name="twitter:card" content="summary_large_image" />',
     `<meta name="twitter:title" content="${escapeHtml(meta.ogTitle)}" />`,
     `<meta name="twitter:description" content="${escapeHtml(meta.twitterDescription)}" />`,

@@ -48,6 +48,8 @@ export const DOCUMENT_COLUMNS: Record<DocumentType, ColumnLayout> = {
   [DocumentType.BPe]: { statusIndex: 5, tMedIndex: 6 },
   // NFCom idem: só a página do SVRS e a API do IntegraNotas.
   [DocumentType.NFCom]: { statusIndex: 5, tMedIndex: 6 },
+  // NF3e: só a página do SVRS.
+  [DocumentType.NF3e]: { statusIndex: 5, tMedIndex: 6 },
 };
 
 /** Mapeia a cor da "bolinha" de status para um `ServiceState`. */

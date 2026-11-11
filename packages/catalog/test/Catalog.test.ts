@@ -87,6 +87,19 @@ describe('Catalog', () => {
     }
   });
 
+  it('resolve o NF3e em MG, MS, MT e PR e manda o resto ao SVRS', () => {
+    const entries = catalog.list(DocumentType.NF3e, Environment.Production);
+    expect(entries).toHaveLength(27);
+    const own = entries.filter((e) => e.authorizer === e.uf).map((e) => e.uf);
+    expect(own.sort()).toEqual(['MG', 'MS', 'MT', 'PR']);
+    expect(catalog.resolveAuthorizer(DocumentType.NF3e, 'SP')).toBe('SVRS');
+    for (const environment of [Environment.Production, Environment.Homologation]) {
+      for (const entry of catalog.list(DocumentType.NF3e, environment)) {
+        expect(entry.url, entry.uf).toMatch(/nf3eStatusServico/i);
+      }
+    }
+  });
+
   it('resolve CT-e de SP no autorizador próprio', () => {
     const entry = catalog.resolve(DocumentType.CTe, 'SP', Environment.Production);
     expect(entry?.authorizer).toBe('SP');

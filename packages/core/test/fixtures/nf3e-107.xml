@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
+  <soap:Body>
+    <nf3eResultMsg xmlns="http://www.portalfiscal.inf.br/nf3e/wsdl/NF3eStatusServico">
+      <retConsStatServNF3e versao="1.00" xmlns="http://www.portalfiscal.inf.br/nf3e">
+        <tpAmb>1</tpAmb>
+        <verAplic>SVRS</verAplic>
+        <cStat>107</cStat>
+        <xMotivo>Servico em Operacao</xMotivo>
+        <cUF>90</cUF>
+        <dhRecbto>2026-11-10T21:00:00-03:00</dhRecbto>
+        <tMed>1</tMed>
+      </retConsStatServNF3e>
+    </nf3eResultMsg>
+  </soap:Body>
+</soap:Envelope>
