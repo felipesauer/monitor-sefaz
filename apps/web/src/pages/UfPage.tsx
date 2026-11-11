@@ -311,6 +311,7 @@ export function UfPage({ uf }: { uf: UF }) {
         </section>
 
         <section
+          id="o-que-fazer"
           className="rounded-xl border p-4 sm:p-5"
           style={{ background: 'var(--surface)', boxShadow: 'var(--shadow)' }}
         >

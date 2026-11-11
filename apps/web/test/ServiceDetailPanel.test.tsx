@@ -57,7 +57,7 @@ function openPanel(onClose?: () => void) {
 describe('ServiceDetailPanel', () => {
   it('é um diálogo modal com o título do serviço', () => {
     openPanel();
-    const dialog = screen.getByRole('dialog', { name: 'NF-e · SP' });
+    const dialog = screen.getByRole('dialog', { name: 'NF-e · São Paulo' });
     expect(dialog).toHaveAttribute('aria-modal', 'true');
   });
 
@@ -80,12 +80,43 @@ describe('ServiceDetailPanel', () => {
   it('mantém o Tab dentro do painel', () => {
     openPanel();
     const dialog = screen.getByRole('dialog');
-    const buttons = dialog.querySelectorAll('button');
-    const last = buttons[buttons.length - 1]!;
+    const focusable = dialog.querySelectorAll<HTMLElement>('a[href], button');
+    const first = focusable[0]!;
+    const last = focusable[focusable.length - 1]!;
     last.focus();
     fireEvent.keyDown(document, { key: 'Tab' });
-    expect(screen.getByRole('button', { name: 'Fechar' })).toHaveFocus();
+    expect(first).toHaveFocus();
     fireEvent.keyDown(document, { key: 'Tab', shiftKey: true });
     expect(last).toHaveFocus();
+  });
+
+  it('diz para onde vai a NF-e em contingência e liga para o que fazer na página da UF', () => {
+    openPanel();
+    expect(screen.getByText('Contingência SVC-AN')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /O que fazer quando a SEFAZ-SP cai/ })).toHaveAttribute(
+      'href',
+      '/sefaz-sp/#o-que-fazer'
+    );
+  });
+
+  it('mostra a bandeira e a frase do estado', () => {
+    openPanel();
+    expect(screen.getByAltText('Bandeira de São Paulo')).toHaveAttribute('src', '/flags/sp.png');
+    expect(screen.getByText('Respondendo normalmente.')).toBeInTheDocument();
+  });
+});
+
+describe('ServiceDetailPanel de autorizador compartilhado', () => {
+  it('lista os estados que caem junto, com link para cada um', () => {
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <ServiceDetailPanel
+          service={{ ...service, id: 'NFe:AC', uf: 'AC', authorizer: 'SVRS' }}
+          onClose={() => {}}
+        />
+      </QueryClientProvider>
+    );
+    expect(screen.getByText(/O SVRS autoriza o NF-e de mais \d+ estados/)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'AL' })).toHaveAttribute('href', '/sefaz-al/');
   });
 });
