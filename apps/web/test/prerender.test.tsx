@@ -86,6 +86,20 @@ describe('prerender', () => {
     expect(html).toContain('Carregando o status ao vivo…');
   });
 
+  it('pré-renderiza um card de espera por documento da UF, para a grade não pular (CLS)', () => {
+    const html = file(files, 'sefaz-sp/index.html');
+    // 6 cards de espera, um por documento do catálogo, e o banner de espera.
+    expect(html.match(/aria-busy="true"/g)).toHaveLength(7);
+    expect(html).toContain('São Paulo · NF-e');
+    expect(html).toContain('São Paulo · BP-e');
+  });
+
+  it('pré-renderiza uma página de cards de espera na home', () => {
+    const html = file(files, 'index.html');
+    // 24 cards e o banner.
+    expect(html.match(/aria-busy="true"/g)).toHaveLength(25);
+  });
+
   it('diz quem cai junto quando o autorizador é compartilhado', () => {
     const html = file(files, 'sefaz-ac/index.html');
     expect(html).toContain('A NF-e do Acre é autorizada pelo');

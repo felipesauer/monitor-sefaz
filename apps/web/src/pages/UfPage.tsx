@@ -8,7 +8,8 @@ import { useTheme } from '../hooks/useTheme.js';
 import { Header } from '../components/Header.js';
 import { UpdateInfo } from '../components/UpdateInfo.js';
 import { StatusLegend } from '../components/StatusLegend.js';
-import { ServiceGrid } from '../components/ServiceGrid.js';
+import { ServiceGrid, type ServiceGridPlaceholder } from '../components/ServiceGrid.js';
+import { LoadingBanner } from '../components/GlobalBanner.js';
 import { ServiceDetailPanel } from '../components/ServiceDetailPanel.js';
 import { NoScriptNotice } from '../components/NoScriptNotice.js';
 import { UfDirectory } from '../components/UfDirectory.js';
@@ -169,6 +170,23 @@ export function UfPage({ uf }: { uf: UF }) {
     [status.data, uf]
   );
 
+  // Um card de espera por documento do catálogo enquanto o status carrega, e um
+  // card "sem leitura" por documento que a leitura não trouxe: a grade tem
+  // sempre um card por documento, e não muda de altura quando os dados chegam.
+  const placeholders = (
+    kind: ServiceGridPlaceholder['kind'],
+    only?: ReadonlySet<DocumentType>
+  ): ServiceGridPlaceholder[] =>
+    ufAuthorizations(uf)
+      .filter(({ document }) => !only || only.has(document))
+      .map(({ document, authorizer }) => ({
+        key: `${kind}-${document}`,
+        kind,
+        document,
+        uf,
+        authorizer,
+      }));
+
   const sefaz = `SEFAZ-${uf}`;
   const svc = nfeContingency(uf);
   const homeHref = pageHref(HOME);
@@ -208,17 +226,22 @@ export function UfPage({ uf }: { uf: UF }) {
           </p>
         </div>
 
-        {status.data && services.length > 0 && <UfBanner uf={uf} services={services} />}
-        {status.data && (
-          <UpdateInfo generatedAt={status.data.generatedAt} refreshIntervalMs={POLL_INTERVAL_MS} />
+        {status.data
+          ? services.length > 0 && <UfBanner uf={uf} services={services} />
+          : status.isLoading && <LoadingBanner title="Carregando o status ao vivo…" />}
+        {(status.data || status.isLoading) && (
+          <UpdateInfo generatedAt={status.data?.generatedAt} refreshIntervalMs={POLL_INTERVAL_MS} />
         )}
 
         <StatusLegend />
 
         {status.isLoading && (
-          <p className="py-10 text-center text-sm" style={{ color: 'var(--text-dim)' }}>
-            Carregando o status ao vivo…
-          </p>
+          <ServiceGrid
+            services={[]}
+            series={{}}
+            onSelect={() => {}}
+            placeholders={placeholders('loading')}
+          />
         )}
         <NoScriptNotice />
         {status.isError && (
@@ -228,7 +251,12 @@ export function UfPage({ uf }: { uf: UF }) {
         )}
         {status.data &&
           (services.length > 0 ? (
-            <ServiceGrid services={services} series={series.data ?? {}} onSelect={setSelected} />
+            <ServiceGrid
+              services={services}
+              series={series.data ?? {}}
+              onSelect={setSelected}
+              placeholders={placeholders('no-source', withoutStatus)}
+            />
           ) : (
             <p className="py-10 text-center text-sm" style={{ color: 'var(--text-dim)' }}>
               A última leitura não trouxe serviços {ofUf(uf)}.

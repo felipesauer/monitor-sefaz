@@ -1,15 +1,17 @@
-import { CheckCircle2, AlertTriangle, XCircle } from 'lucide-react';
+import { CheckCircle2, AlertTriangle, XCircle, CircleDashed } from 'lucide-react';
 import { isUp, type ServiceStatusDTO, type SummaryDTO } from '@monitor-sefaz/contracts';
 import { DOC_LABEL } from '../lib/labels.js';
 
 interface GlobalBannerProps {
-  summary: SummaryDTO;
+  /** Ausente enquanto o resumo carrega: o banner ocupa o lugar com o mesmo tamanho. */
+  summary?: SummaryDTO;
   /** Snapshot atual — usado para listar quais serviços estão com problema. */
   services?: ServiceStatusDTO[];
 }
 
 /** Banner com a "saúde geral" do sistema, no topo da status page. */
 export function GlobalBanner({ summary, services = [] }: GlobalBannerProps) {
+  if (!summary) return <LoadingBanner />;
   const allOk = summary.failing === 0;
   const majority = summary.availability >= 80;
 
@@ -56,6 +58,25 @@ export function GlobalBanner({ summary, services = [] }: GlobalBannerProps) {
             amostrado periodicamente — instabilidades curtas podem não constar nos gráficos.
           </p>
         )}
+      </div>
+    </div>
+  );
+}
+
+/** O banner antes do resumo chegar, com a mesma altura do de "tudo no ar". */
+export function LoadingBanner({ title = 'Carregando…' }: { title?: string }) {
+  return (
+    <div
+      className="flex items-start gap-3 rounded-xl border p-4"
+      aria-busy="true"
+      style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}
+    >
+      <CircleDashed className="mt-0.5 h-6 w-6 shrink-0" style={{ color: 'var(--text-dim)' }} />
+      <div className="min-w-0">
+        <strong className="block text-sm font-semibold">{title}</strong>
+        <span className="text-xs" style={{ color: 'var(--text-dim)' }}>
+          Lendo o status ao vivo das fontes públicas da SEFAZ
+        </span>
       </div>
     </div>
   );

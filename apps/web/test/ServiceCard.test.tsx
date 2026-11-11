@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import type { ServiceStatusDTO } from '@monitor-sefaz/contracts';
-import { ServiceCard } from '../src/components/ServiceCard.js';
+import { ServiceCard, ServiceCardPlaceholder } from '../src/components/ServiceCard.js';
 
 function service(overrides: Partial<ServiceStatusDTO> = {}): ServiceStatusDTO {
   return {
@@ -56,5 +56,28 @@ describe('ServiceCard', () => {
   it('omite o frescor quando a fonte não publica sourceCheckedAt', () => {
     render(<ServiceCard service={service()} onSelect={() => {}} />);
     expect(screen.queryByText(/aferido pela SEFAZ/)).not.toBeInTheDocument();
+  });
+
+  it('reserva a linha do frescor mesmo sem sourceCheckedAt, para os cards terem a mesma altura', () => {
+    const { container } = render(<ServiceCard service={service()} onSelect={() => {}} />);
+    expect(container.querySelector('p[aria-hidden="true"]')).not.toBeNull();
+  });
+});
+
+describe('ServiceCardPlaceholder', () => {
+  it('mostra o card de espera com o documento e o autorizador do catálogo', () => {
+    const { container } = render(
+      <ServiceCardPlaceholder kind="loading" document="NFe" uf="SP" authorizer="SP" />
+    );
+    expect(screen.getByText('Carregando…')).toBeInTheDocument();
+    expect(screen.getByText('São Paulo · NF-e')).toBeInTheDocument();
+    expect(container.firstElementChild).toHaveAttribute('aria-busy', 'true');
+  });
+
+  it('marca o documento que a leitura não trouxe, sem botão para abrir', () => {
+    render(<ServiceCardPlaceholder kind="no-source" document="BPe" uf="SP" authorizer="SP" />);
+    expect(screen.getByText('Sem leitura pública')).toBeInTheDocument();
+    expect(screen.getByText('Sem fonte pública neste estado')).toBeInTheDocument();
+    expect(screen.queryByRole('button')).toBeNull();
   });
 });
