@@ -126,4 +126,42 @@ describe('AvailabilityParser', () => {
       expect(res.rows[0]?.state).toBe(ServiceState.Operational); // fallback índice 5 ainda funciona
     });
   });
+
+  describe('parseOperations', () => {
+    it('lê todas as colunas de serviço da NF-e, com o nome do cabeçalho', () => {
+      const rows = new AvailabilityParser().parseOperations(
+        loadAvailability('nfe-disponibilidade.html')
+      );
+      expect(rows.map((r) => r.authorizer)).toEqual(
+        expect.arrayContaining(['SP', 'SVAN', 'SVRS', 'SVCAN', 'SVCRS'])
+      );
+      const sp = rows.find((r) => r.authorizer === 'SP')!;
+      // Nomes com acento: a página chega em UTF-8 decodificada como latin-1.
+      expect(sp.operations.map((o) => o.operation)).toEqual([
+        'Autorização4',
+        'Retorno Autorização4',
+        'Inutilização4',
+        'Consulta Protocolo4',
+        'Status Serviço4',
+        'Consulta Cadastro4',
+        'Recepção Evento4',
+      ]);
+    });
+
+    it('lê as colunas do CT-e, incluindo CT-e OS e GTV-e', () => {
+      const rows = new AvailabilityParser().parseOperations(
+        loadAvailability('cte-disponibilidade.html')
+      );
+      const svrs = rows.find((r) => r.authorizer === 'SVRS')!;
+      expect(svrs.operations.map((o) => o.operation)).toEqual(
+        expect.arrayContaining(['Recepção CT-e OS', 'Recepção GTVE', 'Status Serviço'])
+      );
+    });
+
+    it('não inventa nomes quando a página não tem cabeçalho', () => {
+      expect(
+        new AvailabilityParser().parseOperations('<table><tr><td>SP</td></tr></table>')
+      ).toEqual([]);
+    });
+  });
 });

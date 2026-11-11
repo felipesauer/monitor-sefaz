@@ -58,10 +58,12 @@ export {
   DOCUMENT_COLUMNS,
   type AvailabilityRow,
   type AvailabilityParseResult,
+  type AvailabilityOperationsRow,
   type ColumnLayout,
 } from './availability/AvailabilityParser.js';
 export {
   HttpAvailabilityProvider,
+  HOMOLOGATION_AVAILABILITY_URLS,
   AVAILABILITY_URLS,
 } from './availability/AvailabilityProvider.js';
 export {
@@ -110,3 +112,13 @@ export {
   type TechnicalNotesFetcher,
 } from './technical-notes/TechnicalNotesProvider.js';
 export { createHttpTechnicalNotesFetcher } from './technical-notes/httpFetcher.js';
+
+// Camada de detalhe por autorizador × ambiente × serviço
+export {
+  DetailCollector,
+  recordingSvrsFetcher,
+  type AuthorizerDetail,
+  type OperationStatus,
+  type PageLog,
+  type HomologationFetcher,
+} from './detail/DetailCollector.js';

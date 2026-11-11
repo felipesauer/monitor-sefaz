@@ -26,6 +26,16 @@ export const AVAILABILITY_URLS: Partial<Record<DocumentType, readonly string[]>>
   [DocumentType.CTe]: ['https://www.cte.fazenda.gov.br/portal/disponibilidade.aspx'],
 };
 
+/**
+ * Páginas de disponibilidade de HOMOLOGAÇÃO da Receita. Status independente do de
+ * produção (por isso nunca são fallback dela); servem só à camada de detalhe, que
+ * mostra os dois ambientes lado a lado. Só NF-e e CT-e têm página pública.
+ */
+export const HOMOLOGATION_AVAILABILITY_URLS: Partial<Record<DocumentType, string>> = {
+  [DocumentType.NFe]: 'https://hom.nfe.fazenda.gov.br/portal/disponibilidade.aspx',
+  [DocumentType.CTe]: 'https://hom.cte.fazenda.gov.br/portal/disponibilidade.aspx',
+};
+
 const BROWSER_UA =
   'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36';
 
@@ -44,7 +54,12 @@ export class HttpAvailabilityProvider {
     private readonly timeoutMs = 20_000,
     private readonly sleep: Sleeper = defaultSleeper,
     /** Fonte de aleatoriedade do jitter; injetável para o backoff ser determinístico em teste. */
-    private readonly random: () => number = Math.random
+    private readonly random: () => number = Math.random,
+    /**
+     * Avisado com cada página válida baixada. A camada de detalhe usa isto para
+     * ler as mesmas páginas da rodada sem baixá-las de novo.
+     */
+    private readonly onPage?: (url: string, html: string) => void
   ) {
     const jar = new CookieJar();
     this.http = wrapper(
@@ -102,6 +117,7 @@ export class HttpAvailabilityProvider {
           // esvazia esta fonte e a marca `degraded` no consenso (sinal de drift),
           // em vez de publicar dado possivelmente incorreto em silêncio.
           if (rows.length > 0 && headerMatched) {
+            this.onPage?.(url, html);
             return rows;
           }
           lastError = new Error(
@@ -118,6 +134,33 @@ export class HttpAvailabilityProvider {
         if (attemptIndex < totalAttempts) {
           await this.sleep(backoffMs(attempt, this.random));
         }
+      }
+    }
+    throw lastError instanceof Error ? lastError : new Error(String(lastError));
+  }
+
+  /**
+   * Baixa uma página de disponibilidade qualquer (a de homologação, por exemplo)
+   * com o mesmo retry e a mesma validação de cabeçalho do `fetch`, e devolve o
+   * HTML. Lança se nenhuma tentativa trouxer a tabela.
+   */
+  public async fetchPage(url: string, document: DocumentType, attempts = 3): Promise<string> {
+    const parser = new AvailabilityParser(document);
+    let lastError: unknown;
+    for (let attempt = 1; attempt <= attempts; attempt += 1) {
+      try {
+        const response = await this.http.get<ArrayBuffer>(url);
+        const html = Buffer.from(response.data).toString('latin1');
+        const { rows, headerMatched } = parser.parseWithDiagnostics(html);
+        if (rows.length > 0 && headerMatched) {
+          return html;
+        }
+        lastError = new Error(`página sem tabela de status (HTTP ${response.status})`);
+      } catch (err) {
+        lastError = err;
+      }
+      if (attempt < attempts) {
+        await this.sleep(backoffMs(attempt, this.random));
       }
     }
     throw lastError instanceof Error ? lastError : new Error(String(lastError));

@@ -10,6 +10,7 @@ import { SvrsCollector } from '../svrs/SvrsCollector.js';
 import { SvrsProvider } from '../svrs/SvrsProvider.js';
 import { createHttpSvrsFetcher } from '../svrs/httpFetcher.js';
 import type { StatusCollectorLike } from '../integranotas/HybridCollector.js';
+import { recordingSvrsFetcher, type PageLog } from '../detail/DetailCollector.js';
 
 /** Uma fonte do consenso e se ela é OFICIAL (tem precedência de estado). */
 export interface ConsensusSource {
@@ -78,19 +79,32 @@ export class ConsensusCollector implements StatusCollectorLike {
    */
   public static createForNode(
     catalog = new Catalog(),
-    minCoverageRatio = DEFAULT_MIN_COVERAGE_RATIO
+    minCoverageRatio = DEFAULT_MIN_COVERAGE_RATIO,
+    /**
+     * Quando dado, guarda as páginas do SVRS e da Receita baixadas na rodada, para
+     * a camada de detalhe (`DetailCollector`) lê-las sem baixar de novo.
+     */
+    pages?: PageLog
   ): ConsensusCollector {
+    const svrsFetcher = pages
+      ? recordingSvrsFetcher(createHttpSvrsFetcher(), pages)
+      : createHttpSvrsFetcher();
+    const availability = pages
+      ? new HttpAvailabilityProvider(undefined, undefined, undefined, (url, html) =>
+          pages.set(url, html)
+        )
+      : new HttpAvailabilityProvider();
     return new ConsensusCollector(
       [
         {
           name: 'svrs',
           official: true,
-          collector: new SvrsCollector(new SvrsProvider(createHttpSvrsFetcher()), catalog),
+          collector: new SvrsCollector(new SvrsProvider(svrsFetcher), catalog),
         },
         {
           name: 'availability',
           official: true,
-          collector: new AvailabilityCollector(new HttpAvailabilityProvider(), catalog),
+          collector: new AvailabilityCollector(availability, catalog),
         },
         {
           name: 'integranotas',
