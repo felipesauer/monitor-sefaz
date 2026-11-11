@@ -9,7 +9,8 @@ import { SvrsParser, type SvrsAuthorizerStatus } from './SvrsParser.js';
  * DC-e roda no SVRS e usa a página da MDF-e
  * como melhor proxy oficial disponível (ambos são serviços do SVRS nacional). O
  * BP-e tem página própria, que cobre só as UFs atendidas pelo SVRS: MG, MS, MT,
- * PR e SP autorizam o BP-e em ambiente próprio, sem página pública.
+ * PR e SP autorizam o BP-e em ambiente próprio, sem página pública. O mesmo vale
+ * para a NFCom: a página cobre as UFs do SVRS, e MG, MS e MT ficam de fora.
  *
  * Diferente do `hom.` da Receita, o SVRS não separa o portal por ambiente aqui —
  * estas páginas refletem a disponibilidade de produção.
@@ -21,6 +22,7 @@ export const SVRS_URLS: Partial<Record<DocumentType, string>> = {
   [DocumentType.MDFe]: 'https://dfe-portal.svrs.rs.gov.br/Mdfe/Disponibilidade',
   [DocumentType.DCe]: 'https://dfe-portal.svrs.rs.gov.br/Mdfe/Disponibilidade',
   [DocumentType.BPe]: 'https://dfe-portal.svrs.rs.gov.br/Bpe/Disponibilidade',
+  [DocumentType.NFCom]: 'https://dfe-portal.svrs.rs.gov.br/Nfcom/Disponibilidade',
 };
 
 /**

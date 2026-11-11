@@ -24,3 +24,9 @@ export class BPeStatusParser extends AbstractRetConsParser {
   public readonly document = DocumentType.BPe;
   protected readonly retNodeName = 'retConsStatServBPe';
 }
+
+/** Parser da resposta de status NFCom (`retConsStatServNFCom`). */
+export class NFComStatusParser extends AbstractRetConsParser {
+  public readonly document = DocumentType.NFCom;
+  protected readonly retNodeName = 'retConsStatServNFCom';
+}

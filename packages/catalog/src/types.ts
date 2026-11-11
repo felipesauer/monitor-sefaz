@@ -14,6 +14,7 @@ export enum DocumentType {
   MDFe = 'MDFe',
   DCe = 'DCe',
   BPe = 'BPe',
+  NFCom = 'NFCom',
 }
 
 /** Ambiente de operação. O valor numérico coincide com o `tpAmb` da SEFAZ. */

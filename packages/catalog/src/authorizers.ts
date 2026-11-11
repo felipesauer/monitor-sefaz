@@ -93,8 +93,25 @@ function buildBPeAuthorizerMap(): Record<UF, AuthorizerCode> {
   return map;
 }
 
+/**
+ * UFs com autorizador NFCom (modelo 62) próprio; as demais delegam ao SVRS.
+ * Fonte: "Relação de Serviços Web" do Portal da NFCom no SVRS
+ * (dfe-portal.svrs.rs.gov.br/Nfcom/Servicos, autorizadores MG, MS, MT e SVRS),
+ * que confere com o nfephp-org/sped-nfcom (storage/autorizadores.json).
+ */
+const NFCOM_OWN_AUTHORIZERS: UF[] = ['MG', 'MS', 'MT'];
+
+function buildNFComAuthorizerMap(): Record<UF, AuthorizerCode> {
+  const map = {} as Record<UF, AuthorizerCode>;
+  for (const uf of ALL_UFS) {
+    map[uf] = NFCOM_OWN_AUTHORIZERS.includes(uf) ? uf : 'SVRS';
+  }
+  return map;
+}
+
 const CTE_AUTHORIZERS = buildCTeAuthorizerMap();
 const BPE_AUTHORIZERS = buildBPeAuthorizerMap();
+const NFCOM_AUTHORIZERS = buildNFComAuthorizerMap();
 const CENTRALIZED_SVRS = buildCentralizedSVRSMap();
 
 /**
@@ -110,6 +127,7 @@ export const UF_AUTHORIZERS: Readonly<Record<DocumentType, Partial<Record<UF, Au
   [DocumentType.MDFe]: CENTRALIZED_SVRS,
   [DocumentType.DCe]: CENTRALIZED_SVRS,
   [DocumentType.BPe]: BPE_AUTHORIZERS,
+  [DocumentType.NFCom]: NFCOM_AUTHORIZERS,
 };
 
 /**

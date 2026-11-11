@@ -39,6 +39,18 @@ describe('SvrsParser', () => {
     expect(rows[0]!.webServices.length).toBeGreaterThan(0);
   });
 
+  it('extrai o autorizador único da página de NFCom, com os 4 WS', () => {
+    const rows = new SvrsParser().parse(fixture('nfcom-disponibilidade.html'));
+    expect(rows).toHaveLength(1);
+    expect(rows[0]!.authorizer).toBe('SVRS');
+    expect(rows[0]!.webServices.map((w) => w.operation)).toEqual([
+      'WS Autorizacao Sincrona',
+      'WS Consulta Situacao',
+      'WS Eventos',
+      'WS Status',
+    ]);
+  });
+
   it('lê as duas seções da página de NFC-e, cujo WS Status traz o sufixo HMLE', () => {
     const rows = new SvrsParser().parse(fixture('nfce-disponibilidade.html'));
     expect(rows.map((r) => r.authorizer)).toEqual(['SEFAZ-RS', 'SVRS']);

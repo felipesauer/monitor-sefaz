@@ -74,6 +74,19 @@ describe('Catalog', () => {
     );
   });
 
+  it('resolve a NFCom em MG, MS e MT e manda o resto ao SVRS', () => {
+    const entries = catalog.list(DocumentType.NFCom, Environment.Production);
+    expect(entries).toHaveLength(27);
+    const own = entries.filter((e) => e.authorizer === e.uf).map((e) => e.uf);
+    expect(own.sort()).toEqual(['MG', 'MS', 'MT']);
+    expect(catalog.resolveAuthorizer(DocumentType.NFCom, 'SP')).toBe('SVRS');
+    for (const environment of [Environment.Production, Environment.Homologation]) {
+      for (const entry of catalog.list(DocumentType.NFCom, environment)) {
+        expect(entry.url, entry.uf).toContain('NFComStatusServico');
+      }
+    }
+  });
+
   it('resolve CT-e de SP no autorizador próprio', () => {
     const entry = catalog.resolve(DocumentType.CTe, 'SP', Environment.Production);
     expect(entry?.authorizer).toBe('SP');

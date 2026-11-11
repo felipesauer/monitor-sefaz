@@ -8,6 +8,7 @@ import { CTeStatusEnvelopeBuilder } from '../envelopes/CTeStatusEnvelopeBuilder.
 import { MDFeStatusEnvelopeBuilder } from '../envelopes/MDFeStatusEnvelopeBuilder.js';
 import { DCeStatusEnvelopeBuilder } from '../envelopes/DCeStatusEnvelopeBuilder.js';
 import { BPeStatusEnvelopeBuilder } from '../envelopes/BPeStatusEnvelopeBuilder.js';
+import { NFComStatusEnvelopeBuilder } from '../envelopes/NFComStatusEnvelopeBuilder.js';
 import type { ResponseParser } from '../parsers/ResponseParser.js';
 import { NFCeStatusParser, NFeStatusParser } from '../parsers/NFeStatusParser.js';
 import {
@@ -15,6 +16,7 @@ import {
   CTeStatusParser,
   DCeStatusParser,
   MDFeStatusParser,
+  NFComStatusParser,
 } from '../parsers/DocumentStatusParsers.js';
 import { AxiosSoapClient, type ClientCertificate, type SoapClient } from '../checker/SoapClient.js';
 import { StatusClassifier } from '../checker/StatusClassifier.js';
@@ -42,6 +44,7 @@ export class CheckerFactory {
       new MDFeStatusEnvelopeBuilder(),
       new DCeStatusEnvelopeBuilder(),
       new BPeStatusEnvelopeBuilder(),
+      new NFComStatusEnvelopeBuilder(),
     ];
     return new Map(builders.map((b) => [b.document, b]));
   }
@@ -54,6 +57,7 @@ export class CheckerFactory {
       new MDFeStatusParser(),
       new DCeStatusParser(),
       new BPeStatusParser(),
+      new NFComStatusParser(),
     ];
     return new Map(parsers.map((p) => [p.document, p]));
   }

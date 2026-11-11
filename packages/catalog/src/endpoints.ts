@@ -177,6 +177,27 @@ const BPE_ENDPOINTS: DocumentEndpoints = {
   },
 };
 
+/**
+ * Endpoints NFCom (Nota Fiscal Fatura de Serviços de Comunicação, modelo 62,
+ * `NFComStatusServico`, v1.00). MG, MS e MT têm autorizador próprio; as demais UFs
+ * usam o SVRS. Fonte: "Relação de Serviços Web" do Portal da NFCom no SVRS,
+ * conferida em 2026-11-10.
+ */
+const NFCOM_ENDPOINTS: DocumentEndpoints = {
+  production: {
+    MG: 'https://nfcom.fazenda.mg.gov.br/nfcom/services/NFComStatusServico',
+    MS: 'https://nfcom.sefaz.ms.gov.br/ws/NFComStatusServico',
+    MT: 'https://www.sefaz.mt.gov.br/nfcom/services/NFComStatusServico',
+    SVRS: 'https://nfcom.svrs.rs.gov.br/WS/NFComStatusServico/NFComStatusServico.asmx',
+  },
+  homologation: {
+    MG: 'https://hnfcom.fazenda.mg.gov.br/nfcom/services/NFComStatusServico',
+    MS: 'https://hom.nfcom.sefaz.ms.gov.br/ws/NFComStatusServico',
+    MT: 'https://homologacao.sefaz.mt.gov.br/nfcom/services/NFComStatusServico',
+    SVRS: 'https://nfcom-homologacao.svrs.rs.gov.br/WS/NFComStatusServico/NFComStatusServico.asmx',
+  },
+};
+
 /** Registro de endpoints por documento. */
 export const ENDPOINTS: Readonly<Record<DocumentType, DocumentEndpoints>> = {
   [DocumentType.NFe]: NFE_ENDPOINTS,
@@ -185,4 +206,5 @@ export const ENDPOINTS: Readonly<Record<DocumentType, DocumentEndpoints>> = {
   [DocumentType.MDFe]: MDFE_ENDPOINTS,
   [DocumentType.DCe]: DCE_ENDPOINTS,
   [DocumentType.BPe]: BPE_ENDPOINTS,
+  [DocumentType.NFCom]: NFCOM_ENDPOINTS,
 };

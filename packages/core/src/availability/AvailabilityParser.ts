@@ -56,6 +56,8 @@ export const DOCUMENT_COLUMNS: Record<DocumentType, ColumnLayout> = {
   [DocumentType.DCe]: { statusIndex: 5, tMedIndex: 6 },
   // BP-e não tem página na Receita (só a do SVRS); layout não aplicável.
   [DocumentType.BPe]: { statusIndex: 5, tMedIndex: 6 },
+  // NFCom idem: só a página do SVRS e a API do IntegraNotas.
+  [DocumentType.NFCom]: { statusIndex: 5, tMedIndex: 6 },
 };
 
 /** Mapeia a cor da "bolinha" de status para um `ServiceState`. */

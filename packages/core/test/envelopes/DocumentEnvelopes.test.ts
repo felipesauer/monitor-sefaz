@@ -4,6 +4,7 @@ import { CTeStatusEnvelopeBuilder } from '../../src/envelopes/CTeStatusEnvelopeB
 import { MDFeStatusEnvelopeBuilder } from '../../src/envelopes/MDFeStatusEnvelopeBuilder.js';
 import { DCeStatusEnvelopeBuilder } from '../../src/envelopes/DCeStatusEnvelopeBuilder.js';
 import { BPeStatusEnvelopeBuilder } from '../../src/envelopes/BPeStatusEnvelopeBuilder.js';
+import { NFComStatusEnvelopeBuilder } from '../../src/envelopes/NFComStatusEnvelopeBuilder.js';
 
 describe('Document envelopes', () => {
   it('CT-e usa namespace cte, versão 4.00 e consStatServCte', () => {
@@ -47,5 +48,23 @@ describe('Document envelopes', () => {
     expect(xml).toContain('<cUF>31</cUF>');
     expect(xml).toContain('<tpAmb>1</tpAmb>');
     expect(xml).toContain('<xServ>STATUS</xServ>');
+  });
+
+  it('NFCom usa namespace nfcom, versão 1.00, consStatServNFCom e nenhum cabeçalho', () => {
+    const xml = new NFComStatusEnvelopeBuilder().build({
+      cUF: 31,
+      environment: Environment.Homologation,
+    });
+    expect(xml).toContain(
+      '<nfcomDadosMsg xmlns="http://www.portalfiscal.inf.br/nfcom/wsdl/NFComStatusServico">'
+    );
+    expect(xml).toContain(
+      'consStatServNFCom versao="1.00" xmlns="http://www.portalfiscal.inf.br/nfcom"'
+    );
+    expect(xml).toContain('<tpAmb>2</tpAmb>');
+    expect(xml).toContain('<xServ>STATUS</xServ>');
+    // O schema oficial (TConsStatServ) não tem cUF, e o WSDL não tem cabeçalho.
+    expect(xml).not.toContain('<cUF>');
+    expect(xml).not.toContain('Header');
   });
 });
