@@ -215,6 +215,7 @@ export function UfPage({ uf }: { uf: UF }) {
             series={{}}
             onSelect={() => {}}
             linkToUf={false}
+            headingLevel={2}
           />
         )}
         <NoScriptNotice />
@@ -232,6 +233,7 @@ export function UfPage({ uf }: { uf: UF }) {
               series={series.data ?? {}}
               onSelect={setSelected}
               linkToUf={false}
+              headingLevel={2}
             />
           ) : (
             <p className="py-10 text-center text-sm" style={{ color: 'var(--text-dim)' }}>

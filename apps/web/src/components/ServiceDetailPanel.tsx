@@ -347,6 +347,7 @@ export function ServiceDetailPanel({ service, onClose }: ServiceDetailPanelProps
               now={Date.now()}
               emptyText="Nenhuma queda ou instabilidade no período."
               limit={8}
+              headingLevel={4}
             />
           </div>
         </Section>
