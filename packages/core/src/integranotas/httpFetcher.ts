@@ -1,3 +1,4 @@
+import { Agent } from 'node:https';
 import axios from 'axios';
 import type { IntegraNotasFetcher } from './IntegraNotasProvider.js';
 
@@ -8,6 +9,8 @@ import type { IntegraNotasFetcher } from './IntegraNotasProvider.js';
  */
 export function createHttpIntegraNotasFetcher(timeoutMs = 15_000): IntegraNotasFetcher {
   const http = axios.create({
+    // Uma conexão aberta e reaproveitada: o aquecimento abre, a busca medida usa (ADR-23).
+    httpsAgent: new Agent({ keepAlive: true }),
     timeout: timeoutMs,
     headers: {
       'X-Requested-With': 'XMLHttpRequest',
@@ -18,8 +21,16 @@ export function createHttpIntegraNotasFetcher(timeoutMs = 15_000): IntegraNotasF
     responseType: 'text',
     validateStatus: (s) => s >= 200 && s < 300,
   });
-  return async (url) => {
+  const fetcher: IntegraNotasFetcher = async (url) => {
     const res = await http.get<string>(url);
     return typeof res.data === 'string' ? res.data : JSON.stringify(res.data);
   };
+  fetcher.warmUp = async (url) => {
+    try {
+      await http.head(url, { validateStatus: () => true });
+    } catch {
+      // aquecimento é só uma tentativa
+    }
+  };
+  return fetcher;
 }

@@ -105,4 +105,30 @@ describe('AvailabilityCollector', () => {
     expect(mdfe.every((s) => s.authorizer === 'SVRS' && s.state === ServiceState.Down)).toBe(true);
     expect(dce.every((s) => s.authorizer === 'SVRS' && s.state === ServiceState.Down)).toBe(true);
   });
+
+  it('aquece a conexão antes de cronometrar, e a latência fica só com a busca (ADR-23)', async () => {
+    let t = 0;
+    const calls: string[] = [];
+    const provider = {
+      supportedDocuments: () => [DocumentType.NFe],
+      warmUp: async () => {
+        calls.push('warmUp');
+        t += 2000;
+      },
+      fetch: async () => {
+        calls.push('fetch');
+        t += 90;
+        return [{ authorizer: 'SP', state: ServiceState.Operational }];
+      },
+    };
+    const collected = await new AvailabilityCollector(
+      provider as never,
+      undefined,
+      () => t
+    ).collect();
+    expect(calls).toEqual(['warmUp', 'fetch']);
+    expect(collected.find((s) => s.document === DocumentType.NFe && s.uf === 'SP')?.latencyMs).toBe(
+      90
+    );
+  });
 });

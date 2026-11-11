@@ -42,6 +42,24 @@ describe('IntegraNotasProvider', () => {
     expect(rows.every((r) => r.state === ServiceState.Operational)).toBe(true);
   });
 
+  it('não conta o aquecimento da conexão na latência (ADR-23)', async () => {
+    let t = 0;
+    const fetcher = Object.assign(
+      async () => {
+        t += 120; // a resposta da API
+        return nfeFixture;
+      },
+      {
+        warmUp: async () => {
+          t += 2000; // abrir a conexão de longe
+        },
+      }
+    );
+    const provider = new IntegraNotasProvider(fetcher, () => t);
+    const { fetchLatencyMs } = await provider.fetch(DocumentType.NFe);
+    expect(fetchLatencyMs).toBe(120);
+  });
+
   it('mede a latência de rede do fetch (now injetável)', async () => {
     // relógio avança 137ms entre o início e o fim da requisição
     let t = 1000;
