@@ -198,6 +198,29 @@ const NFCOM_ENDPOINTS: DocumentEndpoints = {
   },
 };
 
+/**
+ * Endpoints NF3e (Nota Fiscal de Energia Elétrica Eletrônica, modelo 66,
+ * `NF3eStatusServico`, v1.00). MG, MS, MT e PR têm autorizador próprio; as demais
+ * UFs usam o SVRS. Fonte: "Relação de Serviços Web" do Portal da NF3e no SVRS,
+ * conferida em 2026-11-11.
+ */
+const NF3E_ENDPOINTS: DocumentEndpoints = {
+  production: {
+    MG: 'https://nf3e.fazenda.mg.gov.br/nf3e/services/NF3eStatusServico',
+    MS: 'https://nf3e.sefaz.ms.gov.br/ws/NF3eStatusServico',
+    MT: 'https://nfe.sefaz.mt.gov.br/nf3ews/services/NF3eStatusServico',
+    PR: 'https://nf3e.fazenda.pr.gov.br/nf3e/NF3eStatusServico',
+    SVRS: 'https://nf3e.svrs.rs.gov.br/ws/nf3eStatusServico/nf3eStatusServico.asmx',
+  },
+  homologation: {
+    MG: 'https://hnf3e.fazenda.mg.gov.br/nf3e/services/NF3eStatusServico',
+    MS: 'https://hom.nf3e.sefaz.ms.gov.br/ws/NF3eStatusServico',
+    MT: 'https://homologacao.sefaz.mt.gov.br/nf3ews/services/NF3eStatusServico',
+    PR: 'https://homologacao.nf3e.fazenda.pr.gov.br/nf3e/NF3eStatusServico',
+    SVRS: 'https://nf3e-homologacao.svrs.rs.gov.br/ws/nf3eStatusServico/nf3eStatusServico.asmx',
+  },
+};
+
 /** Registro de endpoints por documento. */
 export const ENDPOINTS: Readonly<Record<DocumentType, DocumentEndpoints>> = {
   [DocumentType.NFe]: NFE_ENDPOINTS,
@@ -207,4 +230,5 @@ export const ENDPOINTS: Readonly<Record<DocumentType, DocumentEndpoints>> = {
   [DocumentType.DCe]: DCE_ENDPOINTS,
   [DocumentType.BPe]: BPE_ENDPOINTS,
   [DocumentType.NFCom]: NFCOM_ENDPOINTS,
+  [DocumentType.NF3e]: NF3E_ENDPOINTS,
 };

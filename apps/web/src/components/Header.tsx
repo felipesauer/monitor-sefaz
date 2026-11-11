@@ -41,7 +41,7 @@ export function Header({
           Monitor SEFAZ
         </Title>
         <p className="hidden text-xs sm:block" style={{ color: 'var(--text-dim)' }}>
-          Disponibilidade de NF-e, NFC-e, CT-e, MDF-e, DC-e, BP-e e NFCom
+          Disponibilidade de NF-e, NFC-e, CT-e, MDF-e, DC-e, BP-e, NFCom e NF3e
         </p>
       </div>
     </>

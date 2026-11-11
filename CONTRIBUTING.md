@@ -70,7 +70,7 @@ O design é Open/Closed: estender raramente exige mexer no que já existe.
 
 ### Adicionar um novo documento
 
-O BP-e (#32) e a NFCom foram feitos assim; use-os como molde.
+O BP-e (#32), a NFCom e o NF3e foram feitos assim; use-os como molde.
 
 1. **Catálogo** (`packages/catalog/src/`): o valor novo em `DocumentType`
    (`types.ts`), o mapa UF → autorizador (`authorizers.ts`) e as URLs de

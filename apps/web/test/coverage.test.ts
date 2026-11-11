@@ -17,7 +17,7 @@ describe('cobertura do snapshot', () => {
   });
 
   it('sem nenhum serviço da UF, todos os documentos estão sem status', () => {
-    expect(documentsWithoutStatus([], 'SP').size).toBe(7);
+    expect(documentsWithoutStatus([], 'SP').size).toBe(8);
   });
 
   it('lista as UFs que o documento não cobre', () => {

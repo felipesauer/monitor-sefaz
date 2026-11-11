@@ -3,6 +3,7 @@ import { DocumentType } from '@monitor-sefaz/catalog';
 import {
   BPeStatusParser,
   NFComStatusParser,
+  NF3eStatusParser,
   CTeStatusParser,
   DCeStatusParser,
   MDFeStatusParser,
@@ -32,6 +33,12 @@ describe('DocumentStatusParsers', () => {
     expect(result.cStat).toBe(107);
     expect(result.xMotivo).toBe('Servico em Operacao');
     expect(new NFComStatusParser().document).toBe(DocumentType.NFCom);
+  });
+
+  it('NF3eStatusParser extrai cStat do nó retConsStatServNF3e', () => {
+    const result = new NF3eStatusParser().parse(loadFixture('nf3e-107.xml'));
+    expect(result.cStat).toBe(107);
+    expect(new NF3eStatusParser().document).toBe(DocumentType.NF3e);
   });
 
   it('cada parser expõe o tipo de documento correto', () => {

@@ -109,9 +109,28 @@ function buildNFComAuthorizerMap(): Record<UF, AuthorizerCode> {
   return map;
 }
 
+/**
+ * UFs com autorizador NF3e (modelo 66) próprio; as demais delegam ao SVRS. Não há
+ * tabela oficial UF a UF: o MOC do NF3e (item 3) põe os webservices na SEFAZ da UF
+ * "exceto quando a UF utilizar serviços de SEFAZ Virtual", e a "Relação de
+ * Serviços Web" do SVRS (dfe-portal.svrs.rs.gov.br/Nf3e/Servicos) só lista
+ * webservices próprios de MG, MS, MT e PR, sendo o SVRS a única SEFAZ Virtual do
+ * NF3e. Logo, essas quatro são próprias e as outras 23 UFs usam o SVRS.
+ */
+const NF3E_OWN_AUTHORIZERS: UF[] = ['MG', 'MS', 'MT', 'PR'];
+
+function buildNF3eAuthorizerMap(): Record<UF, AuthorizerCode> {
+  const map = {} as Record<UF, AuthorizerCode>;
+  for (const uf of ALL_UFS) {
+    map[uf] = NF3E_OWN_AUTHORIZERS.includes(uf) ? uf : 'SVRS';
+  }
+  return map;
+}
+
 const CTE_AUTHORIZERS = buildCTeAuthorizerMap();
 const BPE_AUTHORIZERS = buildBPeAuthorizerMap();
 const NFCOM_AUTHORIZERS = buildNFComAuthorizerMap();
+const NF3E_AUTHORIZERS = buildNF3eAuthorizerMap();
 const CENTRALIZED_SVRS = buildCentralizedSVRSMap();
 
 /**
@@ -128,6 +147,7 @@ export const UF_AUTHORIZERS: Readonly<Record<DocumentType, Partial<Record<UF, Au
   [DocumentType.DCe]: CENTRALIZED_SVRS,
   [DocumentType.BPe]: BPE_AUTHORIZERS,
   [DocumentType.NFCom]: NFCOM_AUTHORIZERS,
+  [DocumentType.NF3e]: NF3E_AUTHORIZERS,
 };
 
 /**

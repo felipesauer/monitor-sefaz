@@ -5,7 +5,7 @@ cada UF, o endpoint de cada webservice e a tabela de `cStat`.
 
 Sem dependências, sem I/O — são dados estáticos e a lógica de resolução em cima
 deles. Faz parte do [Monitor SEFAZ](https://github.com/felipesauer/monitor-sefaz),
-mas é útil sozinho para qualquer integração com NF-e, NFC-e, CT-e, MDF-e, DC-e, BP-e ou NFCom.
+mas é útil sozinho para qualquer integração com NF-e, NFC-e, CT-e, MDF-e, DC-e, BP-e, NFCom ou NF3e.
 
 ## O problema que resolve
 
@@ -38,9 +38,9 @@ const entry = catalog.resolve(DocumentType.NFe, 'AC', Environment.Production);
 // { document: 'NFe', uf: 'AC', authorizer: 'SVRS', environment: 1,
 //   cUF: 12, url: 'https://nfe.svrs.rs.gov.br/ws/NfeStatusServico/...' }
 
-// Todas as 27 UFs de um documento, ou os 189 serviços de uma vez.
+// Todas as 27 UFs de um documento, ou os 216 serviços de uma vez.
 catalog.list(DocumentType.CTe, Environment.Production); // 27 entradas
-catalog.listAll(Environment.Production); // 189 entradas
+catalog.listAll(Environment.Production); // 216 entradas
 
 // Para onde vai a NF-e de SP quando a contingência é ativada?
 catalog.resolveContingency(DocumentType.NFe, 'SP'); // 'SVCAN'

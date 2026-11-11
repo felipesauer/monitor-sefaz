@@ -106,8 +106,8 @@ describe('ConsensusCollector', () => {
   });
 
   describe('collectWithDiagnostics (sinal de drift)', () => {
-    // expected = 189 (7 docs × 27 UFs em produção). Com ratio 0.015, floor = 2:
-    // uma fonte com 1 serviço fica degraded; com 2+ fica saudável. Assim testamos
+    // expected = 216 (8 docs × 27 UFs em produção). Com ratio 0.015, floor = 3:
+    // uma fonte com 1 serviço fica degraded; com 3+ fica saudável. Assim testamos
     // os dois lados sem montar 100+ serviços à mão.
     const RATIO = 0.015;
 
@@ -134,18 +134,19 @@ describe('ConsensusCollector', () => {
 
       const svrsHealth = sources.find((s) => s.source === 'svrs')!;
       expect(svrsHealth.collected).toBe(1);
-      expect(svrsHealth.expected).toBe(189);
-      expect(svrsHealth.degraded).toBe(true); // 1 < floor(189*0.015)=2 → drift
+      expect(svrsHealth.expected).toBe(216);
+      expect(svrsHealth.degraded).toBe(true); // 1 < floor(216*0.015)=3 → drift
 
       const thirdHealth = sources.find((s) => s.source === 'integranotas')!;
       expect(thirdHealth.collected).toBe(3);
-      expect(thirdHealth.degraded).toBe(false); // 3 ≥ 2 → saudável
+      expect(thirdHealth.degraded).toBe(false); // 3 ≥ 3 → saudável
     });
 
-    it('piso padrão (75%) sobre 189 serviços: 141 é o mínimo; perder um documento inteiro degrada', async () => {
+    it('piso padrão (75%) sobre 216 serviços: 162 é o mínimo; perder um documento inteiro degrada', async () => {
       // Um coletor que não declara seus documentos é medido sobre o catálogo
-      // inteiro: 7 documentos × 27 UFs = 189, piso floor(189 × 0,75) = 141. Uma
-      // fonte que traz 162 e perde uma página de 27 cai para 135 e vira drift.
+      // inteiro: 8 documentos × 27 UFs = 216, piso floor(216 × 0,75) = 162. Uma
+      // fonte que traz 189 e perde uma página de 27 cai para 162, ainda no piso;
+      // perdendo duas, cai para 135 e vira drift.
       const catalog = new Catalog();
       const all = catalog.listAll(Environment.Production);
       const take = (n: number): CollectedStatus[] =>
@@ -167,11 +168,11 @@ describe('ConsensusCollector', () => {
         return sources[0]!;
       };
 
-      expect((await health(162)).expected).toBe(189);
-      expect((await health(162)).degraded).toBe(false);
-      expect((await health(141)).degraded).toBe(false); // floor(189 × 0,75)
-      expect((await health(140)).degraded).toBe(true);
-      expect((await health(162 - 27)).degraded).toBe(true); // perdeu um documento inteiro
+      expect((await health(189)).expected).toBe(216);
+      expect((await health(189)).degraded).toBe(false);
+      expect((await health(162)).degraded).toBe(false); // floor(216 × 0,75)
+      expect((await health(161)).degraded).toBe(true);
+      expect((await health(189 - 54)).degraded).toBe(true); // perdeu dois documentos inteiros
     });
 
     it('uma fonte que lança fica com collected=0 e degraded=true', async () => {
@@ -239,9 +240,9 @@ describe('ConsensusCollector', () => {
       });
 
       it('um documento que a fonte não cobre não a derruba abaixo do piso', async () => {
-        // A Receita não publica o BP-e nem a NFCom. Com o catálogo inteiro (189,
-        // piso 141), 120 serviços dela viravam drift falso; sobre os 135 que ela
-        // cobre (piso 101), não.
+        // A Receita não publica o BP-e, a NFCom nem o NF3e. Com o catálogo inteiro
+        // (216, piso 162), 120 serviços dela viravam drift falso; sobre os 135 que
+        // ela cobre (piso 101), não.
         const health = await healthOf(declaring(RECEITA_DOCS, servicesOf(RECEITA_DOCS, 120)));
         expect(health).toMatchObject({ expected: 135, degraded: false });
         expect(health.coverage).toBeCloseTo(0.889, 3);
@@ -297,9 +298,10 @@ describe('ConsensusCollector', () => {
         );
         const { sources } = await consensus.collectWithDiagnostics();
         const expected = Object.fromEntries(sources.map((s) => [s.source, s.expected]));
-        // SVRS: os 7 documentos (189). Receita: NF-e, NFC-e e CT-e, mais MDF-e e
-        // DC-e derivados (135). IntegraNotas: os 6 documentos da API, sem BP-e (162).
-        expect(expected).toEqual({ svrs: 189, availability: 135, integranotas: 162 });
+        // SVRS: os 8 documentos (216). Receita: NF-e, NFC-e e CT-e, mais MDF-e e
+        // DC-e derivados (135). IntegraNotas: os 6 documentos da API, sem BP-e nem
+        // NF3e (162).
+        expect(expected).toEqual({ svrs: 216, availability: 135, integranotas: 162 });
       });
     });
 

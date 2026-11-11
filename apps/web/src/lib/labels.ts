@@ -81,6 +81,7 @@ export const DOC_LABEL: Record<string, string> = {
   DCe: 'DC-e',
   BPe: 'BP-e',
   NFCom: 'NFCom',
+  NF3e: 'NF3e',
 };
 
 /** Descrição curta de cada documento, para tooltips e o painel de detalhe. */
@@ -93,6 +94,7 @@ export const DOC_DESCRIPTION: Record<string, string> = {
   BPe: 'Bilhete de Passagem Eletrônico — documenta a venda de passagem no transporte de passageiros (modelo 63).',
   NFCom:
     'Nota Fiscal Fatura de Serviços de Comunicação Eletrônica — emitida por quem presta serviço de telecomunicação e comunicação (modelo 62).',
+  NF3e: 'Nota Fiscal de Energia Elétrica Eletrônica — emitida pelas distribuidoras de energia elétrica (modelo 66).',
 };
 
 /**
