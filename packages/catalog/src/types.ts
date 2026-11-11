@@ -60,6 +60,7 @@ export type AuthorizerCode =
   | UF
   | 'SVRS' // Sefaz Virtual do Rio Grande do Sul
   | 'SVAN' // Sefaz Virtual do Ambiente Nacional
+  | 'SVSP' // Sefaz Virtual de São Paulo (CT-e de AP, PE e RR)
   | 'AN' // Ambiente Nacional
   | 'SVCAN' // Sefaz Virtual de Contingência — Ambiente Nacional
   | 'SVCRS'; // Sefaz Virtual de Contingência — Rio Grande do Sul

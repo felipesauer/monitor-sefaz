@@ -55,6 +55,16 @@ describe('SvrsCollector', () => {
     expect(rs?.state).toBe(ServiceState.Operational);
   });
 
+  it('não atribui ao SVRS o CT-e de AP, PE e RR, que autorizam na SVSP', async () => {
+    const collector = new SvrsCollector(new SvrsProvider(fixtureFetcher));
+    const cte = (await collector.collect()).filter((s) => s.document === DocumentType.CTe);
+
+    for (const uf of ['AP', 'PE', 'RR']) {
+      expect(cte.some((s) => s.uf === uf)).toBe(false);
+    }
+    expect(cte.find((s) => s.uf === 'AC')?.authorizer).toBe('SVRS');
+  });
+
   it('propaga o horário de aferição do SVRS em sourceCheckedAt', async () => {
     const collector = new SvrsCollector(new SvrsProvider(fixtureFetcher));
     const out = await collector.collect();

@@ -62,6 +62,18 @@ describe('Catalog', () => {
     expect(catalog.resolve(DocumentType.NFCe, 'GO', Environment.Production)!.url).toBe(nfe);
   });
 
+  it('manda o CT-e de AP, PE e RR para a SVSP, no endereço da SEFAZ-SP', () => {
+    for (const uf of ['AP', 'PE', 'RR'] as const) {
+      const entry = catalog.resolve(DocumentType.CTe, uf, Environment.Production);
+      expect(entry?.authorizer, uf).toBe('SVSP');
+      expect(entry?.url, uf).toBe('https://nfe.fazenda.sp.gov.br/CTeWS/WS/CTeStatusServicoV4.asmx');
+    }
+    expect(catalog.resolveAuthorizer(DocumentType.CTe, 'AC')).toBe('SVRS');
+    expect(catalog.resolve(DocumentType.CTe, 'PE', Environment.Homologation)?.url).toContain(
+      'homologacao.nfe.fazenda.sp.gov.br'
+    );
+  });
+
   it('resolve CT-e de SP no autorizador próprio', () => {
     const entry = catalog.resolve(DocumentType.CTe, 'SP', Environment.Production);
     expect(entry?.authorizer).toBe('SP');
