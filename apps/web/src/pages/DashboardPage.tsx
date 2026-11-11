@@ -14,7 +14,7 @@ import { GlobalBanner } from '../components/GlobalBanner.js';
 import { UpdateInfo } from '../components/UpdateInfo.js';
 import { SummaryCards } from '../components/SummaryCards.js';
 import { FilterBar, type DocumentFilter } from '../components/FilterBar.js';
-import { ServiceGrid } from '../components/ServiceGrid.js';
+import { ServiceGrid, type ServiceGridPlaceholder } from '../components/ServiceGrid.js';
 import { ServiceDetailPanel } from '../components/ServiceDetailPanel.js';
 import { Footer } from '../components/Footer.js';
 import { StatusLegend } from '../components/StatusLegend.js';
@@ -44,6 +44,12 @@ function aggregateUfStates(
 }
 
 /** Página principal: status page de disponibilidade da SEFAZ (produção). */
+/** Cards de espera da home: uma página da grade (24). */
+const LOADING_PLACEHOLDERS: ServiceGridPlaceholder[] = Array.from({ length: 24 }, (_, i) => ({
+  key: `loading-${i}`,
+  kind: 'loading',
+}));
+
 export function DashboardPage() {
   const { toggle } = useTheme();
   const queryClient = useQueryClient();
@@ -126,10 +132,12 @@ export function DashboardPage() {
           monitoramento público da SEFAZ.
         </p>
 
-        {summary.data && <GlobalBanner summary={summary.data} services={all} />}
+        {(summary.data || summary.isLoading) && (
+          <GlobalBanner summary={summary.data} services={all} />
+        )}
 
-        {status.data && (
-          <UpdateInfo generatedAt={status.data.generatedAt} refreshIntervalMs={POLL_INTERVAL_MS} />
+        {(status.data || status.isLoading) && (
+          <UpdateInfo generatedAt={status.data?.generatedAt} refreshIntervalMs={POLL_INTERVAL_MS} />
         )}
 
         {layout === 'metrics' && summary.data && <SummaryCards summary={summary.data} />}
@@ -159,9 +167,15 @@ export function DashboardPage() {
         <StatusLegend />
 
         {status.isLoading && (
-          <p className="py-16 text-center text-sm" style={{ color: 'var(--text-dim)' }}>
-            Carregando…
-          </p>
+          // Uma página de cards de espera, do tamanho da primeira página real:
+          // é o que vai no HTML pré-renderizado, e a grade não empurra o resto
+          // da página quando o status chega.
+          <ServiceGrid
+            services={[]}
+            series={{}}
+            onSelect={() => {}}
+            placeholders={LOADING_PLACEHOLDERS}
+          />
         )}
         <NoScriptNotice />
         {status.isError && (

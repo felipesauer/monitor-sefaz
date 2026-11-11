@@ -1,3 +1,4 @@
+import { CircleDashed } from 'lucide-react';
 import type { HistoryPointDTO, ServiceStatusDTO } from '@monitor-sefaz/contracts';
 import { Sparkline } from './Sparkline.js';
 import { STATE_META } from './serviceState.js';
@@ -9,6 +10,13 @@ interface ServiceCardProps {
   spark?: HistoryPointDTO[];
   onSelect: (service: ServiceStatusDTO) => void;
 }
+
+/** Classes do card, compartilhadas com o card de espera para os dois terem a mesma altura. */
+const CARD_CLASS =
+  'group animate-fade-in relative flex flex-col gap-4 overflow-hidden rounded-xl border p-5 text-left transition-all duration-300';
+const CARD_STYLE = { background: 'var(--surface)', boxShadow: 'var(--shadow)' } as const;
+const LINE_CLASS = 'mt-1 text-[10px]';
+const SPARK_CLASS = 'h-[44px] w-full';
 
 /**
  * Card de um serviço (documento × UF), estilo status page: sigla da UF, badge
@@ -34,8 +42,8 @@ export function ServiceCard({ service, spark = [], onSelect }: ServiceCardProps)
     <button
       type="button"
       onClick={() => onSelect(service)}
-      className="group animate-fade-in relative flex flex-col gap-4 overflow-hidden rounded-xl border p-5 text-left transition-all duration-300 hover:-translate-y-0.5"
-      style={{ background: 'var(--surface)', boxShadow: 'var(--shadow)' }}
+      className={`${CARD_CLASS} hover:-translate-y-0.5`}
+      style={CARD_STYLE}
       title={`${DOC_LABEL[service.document] ?? service.document} · ${ufName} (${service.authorizer})`}
     >
       {/* faixa lateral colorida pelo estado */}
@@ -104,13 +112,19 @@ export function ServiceCard({ service, spark = [], onSelect }: ServiceCardProps)
               </span>
             )}
           </div>
-          {service.sourceCheckedAt && (
+          {service.sourceCheckedAt ? (
             <p
-              className="mt-1 cursor-help text-[10px]"
+              className={`${LINE_CLASS} cursor-help`}
               style={{ color: 'var(--text-dim)' }}
               title="Horário em que o próprio autorizador (SVRS) verificou o serviço — o frescor do dado oficial."
             >
               ✓ aferido pela SEFAZ às {service.sourceCheckedAt.slice(0, 5)}
+            </p>
+          ) : (
+            // A linha fica reservada mesmo sem horário: todos os cards (e o de
+            // espera do pré-render) ficam da mesma altura, e a grade não pula.
+            <p className={LINE_CLASS} aria-hidden="true">
+              {'\u00a0'}
             </p>
           )}
         </div>
@@ -120,7 +134,7 @@ export function ServiceCard({ service, spark = [], onSelect }: ServiceCardProps)
         />
       </div>
 
-      <div className="h-[44px] w-full">
+      <div className={SPARK_CLASS}>
         {sparkData.length >= 2 ? (
           <Sparkline
             values={sparkData.map((d) => d.v)}
@@ -137,5 +151,102 @@ export function ServiceCard({ service, spark = [], onSelect }: ServiceCardProps)
         )}
       </div>
     </button>
+  );
+}
+
+interface ServiceCardPlaceholderProps {
+  /** `loading`: o status ainda não chegou. `no-source`: a leitura chegou sem este documento. */
+  kind: 'loading' | 'no-source';
+  document?: string;
+  uf?: string;
+  authorizer?: string;
+}
+
+/**
+ * Card no lugar de um serviço que não tem leitura para mostrar: enquanto o
+ * status carrega (é o que vai no HTML pré-renderizado) ou quando a leitura não
+ * traz o documento naquela UF. Tem a mesma estrutura do `ServiceCard`, para a
+ * grade não mudar de altura quando os dados chegam (CLS).
+ */
+export function ServiceCardPlaceholder({
+  kind,
+  document,
+  uf,
+  authorizer,
+}: ServiceCardPlaceholderProps) {
+  const loading = kind === 'loading';
+  const ufName = uf ? (UF_NAME[uf] ?? uf) : null;
+  const docLabel = document ? (DOC_LABEL[document] ?? document) : null;
+  return (
+    <div
+      className={CARD_CLASS}
+      style={CARD_STYLE}
+      aria-busy={loading || undefined}
+      title={loading ? undefined : 'A fonte pública não traz este documento no estado.'}
+    >
+      <span
+        aria-hidden
+        className="absolute inset-y-0 left-0 w-1"
+        style={{ background: 'var(--border)' }}
+      />
+
+      <header className="flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2">
+            <span className="font-mono text-2xl font-bold tracking-tight">{uf ?? '··'}</span>
+            {authorizer && (
+              <span
+                className="rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase"
+                style={{ background: 'var(--surface-2)', color: 'var(--text-dim)' }}
+              >
+                {authorizer}
+              </span>
+            )}
+          </div>
+          <p className="mt-0.5 truncate text-xs" style={{ color: 'var(--text-dim)' }}>
+            {ufName && docLabel ? `${ufName} · ${docLabel}` : '\u00a0'}
+          </p>
+        </div>
+
+        <span
+          className="flex shrink-0 items-center gap-1.5 rounded-full px-2 py-1 text-[11px] font-medium"
+          style={{ background: 'var(--surface-2)', color: 'var(--text-dim)' }}
+        >
+          {loading ? 'Carregando…' : 'Sem leitura pública'}
+        </span>
+      </header>
+
+      <div className="flex items-end justify-between gap-2">
+        <div>
+          <p className="text-[10px] uppercase tracking-wide" style={{ color: 'var(--text-dim)' }}>
+            Tempo de acesso
+          </p>
+          <div className="font-mono text-3xl font-bold tracking-tighter">—</div>
+          <p className={LINE_CLASS} style={{ color: 'var(--text-dim)' }}>
+            {loading ? '\u00a0' : 'Sem fonte pública neste estado'}
+          </p>
+        </div>
+        <CircleDashed
+          className="h-8 w-8 shrink-0 opacity-20"
+          style={{ color: 'var(--text-dim)' }}
+        />
+      </div>
+
+      <div className={SPARK_CLASS}>
+        {loading ? (
+          <div
+            className="h-full w-full animate-pulse rounded"
+            style={{ background: 'var(--surface-2)' }}
+          />
+        ) : (
+          <div
+            className="flex h-full items-center justify-center text-[10px]"
+            style={{ color: 'var(--text-dim)' }}
+          >
+            sem histórico
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
