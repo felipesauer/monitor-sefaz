@@ -161,6 +161,17 @@ export function DashboardPage() {
 
         {layout === 'metrics' && summary.data && <SummaryCards summary={summary.data} />}
 
+        {layout !== 'operation' && (
+          <BrazilMap
+            ufStates={ufStates}
+            selectedUfs={selectedUfs}
+            onToggleUf={toggleUf}
+            services={docScoped}
+            documents={shownDocuments}
+            loading={status.isLoading}
+          />
+        )}
+
         <OverviewCharts
           series={series.data}
           documents={shownDocuments}
@@ -194,17 +205,6 @@ export function DashboardPage() {
             </p>
           )}
         </section>
-
-        {layout !== 'operation' && (
-          <BrazilMap
-            ufStates={ufStates}
-            selectedUfs={selectedUfs}
-            onToggleUf={toggleUf}
-            services={docScoped}
-            documents={shownDocuments}
-            loading={status.isLoading}
-          />
-        )}
 
         {layout !== 'operation' && (
           <FilterBar

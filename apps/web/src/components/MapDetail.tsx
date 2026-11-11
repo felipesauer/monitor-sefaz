@@ -1,3 +1,4 @@
+import { CheckCircle2, MousePointerClick } from 'lucide-react';
 import type { DocumentType, UF } from '@monitor-sefaz/catalog';
 import { isUp, type ServiceStateValue, type ServiceStatusDTO } from '@monitor-sefaz/contracts';
 import { STATE_META, STATE_SEVERITY, stateTextColor } from './serviceState.js';
@@ -43,6 +44,205 @@ function median(values: number[]): number | null {
   return sorted.length % 2 ? sorted[mid]! : (sorted[mid - 1]! + sorted[mid]!) / 2;
 }
 
+const STATE_ORDER: ServiceStateValue[] = [
+  'OPERATIONAL',
+  'CONTINGENCY',
+  'SLOWDOWN',
+  'DOWN',
+  'ERROR',
+];
+
+/**
+ * "Brasil agora": o resumo do país ao lado do mapa, enquanto nenhum estado
+ * está em foco. Destaque com o estado geral, os números, a distribuição dos
+ * serviços por estado, cada documento e os estados com problema.
+ */
+function CountryOverview({
+  services,
+  documents,
+}: {
+  services: ServiceStatusDTO[];
+  documents: readonly DocumentType[];
+}) {
+  const byUf = new Map<string, ServiceStatusDTO[]>();
+  for (const s of services) byUf.set(s.uf, [...(byUf.get(s.uf) ?? []), s]);
+  const failingUfs = [...byUf.entries()]
+    .filter(([, list]) => list.some((s) => !isUp(s.state)))
+    .map(([u]) => u as UF)
+    .sort((a, b) => (UF_NAME[a] ?? a).localeCompare(UF_NAME[b] ?? b, 'pt-BR'));
+  const total = services.length;
+  const up = services.filter((s) => isUp(s.state)).length;
+  const pct = total ? Math.round((up / total) * 1000) / 10 : 0;
+  const worst = worstOf(services.filter((s) => !isUp(s.state)));
+  const heroState: ServiceStateValue = worst ?? 'OPERATIONAL';
+  const meta = STATE_META[heroState];
+  const Icon = meta.icon;
+  const counts = STATE_ORDER.map((state) => ({
+    state,
+    count: services.filter((s) => s.state === state).length,
+  })).filter((c) => c.count > 0);
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div
+        className="flex items-start gap-3 rounded-xl border p-3.5"
+        style={{
+          background: `color-mix(in srgb, ${meta.color} 9%, var(--surface))`,
+          borderColor: `color-mix(in srgb, ${meta.color} 35%, var(--border))`,
+        }}
+      >
+        <Icon
+          className="mt-0.5 h-6 w-6 shrink-0"
+          style={{ color: meta.color }}
+          aria-hidden="true"
+        />
+        <div className="min-w-0">
+          <p
+            className="text-[10px] font-semibold uppercase tracking-wide"
+            style={{ color: 'var(--text-dim)' }}
+          >
+            Brasil agora
+          </p>
+          <h3
+            className="text-base font-bold leading-tight"
+            style={{ color: stateTextColor(meta.color) }}
+          >
+            {failingUfs.length === 0
+              ? 'Tudo no ar'
+              : `${failingUfs.length} ${failingUfs.length > 1 ? 'estados' : 'estado'} com problema`}
+          </h3>
+          <p className="mt-0.5 text-xs" style={{ color: 'var(--text-dim)' }}>
+            {up} de {total} serviços operando em {byUf.size} estados.
+          </p>
+        </div>
+      </div>
+
+      <dl className="grid grid-cols-3 gap-2">
+        {[
+          ['Estados no ar', `${byUf.size - failingUfs.length}`, `de ${byUf.size}`],
+          ['Serviços no ar', `${up}`, `de ${total}`],
+          ['Operando', `${pct}%`, 'agora'],
+        ].map(([label, value, hint]) => (
+          <div
+            key={label}
+            className="flex flex-col rounded-xl p-2.5"
+            style={{ background: 'var(--surface-2)' }}
+          >
+            <dt
+              className="order-2 text-[10px] font-semibold uppercase tracking-wide"
+              style={{ color: 'var(--text-dim)' }}
+            >
+              {label}
+            </dt>
+            <dd className="order-1 text-xl font-bold leading-tight">
+              {value}
+              <span className="ml-1 text-[11px] font-normal" style={{ color: 'var(--text-dim)' }}>
+                {hint}
+              </span>
+            </dd>
+          </div>
+        ))}
+      </dl>
+
+      <div className="flex flex-col gap-1.5">
+        <p className="text-xs font-semibold">Serviços por situação</p>
+        <div
+          className="flex h-2.5 gap-[2px] overflow-hidden rounded-full"
+          role="img"
+          aria-label={counts.map((c) => `${STATE_META[c.state].label}: ${c.count}`).join(', ')}
+        >
+          {counts.map((c) => (
+            <span
+              key={c.state}
+              style={{ flexGrow: c.count, background: STATE_META[c.state].color }}
+            />
+          ))}
+        </div>
+        <ul
+          className="flex flex-wrap gap-x-3 gap-y-0.5 text-[11px]"
+          style={{ color: 'var(--text-dim)' }}
+        >
+          {counts.map((c) => (
+            <li key={c.state} className="flex items-center gap-1">
+              <span
+                className="inline-block h-2 w-2 rounded-full"
+                style={{ background: STATE_META[c.state].color }}
+                aria-hidden="true"
+              />
+              {STATE_META[c.state].label}
+              <strong className="font-semibold" style={{ color: 'var(--text)' }}>
+                {c.count}
+              </strong>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="flex flex-col gap-1.5">
+        <p className="text-xs font-semibold">Por documento</p>
+        <ul className="flex flex-col gap-1">
+          {documents.map((document) => {
+            const list = services.filter((s) => s.document === document);
+            const ok = list.filter((s) => isUp(s.state)).length;
+            const docWorst = worstOf(list.filter((s) => !isUp(s.state)));
+            const color = docWorst ? STATE_META[docWorst].color : 'var(--ok)';
+            return (
+              <li
+                key={document}
+                className="grid grid-cols-[3.5rem_minmax(0,1fr)_2.75rem] items-center gap-2 text-xs"
+              >
+                <span className="font-semibold">{DOC_LABEL[document] ?? document}</span>
+                <span
+                  className="h-1.5 overflow-hidden rounded-full"
+                  style={{ background: 'var(--surface-2)' }}
+                  aria-hidden="true"
+                >
+                  <span
+                    className="block h-full rounded-full"
+                    style={{
+                      width: list.length ? `${(ok / list.length) * 100}%` : '0%',
+                      background: color,
+                    }}
+                  />
+                </span>
+                <span
+                  className="text-right font-mono tabular-nums"
+                  style={{ color: docWorst ? stateTextColor(color) : 'var(--text-dim)' }}
+                >
+                  {list.length ? `${ok}/${list.length}` : '—'}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+
+      {failingUfs.length > 0 ? (
+        <div className="flex flex-col gap-1.5">
+          <p className="text-xs font-semibold">Estados com problema</p>
+          <UfChipLinks ufs={failingUfs} label="Estados com problema" />
+        </div>
+      ) : (
+        <p
+          className="flex items-center gap-1.5 text-xs"
+          style={{ color: stateTextColor('var(--ok)') }}
+        >
+          <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
+          Nenhum estado com problema agora.
+        </p>
+      )}
+
+      <p
+        className="flex items-center gap-1.5 border-t pt-3 text-[11px]"
+        style={{ color: 'var(--text-dim)', borderColor: 'var(--border)' }}
+      >
+        <MousePointerClick className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+        Passe o mouse ou toque num estado do mapa para ver os detalhes dele.
+      </p>
+    </div>
+  );
+}
+
 /** O detalhe ao lado do mapa: o estado em foco, ou o resumo do país. */
 export function MapDetail({ uf, services, documents, loading }: MapDetailProps) {
   if (loading) {
@@ -53,56 +253,7 @@ export function MapDetail({ uf, services, documents, loading }: MapDetailProps) 
     );
   }
 
-  if (!uf) {
-    const byUf = new Map<string, ServiceStatusDTO[]>();
-    for (const s of services) byUf.set(s.uf, [...(byUf.get(s.uf) ?? []), s]);
-    const failingUfs = [...byUf.entries()]
-      .filter(([, list]) => list.some((s) => !isUp(s.state)))
-      .map(([u]) => u as UF)
-      .sort((a, b) => (UF_NAME[a] ?? a).localeCompare(UF_NAME[b] ?? b, 'pt-BR'));
-    const up = services.filter((s) => isUp(s.state)).length;
-    return (
-      <div className="flex flex-col gap-4">
-        <div>
-          <h3 className="text-sm font-semibold">Brasil agora</h3>
-          <p className="text-xs" style={{ color: 'var(--text-dim)' }}>
-            Passe o mouse ou toque num estado para ver os detalhes dele.
-          </p>
-        </div>
-        <dl className="grid grid-cols-3 gap-2">
-          {[
-            ['Estados no ar', `${byUf.size - failingUfs.length}`],
-            ['Com problema', `${failingUfs.length}`],
-            ['Serviços no ar', `${up}/${services.length}`],
-          ].map(([label, value]) => (
-            <div
-              key={label}
-              className="rounded-xl p-2.5"
-              style={{ background: 'var(--surface-2)' }}
-            >
-              <dt
-                className="text-[10px] font-semibold uppercase tracking-wide"
-                style={{ color: 'var(--text-dim)' }}
-              >
-                {label}
-              </dt>
-              <dd className="font-mono text-lg font-bold">{value}</dd>
-            </div>
-          ))}
-        </dl>
-        {failingUfs.length > 0 ? (
-          <div className="flex flex-col gap-2">
-            <p className="text-xs font-semibold">Estados com problema</p>
-            <UfChipLinks ufs={failingUfs} label="Estados com problema" />
-          </div>
-        ) : (
-          <p className="text-sm" style={{ color: 'var(--text-dim)' }}>
-            Nenhum estado com problema agora.
-          </p>
-        )}
-      </div>
-    );
-  }
+  if (!uf) return <CountryOverview services={services} documents={documents} />;
 
   const name = UF_NAME[uf] ?? uf;
   const own = services.filter((s) => s.uf === uf);
