@@ -1,5 +1,11 @@
 # @monitor-sefaz/notifier
 
+## 0.1.4
+
+### Patch Changes
+
+- @monitor-sefaz/contracts@0.2.1
+
 ## 0.1.3
 
 ### Patch Changes
