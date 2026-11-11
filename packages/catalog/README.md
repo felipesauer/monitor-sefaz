@@ -10,10 +10,14 @@ mas é útil sozinho para qualquer integração com NF-e, NFC-e, CT-e, MDF-e, DC
 ## O problema que resolve
 
 "Para onde eu mando a consulta de NF-e do Acre?" não tem resposta óbvia: o AC não
-tem autorizador próprio, quem atende é o SVRS. O Maranhão usa SVAN. Em
-contingência muda de novo. E o `cUF` do envelope, nesses casos, é o do
-autorizador virtual, não o da UF. Esse mapeamento costuma acabar hard-coded e
-desatualizado em cada projeto.
+tem autorizador próprio, quem atende é o SVRS. O Maranhão usa SVAN. O CT-e do
+Amapá, de Pernambuco e de Roraima vai para a Sefaz Virtual de São Paulo (SVSP). A
+NFC-e usa o mesmo serviço da NF-e, mas na maioria dos estados num host próprio
+(`nfce.*`). Em contingência muda de novo. Esse mapeamento costuma acabar
+hard-coded e desatualizado em cada projeto.
+
+O `cUF` que `resolve` devolve é sempre o da UF, também quando quem atende é um
+autorizador virtual.
 
 ## Instalação
 
