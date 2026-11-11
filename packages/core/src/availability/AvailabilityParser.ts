@@ -10,6 +10,16 @@ export interface AvailabilityRow {
   readonly tMedSeconds: number | null;
 }
 
+/** Todas as operações de um autorizador, uma por coluna com bolinha. */
+export interface AvailabilityOperationsRow {
+  readonly authorizer: AuthorizerCode;
+  readonly operations: readonly {
+    /** Texto do cabeçalho da coluna, como a página o publica ("Autorização4"). */
+    readonly operation: string;
+    readonly state: ServiceState;
+  }[];
+}
+
 /**
  * Resultado do parse com diagnóstico de layout. `headerMatched` indica se a coluna
  * de status foi resolvida pelo TEXTO do cabeçalho (robusto a mudança de layout) ou
@@ -85,6 +95,19 @@ function findColumnsByHeader(
   }
   // tMed pode não existir em alguns layouts; -1 é aceitável (vira null no parse).
   return { statusIndex, tMedIndex };
+}
+
+/**
+ * Desfaz o mojibake dos cabeçalhos: a página chega em UTF-8, mas o provider a
+ * decodifica como latin-1 ("Serviço" vira "ServiÃ§o"). O parse de status não
+ * sofre, porque casa só âncoras sem acento; já o NOME da operação é exibido, então
+ * reinterpretamos os bytes como UTF-8 quando o texto tem a marca do mojibake.
+ */
+function fixMojibake(text: string): string {
+  if (!/[ÃÂ]/.test(text)) return text;
+  const bytes = Uint8Array.from(text, (c) => c.charCodeAt(0) & 0xff);
+  const decoded = new TextDecoder('utf-8', { fatal: false }).decode(bytes);
+  return decoded.includes('\uFFFD') ? text : decoded;
 }
 
 function normalizeAuthorizer(raw: string): AuthorizerCode {
@@ -177,5 +200,47 @@ export class AvailabilityParser {
     });
 
     return { rows, headerMatched };
+  }
+
+  /**
+   * Lê TODAS as colunas de serviço de cada autorizador, e não só "Status
+   * Serviço": cada célula com bolinha vira uma operação, com o texto do cabeçalho
+   * daquela coluna. Colunas sem bolinha (como "Tempo Médio") ficam de fora. Sem
+   * cabeçalho reconhecível, devolve vazio em vez de adivinhar nomes.
+   */
+  public parseOperations(html: string): AvailabilityOperationsRow[] {
+    const $ = cheerio.load(html);
+    let headers: string[] | null = null;
+    $('tr').each((_, tr) => {
+      if (headers) return;
+      const ths = $(tr).find('th');
+      if (ths.length > 2) {
+        headers = ths.map((_i, th) => fixMojibake($(th).text().replace(/\s+/g, ' ').trim())).get();
+      }
+    });
+    if (!headers) {
+      return [];
+    }
+    const header: string[] = headers;
+
+    const rows: AvailabilityOperationsRow[] = [];
+    $('tr').each((_, tr) => {
+      const cells = $(tr).find('td');
+      if (cells.length < 2) return;
+      const authorizer = cells.eq(0).text().trim().toUpperCase();
+      if (!/^(S[VP]|[A-Z]{2,5})/.test(authorizer) || authorizer.length > 6) return;
+
+      const operations: { operation: string; state: ServiceState }[] = [];
+      cells.each((i, td) => {
+        if (i === 0) return;
+        const state = colorToState($(td).find('img').attr('src') ?? '');
+        const operation = header[i];
+        if (state && operation) operations.push({ operation, state });
+      });
+      if (operations.length > 0) {
+        rows.push({ authorizer: normalizeAuthorizer(authorizer), operations });
+      }
+    });
+    return rows;
   }
 }
