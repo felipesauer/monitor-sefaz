@@ -37,7 +37,7 @@ describe('ServiceCard', () => {
 
   it('formata latência ≥ 1s em segundos', () => {
     render(<ServiceCard service={service({ latencyMs: 1500 })} onSelect={() => {}} />);
-    expect(screen.getByText('1.5')).toBeInTheDocument();
+    expect(screen.getByText('1,5')).toBeInTheDocument();
     expect(screen.getByText('s')).toBeInTheDocument();
   });
 

@@ -10,7 +10,13 @@ import {
 import type { HistorySeries } from '../api/DataSource.js';
 import { Sparkline } from './Sparkline.js';
 import { STATE_META, STATE_SEVERITY, stateTextColor } from './serviceState.js';
-import { authorizerLabel, DOC_LABEL, formatLatency, UF_NAME } from '../lib/labels.js';
+import {
+  authorizerLabel,
+  DOC_LABEL,
+  formatLatency,
+  formatPercent,
+  UF_NAME,
+} from '../lib/labels.js';
 import { computeUptime } from '../lib/uptime.js';
 import { ufAuthorizations } from '../lib/ufFacts.js';
 import { pageHref } from '../lib/pages.js';
@@ -341,7 +347,7 @@ export function UfSections({
                   style={{ color: 'var(--text-dim)' }}
                   title="Disponibilidade dos documentos do estado nas últimas 24 horas"
                 >
-                  {g.uptime}% · 24h
+                  {formatPercent(g.uptime)} · 24h
                 </span>
               )}
               {linkToUf && (

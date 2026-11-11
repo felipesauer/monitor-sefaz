@@ -25,6 +25,7 @@ import {
   DOC_DESCRIPTION,
   DOC_LABEL,
   formatLatency,
+  formatPercent,
   ofUf,
   UF_NAME,
 } from '../lib/labels.js';
@@ -259,7 +260,7 @@ export function ServiceDetailPanel({ service, onClose }: ServiceDetailPanelProps
         <div className="grid grid-cols-3 gap-2 px-5 py-5 sm:px-6">
           <Stat
             label={`Disponível ${period}`}
-            value={stats.uptime !== null ? `${stats.uptime}%` : '—'}
+            value={stats.uptime !== null ? formatPercent(stats.uptime) : '—'}
             hint={stats.points ? `${stats.points} leituras` : 'sem leituras'}
           />
           <Stat

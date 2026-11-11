@@ -11,7 +11,7 @@ import type { HistorySeries } from '../api/DataSource.js';
 import { LatencyChart } from './LatencyChart.js';
 import { STATE_META } from './serviceState.js';
 import { bucketTimeline, computeUptime } from '../lib/uptime.js';
-import { DOC_LABEL } from '../lib/labels.js';
+import { DOC_LABEL, formatPercent } from '../lib/labels.js';
 
 interface OverviewChartsProps {
   /** Todas as séries do histórico; ausente enquanto carrega. */
@@ -194,7 +194,7 @@ export function OverviewCharts({ series, documents, end = Date.now() }: Overview
                     </div>
                   </td>
                   <td className="w-16 pl-2 text-right text-xs font-semibold tabular-nums">
-                    {loading || uptime === null ? '—' : `${uptime}%`}
+                    {loading || uptime === null ? '—' : formatPercent(uptime)}
                   </td>
                 </tr>
               ))}

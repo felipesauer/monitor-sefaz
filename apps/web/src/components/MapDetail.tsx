@@ -4,7 +4,13 @@ import { isUp, type ServiceStateValue, type ServiceStatusDTO } from '@monitor-se
 import { STATE_META, STATE_SEVERITY, stateTextColor } from './serviceState.js';
 import { ButtonLink } from './ButtonLink.js';
 import { UfChipLinks } from './UfChipLinks.js';
-import { authorizerLabel, DOC_LABEL, formatLatency, UF_NAME } from '../lib/labels.js';
+import {
+  authorizerLabel,
+  DOC_LABEL,
+  formatLatency,
+  formatPercent,
+  UF_NAME,
+} from '../lib/labels.js';
 import { ufAuthorizations } from '../lib/ufFacts.js';
 import { pageHref } from '../lib/pages.js';
 
@@ -121,7 +127,7 @@ function CountryOverview({
         {[
           ['estados no ar', `${byUf.size - failingUfs.length}/${byUf.size}`],
           ['serviços no ar', `${up}/${total}`],
-          ['operando', `${pct}%`],
+          ['operando', formatPercent(pct)],
         ].map(([label, value]) => (
           <div
             key={label}
