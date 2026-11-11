@@ -43,8 +43,8 @@ function ufLinks(ufs: readonly UF[]): ReactNode {
       <a
         href={pageHref({ kind: 'uf', uf })}
         title={`Status da SEFAZ-${uf}`}
-        className="font-mono hover:underline"
-        style={{ color: 'var(--accent)' }}
+        className="font-mono underline decoration-dotted underline-offset-2 hover:decoration-solid"
+        style={{ color: 'var(--link)' }}
       >
         {uf}
       </a>
@@ -209,7 +209,7 @@ export function UfPage({ uf }: { uf: UF }) {
           className="text-xs"
           style={{ color: 'var(--text-dim)' }}
         >
-          <a href={homeHref} className="hover:underline" style={{ color: 'var(--accent)' }}>
+          <a href={homeHref} className="hover:underline" style={{ color: 'var(--link)' }}>
             Monitor SEFAZ
           </a>
           <span aria-hidden="true"> / </span>
@@ -354,7 +354,11 @@ export function UfPage({ uf }: { uf: UF }) {
           <h2 className="text-base font-semibold">A SEFAZ nos outros estados</h2>
           <p className="mb-4 mt-1 text-xs" style={{ color: 'var(--text-dim)' }}>
             Cada UF tem a sua página. Para ver as 27 de uma vez, abra o{' '}
-            <a href={homeHref} className="hover:underline" style={{ color: 'var(--accent)' }}>
+            <a
+              href={homeHref}
+              className="underline underline-offset-2"
+              style={{ color: 'var(--link)' }}
+            >
               painel completo
             </a>
             .
