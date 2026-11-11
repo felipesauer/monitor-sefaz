@@ -2,8 +2,8 @@ name: Estudo — amostragem da disponibilidade
 
 # Amostra as páginas de disponibilidade do SVRS a cada poucos minutos, por até
 # ~6 h, para decidir se um documento novo (NF3e, NFCom) tem fonte estável o
-# bastante para entrar no monitor. Critério: fetch ok em pelo menos 99% das
-# amostras e layout sem mudança.
+# bastante para entrar no monitor. Critério (ADR-21): fetch ok em pelo menos 98%
+# das amostras, somando as três janelas, e layout sem mudança.
 #
 # É ESTUDO, não produção: só roda quando disparado à mão, não usa segredo, não
 # commita nada e não toca na coleta. O resultado vai para o resumo do job e para
