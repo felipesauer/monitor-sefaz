@@ -296,6 +296,7 @@ export function DashboardPage() {
         )}
         {status.data && (
           <UfSections
+            deferOffscreen
             compact={tv || ufView === 'compact'}
             services={visible}
             documents={shownDocuments}
