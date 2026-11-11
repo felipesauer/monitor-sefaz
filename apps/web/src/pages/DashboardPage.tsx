@@ -14,7 +14,7 @@ import { GlobalBanner } from '../components/GlobalBanner.js';
 import { UpdateInfo } from '../components/UpdateInfo.js';
 import { SummaryCards } from '../components/SummaryCards.js';
 import { FilterBar, type DocumentFilter } from '../components/FilterBar.js';
-import { ServiceGrid, type ServiceGridPlaceholder } from '../components/ServiceGrid.js';
+import { UfSections } from '../components/UfSections.js';
 import { ServiceDetailPanel } from '../components/ServiceDetailPanel.js';
 import { Footer } from '../components/Footer.js';
 import { StatusLegend } from '../components/StatusLegend.js';
@@ -26,6 +26,8 @@ import { UfDirectory } from '../components/UfDirectory.js';
 import { STATE_SEVERITY } from '../components/serviceState.js';
 import { ufsWithoutStatus } from '../lib/coverage.js';
 import { DOC_LABEL } from '../lib/labels.js';
+import { DOCUMENTS } from '../lib/ufFacts.js';
+import { ALL_UFS, type DocumentType, type UF } from '@monitor-sefaz/catalog';
 
 /** Estado agregado (pior) de uma UF entre os serviços visíveis — colore o chip. */
 function aggregateUfStates(
@@ -44,12 +46,6 @@ function aggregateUfStates(
 }
 
 /** Página principal: status page de disponibilidade da SEFAZ (produção). */
-/** Cards de espera da home: uma página da grade (24). */
-const LOADING_PLACEHOLDERS: ServiceGridPlaceholder[] = Array.from({ length: 24 }, (_, i) => ({
-  key: `loading-${i}`,
-  kind: 'loading',
-}));
-
 export function DashboardPage() {
   const { toggle } = useTheme();
   const queryClient = useQueryClient();
@@ -96,6 +92,11 @@ export function DashboardPage() {
   }, [docScoped, selectedUfs]);
 
   const selectedLive = selected ? (all.find((s) => s.id === selected.id) ?? selected) : null;
+
+  // Agrupamento por estado (ADR-18): os documentos e os estados que os filtros deixam ver.
+  const shownDocuments = docFilter === 'ALL' ? DOCUMENTS : [docFilter as DocumentType];
+  const shownUfs: readonly UF[] =
+    selectedUfs.size === 0 ? ALL_UFS : ALL_UFS.filter((uf) => selectedUfs.has(uf));
 
   const toggleUf = (uf: string): void =>
     setSelectedUfs((prev) => {
@@ -167,14 +168,16 @@ export function DashboardPage() {
         <StatusLegend />
 
         {status.isLoading && (
-          // Uma página de cards de espera, do tamanho da primeira página real:
-          // é o que vai no HTML pré-renderizado, e a grade não empurra o resto
-          // da página quando o status chega.
-          <ServiceGrid
+          // Os grupos por estado com cards de espera, do tamanho dos reais: é o
+          // que vai no HTML pré-renderizado, e a página não pula quando o status
+          // chega.
+          <UfSections
+            loading
             services={[]}
+            documents={shownDocuments}
+            ufs={shownUfs}
             series={{}}
             onSelect={() => {}}
-            placeholders={LOADING_PLACEHOLDERS}
           />
         )}
         <NoScriptNotice />
@@ -184,7 +187,13 @@ export function DashboardPage() {
           </p>
         )}
         {status.data && (
-          <ServiceGrid services={visible} series={series.data ?? {}} onSelect={setSelected} />
+          <UfSections
+            services={visible}
+            documents={shownDocuments}
+            ufs={shownUfs}
+            series={series.data ?? {}}
+            onSelect={setSelected}
+          />
         )}
 
         <section

@@ -94,10 +94,11 @@ describe('prerender', () => {
     expect(html).toContain('São Paulo · BP-e');
   });
 
-  it('pré-renderiza uma página de cards de espera na home', () => {
+  it('pré-renderiza os grupos por estado com cards de espera na home', () => {
     const html = file(files, 'index.html');
-    // 24 cards e o banner.
-    expect(html.match(/aria-busy="true"/g)).toHaveLength(25);
+    // 27 estados × 6 documentos, e o banner.
+    expect(html.match(/aria-busy="true"/g)).toHaveLength(27 * 6 + 1);
+    expect(html).toContain('alt="Bandeira de São Paulo"');
   });
 
   it('diz quem cai junto quando o autorizador é compartilhado', () => {
