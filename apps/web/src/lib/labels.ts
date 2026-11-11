@@ -103,9 +103,21 @@ export const DOC_DESCRIPTION: Record<string, string> = {
  * numéricos ou negativos (ausência de medição) viram "—". Tratar 0 como "—"
  * fazia a maioria dos cards saudáveis (tMed=0) exibir traço de indisponível.
  */
+const DECIMAL_1 = new Intl.NumberFormat('pt-BR', {
+  minimumFractionDigits: 1,
+  maximumFractionDigits: 1,
+});
+const PERCENT = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 1 });
+
+/** Porcentagem com vírgula decimal: 99.9 → "99,9%", 100 → "100%". */
+export function formatPercent(value: number): string {
+  return `${PERCENT.format(value)}%`;
+}
+
 export function formatLatency(ms: number): { value: string; unit: string } {
   if (!Number.isFinite(ms) || ms < 0) return { value: '—', unit: '' };
   if (ms === 0) return { value: '<1', unit: 's' };
-  if (ms >= 1000) return { value: (ms / 1000).toFixed(1), unit: 's' };
+  // Vírgula decimal, como se escreve em português: "1,8 s".
+  if (ms >= 1000) return { value: DECIMAL_1.format(ms / 1000), unit: 's' };
   return { value: String(ms), unit: 'ms' };
 }

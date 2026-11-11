@@ -1,7 +1,10 @@
 import {
+  detailSnapshotSchema,
   historyFileSchema,
+  PERIOD_MS,
   summarySchema,
   technicalNotesFileSchema,
+  type DetailSnapshotDTO,
   type HistoryPeriod,
   type HistoryResponseDTO,
   type StatusSnapshotDTO,
@@ -9,17 +12,13 @@ import {
   type TechnicalNotesFileDTO,
 } from '@monitor-sefaz/contracts';
 import {
+  EMPTY_DETAILS,
   fetchJson,
   parseStatusSnapshot,
   type DataSource,
   type HistorySeries,
   type StatusFilters,
 } from './DataSource.js';
-
-const PERIOD_MS: Record<HistoryPeriod, number> = {
-  '24h': 24 * 60 * 60 * 1000,
-  '72h': 72 * 60 * 60 * 1000,
-};
 
 /**
  * Fonte estática: lê os JSONs versionados (gerados pelo GitHub Actions) sob
@@ -72,6 +71,17 @@ export class StaticDataSource implements DataSource {
       );
     } catch {
       return { updatedAt: new Date(0).toISOString(), notes: [] };
+    }
+  }
+
+  public async getDetails(): Promise<DetailSnapshotDTO> {
+    // Tolerante como as Notas Técnicas: o details.json só existe depois da
+    // primeira coleta com a camada de detalhe. Faltando ou inválido, o painel
+    // mostra só o cabeçalho.
+    try {
+      return detailSnapshotSchema.parse(await fetchJson(`${this.base}data/details.json`));
+    } catch {
+      return EMPTY_DETAILS;
     }
   }
 }

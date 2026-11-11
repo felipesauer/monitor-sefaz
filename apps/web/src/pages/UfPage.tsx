@@ -1,4 +1,4 @@
-import { Fragment, useMemo, useState, type ReactNode } from 'react';
+import { useMemo, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { AlertTriangle, CheckCircle2, XCircle } from 'lucide-react';
 import { DocumentType, type UF } from '@monitor-sefaz/catalog';
@@ -8,12 +8,15 @@ import { useTheme } from '../hooks/useTheme.js';
 import { Header } from '../components/Header.js';
 import { UpdateInfo } from '../components/UpdateInfo.js';
 import { StatusLegend } from '../components/StatusLegend.js';
-import { ServiceGrid } from '../components/ServiceGrid.js';
+import { UfSections } from '../components/UfSections.js';
+import { LoadingBanner } from '../components/GlobalBanner.js';
 import { ServiceDetailPanel } from '../components/ServiceDetailPanel.js';
 import { NoScriptNotice } from '../components/NoScriptNotice.js';
 import { UfDirectory } from '../components/UfDirectory.js';
 import { Footer } from '../components/Footer.js';
-import { STATE_META, STATE_SEVERITY } from '../components/serviceState.js';
+import { ButtonLink } from '../components/ButtonLink.js';
+import { UfChipLinks } from '../components/UfChipLinks.js';
+import { STATE_META, STATE_SEVERITY, stateTextColor } from '../components/serviceState.js';
 import {
   AUTHORIZER_NAME,
   DOC_DESCRIPTION,
@@ -33,23 +36,6 @@ import {
 
 /** Valor do campo tpEmis da NF-e emitida em cada SVC (Manual do Contribuinte). */
 const SVC_TP_EMIS: Record<string, number> = { SVCAN: 6, SVCRS: 7 };
-
-/** "AL, AP, CE e TO", cada sigla com link para a página da UF. */
-function ufLinks(ufs: readonly UF[]): ReactNode {
-  return ufs.map((uf, i) => (
-    <Fragment key={uf}>
-      {i > 0 && (i === ufs.length - 1 ? ' e ' : ', ')}
-      <a
-        href={pageHref({ kind: 'uf', uf })}
-        title={`Status da SEFAZ-${uf}`}
-        className="font-mono hover:underline"
-        style={{ color: 'var(--accent)' }}
-      >
-        {uf}
-      </a>
-    </Fragment>
-  ));
-}
 
 /** Quem mais cai junto quando o autorizador da NF-e da UF cai. */
 function NfeSharing({ uf }: { uf: UF }) {
@@ -76,8 +62,9 @@ function NfeSharing({ uf }: { uf: UF }) {
   }
   return (
     <>
-      A NF-e {ofUf(uf)} é autorizada pelo {label}, que atende também {ufLinks(others)}. Quando o{' '}
-      {label} cai, todos esses estados ficam sem NF-e ao mesmo tempo.
+      A NF-e {ofUf(uf)} é autorizada pelo {label}, que atende também outros {others.length}{' '}
+      {others.length > 1 ? 'estados' : 'estado'}. Quando o {label} cai, todos eles ficam sem NF-e ao
+      mesmo tempo.
     </>
   );
 }
@@ -120,7 +107,7 @@ function UfBanner({ uf, services }: { uf: UF; services: ServiceStatusDTO[] }) {
         {failing.length > 0 && (
           <p className="mt-1 text-xs" style={{ color: 'var(--text-dim)' }}>
             Com problema:{' '}
-            <span style={{ color }}>
+            <span style={{ color: stateTextColor(color) }}>
               {failing
                 .map((s) => `${DOC_LABEL[s.document] ?? s.document} (${STATE_META[s.state].label})`)
                 .join(', ')}
@@ -171,6 +158,8 @@ export function UfPage({ uf }: { uf: UF }) {
 
   const sefaz = `SEFAZ-${uf}`;
   const svc = nfeContingency(uf);
+  const nfeAuth = ufAuthorizations(uf).find((a) => a.document === DocumentType.NFe);
+  const nfeSharing = nfeAuth && !nfeAuth.own ? ufsSharingAuthorizer(DocumentType.NFe, uf) : [];
   const homeHref = pageHref(HOME);
 
   return (
@@ -191,7 +180,7 @@ export function UfPage({ uf }: { uf: UF }) {
           className="text-xs"
           style={{ color: 'var(--text-dim)' }}
         >
-          <a href={homeHref} className="hover:underline" style={{ color: 'var(--accent)' }}>
+          <a href={homeHref} className="hover:underline" style={{ color: 'var(--link)' }}>
             Monitor SEFAZ
           </a>
           <span aria-hidden="true"> / </span>
@@ -208,17 +197,26 @@ export function UfPage({ uf }: { uf: UF }) {
           </p>
         </div>
 
-        {status.data && services.length > 0 && <UfBanner uf={uf} services={services} />}
-        {status.data && (
-          <UpdateInfo generatedAt={status.data.generatedAt} refreshIntervalMs={POLL_INTERVAL_MS} />
+        {status.data
+          ? services.length > 0 && <UfBanner uf={uf} services={services} />
+          : status.isLoading && <LoadingBanner title="Carregando o status ao vivo…" />}
+        {(status.data || status.isLoading) && (
+          <UpdateInfo generatedAt={status.data?.generatedAt} refreshIntervalMs={POLL_INTERVAL_MS} />
         )}
 
         <StatusLegend />
 
         {status.isLoading && (
-          <p className="py-10 text-center text-sm" style={{ color: 'var(--text-dim)' }}>
-            Carregando o status ao vivo…
-          </p>
+          <UfSections
+            loading
+            services={[]}
+            documents={DOCUMENTS}
+            ufs={[uf]}
+            series={{}}
+            onSelect={() => {}}
+            linkToUf={false}
+            headingLevel={2}
+          />
         )}
         <NoScriptNotice />
         {status.isError && (
@@ -228,7 +226,15 @@ export function UfPage({ uf }: { uf: UF }) {
         )}
         {status.data &&
           (services.length > 0 ? (
-            <ServiceGrid services={services} series={series.data ?? {}} onSelect={setSelected} />
+            <UfSections
+              services={services}
+              documents={DOCUMENTS}
+              ufs={[uf]}
+              series={series.data ?? {}}
+              onSelect={setSelected}
+              linkToUf={false}
+              headingLevel={2}
+            />
           ) : (
             <p className="py-10 text-center text-sm" style={{ color: 'var(--text-dim)' }}>
               A última leitura não trouxe serviços {ofUf(uf)}.
@@ -243,7 +249,7 @@ export function UfPage({ uf }: { uf: UF }) {
             Quem autoriza os documentos fiscais {ofUf(uf)}
           </h2>
           <table className="mt-3 w-full text-left text-sm">
-            <thead>
+            <thead className="hidden sm:table-header-group">
               <tr className="text-xs uppercase tracking-wide" style={{ color: 'var(--text-dim)' }}>
                 <th scope="col" className="pb-2 pr-4 font-semibold">
                   Documento
@@ -255,14 +261,14 @@ export function UfPage({ uf }: { uf: UF }) {
             </thead>
             <tbody>
               {ufAuthorizations(uf).map(({ document, authorizer, own }) => (
-                <tr key={document} className="border-t align-top">
-                  <th scope="row" className="py-2.5 pr-4 font-normal">
+                <tr key={document} className="block border-t py-2.5 align-top sm:table-row sm:py-0">
+                  <th scope="row" className="block pr-4 font-normal sm:table-cell sm:py-2.5">
                     <span className="font-semibold">{DOC_LABEL[document]}</span>
                     <span className="mt-0.5 block text-xs" style={{ color: 'var(--text-dim)' }}>
                       {DOC_DESCRIPTION[document]}
                     </span>
                   </th>
-                  <td className="py-2.5">
+                  <td className="mt-1.5 block sm:mt-0 sm:table-cell sm:py-2.5">
                     <span className="font-mono font-semibold">{authorizerLabel(authorizer)}</span>
                     <span className="mt-0.5 block text-xs" style={{ color: 'var(--text-dim)' }}>
                       {own ? 'Autorizador próprio do estado' : AUTHORIZER_NAME[authorizer]}
@@ -280,9 +286,15 @@ export function UfPage({ uf }: { uf: UF }) {
           <p className="mt-3 text-sm leading-relaxed" style={{ color: 'var(--text-dim)' }}>
             <NfeSharing uf={uf} />
           </p>
+          {nfeSharing.length > 0 && (
+            <div className="mt-3">
+              <UfChipLinks ufs={nfeSharing} label="Estados que dividem o autorizador da NF-e" />
+            </div>
+          )}
         </section>
 
         <section
+          id="o-que-fazer"
           className="rounded-xl border p-4 sm:p-5"
           style={{ background: 'var(--surface)', boxShadow: 'var(--shadow)' }}
         >
@@ -324,13 +336,14 @@ export function UfPage({ uf }: { uf: UF }) {
           style={{ background: 'var(--surface)', boxShadow: 'var(--shadow)' }}
         >
           <h2 className="text-base font-semibold">A SEFAZ nos outros estados</h2>
-          <p className="mb-4 mt-1 text-xs" style={{ color: 'var(--text-dim)' }}>
-            Cada UF tem a sua página. Para ver as 27 de uma vez, abra o{' '}
-            <a href={homeHref} className="hover:underline" style={{ color: 'var(--accent)' }}>
-              painel completo
-            </a>
-            .
-          </p>
+          <div className="mb-4 mt-1 flex flex-wrap items-center justify-between gap-3">
+            <p className="text-xs" style={{ color: 'var(--text-dim)' }}>
+              Cada UF tem a sua página, com o status ao vivo e o que fazer quando a SEFAZ cai.
+            </p>
+            <ButtonLink href={homeHref} variant="primary">
+              Abrir o painel completo
+            </ButtonLink>
+          </div>
           <UfDirectory current={uf} />
         </section>
       </main>

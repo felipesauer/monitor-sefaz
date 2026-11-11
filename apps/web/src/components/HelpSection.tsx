@@ -45,7 +45,7 @@ export function HelpSection() {
         className="flex w-full items-center justify-between gap-2 p-4 text-left"
       >
         <span className="flex items-center gap-2 text-sm font-semibold">
-          <HelpCircle className="h-4 w-4" style={{ color: 'var(--accent)' }} />
+          <HelpCircle className="h-4 w-4" style={{ color: 'var(--link)' }} />
           Como funciona / Perguntas frequentes
         </span>
         <ChevronDown

@@ -1,16 +1,18 @@
-import { isUp, type HistoryPeriod, type HistoryPointDTO } from '@monitor-sefaz/contracts';
-
-const PERIOD_MS: Record<HistoryPeriod, number> = {
-  '24h': 24 * 60 * 60 * 1000,
-  '72h': 72 * 60 * 60 * 1000,
-};
+import {
+  isUp,
+  PERIOD_MS,
+  type HistoryPeriod,
+  type HistoryPointDTO,
+  type ServiceStateValue,
+} from '@monitor-sefaz/contracts';
+import { STATE_SEVERITY } from '../components/serviceState.js';
 
 /**
- * Cadência fallback (ms) quando há poucos pontos para inferir o intervalo real.
- * O cron do Actions é declarado horário mas é best-effort: na prática roda a
- * cada ~3h. Só serve de chute inicial — com ≥2 pontos usamos a mediana real.
+ * Cadência fallback (ms) quando há poucos pontos para inferir o intervalo real:
+ * a da coleta, que o Worker dispara a cada 5 minutos. Só serve de chute
+ * inicial — com ≥2 pontos usamos a mediana real.
  */
-const FALLBACK_INTERVAL_MS = 3 * 60 * 60 * 1000;
+const FALLBACK_INTERVAL_MS = 5 * 60 * 1000;
 
 export interface UptimeStats {
   /** % de disponibilidade no período (0–100), ou null se não há pontos. */
@@ -40,7 +42,8 @@ function medianGapMs(points: HistoryPointDTO[]): number {
  * Calcula uptime e a CONFIABILIDADE dele. O uptime simples (operacionais /
  * total de pontos) engana com histórico esparso: uma falha de horas que caia
  * entre coletas não aparece. Em vez de comparar contra um intervalo fixo
- * presumido (o cron é best-effort e roda bem menos que de hora em hora), medimos
+ * presumido (a coleta é pedida a cada 5 minutos, mas o Actions pode atrasar ou
+ * pular rodadas, e a série antiga é esparsa), medimos
  * a CADÊNCIA REAL pela mediana dos gaps observados e só alertamos quando há um
  * buraco anormalmente grande — aí sim uma instabilidade pode ter passado batida.
  */
@@ -82,4 +85,45 @@ export function maxGapMs(points: HistoryPointDTO[]): number {
     max = Math.max(max, ts[i]! - ts[i - 1]!);
   }
   return max;
+}
+
+/** Uma faixa de tempo da barra de disponibilidade. */
+export interface TimelineBucket {
+  start: number;
+  end: number;
+  /** Pior estado lido na faixa, ou null quando não houve leitura. */
+  state: ServiceStateValue | null;
+  points: number;
+}
+
+/**
+ * Divide a janela [end - periodMs, end] em `count` faixas iguais, cada uma com o
+ * pior estado lido nela. Um segmento por leitura não cabe na tela (72h a 5 min
+ * são 864 leituras), e a faixa vazia mostra o buraco de coleta em vez de
+ * esticar a leitura vizinha.
+ */
+export function bucketTimeline(
+  points: readonly HistoryPointDTO[],
+  end: number,
+  periodMs: number,
+  count = 48
+): TimelineBucket[] {
+  const start = end - periodMs;
+  const size = periodMs / count;
+  const buckets: TimelineBucket[] = Array.from({ length: count }, (_, i) => ({
+    start: start + i * size,
+    end: start + (i + 1) * size,
+    state: null,
+    points: 0,
+  }));
+  for (const p of points) {
+    const t = Date.parse(p.timestamp);
+    if (Number.isNaN(t) || t < start || t > end) continue;
+    const bucket = buckets[Math.min(count - 1, Math.floor((t - start) / size))]!;
+    bucket.points += 1;
+    if (!bucket.state || STATE_SEVERITY[p.state] > STATE_SEVERITY[bucket.state]) {
+      bucket.state = p.state;
+    }
+  }
+  return buckets;
 }

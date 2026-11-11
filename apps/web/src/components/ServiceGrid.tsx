@@ -2,17 +2,36 @@ import { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { ServiceStatusDTO } from '@monitor-sefaz/contracts';
 import type { HistorySeries } from '../api/DataSource.js';
-import { ServiceCard } from './ServiceCard.js';
+import { ServiceCard, ServiceCardPlaceholder } from './ServiceCard.js';
 
 interface ServiceGridProps {
   services: ServiceStatusDTO[];
   series: HistorySeries;
   onSelect: (service: ServiceStatusDTO) => void;
   pageSize?: number;
+  /**
+   * Cards de espera depois dos serviços: os de carregamento (antes do status
+   * chegar) e os de documento sem leitura na UF. Mantêm a altura da grade.
+   */
+  placeholders?: ServiceGridPlaceholder[];
+}
+
+export interface ServiceGridPlaceholder {
+  key: string;
+  kind: 'loading' | 'no-source';
+  document?: string;
+  uf?: string;
+  authorizer?: string;
 }
 
 /** Grade paginada de cards de serviço. */
-export function ServiceGrid({ services, series, onSelect, pageSize = 24 }: ServiceGridProps) {
+export function ServiceGrid({
+  services,
+  series,
+  onSelect,
+  pageSize = 24,
+  placeholders = [],
+}: ServiceGridProps) {
   const [page, setPage] = useState(0);
   const pages = Math.max(1, Math.ceil(services.length / pageSize));
 
@@ -27,7 +46,7 @@ export function ServiceGrid({ services, series, onSelect, pageSize = 24 }: Servi
   const current = Math.min(page, pages - 1);
   const slice = services.slice(current * pageSize, current * pageSize + pageSize);
 
-  if (services.length === 0) {
+  if (services.length === 0 && placeholders.length === 0) {
     return (
       <p className="py-16 text-center text-sm" style={{ color: 'var(--text-dim)' }}>
         Nenhum serviço corresponde aos filtros.
@@ -46,6 +65,8 @@ export function ServiceGrid({ services, series, onSelect, pageSize = 24 }: Servi
             onSelect={onSelect}
           />
         ))}
+        {current === pages - 1 &&
+          placeholders.map(({ key, ...rest }) => <ServiceCardPlaceholder key={key} {...rest} />)}
       </div>
 
       {pages > 1 && (

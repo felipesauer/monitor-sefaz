@@ -89,7 +89,7 @@ export function FilterBar({
                 type="button"
                 onClick={onClearUfs}
                 className="text-xs font-medium hover:underline"
-                style={{ color: 'var(--accent)' }}
+                style={{ color: 'var(--link)' }}
               >
                 Limpar ({selectedUfs.size})
               </button>

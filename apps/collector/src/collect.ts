@@ -34,6 +34,7 @@ import { buildNotificationEvents } from './notifyEvents.js';
 import { reconcileTechnicalNotes, technicalNoteEvents } from './technicalNotes.js';
 import { buildDigestEvent, parseDigestHour, utcDate } from './digest.js';
 import { capHistoryBytes, DEFAULT_HISTORY_MAX_BYTES } from './historyCap.js';
+import { downsampleHistory } from './historyDownsample.js';
 
 /** Retenção do histórico estático (ms). Padrão 7 dias. */
 const RETENTION_MS = Number(process.env.HISTORY_RETENTION_MS ?? 7 * 24 * 60 * 60 * 1000);
@@ -270,8 +271,13 @@ async function main(): Promise<void> {
   // Carrega o histórico ANTES do append: o último ponto de cada série é o estado
   // anterior contra o qual detectamos transições para notificar.
   const previousHistory = loadHistory(join(outDir, 'history.json'));
+  // Um ponto por hora no que passou da última hora (ADR-22), e o teto de bytes
+  // como trava: assim os 7 dias de retenção cabem no arquivo.
   const history = capHistoryBytes(
-    appendHistory(previousHistory, services, generatedAt),
+    downsampleHistory(
+      appendHistory(previousHistory, services, generatedAt),
+      Date.parse(generatedAt)
+    ),
     HISTORY_MAX_BYTES
   );
 

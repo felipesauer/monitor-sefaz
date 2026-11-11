@@ -1,5 +1,24 @@
 # @monitor-sefaz/catalog
 
+## 0.4.0
+
+### Minor Changes
+
+- e7b12b3: O CT-e de AP, PE e RR passa a ser autorizado pela Sefaz Virtual de São Paulo (SVSP), como diz a "Relação de Serviços Web" do Portal do CT-e. Antes o catálogo os mandava ao SVRS.
+
+  - `AuthorizerCode` ganha o valor `'SVSP'`. Quem trata os códigos de forma exaustiva (um `switch` sem `default`, um `Record<AuthorizerCode, …>`) precisa acrescentá-lo.
+  - `Catalog.resolveAuthorizer(DocumentType.CTe, 'AP' | 'PE' | 'RR')` devolve `'SVSP'`, e `resolve` aponta para o `CTeStatusServicoV4` da SEFAZ-SP (a SVSP roda na infraestrutura dela), em produção e homologação.
+  - A contingência do CT-e (SVC-SP e SVC-RS) segue fora do catálogo.
+
+### Patch Changes
+
+- 66c5890: Corrige as URLs de "consulta status do serviço" da NF-e e dá à NFC-e um mapa próprio de endpoints, conferidos com a "Relação de Serviços Web" do portal DFe do SVRS em 2026-11-10.
+
+  - NF-e: AM e MT passam ao serviço da versão 4 (`NfeStatusServico4`, antes `NfeStatusServico2` e `Nfews`); o RS passa ao host da SEFAZ-RS (`nfe.sefazrs.rs.gov.br`, antes o do SVRS); a homologação da BA e a de PE são corrigidas. As entradas de CE e PA, que nunca eram usadas (as duas UFs autorizam no SVRS), saem do mapa.
+  - NFC-e: deixa de reaproveitar os hosts da NF-e. AM, MG, MS, MT, PR, RS, SP e SVRS passam aos hosts da NFC-e (`nfce.*`); GO segue no mesmo host da NF-e, como na relação oficial. A URL de MG vem do nfephp-org/sped-nfe, porque o SVRS não a lista.
+
+  Quem resolve NFC-e com `Catalog.resolve(DocumentType.NFCe, ...)` passa a receber o host certo; a consulta SOAP de status deixa de perguntar à NF-e pelo estado da NFC-e.
+
 ## 0.3.0
 
 ### Minor Changes

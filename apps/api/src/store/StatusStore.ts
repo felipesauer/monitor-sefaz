@@ -27,11 +27,8 @@ export interface StatusStore {
   publishUpdates(env: EnvironmentValue, changed: ServiceStatusDTO[]): Promise<void>;
 }
 
-/** Milissegundos correspondentes a cada período de histórico. */
-export const PERIOD_MS: Record<HistoryPeriod, number> = {
-  '24h': 24 * 60 * 60 * 1000,
-  '72h': 72 * 60 * 60 * 1000,
-};
+/** Milissegundos correspondentes a cada período de histórico (definidos no contracts). */
+export { PERIOD_MS } from '@monitor-sefaz/contracts';
 
 /** Nome do canal Redis de atualizações de status. */
 export const UPDATES_CHANNEL = 'monitor-sefaz:status-updates';

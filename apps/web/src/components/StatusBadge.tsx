@@ -1,5 +1,5 @@
 import type { ServiceStateValue } from '@monitor-sefaz/contracts';
-import { STATE_META } from './serviceState.js';
+import { STATE_META, stateTextColor } from './serviceState.js';
 
 interface StatusBadgeProps {
   state: ServiceStateValue;
@@ -13,7 +13,7 @@ export function StatusBadge({ state }: StatusBadgeProps) {
       className="inline-flex w-fit items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold"
       style={{
         background: `color-mix(in srgb, ${meta.color} 16%, transparent)`,
-        color: meta.color,
+        color: stateTextColor(meta.color),
       }}
       role="status"
     >

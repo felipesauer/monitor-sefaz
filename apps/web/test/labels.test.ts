@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { UF_NAME, formatLatency } from '../src/lib/labels.js';
+import { UF_NAME, formatLatency, formatPercent } from '../src/lib/labels.js';
 
 describe('UF_NAME', () => {
   it('nomeia as 27 UFs a partir do catalog', () => {
@@ -22,11 +22,20 @@ describe('formatLatency', () => {
   });
 
   it('≥ 1000ms exibe em segundos', () => {
-    expect(formatLatency(1000)).toEqual({ value: '1.0', unit: 's' });
-    expect(formatLatency(6000)).toEqual({ value: '6.0', unit: 's' });
+    expect(formatLatency(1000)).toEqual({ value: '1,0', unit: 's' });
+    expect(formatLatency(6000)).toEqual({ value: '6,0', unit: 's' });
+    expect(formatLatency(1840)).toEqual({ value: '1,8', unit: 's' });
   });
 
   it('valores intermediários em ms', () => {
     expect(formatLatency(240)).toEqual({ value: '240', unit: 'ms' });
+  });
+});
+
+describe('formatPercent', () => {
+  it('usa vírgula decimal e não mostra casa decimal em número inteiro', () => {
+    expect(formatPercent(99.9)).toBe('99,9%');
+    expect(formatPercent(100)).toBe('100%');
+    expect(formatPercent(66.66)).toBe('66,7%');
   });
 });

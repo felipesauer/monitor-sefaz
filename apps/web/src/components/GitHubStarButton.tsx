@@ -23,22 +23,27 @@ export function GitHubStarButton() {
       className="inline-flex h-9 items-center gap-1.5 rounded-lg border px-3 text-xs font-semibold transition-colors hover:opacity-80"
       style={{ background: 'var(--surface)' }}
       title="Dar uma estrela ao projeto no GitHub"
-      aria-label={count ? `Star no GitHub, ${count} estrelas` : undefined}
     >
       <Star
         className="h-4 w-4"
         style={{ color: 'var(--star)', fill: 'var(--star)' }}
         aria-hidden="true"
       />
-      Star no GitHub
+      <span className="sr-only sm:not-sr-only">Star no GitHub</span>
+      {/* O nome acessível sai do próprio conteúdo ("Star no GitHub 42 estrelas"),
+          então contém o texto visível, como pede o WCAG 2.5.3. O espaço explícito
+          separa o número no texto lido; o "estrelas" só existe para o leitor de tela. */}
       {count && (
-        <span
-          aria-hidden="true"
-          className="rounded-md px-1.5 py-0.5 font-mono text-[11px] font-medium"
-          style={{ background: 'var(--surface-2)', color: 'var(--text-dim)' }}
-        >
-          {count}
-        </span>
+        <>
+          {' '}
+          <span
+            className="rounded-md px-1.5 py-0.5 font-mono text-[11px] font-medium"
+            style={{ background: 'var(--surface-2)', color: 'var(--text-dim)' }}
+          >
+            {count}
+          </span>{' '}
+          <span className="sr-only">estrelas</span>
+        </>
       )}
     </a>
   );

@@ -1,14 +1,10 @@
-import { Activity, LayoutGrid, Moon, Pause, Play, RefreshCw, Sun } from 'lucide-react';
+import { Activity, Moon, Pause, Play, RefreshCw, Sun } from 'lucide-react';
 import { GitHubStarButton } from './GitHubStarButton.js';
 
 /** Modos de layout do painel (espelha o monitorsefaz). */
-export type LayoutMode = 'operation' | 'panel' | 'metrics';
-
 interface HeaderProps {
   onToggleTheme: () => void;
   /** Modos de layout do painel. As páginas por UF não têm: sem eles, o seletor some. */
-  layout?: LayoutMode;
-  onLayout?: (mode: LayoutMode) => void;
   generatedAt?: string;
   refreshLabel: string;
   paused: boolean;
@@ -21,17 +17,9 @@ interface HeaderProps {
   homeHref?: string;
 }
 
-const MODES: { value: LayoutMode; label: string }[] = [
-  { value: 'operation', label: 'Operação' },
-  { value: 'panel', label: 'Painel' },
-  { value: 'metrics', label: 'Painel + métricas' },
-];
-
 /** Cabeçalho: marca, modos de layout, atualização e controles. */
 export function Header({
   onToggleTheme,
-  layout,
-  onLayout,
   generatedAt,
   refreshLabel,
   paused,
@@ -48,9 +36,11 @@ export function Header({
       >
         <Activity className="h-5 w-5" />
       </div>
-      <div>
-        <Title className="text-lg font-bold leading-tight">Monitor SEFAZ</Title>
-        <p className="text-xs" style={{ color: 'var(--text-dim)' }}>
+      <div className="min-w-0">
+        <Title className="whitespace-nowrap text-base font-bold leading-tight sm:text-lg">
+          Monitor SEFAZ
+        </Title>
+        <p className="hidden text-xs sm:block" style={{ color: 'var(--text-dim)' }}>
           Disponibilidade de NF-e, NFC-e, CT-e, MDF-e, DC-e, BP-e e NFCom
         </p>
       </div>
@@ -62,46 +52,18 @@ export function Header({
       className="sticky top-0 z-20 border-b backdrop-blur"
       style={{ background: 'color-mix(in srgb, var(--bg) 85%, transparent)' }}
     >
-      <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3 lg:flex-row lg:items-center lg:justify-between">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3">
         {homeHref ? (
-          <a href={homeHref} className="flex items-center gap-3">
+          <a href={homeHref} className="flex min-w-0 items-center gap-3">
             {brand}
           </a>
         ) : (
-          <div className="flex items-center gap-3">{brand}</div>
+          <div className="flex min-w-0 items-center gap-3">{brand}</div>
         )}
 
-        <div className="flex flex-wrap items-center gap-2">
-          {/* modos de layout */}
-          {layout && onLayout && (
-            <div
-              className="inline-flex items-center gap-0.5 rounded-lg border p-0.5"
-              role="group"
-              aria-label="Modos de layout"
-              style={{ background: 'var(--surface-2)' }}
-            >
-              {MODES.map((m) => (
-                <button
-                  key={m.value}
-                  type="button"
-                  onClick={() => onLayout(m.value)}
-                  aria-pressed={layout === m.value}
-                  className="flex items-center gap-1 rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors"
-                  style={
-                    layout === m.value
-                      ? { background: 'var(--accent)', color: '#fff' }
-                      : { color: 'var(--text-dim)' }
-                  }
-                >
-                  <LayoutGrid className="h-3.5 w-3.5" />
-                  {m.label}
-                </button>
-              ))}
-            </div>
-          )}
-
+        <div className="flex shrink-0 items-center gap-2">
           {/* atualização */}
-          <div className="hidden text-right text-xs sm:block" style={{ color: 'var(--text-dim)' }}>
+          <div className="hidden text-right text-xs xl:block" style={{ color: 'var(--text-dim)' }}>
             {generatedAt && (
               <div>
                 Atualizado:{' '}
@@ -119,7 +81,7 @@ export function Header({
           <button
             type="button"
             onClick={onRefresh}
-            className="flex h-9 w-9 items-center justify-center rounded-lg border transition-colors hover:opacity-80"
+            className="hidden h-9 w-9 items-center justify-center rounded-lg border sm:flex transition-colors hover:opacity-80"
             style={{ background: 'var(--surface)' }}
             title="Atualizar agora"
             aria-label="Atualizar agora"
@@ -129,7 +91,7 @@ export function Header({
           <button
             type="button"
             onClick={onTogglePause}
-            className="flex h-9 w-9 items-center justify-center rounded-lg border transition-colors hover:opacity-80"
+            className="hidden h-9 w-9 items-center justify-center rounded-lg border sm:flex transition-colors hover:opacity-80"
             style={{ background: 'var(--surface)' }}
             title={paused ? 'Retomar atualização' : 'Pausar atualização'}
             aria-label={paused ? 'Retomar' : 'Pausar'}

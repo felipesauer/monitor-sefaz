@@ -51,3 +51,13 @@ export function useTechnicalNotes() {
     staleTime: POLL_INTERVAL_MS,
   });
 }
+
+/** Estado por operação de cada autorizador. Muda a cada coleta (5 min). */
+export function useDetails() {
+  return useQuery({
+    queryKey: ['details'],
+    queryFn: () => dataSource.getDetails(),
+    refetchInterval: POLL_INTERVAL_MS * 5,
+    staleTime: POLL_INTERVAL_MS,
+  });
+}

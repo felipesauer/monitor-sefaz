@@ -8,8 +8,12 @@ import type { SvrsAuthorizerStatus, SvrsWebService } from '@monitor-sefaz/core';
  * monitor, se a página dele é estável o bastante para ser fonte.
  */
 
-/** Critério de entrada: fetch ok em pelo menos 99% das amostras, sem mudança de layout. */
-export const MIN_FETCH_OK_RATIO = 0.99;
+/**
+ * Critério de entrada (ADR-21): fetch ok em pelo menos 98% das amostras, sem
+ * mudança de layout. Era 99%, e com ~55 amostras por janela um único timeout
+ * já reprovava o documento.
+ */
+export const MIN_FETCH_OK_RATIO = 0.98;
 
 type State = SvrsWebService['state'];
 

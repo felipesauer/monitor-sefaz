@@ -49,14 +49,14 @@ export class IntegraNotasCollector {
   public async collect(): Promise<CollectedStatus[]> {
     const out: CollectedStatus[] = [];
 
-    for (const document of this.provider.supportedDocuments()) {
-      let result;
-      try {
-        result = await this.provider.fetch(document);
-      } catch {
-        continue; // documento que falha não derruba os demais
-      }
-      const { rows, fetchLatencyMs } = result;
+    // Em paralelo, como nas fontes oficiais: uma API lenta não soma minutos à rodada.
+    const documents = this.provider.supportedDocuments();
+    const fetched = await Promise.allSettled(documents.map((d) => this.provider.fetch(d)));
+
+    for (const [i, document] of documents.entries()) {
+      const result = fetched[i];
+      if (result?.status !== 'fulfilled') continue; // documento que falha não derruba os demais
+      const { rows, fetchLatencyMs } = result.value;
       for (const row of rows) {
         const entry = this.catalog.resolve(document, row.uf, Environment.Production);
         out.push({
