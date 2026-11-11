@@ -30,6 +30,8 @@ interface UfSectionsProps {
   compact?: boolean;
   /** Botão para a página de cada UF no cabeçalho (desligado na própria página da UF). */
   linkToUf?: boolean;
+  /** Nível do título de cada estado: h3 na home (sob "Por estado"), h2 na página da UF. */
+  headingLevel?: 2 | 3;
 }
 
 const flagSrc = (uf: string) => `${import.meta.env.BASE_URL}flags/${uf.toLowerCase()}.png`;
@@ -48,6 +50,8 @@ interface CompactCardProps {
   onClick?: () => void;
   busy?: boolean;
   hint?: string;
+  /** Cor do texto do estado, quando não deve sair da cor do ponto (cards de espera). */
+  textColor?: string;
 }
 
 /**
@@ -66,6 +70,7 @@ function CompactCard({
   onClick,
   busy,
   hint,
+  textColor,
 }: CompactCardProps) {
   const body = (
     <>
@@ -89,7 +94,7 @@ function CompactCard({
         <div className="h-6 min-w-0 flex-1">{spark}</div>
       </div>
       <p className="truncate text-[11px] leading-tight">
-        <span className="font-semibold" style={{ color: stateTextColor(color) }}>
+        <span className="font-semibold" style={{ color: textColor ?? stateTextColor(color) }}>
           {status}
         </span>
         {detail && <span style={{ color: 'var(--text-dim)' }}> · {detail}</span>}
@@ -172,6 +177,7 @@ function PlaceholderCompactCard({
       title={DOC_LABEL[document] ?? document}
       chip={authorizerLabel(authorizer)}
       color="var(--border)"
+      textColor="var(--text-dim)"
       status={loading ? 'Carregando…' : 'Sem leitura'}
       detail={loading ? undefined : 'sem fonte'}
       latency="—"
@@ -212,7 +218,9 @@ export function UfSections({
   loading,
   compact,
   linkToUf = true,
+  headingLevel = 3,
 }: UfSectionsProps) {
+  const Heading = headingLevel === 2 ? 'h2' : 'h3';
   // Fim da janela de 24h: a leitura mais recente das séries.
   const end = Object.values(series).reduce(
     (max, pts) => Math.max(max, Date.parse(pts.at(-1)?.timestamp ?? '') || 0),
@@ -304,9 +312,12 @@ export function UfSections({
                 style={{ boxShadow: '0 0 0 1px var(--border)' }}
               />
               <div className="min-w-0 flex-1">
-                <h3 id={`uf-${g.uf}-title`} className="truncate text-base font-bold leading-tight">
+                <Heading
+                  id={`uf-${g.uf}-title`}
+                  className="truncate text-base font-bold leading-tight"
+                >
                   {name}
-                </h3>
+                </Heading>
                 <p className="truncate text-xs" style={{ color: 'var(--text-dim)' }}>
                   {g.uf} · {authorizers}
                 </p>

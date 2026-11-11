@@ -11,6 +11,8 @@ interface IncidentListProps {
   now: number;
   emptyText: string;
   limit?: number;
+  /** Nível do título de cada dia, para seguir a hierarquia de onde a lista entra. */
+  headingLevel?: 3 | 4;
 }
 
 /**
@@ -20,6 +22,7 @@ interface IncidentListProps {
 export function IncidentList({
   incidents,
   showService,
+  headingLevel = 3,
   now,
   emptyText,
   limit = 20,
@@ -32,6 +35,7 @@ export function IncidentList({
     );
   }
   const shown = incidents.slice(0, limit);
+  const DayHeading = headingLevel === 4 ? 'h4' : 'h3';
   const days = new Map<string, Incident[]>();
   for (const incident of shown) {
     const key = dayKey(incident.end ?? now);
@@ -41,12 +45,12 @@ export function IncidentList({
     <div className="flex flex-col gap-4">
       {[...days.values()].map((list) => (
         <div key={dayKey(list[0]!.end ?? now)}>
-          <h4
+          <DayHeading
             className="mb-1.5 text-xs font-semibold capitalize"
             style={{ color: 'var(--text-dim)' }}
           >
             {formatDay(list[0]!.end ?? now)}
-          </h4>
+          </DayHeading>
           <ul
             className="flex flex-col divide-y rounded-xl border"
             style={{ borderColor: 'var(--border)' }}
