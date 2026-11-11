@@ -24,7 +24,7 @@ export function Footer() {
             href="https://github.com/felipesauer/monitor-sefaz"
             target="_blank"
             rel="noopener"
-            style={{ color: 'var(--accent)' }}
+            style={{ color: 'var(--link)' }}
           >
             <GithubMark className="h-3.5 w-3.5" />
             Código no GitHub
@@ -34,7 +34,7 @@ export function Footer() {
             href="https://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx"
             target="_blank"
             rel="noreferrer"
-            style={{ color: 'var(--accent)' }}
+            style={{ color: 'var(--link)' }}
           >
             Fonte oficial SEFAZ
           </a>

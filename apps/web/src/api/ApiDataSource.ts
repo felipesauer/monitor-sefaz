@@ -5,6 +5,7 @@ import {
   LATENCY_BUCKET_MS,
   statusSnapshotSchema,
   summarySchema,
+  type DetailSnapshotDTO,
   type HistoryPeriod,
   type HistoryResponseDTO,
   type StatusSnapshotDTO,
@@ -12,6 +13,7 @@ import {
   type TechnicalNotesFileDTO,
 } from '@monitor-sefaz/contracts';
 import {
+  EMPTY_DETAILS,
   fetchJson,
   type DataSource,
   type HistorySeries,
@@ -55,8 +57,8 @@ export class ApiDataSource implements DataSource {
    * Todas as séries de uma vez, para os sparklines dos cards.
    *
    * Vem do blob compacto do Worker (`/history`, acumulado no KV pelo cron).
-   * Expandimos na resolução GROSSA de 1h de propósito: são 135 séries, e na
-   * cadência real da coleta isso daria ~117 mil pontos só para desenhar
+   * Expandimos na resolução GROSSA de 1h de propósito: são mais de 150 séries, e
+   * a um ponto a cada 5 minutos isso daria mais de 130 mil pontos só para desenhar
    * sparklines de poucos pixels. O painel de detalhe pede a série fina à parte.
    */
   public async getHistorySeries(): Promise<HistorySeries> {
@@ -71,5 +73,13 @@ export class ApiDataSource implements DataSource {
    */
   public async getTechnicalNotes(): Promise<TechnicalNotesFileDTO> {
     return { updatedAt: new Date(0).toISOString(), notes: [] };
+  }
+
+  /**
+   * A API/Worker também não serve o detalhe: o details.json sai só da coleta do
+   * Actions. No modo híbrido quem responde é o estático.
+   */
+  public async getDetails(): Promise<DetailSnapshotDTO> {
+    return EMPTY_DETAILS;
   }
 }

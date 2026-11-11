@@ -60,7 +60,7 @@ onde o repositório a impõe; "(sem check)" quer dizer que nada a verifica além
 - `packages/contracts`: tipos compartilhados. `packages/catalog`: endpoints e autorizadores (só dados). `packages/core`: motor de
   coleta (consenso, parsers, envelopes SOAP, checkers). `packages/notifier`: notificações.
 - `apps/collector`: coleta e `endpoint-check`; `apps/web`: dashboard (Vite, pré-render); `apps/api`; `apps/worker`: Cloudflare Worker.
-- `.github/workflows/`: `ci.yml` (o portão), `collect.yml` (disparado por `collect-schedule.yml`), `deploy-pages.yml`, `deploy-worker.yml`, `drift-check.yml`, `endpoint-check.yml`, `release.yml`, `study-sampling.yml` (estudo, manual).
+- `.github/workflows/`: `ci.yml` (o portão), `collect.yml` (disparado por `collect-schedule.yml`), `deploy-pages.yml`, `deploy-worker.yml`, `drift-check.yml`, `endpoint-check.yml`, `release.yml`, `study-sampling.yml` e `study-lighthouse.yml` (estudos, manuais).
 - Guia humano: `CONTRIBUTING.md`.
 
 <!-- mnema:begin v4 (written by mnema; `mnema instructions --remove` takes it out) -->

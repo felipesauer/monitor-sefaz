@@ -110,6 +110,11 @@ status…) como o SVRS e a Receita as publicam, em produção e, para NF-e e CT-
 homologação. No CT-e, a Receita mostra ali também a recepção do CT-e OS e da GTV-e,
 que não têm consulta de status própria. O detalhe é lido das mesmas páginas que a
 coleta já baixa; só as duas páginas de homologação são buscadas a mais.
+No painel de cada serviço, a seção **Serviços do autorizador** mostra essas operações
+do autorizador da UF, da contingência SVC que também a atende e, recolhida, da
+homologação. Quando o SVRS e a Receita publicam o mesmo autorizador, vale o SVRS, como
+no consenso. Fica sem a seção o serviço que não tem página própria de operações: a DC-e,
+a NFC-e fora do SVRS e o BP-e dos autorizadores próprios.
 
 Cada coleta mede a **cobertura por fonte** e marca quando uma fonte oficial fica
 degradada (cobertura abaixo do piso) — o sinal que distingue "a fonte parou de
@@ -145,12 +150,23 @@ Actions) quanto no self-host (API).
 ## Dashboard
 
 - **Uma página por estado** (`/sefaz-sp/`, `/sefaz-mg/`…) com o status ao vivo da UF,
-  quem autoriza cada documento, a contingência da NF-e e links para as demais.
-- **Mapa do Brasil** clicável, cada UF colorida pelo pior estado agregado.
-- **Cards por serviço** com badge de estado, tempo de resposta e _sparkline_ de latência.
-- **Histórico de uptime** (24h/72h) com barra estilo status-page e gráfico de latência.
+  quem autoriza cada documento, a contingência da NF-e e os estados que dividem o
+  autorizador.
+- **Mapa do Brasil** clicável, cada UF colorida pelo pior estado agregado, com um painel ao
+  lado: o resumo do país ("Brasil agora") ou, com um estado em foco, cada documento dele.
+- **Panorama** da janela (6h/24h/72h): o estado de cada documento no tempo, a mediana do
+  tempo de acesso e quantos serviços tiveram problema.
+- **Ocorrências recentes** (72h), tiradas do histórico: serviços do mesmo autorizador que
+  caíram juntos viram uma ocorrência só, com início, fim e duração.
+- **Cards agrupados por estado**, com a bandeira, a disponibilidade de 24h e um card por
+  documento (estado, tempo de acesso, _sparkline_); ou a **lista compacta**, uma linha por estado.
+- **Painel do serviço**: o estado e o que ele quer dizer, os números da janela, o histórico
+  em faixas de tempo, as operações do autorizador, a contingência e quem cai junto.
+- **Manutenção programada do SVRS** (domingos, 7h–9h) avisada na tela; horários no fuso de
+  Brasília.
 - **Filtros** por documento e por UF; **banner** de saúde geral.
-- **Três modos de layout** (Operação, Painel, Painel + métricas) e **tema claro/escuro**.
+- **Modo TV** (`/#tv`): a visão para tela de NOC, só o essencial e atualizando sozinha; e
+  **tema claro/escuro**.
 - **Últimas Notas Técnicas** e um FAQ explicando cStat, autorizadores e contingência.
 
 ## API HTTP
@@ -163,7 +179,7 @@ No modo self-host, a API expõe (base `/api/v1`):
 | GET    | `/status`               | Snapshot atual; filtros `?document=&uf=&env=`                                                   |
 | GET    | `/status/:document/:uf` | Status de um serviço específico                                                                 |
 | GET    | `/summary`              | Agregado: disponibilidade, no ar, com problema, latência média, por documento e por autorizador |
-| GET    | `/services/:id/history` | Série histórica (`?period=24h\|72h`)                                                            |
+| GET    | `/services/:id/history` | Série histórica (`?period=6h\|24h\|72h`)                                                        |
 | GET    | `/services/:id/uptime`  | Uptime %, total de checagens, latência média                                                    |
 | GET    | `/incidents`            | Incidentes derivados da série                                                                   |
 | GET    | `/stream`               | **SSE** — deltas de mudança de estado em tempo real                                             |

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 
 interface UpdateInfoProps {
-  /** Timestamp ISO da última atualização dos dados (generatedAt). */
-  generatedAt: string;
+  /** Timestamp ISO da última atualização dos dados; ausente enquanto carrega. */
+  generatedAt?: string;
   /** Intervalo entre atualizações da fonte (ms) — para estimar a próxima. */
   refreshIntervalMs: number;
 }
@@ -28,9 +28,19 @@ export function UpdateInfo({ generatedAt, refreshIntervalMs }: UpdateInfoProps) 
     return () => clearInterval(id);
   }, []);
 
-  const generated = Date.parse(generatedAt);
+  const generated = generatedAt ? Date.parse(generatedAt) : Number.NaN;
   if (Number.isNaN(generated)) {
-    return null;
+    // Mesma linha, sem o horário: reserva a altura até o status chegar.
+    return (
+      <p className="-mt-1 flex items-center gap-2 text-xs" style={{ color: 'var(--text-dim)' }}>
+        <span
+          aria-hidden
+          className="inline-block h-2 w-2 rounded-full"
+          style={{ background: 'var(--border)' }}
+        />
+        Lendo as fontes públicas da SEFAZ…
+      </p>
+    );
   }
 
   const elapsed = now - generated;

@@ -37,7 +37,7 @@ describe('GitHubStarButton', () => {
     render(<GitHubStarButton />);
 
     expect(await screen.findByText('42')).toBeInTheDocument();
-    expect(screen.getByRole('link')).toHaveAccessibleName('Star no GitHub, 42 estrelas');
+    expect(screen.getByRole('link')).toHaveAccessibleName('Star no GitHub 42 estrelas');
     expect(readCachedStars()).toEqual({ count: 42, fresh: true });
   });
 

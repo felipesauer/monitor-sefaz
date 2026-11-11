@@ -15,6 +15,7 @@ function source(overrides: Partial<DataSource> = {}): DataSource {
     getHistory: vi.fn(),
     getHistorySeries: vi.fn(async () => ({})),
     getTechnicalNotes: vi.fn(),
+    getDetails: vi.fn(),
     ...overrides,
   } as DataSource;
 }
@@ -93,5 +94,15 @@ describe('HybridDataSource.getHistorySeries', () => {
       source({ getHistorySeries: vi.fn(async () => ({ 'NFe:SP': ESTATICO })) })
     );
     expect(await hybrid.getHistorySeries()).toEqual({ 'NFe:SP': ESTATICO });
+  });
+});
+
+describe('HybridDataSource.getDetails', () => {
+  it('lê o detalhe da fonte estática, que é onde a coleta o publica', async () => {
+    const details = { generatedAt: '2026-11-11T01:31:13.963Z', authorizers: [] };
+    const live = source({ getDetails: vi.fn() });
+    const hybrid = new HybridDataSource(live, source({ getDetails: vi.fn(async () => details) }));
+    expect(await hybrid.getDetails()).toBe(details);
+    expect(live.getDetails).not.toHaveBeenCalled();
   });
 });

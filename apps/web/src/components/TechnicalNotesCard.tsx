@@ -28,7 +28,7 @@ export function TechnicalNotesCard({ notes, previewCount = 5 }: Props) {
   const headerContent = (
     <>
       <span className="flex items-center gap-2 text-sm font-semibold">
-        <FileText className="h-4 w-4" style={{ color: 'var(--accent)' }} />
+        <FileText className="h-4 w-4" style={{ color: 'var(--link)' }} />
         Notas Técnicas ({notes.length})
       </span>
       {collapsible && (
@@ -67,7 +67,7 @@ export function TechnicalNotesCard({ notes, previewCount = 5 }: Props) {
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-1 hover:underline"
-                style={{ color: 'var(--accent)' }}
+                style={{ color: 'var(--link)' }}
               >
                 {note.title}
                 <ExternalLink className="h-3 w-3 shrink-0" />

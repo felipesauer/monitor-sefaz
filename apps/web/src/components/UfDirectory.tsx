@@ -37,7 +37,7 @@ export function UfDirectory({ current }: UfDirectoryProps) {
                   <a
                     href={pageHref({ kind: 'uf', uf })}
                     className="hover:underline"
-                    style={{ color: 'var(--accent)' }}
+                    style={{ color: 'var(--link)' }}
                   >
                     {UF_INFO[uf].nome}{' '}
                     <span className="font-mono text-xs" style={{ color: 'var(--text-dim)' }}>
