@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { ArrowUpRight } from 'lucide-react';
+import { ButtonLink } from './ButtonLink.js';
 import type { DocumentType, UF } from '@monitor-sefaz/catalog';
 import { isUp, type ServiceStateValue, type ServiceStatusDTO } from '@monitor-sefaz/contracts';
 import type { HistorySeries } from '../api/DataSource.js';
@@ -305,14 +305,13 @@ export function UfSections({
               >
                 {summary}
               </span>
-              <a
+              <ButtonLink
                 href={pageHref({ kind: 'uf', uf: g.uf })}
-                className="hidden shrink-0 items-center gap-0.5 text-xs font-semibold underline underline-offset-2 sm:inline-flex"
-                style={{ color: 'var(--link)' }}
+                arrow
+                className="hidden sm:inline-flex"
               >
-                Ver SEFAZ-{g.uf}
-                <ArrowUpRight className="h-3 w-3" aria-hidden="true" />
-              </a>
+                SEFAZ-{g.uf}
+              </ButtonLink>
             </header>
             <div
               className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:[grid-template-columns:repeat(var(--cols),minmax(0,1fr))]"

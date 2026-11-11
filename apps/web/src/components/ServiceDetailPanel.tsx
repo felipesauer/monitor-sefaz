@@ -11,6 +11,8 @@ import { useDetails, useServiceHistory } from '../hooks/useStatus.js';
 import { useModalDialog } from '../hooks/useModalDialog.js';
 import { AuthorizerOperations } from './AuthorizerOperations.js';
 import { UptimeBar } from './UptimeBar.js';
+import { ButtonLink } from './ButtonLink.js';
+import { UfChipLinks } from './UfChipLinks.js';
 import { LatencyChart } from './LatencyChart.js';
 import { STATE_META, stateTextColor } from './serviceState.js';
 import { detailFor, operationLabel, type ServiceDetailView } from '../lib/details.js';
@@ -378,14 +380,14 @@ export function ServiceDetailPanel({ service, onClose }: ServiceDetailPanelProps
               do documento (offline ou EPEC, conforme o caso).
             </p>
           )}
-          <a
-            href={`${ufHref}#o-que-fazer`}
-            className="inline-flex items-center gap-1 text-sm font-semibold underline underline-offset-2"
-            style={{ color: 'var(--link)' }}
-          >
-            O que fazer quando a SEFAZ-{uf} cai
-            <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
-          </a>
+          <div className="flex flex-wrap gap-2">
+            <ButtonLink href={`${ufHref}#o-que-fazer`} variant="primary" arrow>
+              O que fazer quando a SEFAZ-{uf} cai
+            </ButtonLink>
+            <ButtonLink href={ufHref} arrow className="sm:hidden">
+              Página da SEFAZ-{uf}
+            </ButtonLink>
+          </div>
         </Section>
 
         {sharing.length > 0 && (
@@ -394,27 +396,7 @@ export function ServiceDetailPanel({ service, onClose }: ServiceDetailPanelProps
               O {authorizerLabel(service.authorizer)} autoriza o {docLabel} de mais {sharing.length}{' '}
               {sharing.length > 1 ? 'estados' : 'estado'}. Se ele cair, todos caem juntos.
             </p>
-            <ul className="flex flex-wrap gap-1.5">
-              {sharing.map((other) => (
-                <li key={other}>
-                  <a
-                    href={pageHref({ kind: 'uf', uf: other })}
-                    className="inline-flex items-center gap-1.5 rounded-lg border px-2 py-1 text-xs font-semibold hover:opacity-80"
-                    title={UF_NAME[other]}
-                  >
-                    <img
-                      src={`${import.meta.env.BASE_URL}flags/${other.toLowerCase()}.png`}
-                      alt=""
-                      width={16}
-                      height={11}
-                      loading="lazy"
-                      className="h-[11px] w-4 rounded-[2px] object-cover"
-                    />
-                    {other}
-                  </a>
-                </li>
-              ))}
-            </ul>
+            <UfChipLinks ufs={sharing} label="Estados que caem junto" />
           </Section>
         )}
 

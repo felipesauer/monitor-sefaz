@@ -1,4 +1,4 @@
-import { Fragment, useMemo, useState, type ReactNode } from 'react';
+import { useMemo, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { AlertTriangle, CheckCircle2, XCircle } from 'lucide-react';
 import { DocumentType, type UF } from '@monitor-sefaz/catalog';
@@ -14,6 +14,8 @@ import { ServiceDetailPanel } from '../components/ServiceDetailPanel.js';
 import { NoScriptNotice } from '../components/NoScriptNotice.js';
 import { UfDirectory } from '../components/UfDirectory.js';
 import { Footer } from '../components/Footer.js';
+import { ButtonLink } from '../components/ButtonLink.js';
+import { UfChipLinks } from '../components/UfChipLinks.js';
 import { STATE_META, STATE_SEVERITY, stateTextColor } from '../components/serviceState.js';
 import {
   AUTHORIZER_NAME,
@@ -34,23 +36,6 @@ import {
 
 /** Valor do campo tpEmis da NF-e emitida em cada SVC (Manual do Contribuinte). */
 const SVC_TP_EMIS: Record<string, number> = { SVCAN: 6, SVCRS: 7 };
-
-/** "AL, AP, CE e TO", cada sigla com link para a página da UF. */
-function ufLinks(ufs: readonly UF[]): ReactNode {
-  return ufs.map((uf, i) => (
-    <Fragment key={uf}>
-      {i > 0 && (i === ufs.length - 1 ? ' e ' : ', ')}
-      <a
-        href={pageHref({ kind: 'uf', uf })}
-        title={`Status da SEFAZ-${uf}`}
-        className="font-mono underline decoration-dotted underline-offset-2 hover:decoration-solid"
-        style={{ color: 'var(--link)' }}
-      >
-        {uf}
-      </a>
-    </Fragment>
-  ));
-}
 
 /** Quem mais cai junto quando o autorizador da NF-e da UF cai. */
 function NfeSharing({ uf }: { uf: UF }) {
@@ -77,8 +62,9 @@ function NfeSharing({ uf }: { uf: UF }) {
   }
   return (
     <>
-      A NF-e {ofUf(uf)} é autorizada pelo {label}, que atende também {ufLinks(others)}. Quando o{' '}
-      {label} cai, todos esses estados ficam sem NF-e ao mesmo tempo.
+      A NF-e {ofUf(uf)} é autorizada pelo {label}, que atende também outros {others.length}{' '}
+      {others.length > 1 ? 'estados' : 'estado'}. Quando o {label} cai, todos eles ficam sem NF-e ao
+      mesmo tempo.
     </>
   );
 }
@@ -189,6 +175,8 @@ export function UfPage({ uf }: { uf: UF }) {
 
   const sefaz = `SEFAZ-${uf}`;
   const svc = nfeContingency(uf);
+  const nfeAuth = ufAuthorizations(uf).find((a) => a.document === DocumentType.NFe);
+  const nfeSharing = nfeAuth && !nfeAuth.own ? ufsSharingAuthorizer(DocumentType.NFe, uf) : [];
   const homeHref = pageHref(HOME);
 
   return (
@@ -308,6 +296,11 @@ export function UfPage({ uf }: { uf: UF }) {
           <p className="mt-3 text-sm leading-relaxed" style={{ color: 'var(--text-dim)' }}>
             <NfeSharing uf={uf} />
           </p>
+          {nfeSharing.length > 0 && (
+            <div className="mt-3">
+              <UfChipLinks ufs={nfeSharing} label="Estados que dividem o autorizador da NF-e" />
+            </div>
+          )}
         </section>
 
         <section
@@ -353,17 +346,14 @@ export function UfPage({ uf }: { uf: UF }) {
           style={{ background: 'var(--surface)', boxShadow: 'var(--shadow)' }}
         >
           <h2 className="text-base font-semibold">A SEFAZ nos outros estados</h2>
-          <p className="mb-4 mt-1 text-xs" style={{ color: 'var(--text-dim)' }}>
-            Cada UF tem a sua página. Para ver as 27 de uma vez, abra o{' '}
-            <a
-              href={homeHref}
-              className="underline underline-offset-2"
-              style={{ color: 'var(--link)' }}
-            >
-              painel completo
-            </a>
-            .
-          </p>
+          <div className="mb-4 mt-1 flex flex-wrap items-center justify-between gap-3">
+            <p className="text-xs" style={{ color: 'var(--text-dim)' }}>
+              Cada UF tem a sua página, com o status ao vivo e o que fazer quando a SEFAZ cai.
+            </p>
+            <ButtonLink href={homeHref} variant="primary">
+              Abrir o painel completo
+            </ButtonLink>
+          </div>
           <UfDirectory current={uf} />
         </section>
       </main>

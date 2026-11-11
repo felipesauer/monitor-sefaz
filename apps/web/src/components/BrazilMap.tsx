@@ -1,5 +1,7 @@
-import type { CSSProperties } from 'react';
-import type { ServiceStateValue } from '@monitor-sefaz/contracts';
+import { useState, type CSSProperties } from 'react';
+import type { DocumentType, UF } from '@monitor-sefaz/catalog';
+import type { ServiceStateValue, ServiceStatusDTO } from '@monitor-sefaz/contracts';
+import { MapDetail } from './MapDetail.js';
 import { STATE_META } from './serviceState.js';
 import { UF_NAME } from '../lib/labels.js';
 import { BR_PATHS, BR_VIEWBOX } from '../lib/brazilGeo.js';
@@ -10,6 +12,10 @@ interface BrazilMapProps {
   ufStates: { uf: string; state: ServiceStateValue }[];
   selectedUfs: Set<string>;
   onToggleUf: (uf: string) => void;
+  /** Serviços para o detalhe ao lado do mapa (já no filtro de documento). */
+  services?: ServiceStatusDTO[];
+  documents?: readonly DocumentType[];
+  loading?: boolean;
 }
 
 /** Tamanhos em unidades de viewBox (validados p/ legibilidade até ~360px de largura). */
@@ -83,7 +89,18 @@ const LABEL_STYLE = {
  * leader lines para o rótulo ficar legível fora do polígono. Os paths vêm de
  * um GeoJSON de domínio público, simplificado para o tamanho do bundle.
  */
-export function BrazilMap({ ufStates, selectedUfs, onToggleUf }: BrazilMapProps) {
+export function BrazilMap({
+  ufStates,
+  selectedUfs,
+  onToggleUf,
+  services = [],
+  documents = [],
+  loading = false,
+}: BrazilMapProps) {
+  // Detalhe: o estado sob o mouse/foco; sem ele, o único estado escolhido no filtro.
+  const [hovered, setHovered] = useState<string | null>(null);
+  const pinned = selectedUfs.size === 1 ? [...selectedUfs][0]! : null;
+  const detailUf = (hovered ?? pinned) as UF | null;
   // Os paths somam ~275 KB e o mapa só funciona com JS: o HTML pré-renderizado
   // leva só o <svg> vazio, que já reserva o espaço (sem salto de layout).
   const paths: Record<string, string> = useHydrated() ? BR_PATHS : {};
@@ -111,120 +128,133 @@ export function BrazilMap({ ufStates, selectedUfs, onToggleUf }: BrazilMapProps)
       >
         Mapa por estado
       </h2>
-      <svg
-        viewBox={BR_VIEWBOX}
-        className="mx-auto block h-auto w-full"
-        style={{ maxHeight: '60vh' }}
-        role="group"
-      >
-        {/* Camada 1: polígonos clicáveis dos estados. */}
-        {Object.entries(paths).map(([uf, d]) => {
-          const color = colorOf(uf);
-          const active = selectedUfs.has(uf);
-          const dimmed = hasSelection && !active;
-          return (
-            <path
-              key={uf}
-              d={d}
-              role="button"
-              tabIndex={0}
-              aria-pressed={active}
-              aria-label={labelOf(uf)}
-              onClick={() => onToggleUf(uf)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  onToggleUf(uf);
-                }
-              }}
-              className="cursor-pointer outline-none transition-opacity"
-              style={{
-                fill: `color-mix(in srgb, ${color} ${active ? '85%' : '45%'}, transparent)`,
-                stroke: active ? color : 'var(--surface)',
-                strokeWidth: active ? 1.6 : 0.8,
-                opacity: dimmed ? 0.3 : 1,
-              }}
-            >
-              <title>{labelOf(uf)}</title>
-            </path>
-          );
-        })}
-
-        {/* Camada 2: leader lines dos estados pequenos (atrás dos badges). */}
-        {Object.entries(EXTERNAL).map(([uf, g]) => {
-          if (!paths[uf]) return null;
-          const pts = `${g.anchor[0]},${g.anchor[1]} ${g.elbow[0]},${g.elbow[1]} ${g.label[0]},${g.label[1]}`;
-          return (
-            <polyline
-              key={`lead-${uf}`}
-              points={pts}
-              fill="none"
-              stroke="var(--text-dim)"
-              strokeWidth={0.6}
-              style={{ vectorEffect: 'non-scaling-stroke', pointerEvents: 'none' }}
-            />
-          );
-        })}
-
-        {/* Camada 3: badges internos (sigla + bolinha no centróide). */}
-        {Object.entries(INTERNAL).map(([uf, p]) => {
-          if (!paths[uf]) return null;
-          return (
-            <g key={`in-${uf}`} style={{ pointerEvents: 'none' }} aria-hidden="true">
-              <circle
-                cx={p.tx - 9}
-                cy={p.ty}
-                r={DOT_R}
-                fill={colorOf(uf)}
-                stroke="var(--surface)"
-                strokeWidth={1.3}
-                style={{ vectorEffect: 'non-scaling-stroke' }}
-              />
-              <text
-                x={p.tx - 3}
-                y={p.ty}
-                textAnchor="start"
-                dominantBaseline="central"
-                fontSize={FONT_INTERNAL}
-                style={LABEL_STYLE}
+      <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <svg
+          viewBox={BR_VIEWBOX}
+          className="mx-auto block h-auto w-full"
+          style={{ maxHeight: '60vh' }}
+          role="group"
+          onMouseLeave={() => setHovered(null)}
+        >
+          {/* Camada 1: polígonos clicáveis dos estados. */}
+          {Object.entries(paths).map(([uf, d]) => {
+            const color = colorOf(uf);
+            const active = selectedUfs.has(uf);
+            const dimmed = hasSelection && !active;
+            return (
+              <path
+                key={uf}
+                d={d}
+                role="button"
+                tabIndex={0}
+                aria-pressed={active}
+                aria-label={labelOf(uf)}
+                onClick={() => onToggleUf(uf)}
+                onMouseEnter={() => setHovered(uf)}
+                onFocus={() => setHovered(uf)}
+                onBlur={() => setHovered(null)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onToggleUf(uf);
+                  }
+                }}
+                className="cursor-pointer outline-none transition-opacity"
+                style={{
+                  fill: `color-mix(in srgb, ${color} ${active ? '85%' : '45%'}, transparent)`,
+                  stroke: active ? color : hovered === uf ? 'var(--text)' : 'var(--surface)',
+                  strokeWidth: active || hovered === uf ? 1.6 : 0.8,
+                  opacity: dimmed ? 0.3 : 1,
+                }}
               >
-                {uf}
-              </text>
-            </g>
-          );
-        })}
+                <title>{labelOf(uf)}</title>
+              </path>
+            );
+          })}
 
-        {/* Camada 4: badges externos (bolinha + sigla, alinhados à direita do rótulo). */}
-        {Object.entries(EXTERNAL).map(([uf, g]) => {
-          if (!paths[uf]) return null;
-          const [lx, ly] = g.label;
-          // texto right-aligned em lx; bolinha à esquerda do texto (recuo p/ caber a sigla de 2 letras).
-          const dotCx = lx - 19;
-          return (
-            <g key={`out-${uf}`} style={{ pointerEvents: 'none' }} aria-hidden="true">
-              <circle
-                cx={dotCx}
-                cy={ly}
-                r={DOT_R_EXT}
-                fill={colorOf(uf)}
-                stroke="var(--surface)"
-                strokeWidth={1.3}
-                style={{ vectorEffect: 'non-scaling-stroke' }}
+          {/* Camada 2: leader lines dos estados pequenos (atrás dos badges). */}
+          {Object.entries(EXTERNAL).map(([uf, g]) => {
+            if (!paths[uf]) return null;
+            const pts = `${g.anchor[0]},${g.anchor[1]} ${g.elbow[0]},${g.elbow[1]} ${g.label[0]},${g.label[1]}`;
+            return (
+              <polyline
+                key={`lead-${uf}`}
+                points={pts}
+                fill="none"
+                stroke="var(--text-dim)"
+                strokeWidth={0.6}
+                style={{ vectorEffect: 'non-scaling-stroke', pointerEvents: 'none' }}
               />
-              <text
-                x={lx}
-                y={ly}
-                textAnchor="end"
-                dominantBaseline="central"
-                fontSize={FONT_EXTERNAL}
-                style={LABEL_STYLE}
-              >
-                {uf}
-              </text>
-            </g>
-          );
-        })}
-      </svg>
+            );
+          })}
+
+          {/* Camada 3: badges internos (sigla + bolinha no centróide). */}
+          {Object.entries(INTERNAL).map(([uf, p]) => {
+            if (!paths[uf]) return null;
+            return (
+              <g key={`in-${uf}`} style={{ pointerEvents: 'none' }} aria-hidden="true">
+                <circle
+                  cx={p.tx - 9}
+                  cy={p.ty}
+                  r={DOT_R}
+                  fill={colorOf(uf)}
+                  stroke="var(--surface)"
+                  strokeWidth={1.3}
+                  style={{ vectorEffect: 'non-scaling-stroke' }}
+                />
+                <text
+                  x={p.tx - 3}
+                  y={p.ty}
+                  textAnchor="start"
+                  dominantBaseline="central"
+                  fontSize={FONT_INTERNAL}
+                  style={LABEL_STYLE}
+                >
+                  {uf}
+                </text>
+              </g>
+            );
+          })}
+
+          {/* Camada 4: badges externos (bolinha + sigla, alinhados à direita do rótulo). */}
+          {Object.entries(EXTERNAL).map(([uf, g]) => {
+            if (!paths[uf]) return null;
+            const [lx, ly] = g.label;
+            // texto right-aligned em lx; bolinha à esquerda do texto (recuo p/ caber a sigla de 2 letras).
+            const dotCx = lx - 19;
+            return (
+              <g key={`out-${uf}`} style={{ pointerEvents: 'none' }} aria-hidden="true">
+                <circle
+                  cx={dotCx}
+                  cy={ly}
+                  r={DOT_R_EXT}
+                  fill={colorOf(uf)}
+                  stroke="var(--surface)"
+                  strokeWidth={1.3}
+                  style={{ vectorEffect: 'non-scaling-stroke' }}
+                />
+                <text
+                  x={lx}
+                  y={ly}
+                  textAnchor="end"
+                  dominantBaseline="central"
+                  fontSize={FONT_EXTERNAL}
+                  style={LABEL_STYLE}
+                >
+                  {uf}
+                </text>
+              </g>
+            );
+          })}
+        </svg>
+        <aside
+          className="min-h-[320px] rounded-xl border p-4"
+          style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}
+          aria-label="Detalhes do estado"
+        >
+          <MapDetail uf={detailUf} services={services} documents={documents} loading={loading} />
+        </aside>
+      </div>
     </section>
   );
 }

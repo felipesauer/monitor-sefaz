@@ -15,6 +15,7 @@ import { UpdateInfo } from '../components/UpdateInfo.js';
 import { SummaryCards } from '../components/SummaryCards.js';
 import { FilterBar, type DocumentFilter } from '../components/FilterBar.js';
 import { UfSections } from '../components/UfSections.js';
+import { OverviewCharts } from '../components/OverviewCharts.js';
 import { ServiceDetailPanel } from '../components/ServiceDetailPanel.js';
 import { Footer } from '../components/Footer.js';
 import { StatusLegend } from '../components/StatusLegend.js';
@@ -143,8 +144,21 @@ export function DashboardPage() {
 
         {layout === 'metrics' && summary.data && <SummaryCards summary={summary.data} />}
 
+        <OverviewCharts
+          series={series.data}
+          documents={shownDocuments}
+          end={status.data ? Date.parse(status.data.generatedAt) : undefined}
+        />
+
         {layout !== 'operation' && (
-          <BrazilMap ufStates={ufStates} selectedUfs={selectedUfs} onToggleUf={toggleUf} />
+          <BrazilMap
+            ufStates={ufStates}
+            selectedUfs={selectedUfs}
+            onToggleUf={toggleUf}
+            services={docScoped}
+            documents={shownDocuments}
+            loading={status.isLoading}
+          />
         )}
 
         {layout !== 'operation' && (
