@@ -1,8 +1,9 @@
-import { lazy, Suspense, useState } from 'react';
+import { lazy, Suspense, useId, useRef, useState } from 'react';
 import { X, Info } from 'lucide-react';
 import { DocumentType, type HistoryPeriod, type ServiceStatusDTO } from '@monitor-sefaz/contracts';
 import { useDetails, useServiceHistory } from '../hooks/useStatus.js';
 import { AuthorizerOperations } from './AuthorizerOperations.js';
+import { useModalDialog } from '../hooks/useModalDialog.js';
 import { detailFor } from '../lib/details.js';
 import { StatusBadge } from './StatusBadge.js';
 import { UptimeBar } from './UptimeBar.js';
@@ -35,6 +36,10 @@ export function ServiceDetailPanel({ service, onClose }: ServiceDetailPanelProps
   const isDerived = SVRS_DERIVED.has(service.document);
   const details = useDetails();
   const detailView = detailFor(details.data, service);
+  const panelRef = useRef<HTMLElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const titleId = useId();
+  useModalDialog(panelRef, closeRef, onClose);
 
   return (
     <div
@@ -43,14 +48,18 @@ export function ServiceDetailPanel({ service, onClose }: ServiceDetailPanelProps
       role="presentation"
     >
       <aside
-        className="flex h-full w-full max-w-md flex-col gap-4 overflow-y-auto p-6 shadow-2xl"
+        ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        tabIndex={-1}
+        className="flex h-full w-full max-w-md flex-col gap-4 overflow-y-auto p-6 shadow-2xl outline-none"
         style={{ background: 'var(--surface)' }}
-        aria-label={`Detalhes de ${service.id}`}
         onClick={(e) => e.stopPropagation()}
       >
         <header className="flex items-start justify-between">
           <div>
-            <h2 className="text-xl font-bold">
+            <h2 id={titleId} className="text-xl font-bold">
               {DOC_LABEL[service.document] ?? service.document} · {service.uf}
             </h2>
             <p className="mt-0.5 text-sm" style={{ color: 'var(--text-dim)' }}>
@@ -63,6 +72,7 @@ export function ServiceDetailPanel({ service, onClose }: ServiceDetailPanelProps
             )}
           </div>
           <button
+            ref={closeRef}
             type="button"
             className="flex h-9 w-9 items-center justify-center rounded-lg border hover:opacity-80"
             onClick={onClose}
