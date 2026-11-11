@@ -31,4 +31,20 @@ describe('computeUptime', () => {
     // com 1 ponto não dá para afirmar cobertura — deve sinalizar baixa cobertura
     expect(stats.lowCoverage).toBe(true);
   });
+
+  it('sinaliza baixa cobertura com um único ponto na janela de 6h', () => {
+    const stats = computeUptime([pt('2026-06-28T00:00:00Z', 'OPERATIONAL')], '6h');
+    expect(stats.expectedPoints).toBe(72);
+    expect(stats.lowCoverage).toBe(true);
+  });
+
+  it('dá cobertura cheia na janela de 6h com uma leitura a cada 5 minutos', () => {
+    const start = Date.parse('2026-06-28T00:00:00Z');
+    const points = Array.from({ length: 72 }, (_, i) =>
+      pt(new Date(start + i * 5 * 60 * 1000).toISOString(), 'OPERATIONAL')
+    );
+    const stats = computeUptime(points, '6h');
+    expect(stats.coverage).toBe(100);
+    expect(stats.lowCoverage).toBe(false);
+  });
 });

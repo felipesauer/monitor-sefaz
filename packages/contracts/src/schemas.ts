@@ -210,9 +210,9 @@ export const notifierStateSchema = z.object({
 export type NotifierStateDTO = z.infer<typeof notifierStateSchema>;
 
 /** Períodos suportados pela consulta de histórico curto. */
-// '1h'/'6h' foram removidos: com a cadência real de coleta (~3h/ponto) rendem
-// 0–2 amostras, deixando gráfico vazio e uptime sobre amostra única.
-export const historyPeriodSchema = z.enum(['24h', '72h']);
+// Com a coleta a cada 5 minutos, 6h rendem ~72 pontos. '1h' fica de fora: são
+// ~12 pontos, pouco para o uptime dizer alguma coisa.
+export const historyPeriodSchema = z.enum(['6h', '24h', '72h']);
 export type HistoryPeriod = z.infer<typeof historyPeriodSchema>;
 
 /** Ponto da série temporal de histórico curto. */

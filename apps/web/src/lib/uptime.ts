@@ -1,16 +1,16 @@
-import { isUp, type HistoryPeriod, type HistoryPointDTO } from '@monitor-sefaz/contracts';
-
-const PERIOD_MS: Record<HistoryPeriod, number> = {
-  '24h': 24 * 60 * 60 * 1000,
-  '72h': 72 * 60 * 60 * 1000,
-};
+import {
+  isUp,
+  PERIOD_MS,
+  type HistoryPeriod,
+  type HistoryPointDTO,
+} from '@monitor-sefaz/contracts';
 
 /**
- * Cadência fallback (ms) quando há poucos pontos para inferir o intervalo real.
- * O cron do Actions é declarado horário mas é best-effort: na prática roda a
- * cada ~3h. Só serve de chute inicial — com ≥2 pontos usamos a mediana real.
+ * Cadência fallback (ms) quando há poucos pontos para inferir o intervalo real:
+ * a da coleta, que o Worker dispara a cada 5 minutos. Só serve de chute
+ * inicial — com ≥2 pontos usamos a mediana real.
  */
-const FALLBACK_INTERVAL_MS = 3 * 60 * 60 * 1000;
+const FALLBACK_INTERVAL_MS = 5 * 60 * 1000;
 
 export interface UptimeStats {
   /** % de disponibilidade no período (0–100), ou null se não há pontos. */

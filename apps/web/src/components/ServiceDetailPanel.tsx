@@ -20,10 +20,9 @@ interface ServiceDetailPanelProps {
   onClose: () => void;
 }
 
-// '1h' e '6h' foram omitidos: com a cadência real de coleta (~3h/ponto), essas
-// janelas rendem 0–2 amostras — o gráfico fica vazio e o uptime sai sobre uma
-// amostra única. Mantemos só janelas com densidade de pontos significativa.
-const PERIODS: HistoryPeriod[] = ['24h', '72h'];
+// A coleta roda a cada 5 minutos: 6h já rendem ~72 pontos. '1h' fica de fora
+// (~12 pontos), pouco para o uptime dizer alguma coisa.
+const PERIODS: HistoryPeriod[] = ['6h', '24h', '72h'];
 const SVRS_DERIVED = new Set<string>([DocumentType.MDFe, DocumentType.DCe]);
 
 /** Drawer com histórico de uptime e latência de um serviço. */

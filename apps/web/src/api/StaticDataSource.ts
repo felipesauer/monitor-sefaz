@@ -1,6 +1,7 @@
 import {
   detailSnapshotSchema,
   historyFileSchema,
+  PERIOD_MS,
   summarySchema,
   technicalNotesFileSchema,
   type DetailSnapshotDTO,
@@ -18,11 +19,6 @@ import {
   type HistorySeries,
   type StatusFilters,
 } from './DataSource.js';
-
-const PERIOD_MS: Record<HistoryPeriod, number> = {
-  '24h': 24 * 60 * 60 * 1000,
-  '72h': 72 * 60 * 60 * 1000,
-};
 
 /**
  * Fonte estática: lê os JSONs versionados (gerados pelo GitHub Actions) sob
