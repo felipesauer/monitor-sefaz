@@ -14,6 +14,7 @@ const fixture = (name: string): string =>
 /** Fetcher que serve a fixture do documento pedido pela URL. */
 const fixtureFetcher: SvrsFetcher = async (url) => {
   if (url.includes('/Nfe/')) return fixture('nfe-disponibilidade.html');
+  if (url.includes('/Nfce/')) return fixture('nfce-disponibilidade.html');
   if (url.includes('/Cte/')) return fixture('cte-disponibilidade.html');
   if (url.includes('/Mdfe/')) return fixture('mdfe-disponibilidade.html');
   if (url.includes('/Bpe/')) return fixture('bpe-disponibilidade.html');
@@ -63,6 +64,21 @@ describe('SvrsCollector', () => {
       expect(cte.some((s) => s.uf === uf)).toBe(false);
     }
     expect(cte.find((s) => s.uf === 'AC')?.authorizer).toBe('SVRS');
+  });
+
+  it('lê a NFC-e na página da NFC-e, não na da NF-e', async () => {
+    const urls: string[] = [];
+    const recording: SvrsFetcher = async (url) => {
+      urls.push(url);
+      return fixtureFetcher(url);
+    };
+    const out = await new SvrsCollector(new SvrsProvider(recording)).collect();
+
+    expect(urls).toContain('https://dfe-portal.svrs.rs.gov.br/Nfce/Disponibilidade');
+    // RS autoriza a NFC-e na SEFAZ-RS; as UFs do SVRS vêm da outra seção da página.
+    const nfce = out.filter((s) => s.document === DocumentType.NFCe);
+    expect(nfce.find((s) => s.uf === 'RS')?.authorizer).toBe('RS');
+    expect(nfce.find((s) => s.uf === 'AC')?.authorizer).toBe('SVRS');
   });
 
   it('propaga o horário de aferição do SVRS em sourceCheckedAt', async () => {
