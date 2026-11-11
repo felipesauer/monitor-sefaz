@@ -158,7 +158,8 @@ Actions) quanto no self-host (API).
 - **Manutenção programada do SVRS** (domingos, 7h–9h) avisada na tela; horários no fuso de
   Brasília.
 - **Filtros** por documento e por UF; **banner** de saúde geral.
-- **Três modos de layout** (Operação, Painel, Painel + métricas) e **tema claro/escuro**.
+- **Modo TV** (`/#tv`): a visão para tela de NOC, só o essencial e atualizando sozinha; e
+  **tema claro/escuro**.
 - **Últimas Notas Técnicas** e um FAQ explicando cStat, autorizadores e contingência.
 
 ## API HTTP

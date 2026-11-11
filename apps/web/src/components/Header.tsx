@@ -1,14 +1,10 @@
-import { Activity, LayoutGrid, Moon, Pause, Play, RefreshCw, Sun } from 'lucide-react';
+import { Activity, Moon, Pause, Play, RefreshCw, Sun } from 'lucide-react';
 import { GitHubStarButton } from './GitHubStarButton.js';
 
 /** Modos de layout do painel (espelha o monitorsefaz). */
-export type LayoutMode = 'operation' | 'panel' | 'metrics';
-
 interface HeaderProps {
   onToggleTheme: () => void;
   /** Modos de layout do painel. As páginas por UF não têm: sem eles, o seletor some. */
-  layout?: LayoutMode;
-  onLayout?: (mode: LayoutMode) => void;
   generatedAt?: string;
   refreshLabel: string;
   paused: boolean;
@@ -21,17 +17,9 @@ interface HeaderProps {
   homeHref?: string;
 }
 
-const MODES: { value: LayoutMode; label: string }[] = [
-  { value: 'operation', label: 'Operação' },
-  { value: 'panel', label: 'Painel' },
-  { value: 'metrics', label: 'Painel + métricas' },
-];
-
 /** Cabeçalho: marca, modos de layout, atualização e controles. */
 export function Header({
   onToggleTheme,
-  layout,
-  onLayout,
   generatedAt,
   refreshLabel,
   paused,
@@ -74,34 +62,6 @@ export function Header({
         )}
 
         <div className="flex shrink-0 items-center gap-2">
-          {/* modos de layout */}
-          {layout && onLayout && (
-            <div
-              className="hidden items-center gap-0.5 rounded-lg border p-0.5 lg:inline-flex"
-              role="group"
-              aria-label="Modos de layout"
-              style={{ background: 'var(--surface-2)' }}
-            >
-              {MODES.map((m) => (
-                <button
-                  key={m.value}
-                  type="button"
-                  onClick={() => onLayout(m.value)}
-                  aria-pressed={layout === m.value}
-                  className="flex items-center gap-1 rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors"
-                  style={
-                    layout === m.value
-                      ? { background: 'var(--accent)', color: '#fff' }
-                      : { color: 'var(--text-dim)' }
-                  }
-                >
-                  <LayoutGrid className="h-3.5 w-3.5" />
-                  {m.label}
-                </button>
-              ))}
-            </div>
-          )}
-
           {/* atualização */}
           <div className="hidden text-right text-xs xl:block" style={{ color: 'var(--text-dim)' }}>
             {generatedAt && (

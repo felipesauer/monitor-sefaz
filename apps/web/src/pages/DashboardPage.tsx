@@ -9,10 +9,11 @@ import {
   POLL_INTERVAL_MS,
 } from '../hooks/useStatus.js';
 import { useTheme } from '../hooks/useTheme.js';
-import { Header, type LayoutMode } from '../components/Header.js';
+import { Header } from '../components/Header.js';
 import { GlobalBanner } from '../components/GlobalBanner.js';
 import { UpdateInfo } from '../components/UpdateInfo.js';
-import { SummaryCards } from '../components/SummaryCards.js';
+import { ButtonLink } from '../components/ButtonLink.js';
+import { useTvMode } from '../hooks/useTvMode.js';
 import { FilterBar, type DocumentFilter } from '../components/FilterBar.js';
 import { UfSections } from '../components/UfSections.js';
 import { OverviewCharts } from '../components/OverviewCharts.js';
@@ -54,7 +55,7 @@ export function DashboardPage() {
   const { toggle } = useTheme();
   const queryClient = useQueryClient();
 
-  const [layout, setLayout] = useState<LayoutMode>('panel');
+  const tv = useTvMode();
   const [paused, setPaused] = useState(false);
   const [docFilter, setDocFilter] = useState<DocumentFilter>('ALL');
   const [selectedUfs, setSelectedUfs] = useState<Set<string>>(new Set());
@@ -134,8 +135,6 @@ export function DashboardPage() {
     <div style={{ minHeight: '100vh' }}>
       <Header
         onToggleTheme={toggle}
-        layout={layout}
-        onLayout={setLayout}
         generatedAt={status.data?.generatedAt}
         refreshLabel={paused ? 'Atualização pausada' : 'Atualização automática'}
         paused={paused}
@@ -144,11 +143,18 @@ export function DashboardPage() {
       />
 
       <main className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-6">
-        <p className="text-sm leading-relaxed" style={{ color: 'var(--text-dim)' }}>
-          Acompanhe em tempo real a disponibilidade dos serviços de autorização da SEFAZ para os
-          documentos fiscais eletrônicos, por estado e por UF. Os dados são consolidados a partir do
-          monitoramento público da SEFAZ.
-        </p>
+        {tv ? (
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-sm font-semibold">Modo TV · atualiza sozinho a cada minuto</p>
+            <ButtonLink href="#">Sair do modo TV</ButtonLink>
+          </div>
+        ) : (
+          <p className="text-sm leading-relaxed" style={{ color: 'var(--text-dim)' }}>
+            Acompanhe em tempo real a disponibilidade dos serviços de autorização da SEFAZ para os
+            documentos fiscais eletrônicos, por estado e por UF. Os dados são consolidados a partir
+            do monitoramento público da SEFAZ.
+          </p>
+        )}
 
         {(summary.data || summary.isLoading) && (
           <GlobalBanner summary={summary.data} services={all} />
@@ -159,18 +165,14 @@ export function DashboardPage() {
         )}
         <MaintenanceNotice />
 
-        {layout === 'metrics' && summary.data && <SummaryCards summary={summary.data} />}
-
-        {layout !== 'operation' && (
-          <BrazilMap
-            ufStates={ufStates}
-            selectedUfs={selectedUfs}
-            onToggleUf={toggleUf}
-            services={docScoped}
-            documents={shownDocuments}
-            loading={status.isLoading}
-          />
-        )}
+        <BrazilMap
+          ufStates={ufStates}
+          selectedUfs={selectedUfs}
+          onToggleUf={toggleUf}
+          services={docScoped}
+          documents={shownDocuments}
+          loading={status.isLoading}
+        />
 
         <OverviewCharts
           series={series.data}
@@ -206,7 +208,7 @@ export function DashboardPage() {
           )}
         </section>
 
-        {layout !== 'operation' && (
+        {!tv && (
           <FilterBar
             ufStates={ufStates}
             docFilter={docFilter}
@@ -248,43 +250,53 @@ export function DashboardPage() {
         {status.data && (
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h2 className="text-sm font-semibold">Por estado</h2>
-            <div
-              className="flex gap-1 rounded-lg p-0.5"
-              style={{ background: 'var(--surface-2)' }}
-              role="group"
-              aria-label="Como mostrar os estados"
-            >
-              {(
-                [
-                  ['cards', 'Cards'],
-                  ['compact', 'Lista compacta'],
-                ] as const
-              ).map(([value, label]) => (
-                <button
-                  key={value}
-                  type="button"
-                  aria-pressed={ufView === value}
-                  onClick={() => setUfView(value)}
-                  className="rounded-md px-3 py-1 text-xs font-semibold transition-colors"
-                  style={
-                    ufView === value
-                      ? {
-                          background: 'var(--surface)',
-                          color: 'var(--text)',
-                          boxShadow: 'var(--shadow)',
-                        }
-                      : { color: 'var(--text-dim)' }
-                  }
+            <div className="flex flex-wrap items-center gap-2">
+              {!tv && (
+                <ButtonLink
+                  href="#tv"
+                  title="Visão para tela de NOC: só o essencial, atualizando sozinha"
                 >
-                  {label}
-                </button>
-              ))}
+                  Modo TV
+                </ButtonLink>
+              )}
+              <div
+                className="flex gap-1 rounded-lg p-0.5"
+                style={{ background: 'var(--surface-2)' }}
+                role="group"
+                aria-label="Como mostrar os estados"
+              >
+                {(
+                  [
+                    ['cards', 'Cards'],
+                    ['compact', 'Lista compacta'],
+                  ] as const
+                ).map(([value, label]) => (
+                  <button
+                    key={value}
+                    type="button"
+                    aria-pressed={ufView === value}
+                    onClick={() => setUfView(value)}
+                    className="rounded-md px-3 py-1 text-xs font-semibold transition-colors"
+                    style={
+                      ufView === value
+                        ? {
+                            background: 'var(--surface)',
+                            color: 'var(--text)',
+                            boxShadow: 'var(--shadow)',
+                          }
+                        : { color: 'var(--text-dim)' }
+                    }
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         )}
         {status.data && (
           <UfSections
-            compact={ufView === 'compact'}
+            compact={tv || ufView === 'compact'}
             services={visible}
             documents={shownDocuments}
             ufs={shownUfs}
@@ -293,23 +305,27 @@ export function DashboardPage() {
           />
         )}
 
-        <section
-          className="rounded-xl border p-4 sm:p-5"
-          style={{ background: 'var(--surface)', boxShadow: 'var(--shadow)' }}
-        >
-          <h2 className="text-sm font-semibold">Status da SEFAZ por estado</h2>
-          <p className="mb-4 mt-1 text-xs leading-relaxed" style={{ color: 'var(--text-dim)' }}>
-            Cada estado tem uma página com o status ao vivo, quem autoriza cada documento e o que
-            fazer quando a SEFAZ cai.
-          </p>
-          <UfDirectory />
-        </section>
+        {!tv && (
+          <>
+            <section
+              className="rounded-xl border p-4 sm:p-5"
+              style={{ background: 'var(--surface)', boxShadow: 'var(--shadow)' }}
+            >
+              <h2 className="text-sm font-semibold">Status da SEFAZ por estado</h2>
+              <p className="mb-4 mt-1 text-xs leading-relaxed" style={{ color: 'var(--text-dim)' }}>
+                Cada estado tem uma página com o status ao vivo, quem autoriza cada documento e o
+                que fazer quando a SEFAZ cai.
+              </p>
+              <UfDirectory />
+            </section>
 
-        <TechnicalNotesCard notes={technicalNotes.data?.notes ?? []} />
-        <HelpSection />
+            <TechnicalNotesCard notes={technicalNotes.data?.notes ?? []} />
+            <HelpSection />
+          </>
+        )}
       </main>
 
-      <Footer />
+      {!tv && <Footer />}
 
       {selectedLive && (
         <ServiceDetailPanel service={selectedLive} onClose={() => setSelected(null)} />
