@@ -55,14 +55,16 @@ export class SvrsCollector {
 
   public async collect(): Promise<CollectedStatus[]> {
     const out: CollectedStatus[] = [];
+    // As páginas são buscadas em paralelo: com o portal fora do ar, cada uma
+    // gasta as 3 tentativas com timeout antes de desistir, e em série isso
+    // somava ~6 minutos por rodada. O resultado segue a ordem dos documentos.
+    const documents = this.provider.supportedDocuments();
+    const fetched = await Promise.allSettled(documents.map((d) => this.provider.fetch(d)));
 
-    for (const document of this.provider.supportedDocuments()) {
-      let authorizers: SvrsAuthorizerStatus[];
-      try {
-        authorizers = await this.provider.fetch(document);
-      } catch {
-        continue; // documento que falha não derruba os demais
-      }
+    for (const [i, document] of documents.entries()) {
+      const result = fetched[i];
+      if (result?.status !== 'fulfilled') continue; // documento que falha não derruba os demais
+      const authorizers: SvrsAuthorizerStatus[] = result.value;
 
       const byCode = new Map<AuthorizerCode, SvrsAuthorizerStatus>(
         authorizers.map((a) => [toAuthorizerCode(a.authorizer), a])
