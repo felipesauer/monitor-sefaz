@@ -117,13 +117,10 @@ function Stat({ label, value, hint }: { label: string; value: ReactNode; hint?: 
       className="flex min-w-0 flex-col gap-0.5 rounded-xl p-3"
       style={{ background: 'var(--surface-2)' }}
     >
-      <span
-        className="text-[10px] font-semibold uppercase tracking-wide"
-        style={{ color: 'var(--text-dim)' }}
-      >
+      <span className="truncate text-[11px] font-semibold" style={{ color: 'var(--text-dim)' }}>
         {label}
       </span>
-      <span className="truncate font-mono text-xl font-bold tabular-nums">{value}</span>
+      <span className="truncate text-xl font-bold tabular-nums">{value}</span>
       {hint && (
         <span className="truncate text-[11px]" style={{ color: 'var(--text-dim)' }}>
           {hint}
@@ -261,12 +258,12 @@ export function ServiceDetailPanel({ service, onClose }: ServiceDetailPanelProps
 
         <div className="grid grid-cols-3 gap-2 px-5 py-5 sm:px-6">
           <Stat
-            label={`Disponível · ${period}`}
+            label={`Disponível ${period}`}
             value={stats.uptime !== null ? `${stats.uptime}%` : '—'}
             hint={stats.points ? `${stats.points} leituras` : 'sem leituras'}
           />
           <Stat
-            label="Tempo de acesso"
+            label="Acesso"
             value={
               <>
                 {latency.value}
@@ -276,7 +273,7 @@ export function ServiceDetailPanel({ service, onClose }: ServiceDetailPanelProps
             hint="última leitura"
           />
           <Stat
-            label="Aferido às"
+            label="Aferido"
             value={service.sourceCheckedAt ? service.sourceCheckedAt.slice(0, 5) : '—'}
             hint={SOURCE_LABEL[service.source ?? ''] ?? 'fonte pública'}
           />

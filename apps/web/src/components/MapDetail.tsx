@@ -111,7 +111,7 @@ function CountryOverview({
               ? 'Tudo no ar'
               : `${failingUfs.length} ${failingUfs.length > 1 ? 'estados' : 'estado'} com problema`}
           </h3>
-          <p className="mt-0.5 text-xs" style={{ color: 'var(--text-dim)' }}>
+          <p className="mt-0.5 text-xs [text-wrap:pretty]" style={{ color: 'var(--text-dim)' }}>
             {up} de {total} serviços operando em {byUf.size} estados.
           </p>
         </div>
@@ -119,26 +119,20 @@ function CountryOverview({
 
       <dl className="grid grid-cols-3 gap-2">
         {[
-          ['Estados no ar', `${byUf.size - failingUfs.length}`, `de ${byUf.size}`],
-          ['Serviços no ar', `${up}`, `de ${total}`],
-          ['Operando', `${pct}%`, 'agora'],
-        ].map(([label, value, hint]) => (
+          ['estados no ar', `${byUf.size - failingUfs.length}/${byUf.size}`],
+          ['serviços no ar', `${up}/${total}`],
+          ['operando', `${pct}%`],
+        ].map(([label, value]) => (
           <div
             key={label}
-            className="flex flex-col rounded-xl p-2.5"
+            className="flex min-w-0 flex-col gap-0.5 rounded-xl px-2.5 py-2"
             style={{ background: 'var(--surface-2)' }}
           >
-            <dt
-              className="order-2 text-[10px] font-semibold uppercase tracking-wide"
-              style={{ color: 'var(--text-dim)' }}
-            >
+            <dt className="order-2 text-[11px] leading-tight" style={{ color: 'var(--text-dim)' }}>
               {label}
             </dt>
-            <dd className="order-1 text-xl font-bold leading-tight">
+            <dd className="order-1 whitespace-nowrap text-base font-bold leading-tight tabular-nums sm:text-lg">
               {value}
-              <span className="ml-1 text-[11px] font-normal" style={{ color: 'var(--text-dim)' }}>
-                {hint}
-              </span>
             </dd>
           </div>
         ))}

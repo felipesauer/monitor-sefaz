@@ -33,7 +33,7 @@ describe('OverviewCharts', () => {
     expect(nfe).toHaveTextContent('66.7%');
     expect(screen.getByRole('row', { name: /CT-e/ })).toHaveTextContent('100%');
     expect(
-      screen.getByRole('img', { name: /No máximo 1 serviços com problema/ })
+      screen.getByRole('img', { name: /No máximo 1 serviço com problema/ })
     ).toBeInTheDocument();
   });
 

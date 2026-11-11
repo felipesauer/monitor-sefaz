@@ -8,7 +8,7 @@ import { useTheme } from '../hooks/useTheme.js';
 import { Header } from '../components/Header.js';
 import { UpdateInfo } from '../components/UpdateInfo.js';
 import { StatusLegend } from '../components/StatusLegend.js';
-import { ServiceGrid, type ServiceGridPlaceholder } from '../components/ServiceGrid.js';
+import { UfSections } from '../components/UfSections.js';
 import { LoadingBanner } from '../components/GlobalBanner.js';
 import { ServiceDetailPanel } from '../components/ServiceDetailPanel.js';
 import { NoScriptNotice } from '../components/NoScriptNotice.js';
@@ -156,23 +156,6 @@ export function UfPage({ uf }: { uf: UF }) {
     [status.data, uf]
   );
 
-  // Um card de espera por documento do catálogo enquanto o status carrega, e um
-  // card "sem leitura" por documento que a leitura não trouxe: a grade tem
-  // sempre um card por documento, e não muda de altura quando os dados chegam.
-  const placeholders = (
-    kind: ServiceGridPlaceholder['kind'],
-    only?: ReadonlySet<DocumentType>
-  ): ServiceGridPlaceholder[] =>
-    ufAuthorizations(uf)
-      .filter(({ document }) => !only || only.has(document))
-      .map(({ document, authorizer }) => ({
-        key: `${kind}-${document}`,
-        kind,
-        document,
-        uf,
-        authorizer,
-      }));
-
   const sefaz = `SEFAZ-${uf}`;
   const svc = nfeContingency(uf);
   const nfeAuth = ufAuthorizations(uf).find((a) => a.document === DocumentType.NFe);
@@ -224,11 +207,14 @@ export function UfPage({ uf }: { uf: UF }) {
         <StatusLegend />
 
         {status.isLoading && (
-          <ServiceGrid
+          <UfSections
+            loading
             services={[]}
+            documents={DOCUMENTS}
+            ufs={[uf]}
             series={{}}
             onSelect={() => {}}
-            placeholders={placeholders('loading')}
+            linkToUf={false}
           />
         )}
         <NoScriptNotice />
@@ -239,11 +225,13 @@ export function UfPage({ uf }: { uf: UF }) {
         )}
         {status.data &&
           (services.length > 0 ? (
-            <ServiceGrid
+            <UfSections
               services={services}
+              documents={DOCUMENTS}
+              ufs={[uf]}
               series={series.data ?? {}}
               onSelect={setSelected}
-              placeholders={placeholders('no-source', withoutStatus)}
+              linkToUf={false}
             />
           ) : (
             <p className="py-10 text-center text-sm" style={{ color: 'var(--text-dim)' }}>
@@ -259,7 +247,7 @@ export function UfPage({ uf }: { uf: UF }) {
             Quem autoriza os documentos fiscais {ofUf(uf)}
           </h2>
           <table className="mt-3 w-full text-left text-sm">
-            <thead>
+            <thead className="hidden sm:table-header-group">
               <tr className="text-xs uppercase tracking-wide" style={{ color: 'var(--text-dim)' }}>
                 <th scope="col" className="pb-2 pr-4 font-semibold">
                   Documento
@@ -271,14 +259,14 @@ export function UfPage({ uf }: { uf: UF }) {
             </thead>
             <tbody>
               {ufAuthorizations(uf).map(({ document, authorizer, own }) => (
-                <tr key={document} className="border-t align-top">
-                  <th scope="row" className="py-2.5 pr-4 font-normal">
+                <tr key={document} className="block border-t py-2.5 align-top sm:table-row sm:py-0">
+                  <th scope="row" className="block pr-4 font-normal sm:table-cell sm:py-2.5">
                     <span className="font-semibold">{DOC_LABEL[document]}</span>
                     <span className="mt-0.5 block text-xs" style={{ color: 'var(--text-dim)' }}>
                       {DOC_DESCRIPTION[document]}
                     </span>
                   </th>
-                  <td className="py-2.5">
+                  <td className="mt-1.5 block sm:mt-0 sm:table-cell sm:py-2.5">
                     <span className="font-mono font-semibold">{authorizerLabel(authorizer)}</span>
                     <span className="mt-0.5 block text-xs" style={{ color: 'var(--text-dim)' }}>
                       {own ? 'Autorizador próprio do estado' : AUTHORIZER_NAME[authorizer]}

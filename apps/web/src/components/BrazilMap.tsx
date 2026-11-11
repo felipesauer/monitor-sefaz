@@ -122,13 +122,13 @@ export function BrazilMap({
       style={{ background: 'var(--surface)', boxShadow: 'var(--shadow)' }}
       aria-label="Mapa de disponibilidade por estado"
     >
-      <h2
-        className="mb-3 text-xs font-semibold uppercase tracking-wide"
-        style={{ color: 'var(--text-dim)' }}
-      >
-        Mapa por estado
-      </h2>
-      <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
+      <div className="mb-3">
+        <h2 className="text-sm font-semibold">Mapa por estado</h2>
+        <p className="text-xs" style={{ color: 'var(--text-dim)' }}>
+          A cor é o pior estado dos documentos de cada UF. Clique num estado para filtrar os cards.
+        </p>
+      </div>
+      <div className="grid items-center gap-5 lg:grid-cols-[minmax(0,1fr)_360px]">
         <svg
           viewBox={BR_VIEWBOX}
           className="mx-auto block h-auto w-full"

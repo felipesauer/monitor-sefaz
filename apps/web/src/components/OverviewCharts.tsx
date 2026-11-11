@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { formatTime } from '../lib/time.js';
+import { formatDay, formatTime } from '../lib/time.js';
 import type { DocumentType } from '@monitor-sefaz/catalog';
 import {
   isUp,
@@ -113,7 +113,7 @@ export function OverviewCharts({ series, documents, end = Date.now() }: Overview
           <p className="text-xs" style={{ color: 'var(--text-dim)' }}>
             {loading
               ? 'Carregando o histórico…'
-              : `De ${formatTime(start)} até a última coleta, ${formatTime(end)} (horário de Brasília)`}
+              : `De ${formatDay(start)}, ${formatTime(start)}, a ${formatDay(end)}, ${formatTime(end)} (horário de Brasília) · faixas de ${Math.round(PERIOD_MS[period] / BUCKETS / 60_000)} min`}
           </p>
         </div>
         <div
@@ -193,7 +193,7 @@ export function OverviewCharts({ series, documents, end = Date.now() }: Overview
                       ))}
                     </div>
                   </td>
-                  <td className="w-16 pl-2 text-right font-mono text-xs font-semibold tabular-nums">
+                  <td className="w-16 pl-2 text-right text-xs font-semibold tabular-nums">
                     {loading || uptime === null ? '—' : `${uptime}%`}
                   </td>
                 </tr>
@@ -226,7 +226,6 @@ export function OverviewCharts({ series, documents, end = Date.now() }: Overview
               />
               Sem leitura
             </li>
-            <li>· cada faixa: {Math.round(PERIOD_MS[period] / BUCKETS / 60_000)} min</li>
           </ul>
         </div>
 
@@ -251,7 +250,7 @@ export function OverviewCharts({ series, documents, end = Date.now() }: Overview
             <h3 className="mb-2 text-xs font-semibold" style={{ color: 'var(--text-dim)' }}>
               Serviços com problema
             </h3>
-            <div className="h-16">
+            <div className="h-20">
               {loading ? (
                 <div
                   className="h-full animate-pulse rounded"
@@ -265,22 +264,46 @@ export function OverviewCharts({ series, documents, end = Date.now() }: Overview
                   Nenhum serviço com problema no período.
                 </p>
               ) : (
-                <div
-                  className="flex h-full items-end gap-[2px]"
-                  role="img"
-                  aria-label={`No máximo ${maxProblems} serviços com problema ao mesmo tempo`}
-                >
-                  {problems.map((p) => (
-                    <span
-                      key={p.start}
-                      className="min-w-0 flex-1 rounded-t-[3px]"
-                      title={`${formatTime(p.start)} · ${p.count} ${p.count === 1 ? 'serviço' : 'serviços'} com problema`}
-                      style={{
-                        height: p.count ? `${Math.max(8, (p.count / maxProblems) * 100)}%` : '2px',
-                        background: p.count ? 'var(--down)' : 'var(--border)',
-                      }}
-                    />
-                  ))}
+                <div className="flex h-full flex-col">
+                  <div className="flex min-h-0 flex-1 gap-2">
+                    <div
+                      className="flex w-6 shrink-0 flex-col justify-between text-right text-[10px] tabular-nums"
+                      style={{ color: 'var(--text-dim)' }}
+                      aria-hidden="true"
+                    >
+                      <span>{maxProblems}</span>
+                      <span>0</span>
+                    </div>
+                    <div
+                      className="flex min-w-0 flex-1 items-end gap-[2px] border-b"
+                      style={{ borderColor: 'var(--border)' }}
+                      role="img"
+                      aria-label={`No máximo ${maxProblems} ${maxProblems === 1 ? 'serviço' : 'serviços'} com problema ao mesmo tempo`}
+                    >
+                      {problems.map((p) => (
+                        <span
+                          key={p.start}
+                          className="min-w-0 flex-1 rounded-t-[3px]"
+                          title={`${formatTime(p.start)} · ${p.count} ${p.count === 1 ? 'serviço' : 'serviços'} com problema`}
+                          style={{
+                            height: p.count
+                              ? `${Math.max(8, (p.count / maxProblems) * 100)}%`
+                              : '2px',
+                            background: p.count ? 'var(--down)' : 'transparent',
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <div
+                    className="flex justify-between pl-8 pt-1 text-[10px] tabular-nums"
+                    style={{ color: 'var(--text-dim)' }}
+                    aria-hidden="true"
+                  >
+                    <span>{formatTime(start)}</span>
+                    <span>{formatTime(start + PERIOD_MS[period] / 2)}</span>
+                    <span>{formatTime(end)}</span>
+                  </div>
                 </div>
               )}
             </div>

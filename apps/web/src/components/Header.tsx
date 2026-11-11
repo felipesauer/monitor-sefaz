@@ -48,9 +48,11 @@ export function Header({
       >
         <Activity className="h-5 w-5" />
       </div>
-      <div>
-        <Title className="text-lg font-bold leading-tight">Monitor SEFAZ</Title>
-        <p className="text-xs" style={{ color: 'var(--text-dim)' }}>
+      <div className="min-w-0">
+        <Title className="whitespace-nowrap text-base font-bold leading-tight sm:text-lg">
+          Monitor SEFAZ
+        </Title>
+        <p className="hidden text-xs sm:block" style={{ color: 'var(--text-dim)' }}>
           Disponibilidade de NF-e, NFC-e, CT-e, MDF-e, DC-e e BP-e
         </p>
       </div>
@@ -62,20 +64,20 @@ export function Header({
       className="sticky top-0 z-20 border-b backdrop-blur"
       style={{ background: 'color-mix(in srgb, var(--bg) 85%, transparent)' }}
     >
-      <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3 lg:flex-row lg:items-center lg:justify-between">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3">
         {homeHref ? (
-          <a href={homeHref} className="flex items-center gap-3">
+          <a href={homeHref} className="flex min-w-0 items-center gap-3">
             {brand}
           </a>
         ) : (
-          <div className="flex items-center gap-3">{brand}</div>
+          <div className="flex min-w-0 items-center gap-3">{brand}</div>
         )}
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           {/* modos de layout */}
           {layout && onLayout && (
             <div
-              className="inline-flex items-center gap-0.5 rounded-lg border p-0.5"
+              className="hidden items-center gap-0.5 rounded-lg border p-0.5 lg:inline-flex"
               role="group"
               aria-label="Modos de layout"
               style={{ background: 'var(--surface-2)' }}
@@ -101,7 +103,7 @@ export function Header({
           )}
 
           {/* atualização */}
-          <div className="hidden text-right text-xs sm:block" style={{ color: 'var(--text-dim)' }}>
+          <div className="hidden text-right text-xs xl:block" style={{ color: 'var(--text-dim)' }}>
             {generatedAt && (
               <div>
                 Atualizado:{' '}
@@ -119,7 +121,7 @@ export function Header({
           <button
             type="button"
             onClick={onRefresh}
-            className="flex h-9 w-9 items-center justify-center rounded-lg border transition-colors hover:opacity-80"
+            className="hidden h-9 w-9 items-center justify-center rounded-lg border sm:flex transition-colors hover:opacity-80"
             style={{ background: 'var(--surface)' }}
             title="Atualizar agora"
             aria-label="Atualizar agora"
@@ -129,7 +131,7 @@ export function Header({
           <button
             type="button"
             onClick={onTogglePause}
-            className="flex h-9 w-9 items-center justify-center rounded-lg border transition-colors hover:opacity-80"
+            className="hidden h-9 w-9 items-center justify-center rounded-lg border sm:flex transition-colors hover:opacity-80"
             style={{ background: 'var(--surface)' }}
             title={paused ? 'Retomar atualização' : 'Pausar atualização'}
             aria-label={paused ? 'Retomar' : 'Pausar'}

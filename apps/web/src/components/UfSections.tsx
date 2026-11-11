@@ -28,18 +28,22 @@ interface UfSectionsProps {
   loading?: boolean;
   /** Uma linha por estado, com um botão por documento, em vez dos cards. */
   compact?: boolean;
+  /** Botão para a página de cada UF no cabeçalho (desligado na própria página da UF). */
+  linkToUf?: boolean;
 }
 
 const flagSrc = (uf: string) => `${import.meta.env.BASE_URL}flags/${uf.toLowerCase()}.png`;
 
 interface CompactCardProps {
   title: string;
+  /** Autorizador, em letra pequena sob o título. */
   chip: string;
-  pill: ReactNode;
-  pillStyle: React.CSSProperties;
-  stripe: string;
+  /** Cor do ponto, da faixa lateral e do texto do estado. */
+  color: string;
+  status: string;
+  /** Horário da aferição, ao lado do estado. */
+  detail?: string;
   latency: ReactNode;
-  line: string;
   spark: ReactNode;
   onClick?: () => void;
   busy?: boolean;
@@ -47,17 +51,17 @@ interface CompactCardProps {
 }
 
 /**
- * O card compacto de um documento dentro do grupo do estado. O card real e o
- * de espera usam esta mesma estrutura, para terem a mesma altura (CLS).
+ * O card compacto de um documento dentro do grupo do estado: cabe em ~140 px
+ * (8 documentos lado a lado) sem cortar texto. O card real e o de espera usam
+ * esta mesma estrutura, para terem a mesma altura (CLS).
  */
 function CompactCard({
   title,
   chip,
-  pill,
-  pillStyle,
-  stripe,
+  color,
+  status,
+  detail,
   latency,
-  line,
   spark,
   onClick,
   busy,
@@ -65,37 +69,35 @@ function CompactCard({
 }: CompactCardProps) {
   const body = (
     <>
-      <span aria-hidden className="absolute inset-y-0 left-0 w-1" style={{ background: stripe }} />
-      <div className="flex items-start justify-between gap-2">
-        <div className="min-w-0">
-          <p className="truncate text-sm font-bold leading-tight">{title}</p>
-          <p
-            className="truncate text-[10px] font-semibold uppercase"
-            style={{ color: 'var(--text-dim)' }}
-          >
-            {chip}
-          </p>
-        </div>
+      <span aria-hidden className="absolute inset-y-0 left-0 w-1" style={{ background: color }} />
+      <div className="flex items-center justify-between gap-2">
+        <p className="min-w-0 truncate text-sm font-bold leading-tight">{title}</p>
         <span
-          className="flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold"
-          style={pillStyle}
-        >
-          {pill}
+          className="h-2.5 w-2.5 shrink-0 rounded-full"
+          style={{ background: color }}
+          aria-hidden="true"
+        />
+      </div>
+      <p
+        className="-mt-1 truncate text-[10px] font-semibold uppercase tracking-wide"
+        style={{ color: 'var(--text-dim)' }}
+      >
+        {chip}
+      </p>
+      <div className="flex items-end gap-2">
+        <div className="shrink-0 text-lg font-bold leading-none tabular-nums">{latency}</div>
+        <div className="h-6 min-w-0 flex-1">{spark}</div>
+      </div>
+      <p className="truncate text-[11px] leading-tight">
+        <span className="font-semibold" style={{ color: stateTextColor(color) }}>
+          {status}
         </span>
-      </div>
-      <div className="flex items-end justify-between gap-2">
-        <div className="min-w-0">
-          <div className="font-mono text-lg font-bold leading-none tracking-tight">{latency}</div>
-          <p className="mt-1 truncate text-[10px]" style={{ color: 'var(--text-dim)' }}>
-            {line}
-          </p>
-        </div>
-        <div className="h-7 w-20 shrink-0">{spark}</div>
-      </div>
+        {detail && <span style={{ color: 'var(--text-dim)' }}> · {detail}</span>}
+      </p>
     </>
   );
   const className =
-    'relative flex flex-col gap-2 overflow-hidden rounded-xl border p-3 pl-4 text-left transition-all duration-200';
+    'relative flex min-w-0 flex-col gap-2 overflow-hidden rounded-xl border p-3 pl-4 text-left transition-all duration-200';
   const style = { background: 'var(--surface)', boxShadow: 'var(--shadow)' };
   return onClick ? (
     <button
@@ -131,12 +133,9 @@ function ServiceCompactCard({
     <CompactCard
       title={docLabel}
       chip={authorizerLabel(service.authorizer)}
-      stripe={meta.color}
-      pill={meta.label}
-      pillStyle={{
-        background: `color-mix(in srgb, ${meta.color} 14%, transparent)`,
-        color: stateTextColor(meta.color),
-      }}
+      color={meta.color}
+      status={meta.label}
+      detail={service.sourceCheckedAt?.slice(0, 5)}
       latency={
         <>
           {latency.value}
@@ -147,18 +146,13 @@ function ServiceCompactCard({
           )}
         </>
       }
-      line={
-        service.sourceCheckedAt
-          ? `aferido às ${service.sourceCheckedAt.slice(0, 5)}`
-          : 'tempo de acesso'
-      }
       spark={
         values.length >= 2 ? (
           <Sparkline values={values} color={meta.color} gradientId={`uf-spark-${service.id}`} />
         ) : null
       }
       onClick={() => onSelect(service)}
-      hint={`${docLabel} · ${UF_NAME[service.uf] ?? service.uf} (${service.authorizer})`}
+      hint={`${docLabel} · ${UF_NAME[service.uf] ?? service.uf} (${service.authorizer})${service.sourceCheckedAt ? ` · aferido pela SEFAZ às ${service.sourceCheckedAt.slice(0, 5)}` : ''}`}
     />
   );
 }
@@ -177,11 +171,10 @@ function PlaceholderCompactCard({
     <CompactCard
       title={DOC_LABEL[document] ?? document}
       chip={authorizerLabel(authorizer)}
-      stripe="var(--border)"
-      pill={loading ? 'Carregando…' : 'Sem leitura'}
-      pillStyle={{ background: 'var(--surface-2)', color: 'var(--text-dim)' }}
+      color="var(--border)"
+      status={loading ? 'Carregando…' : 'Sem leitura'}
+      detail={loading ? undefined : 'sem fonte'}
       latency="—"
-      line={loading ? 'tempo de acesso' : 'sem fonte pública'}
       spark={
         loading ? (
           <div
@@ -218,6 +211,7 @@ export function UfSections({
   onSelect,
   loading,
   compact,
+  linkToUf = true,
 }: UfSectionsProps) {
   // Fim da janela de 24h: a leitura mais recente das séries.
   const end = Object.values(series).reduce(
@@ -332,20 +326,22 @@ export function UfSections({
               </span>
               {!loading && g.uptime !== null && (
                 <span
-                  className="hidden shrink-0 font-mono text-xs tabular-nums sm:inline"
+                  className="hidden shrink-0 text-xs tabular-nums sm:inline"
                   style={{ color: 'var(--text-dim)' }}
                   title="Disponibilidade dos documentos do estado nas últimas 24 horas"
                 >
                   {g.uptime}% · 24h
                 </span>
               )}
-              <ButtonLink
-                href={pageHref({ kind: 'uf', uf: g.uf })}
-                arrow
-                className="hidden sm:inline-flex"
-              >
-                SEFAZ-{g.uf}
-              </ButtonLink>
+              {linkToUf && (
+                <ButtonLink
+                  href={pageHref({ kind: 'uf', uf: g.uf })}
+                  arrow
+                  className="hidden sm:inline-flex"
+                >
+                  SEFAZ-{g.uf}
+                </ButtonLink>
+              )}
             </header>
             {compact && !loading ? (
               <ul className="flex flex-wrap gap-1.5">
