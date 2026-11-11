@@ -146,7 +146,7 @@ Actions) quanto no self-host (API).
   quem autoriza cada documento, a contingência da NF-e e links para as demais.
 - **Mapa do Brasil** clicável, cada UF colorida pelo pior estado agregado.
 - **Cards por serviço** com badge de estado, tempo de resposta e _sparkline_ de latência.
-- **Histórico de uptime** (24h/72h) com barra estilo status-page e gráfico de latência.
+- **Histórico de uptime** (6h/24h/72h) com barra estilo status-page e gráfico de latência.
 - **Filtros** por documento e por UF; **banner** de saúde geral.
 - **Três modos de layout** (Operação, Painel, Painel + métricas) e **tema claro/escuro**.
 - **Últimas Notas Técnicas** e um FAQ explicando cStat, autorizadores e contingência.
@@ -161,7 +161,7 @@ No modo self-host, a API expõe (base `/api/v1`):
 | GET    | `/status`               | Snapshot atual; filtros `?document=&uf=&env=`                                                   |
 | GET    | `/status/:document/:uf` | Status de um serviço específico                                                                 |
 | GET    | `/summary`              | Agregado: disponibilidade, no ar, com problema, latência média, por documento e por autorizador |
-| GET    | `/services/:id/history` | Série histórica (`?period=24h\|72h`)                                                            |
+| GET    | `/services/:id/history` | Série histórica (`?period=6h\|24h\|72h`)                                                        |
 | GET    | `/services/:id/uptime`  | Uptime %, total de checagens, latência média                                                    |
 | GET    | `/incidents`            | Incidentes derivados da série                                                                   |
 | GET    | `/stream`               | **SSE** — deltas de mudança de estado em tempo real                                             |

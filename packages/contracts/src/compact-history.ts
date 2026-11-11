@@ -224,6 +224,7 @@ export function expandAllSeries(
 
 /** Janela (ms) de cada período suportado. */
 export const PERIOD_MS: Record<z.infer<typeof historyPeriodSchema>, number> = {
+  '6h': 6 * 60 * 60 * 1000,
   '24h': 24 * 60 * 60 * 1000,
   '72h': 72 * 60 * 60 * 1000,
 };

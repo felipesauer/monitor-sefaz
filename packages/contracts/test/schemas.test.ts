@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { resilientStatusSnapshotSchema, statusSnapshotSchema } from '../src/schemas.js';
+import {
+  historyPeriodSchema,
+  resilientStatusSnapshotSchema,
+  statusSnapshotSchema,
+} from '../src/schemas.js';
+import { PERIOD_MS } from '../src/compact-history.js';
 
 function service(over: Record<string, unknown> = {}): Record<string, unknown> {
   return {
@@ -48,5 +53,16 @@ describe('resilientStatusSnapshotSchema', () => {
   it('falha quando a estrutura externa é inválida (services não é array)', () => {
     const bad = { environment: 'production', generatedAt: 'x', services: 'nope' };
     expect(resilientStatusSnapshotSchema.safeParse(bad).success).toBe(false);
+  });
+});
+
+describe('historyPeriodSchema', () => {
+  it('aceita a janela de 6h, além de 24h e 72h', () => {
+    expect(historyPeriodSchema.options).toEqual(['6h', '24h', '72h']);
+    expect(PERIOD_MS['6h']).toBe(6 * 60 * 60 * 1000);
+  });
+
+  it('recusa um período fora da lista', () => {
+    expect(historyPeriodSchema.safeParse('1h').success).toBe(false);
   });
 });
