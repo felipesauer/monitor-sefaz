@@ -84,14 +84,22 @@ describe('summarizePage', () => {
     expect(s.medianLatencyMs).toBe(800);
   });
 
-  it('reprova abaixo de 99% de leituras ok', () => {
-    const samples = Array.from({ length: 100 }, (_, i) =>
-      i < 2
+  const withFailures = (failures: number) =>
+    Array.from({ length: 100 }, (_, i) =>
+      i < failures
         ? toPageSample('Nf3e', at(i), { ...ok, httpStatus: null, error: 'ETIMEDOUT' }, [])
         : toPageSample('Nf3e', at(i), ok, svrs(FOUR))
     );
-    const s = summarizePage('Nf3e', samples);
+
+  it('aprova com 98% de leituras ok (ADR-21)', () => {
+    const s = summarizePage('Nf3e', withFailures(2));
     expect(s.fetchOkRatio).toBeCloseTo(0.98);
+    expect(s.meetsCriterion).toBe(true);
+  });
+
+  it('reprova abaixo de 98% de leituras ok', () => {
+    const s = summarizePage('Nf3e', withFailures(3));
+    expect(s.fetchOkRatio).toBeCloseTo(0.97);
     expect(s.meetsCriterion).toBe(false);
   });
 

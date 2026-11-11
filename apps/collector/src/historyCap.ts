@@ -4,9 +4,11 @@ import type { HistoryFileDTO } from '@monitor-sefaz/contracts';
  * Teto de tamanho do `history.json` publicado. A retenção por tempo
  * (`HISTORY_RETENTION_MS`, 7 dias) é a regra normal; o teto é a trava para a
  * coleta de 5 em 5 minutos: se o arquivo passar de `maxBytes`, os pontos mais
- * antigos saem primeiro, série a série, até caber.
+ * antigos saem primeiro, série a série, até caber. Com um ponto por hora no que
+ * passou da última hora (ADR-22), 7 dias de 157 serviços dão ~2,9 MB e de 216,
+ * ~3,9 MB: o teto de 5 MB deixa os 7 dias inteiros e continua como trava.
  */
-export const DEFAULT_HISTORY_MAX_BYTES = 2_000_000;
+export const DEFAULT_HISTORY_MAX_BYTES = 5_000_000;
 
 const sizeOf = (history: HistoryFileDTO): number => Buffer.byteLength(JSON.stringify(history));
 
