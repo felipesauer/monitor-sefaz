@@ -39,7 +39,7 @@ jobs:
       cancel-in-progress: false
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url || steps.deployment-retry.outputs.page_url }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -95,5 +95,19 @@ jobs:
         with:
           path: apps/web/dist
 
+      # A API de artifacts do GitHub às vezes não acha o artifact recém-enviado
+      # ("No artifacts named github-pages were found"), mesmo com o upload
+      # finalizado: aconteceu em 3 de 100 rodadas da coleta em 10–11/11. O erro
+      # vem antes de o deploy ser criado, então uma segunda tentativa, depois de
+      # alguns segundos, é segura e resolve.
       - id: deployment
+        uses: actions/deploy-pages@v5
+        continue-on-error: true
+
+      - name: Esperar antes de tentar o deploy de novo
+        if: steps.deployment.outcome == 'failure'
+        run: sleep 20
+
+      - id: deployment-retry
+        if: steps.deployment.outcome == 'failure'
         uses: actions/deploy-pages@v5
