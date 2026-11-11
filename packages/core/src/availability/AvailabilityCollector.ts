@@ -109,15 +109,22 @@ export class AvailabilityCollector {
     // derivados (MDF-e/DC-e usam o estado do SVRS).
     const latencyByAuthorizer = new Map<AuthorizerCode, number>();
 
-    for (const document of this.provider.supportedDocuments()) {
-      let rows: AvailabilityRow[];
-      const start = this.now();
-      try {
-        rows = await this.provider.fetch(document);
-      } catch {
-        continue;
-      }
-      const latencyMs = this.now() - start;
+    // Busca em paralelo (com a página fora do ar, as tentativas em série somavam
+    // minutos) e processa na ordem dos documentos: os derivados herdam a
+    // latência do autorizador lida num documento anterior.
+    const documents = this.provider.supportedDocuments();
+    const fetched = await Promise.allSettled(
+      documents.map(async (document) => {
+        const start = this.now();
+        const rows = await this.provider.fetch(document);
+        return { rows, latencyMs: this.now() - start };
+      })
+    );
+
+    for (const [i, document] of documents.entries()) {
+      const result = fetched[i];
+      if (result?.status !== 'fulfilled') continue;
+      const { rows, latencyMs } = result.value;
       const byAuthorizer = new Map(rows.map((r) => [r.authorizer, r]));
       for (const row of rows) {
         globalByAuthorizer.set(row.authorizer, row);
