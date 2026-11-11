@@ -3,7 +3,9 @@ import {
   PERIOD_MS,
   type HistoryPeriod,
   type HistoryPointDTO,
+  type ServiceStateValue,
 } from '@monitor-sefaz/contracts';
+import { STATE_SEVERITY } from '../components/serviceState.js';
 
 /**
  * Cadência fallback (ms) quando há poucos pontos para inferir o intervalo real:
@@ -83,4 +85,45 @@ export function maxGapMs(points: HistoryPointDTO[]): number {
     max = Math.max(max, ts[i]! - ts[i - 1]!);
   }
   return max;
+}
+
+/** Uma faixa de tempo da barra de disponibilidade. */
+export interface TimelineBucket {
+  start: number;
+  end: number;
+  /** Pior estado lido na faixa, ou null quando não houve leitura. */
+  state: ServiceStateValue | null;
+  points: number;
+}
+
+/**
+ * Divide a janela [end - periodMs, end] em `count` faixas iguais, cada uma com o
+ * pior estado lido nela. Um segmento por leitura não cabe na tela (72h a 5 min
+ * são 864 leituras), e a faixa vazia mostra o buraco de coleta em vez de
+ * esticar a leitura vizinha.
+ */
+export function bucketTimeline(
+  points: readonly HistoryPointDTO[],
+  end: number,
+  periodMs: number,
+  count = 48
+): TimelineBucket[] {
+  const start = end - periodMs;
+  const size = periodMs / count;
+  const buckets: TimelineBucket[] = Array.from({ length: count }, (_, i) => ({
+    start: start + i * size,
+    end: start + (i + 1) * size,
+    state: null,
+    points: 0,
+  }));
+  for (const p of points) {
+    const t = Date.parse(p.timestamp);
+    if (Number.isNaN(t) || t < start || t > end) continue;
+    const bucket = buckets[Math.min(count - 1, Math.floor((t - start) / size))]!;
+    bucket.points += 1;
+    if (!bucket.state || STATE_SEVERITY[p.state] > STATE_SEVERITY[bucket.state]) {
+      bucket.state = p.state;
+    }
+  }
+  return buckets;
 }

@@ -29,7 +29,7 @@ export function GitHubStarButton() {
         style={{ color: 'var(--star)', fill: 'var(--star)' }}
         aria-hidden="true"
       />
-      Star no GitHub
+      <span className="sr-only sm:not-sr-only">Star no GitHub</span>
       {/* O nome acessível sai do próprio conteúdo ("Star no GitHub 42 estrelas"),
           então contém o texto visível, como pede o WCAG 2.5.3. O espaço explícito
           separa o número no texto lido; o "estrelas" só existe para o leitor de tela. */}

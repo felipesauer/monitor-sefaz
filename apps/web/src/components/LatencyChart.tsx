@@ -1,4 +1,5 @@
 import { useId, useState, type PointerEvent } from 'react';
+import { formatTime } from '../lib/time.js';
 import type { HistoryPointDTO } from '@monitor-sefaz/contracts';
 
 interface LatencyChartProps {
@@ -11,9 +12,6 @@ const H = 140;
 
 /** Um intervalo maior que este múltiplo do intervalo típico é um buraco de coleta. */
 const GAP_FACTOR = 3;
-
-const hhmm = (ms: number) =>
-  new Date(ms).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
 /** Teto "redondo" do eixo Y: 1, 2 ou 5 vezes uma potência de 10. */
 function niceMax(value: number): number {
@@ -84,7 +82,7 @@ export function LatencyChart({ points }: LatencyChartProps) {
     `${line(seg)} L${x(seg[seg.length - 1]!.t).toFixed(1)} ${H} L${x(seg[0]!.t).toFixed(1)} ${H} Z`;
 
   const last = samples[samples.length - 1]!;
-  const summary = `Latência de rede de ${hhmm(t0)} a ${hhmm(t1)}: mínima ${Math.min(...values)} ms, máxima ${Math.max(...values)} ms, última ${last.ms} ms.`;
+  const summary = `Latência de rede de ${formatTime(t0)} a ${formatTime(t1)}: mínima ${Math.min(...values)} ms, máxima ${Math.max(...values)} ms, última ${last.ms} ms.`;
 
   const onPointer = (event: PointerEvent<SVGSVGElement>) => {
     const box = event.currentTarget.getBoundingClientRect();
@@ -186,7 +184,8 @@ export function LatencyChart({ points }: LatencyChartProps) {
                 borderColor: 'var(--border)',
               }}
             >
-              <span style={{ color: 'var(--text-dim)' }}>{hhmm(focus.t)}</span> · {focus.ms} ms
+              <span style={{ color: 'var(--text-dim)' }}>{formatTime(focus.t)}</span> · {focus.ms}{' '}
+              ms
             </div>
           )}
         </div>
@@ -196,9 +195,9 @@ export function LatencyChart({ points }: LatencyChartProps) {
         style={{ color: 'var(--text-dim)' }}
         aria-hidden="true"
       >
-        <span>{hhmm(t0)}</span>
-        <span>{hhmm(t0 + span / 2)}</span>
-        <span>{hhmm(t1)}</span>
+        <span>{formatTime(t0)}</span>
+        <span>{formatTime(t0 + span / 2)}</span>
+        <span>{formatTime(t1)}</span>
       </figcaption>
     </figure>
   );

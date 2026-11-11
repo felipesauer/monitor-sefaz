@@ -3,6 +3,7 @@
 // que toque em window/document/localStorage durante o render quebra aqui.
 import { describe, it, expect } from 'vitest';
 import { prerender } from '../src/entry-server.js';
+import { DOCUMENTS } from '../src/lib/ufFacts.js';
 
 const TEMPLATE = `<!doctype html>
 <html lang="pt-BR">
@@ -44,7 +45,7 @@ describe('prerender', () => {
   it('entrega o conteúdo da home no HTML, sem depender de JS', () => {
     const html = file(files, 'index.html');
     expect(html).not.toContain('<!--app-html-->');
-    expect(html).toContain('<h1 class="text-lg font-bold leading-tight">Monitor SEFAZ</h1>');
+    expect(html).toMatch(/<h1 class="[^"]*">\s*Monitor SEFAZ\s*<\/h1>/);
     expect(html).toContain('Acompanhe em tempo real a disponibilidade');
     // O status ao vivo ainda depende do fetch: no HTML vai o estado de espera.
     expect(html).toContain('Carregando…');
@@ -89,15 +90,16 @@ describe('prerender', () => {
   it('pré-renderiza um card de espera por documento da UF, para a grade não pular (CLS)', () => {
     const html = file(files, 'sefaz-sp/index.html');
     // 6 cards de espera, um por documento do catálogo, e o banner de espera.
-    expect(html.match(/aria-busy="true"/g)).toHaveLength(7);
-    expect(html).toContain('São Paulo · NF-e');
-    expect(html).toContain('São Paulo · BP-e');
+    expect(html.match(/aria-busy="true"/g)).toHaveLength(DOCUMENTS.length + 1);
+    expect(html).toContain('alt="Bandeira de São Paulo"');
+    expect(html).toContain('>BP-e<');
   });
 
-  it('pré-renderiza uma página de cards de espera na home', () => {
+  it('pré-renderiza os grupos por estado com cards de espera na home', () => {
     const html = file(files, 'index.html');
-    // 24 cards e o banner.
-    expect(html.match(/aria-busy="true"/g)).toHaveLength(25);
+    // 27 estados × 6 documentos, e o banner.
+    expect(html.match(/aria-busy="true"/g)).toHaveLength(27 * DOCUMENTS.length + 1);
+    expect(html).toContain('alt="Bandeira de São Paulo"');
   });
 
   it('diz quem cai junto quando o autorizador é compartilhado', () => {

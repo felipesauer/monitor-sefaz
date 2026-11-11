@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import type { HistoryPointDTO } from '@monitor-sefaz/contracts';
-import { computeUptime } from '../src/lib/uptime.js';
+import { bucketTimeline, computeUptime } from '../src/lib/uptime.js';
 
 function pt(timestamp: string, state: HistoryPointDTO['state'], latencyMs = 0): HistoryPointDTO {
   return { timestamp, state, cStat: state === 'OPERATIONAL' ? 107 : null, latencyMs };
@@ -46,5 +46,32 @@ describe('computeUptime', () => {
     const stats = computeUptime(points, '6h');
     expect(stats.coverage).toBe(100);
     expect(stats.lowCoverage).toBe(false);
+  });
+});
+
+describe('bucketTimeline', () => {
+  const end = Date.parse('2026-11-11T06:00:00Z');
+  const sixHours = 6 * 60 * 60 * 1000;
+
+  it('divide a janela em faixas iguais com o pior estado de cada uma', () => {
+    const buckets = bucketTimeline(
+      [pt('2026-11-11T00:05:00Z', 'OPERATIONAL'), pt('2026-11-11T00:10:00Z', 'DOWN')],
+      end,
+      sixHours,
+      6
+    );
+    expect(buckets).toHaveLength(6);
+    expect(buckets[0]).toMatchObject({ state: 'DOWN', points: 2 });
+  });
+
+  it('deixa vazia a faixa sem leitura, em vez de esticar a vizinha', () => {
+    const buckets = bucketTimeline([pt('2026-11-11T05:30:00Z', 'OPERATIONAL')], end, sixHours, 6);
+    expect(buckets.slice(0, 5).every((b) => b.state === null)).toBe(true);
+    expect(buckets[5]!.state).toBe('OPERATIONAL');
+  });
+
+  it('ignora leituras fora da janela', () => {
+    const buckets = bucketTimeline([pt('2026-11-10T20:00:00Z', 'DOWN')], end, sixHours, 6);
+    expect(buckets.every((b) => b.points === 0)).toBe(true);
   });
 });

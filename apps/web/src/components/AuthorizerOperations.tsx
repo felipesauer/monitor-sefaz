@@ -12,6 +12,8 @@ interface AuthorizerOperationsProps {
   view: ServiceDetailView;
   /** Quando a coleta leu as páginas (o `generatedAt` do details.json). */
   generatedAt?: string;
+  /** Sem o título próprio, quando quem usa já põe a seção num título. */
+  hideTitle?: boolean;
 }
 
 function OperationList({ detail }: { detail: AuthorizerDetailDTO }) {
@@ -62,7 +64,7 @@ function SourceLine({ detail }: { detail: AuthorizerDetailDTO }) {
  * "Status Serviço"; aqui aparece o que ele não conta, como a autorização fora do
  * ar com o status respondendo.
  */
-export function AuthorizerOperations({ view, generatedAt }: AuthorizerOperationsProps) {
+export function AuthorizerOperations({ view, generatedAt, hideTitle }: AuthorizerOperationsProps) {
   if (isEmptyDetail(view)) return null;
   const readAt = generatedAt
     ? new Date(generatedAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
@@ -71,7 +73,7 @@ export function AuthorizerOperations({ view, generatedAt }: AuthorizerOperations
   return (
     <section aria-label="Serviços do autorizador" className="flex flex-col gap-3">
       <div>
-        <h3 className="text-sm font-semibold">Serviços do autorizador</h3>
+        {!hideTitle && <h3 className="text-sm font-semibold">Serviços do autorizador</h3>}
         {readAt && (
           <p className="text-xs" style={{ color: 'var(--text-dim)' }}>
             Lido nas páginas oficiais às {readAt}
