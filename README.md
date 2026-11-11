@@ -50,11 +50,16 @@ Cada serviço é classificado em um de cinco estados:
 
 | Estado           | Significado                                                         |
 | ---------------- | ------------------------------------------------------------------- |
-| **Operacional**  | Serviço em operação (cStat 107).                                    |
+| **Operacional**  | Serviço em operação.                                                |
 | **Contingência** | Operando por ambiente de contingência (SVC) — ainda dá para emitir. |
-| **Instável**     | Paralisação momentânea / lentidão (cStat 108).                      |
-| **Indisponível** | Paralisação sem previsão (cStat 109).                               |
+| **Instável**     | Paralisação momentânea ou lentidão.                                 |
+| **Indisponível** | Paralisação sem previsão.                                           |
 | **Sem dados**    | Não foi possível ler o status naquele momento.                      |
+
+Na consulta SOAP, os estados correspondem ao cStat 107, 108 e 109. Nas fontes públicas o
+estado vem do indicador da página (a cor do ícone de cada webservice no SVRS, a "bola" de
+cada serviço na Receita); o `cStat` que a API devolve depende da fonte (veja
+[Limitações](#limitações)).
 
 Também acompanha as **Notas Técnicas** publicadas no portal da NF-e, exibidas no
 dashboard.
@@ -90,19 +95,25 @@ por consenso, com precedência para as oficiais:
 3. **IntegraNotas** — API pública (não-oficial), mais completa.
 
 As duas fontes oficiais decidem o estado de cada serviço; o IntegraNotas preenche
-as UFs e documentos que elas não publicam. MDF-e e DC-e são centralizados no SVRS,
-então derivam do estado desse autorizador. O BP-e vem da página de disponibilidade
-do BP-e no SVRS, que cobre as 22 UFs autorizadas ali; MG, MS, MT, PR e SP autorizam
-o BP-e em ambiente próprio, sem fonte pública, e só aparecem no modo `soap`. Nenhuma
-fonte pública mede a latência de rede do BP-e (o SVRS não a publica): o valor fica em
-0 e a tela o mostra como "<1 s", sem ser uma medição. A NFCom vem da página do SVRS
-para as 24 UFs autorizadas ali; MG, MS e MT autorizam em ambiente próprio, sem
-página oficial, e o estado deles vem do IntegraNotas, que publica a NFCom das 27 UFs
-(e dá a ela latência de rede medida). O NF3e, como o BP-e, só tem a página do SVRS,
-que cobre 23 UFs; MG, MS, MT e PR autorizam em ambiente próprio e só aparecem no
-modo `soap`, e a latência dele também fica em 0. Uma fonte que falha não derruba
-as demais, e há um **piso de cobertura (75%)** abaixo do qual a coleta é considerada
-degradada e não é publicada — evitando exibir "tudo no ar" por engano.
+as UFs e documentos que elas não publicam. Uma fonte que falha não derruba as demais,
+e há um **piso de cobertura (75%)** abaixo do qual a coleta é considerada degradada e
+não é publicada — evitando exibir "tudo no ar" por engano.
+
+### Documentos × fontes
+
+Quem decide o estado de cada documento. "—" é sem fonte pública: o serviço aparece como
+**Sem dados**, ou só no modo `soap`.
+
+| Documento | SVRS (oficial)                      | Receita (oficial)                   | IntegraNotas (não oficial) | Detalhe por operação no painel |
+| --------- | ----------------------------------- | ----------------------------------- | -------------------------- | ------------------------------ |
+| NF-e      | SVRS e RS                           | 14 autorizadores, com SVC-AN/SVC-RS | 27 UFs                     | Sim, produção e homologação    |
+| NFC-e     | SVRS e RS (página da própria NFC-e) | —                                   | 27 UFs                     | Só SVRS e RS                   |
+| CT-e      | SVRS                                | 8 autorizadores, com SVSP           | 27 UFs                     | Sim, produção e homologação    |
+| MDF-e     | SVRS (27 UFs)                       | derivado da linha do SVRS           | 27 UFs                     | Sim (SVRS)                     |
+| DC-e      | página do MDF-e no SVRS             | derivado da linha do SVRS           | 27 UFs                     | Não                            |
+| BP-e      | SVRS (22 UFs)                       | —                                   | —                          | Só SVRS                        |
+| NFCom     | SVRS (24 UFs)                       | —                                   | 27 UFs                     | Só SVRS                        |
+| NF3e      | SVRS (23 UFs)                       | —                                   | —                          | Só SVRS                        |
 
 Além do estado por UF, cada coleta publica o **detalhe por serviço** em
 `details.json`: as operações de cada autorizador (autorização, consulta, eventos,
@@ -123,6 +134,41 @@ responder / mudou o HTML" de "o serviço da SEFAZ caiu".
 A consulta SOAP direta aos webservices (modo `soap`) fornece dados mais ricos, mas
 exige saída de rede e, em vários autorizadores, um certificado A1 (mTLS). É
 opcional e desativada por padrão.
+
+## Limitações
+
+- **O cStat do SVRS não é o da consulta de status.** O SVRS publica, para cada
+  webservice, o código que a sonda dele recebeu, e o estado vem da cor do ícone. Com tudo
+  no ar, o "WS Status" aparece com 410 (NF-e do SVRS), 252 (MDF-e), 239 (BP-e) ou 107 (RS
+  e CT-e). O `cStat` da API, nos serviços cuja fonte é o SVRS, é esse código; na Receita
+  e no IntegraNotas, que não publicam código, ele é derivado do estado (107/108/109).
+- **DC-e por procuração.** A DC-e não tem página de disponibilidade própria: o estado é o
+  do SVRS na página do MDF-e (mesma infraestrutura), não uma medição da DC-e.
+- **NFC-e dos autorizadores próprios sem fonte oficial.** A Receita só publica a NF-e; a
+  NFC-e de SP, MG, PR e dos demais autorizadores próprios vem do IntegraNotas.
+- **Autorizadores próprios sem fonte pública.** O BP-e de MG, MS, MT, PR e SP e o NF3e de
+  MG, MS, MT e PR não têm página oficial nem IntegraNotas: ficam fora da coleta padrão (o mapa
+  os mostra como **Sem leitura**) e só são lidos no modo `soap`, que exige certificado A1.
+- **Tempo de acesso não é o tempo da SEFAZ.** O número de latência é o tempo de baixar a
+  página da fonte, com a conexão já aberta, a partir dos servidores do GitHub Actions (fora
+  do Brasil): ~0,4–0,5 s com a fonte saudável. Não é o tempo de autorizar uma nota. Onde
+  a única fonte é o SVRS (BP-e, NF3e), não há medida: o valor fica em 0 e a tela mostra
+  "<1 s". Até 11/11/2026 a medida incluía abrir a conexão do zero (~2,5 s); o histórico
+  anterior é mais alto por isso.
+- **Contingência do CT-e fora do catálogo.** O SVC do CT-e ainda não está mapeado; o
+  painel não mostra contingência para o CT-e.
+- **Cadência.** O Worker pede uma coleta a cada 5 minutos, mas o Actions não garante
+  nenhuma: uma rodada pode atrasar ou falhar, e uma instabilidade mais curta que o
+  intervalo pode não aparecer no histórico.
+- **Manutenção do SVRS.** O SVRS tem janela de manutenção programada aos domingos, das 7h
+  às 9h (horário de Brasília); o painel avisa, e quedas nesse intervalo são esperadas.
+- **Histórico.** O histórico de 72h vem do KV do Worker, com cada mudança de estado e a
+  latência agregada por hora. Se o Worker cair, o painel usa o `history.json` estático: 7 dias, com um ponto por hora
+  (o pior estado da hora) no que passou da última hora.
+- **Homologação só da Receita.** O detalhe de homologação existe para NF-e e CT-e, lido
+  das páginas `hom.*` da Receita; o monitor não lê homologação no SVRS.
+- **NFS-e fora.** O padrão nacional da NFS-e não tem consulta de status nem página de
+  disponibilidade.
 
 ## Notificações
 
@@ -195,10 +241,10 @@ O status exibido é sempre **ao vivo** — cada carregamento consulta as fontes 
 hora. O que precisa ser acumulado é o **histórico**. Ele é coletado no GitHub
 Actions a cada 5 minutos e guardado em dois lugares:
 
-| Onde                            | Retenção       | Papel                              |
-| ------------------------------- | -------------- | ---------------------------------- |
-| **Workers KV** (via `/history`) | 72h            | Fonte primária do histórico na SPA |
-| **JSONs no Pages**              | 7 dias ou 2 MB | Reserva, e o modo sem infra        |
+| Onde                            | Retenção                  | Papel                              |
+| ------------------------------- | ------------------------- | ---------------------------------- |
+| **Workers KV** (via `/history`) | 72h                       | Fonte primária do histórico na SPA |
+| **JSONs no Pages**              | 7 dias, um ponto por hora | Reserva, e o modo sem infra        |
 
 Quem marca o ritmo é o Cron Trigger do Worker: a cada 5 minutos ele só dispara o
 `collect.yml` pela API do GitHub. A coleta em si não roda no Worker, porque no
