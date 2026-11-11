@@ -305,7 +305,10 @@ export function UfSections({
             key={g.uf}
             id={`uf-${g.uf}`}
             aria-labelledby={`uf-${g.uf}-title`}
-            className="scroll-mt-24"
+            // Estados fora da tela não calculam estilo nem layout até chegar perto
+            // (são 27 seções e ~4.500 elementos na home). O tamanho intrínseco
+            // reserva a altura, e o "auto" guarda a real depois do primeiro desenho.
+            className="scroll-mt-24 [contain-intrinsic-size:auto_240px] [content-visibility:auto]"
           >
             <header className="mb-2 flex items-center gap-3">
               <img
