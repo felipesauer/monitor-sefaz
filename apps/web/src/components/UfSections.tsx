@@ -38,7 +38,15 @@ interface UfSectionsProps {
   linkToUf?: boolean;
   /** Nível do título de cada estado: h3 na home (sob "Por estado"), h2 na página da UF. */
   headingLevel?: 2 | 3;
+  /**
+   * Adia estilo e layout dos estados fora da tela (`content-visibility`). Vale
+   * na home, com 27 seções; na página da UF, com uma só, só deslocaria o layout.
+   */
+  deferOffscreen?: boolean;
 }
+
+/** Quantos estados do topo desenham normalmente quando `deferOffscreen` está ligado. */
+const EAGER_SECTIONS = 3;
 
 const flagSrc = (uf: string) => `${import.meta.env.BASE_URL}flags/${uf.toLowerCase()}.png`;
 
@@ -225,6 +233,7 @@ export function UfSections({
   compact,
   linkToUf = true,
   headingLevel = 3,
+  deferOffscreen = false,
 }: UfSectionsProps) {
   const Heading = headingLevel === 2 ? 'h2' : 'h3';
   // Fim da janela de 24h: a leitura mais recente das séries.
@@ -280,7 +289,7 @@ export function UfSections({
 
   return (
     <div className="flex flex-col gap-6">
-      {groups.map((g) => {
+      {groups.map((g, index) => {
         const name = UF_NAME[g.uf] ?? g.uf;
         const authorizers = [
           ...new Set(
@@ -306,9 +315,15 @@ export function UfSections({
             id={`uf-${g.uf}`}
             aria-labelledby={`uf-${g.uf}-title`}
             // Estados fora da tela não calculam estilo nem layout até chegar perto
-            // (são 27 seções e ~4.500 elementos na home). O tamanho intrínseco
-            // reserva a altura, e o "auto" guarda a real depois do primeiro desenho.
-            className="scroll-mt-24 [contain-intrinsic-size:auto_240px] [content-visibility:auto]"
+            // (são 27 seções e ~4.500 elementos na home). Os primeiros desenham
+            // normalmente: na borda da tela, uma seção ainda não desenhada vira
+            // alvo de toque encoberto para o auditor de acessibilidade. O tamanho
+            // intrínseco reserva a altura e o "auto" guarda a real.
+            className={
+              deferOffscreen && index >= EAGER_SECTIONS
+                ? 'scroll-mt-24 [contain-intrinsic-size:auto_240px] [content-visibility:auto]'
+                : 'scroll-mt-24'
+            }
           >
             <header className="mb-2 flex items-center gap-3">
               <img
