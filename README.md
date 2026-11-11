@@ -143,10 +143,20 @@ Actions) quanto no self-host (API).
 ## Dashboard
 
 - **Uma página por estado** (`/sefaz-sp/`, `/sefaz-mg/`…) com o status ao vivo da UF,
-  quem autoriza cada documento, a contingência da NF-e e links para as demais.
-- **Mapa do Brasil** clicável, cada UF colorida pelo pior estado agregado.
-- **Cards por serviço** com badge de estado, tempo de resposta e _sparkline_ de latência.
-- **Histórico de uptime** (6h/24h/72h) com barra estilo status-page e gráfico de latência.
+  quem autoriza cada documento, a contingência da NF-e e os estados que dividem o
+  autorizador.
+- **Mapa do Brasil** clicável, cada UF colorida pelo pior estado agregado, com um painel ao
+  lado: o resumo do país ("Brasil agora") ou, com um estado em foco, cada documento dele.
+- **Panorama** da janela (6h/24h/72h): o estado de cada documento no tempo, a mediana do
+  tempo de acesso e quantos serviços tiveram problema.
+- **Ocorrências recentes** (72h), tiradas do histórico: serviços do mesmo autorizador que
+  caíram juntos viram uma ocorrência só, com início, fim e duração.
+- **Cards agrupados por estado**, com a bandeira, a disponibilidade de 24h e um card por
+  documento (estado, tempo de acesso, _sparkline_); ou a **lista compacta**, uma linha por estado.
+- **Painel do serviço**: o estado e o que ele quer dizer, os números da janela, o histórico
+  em faixas de tempo, as operações do autorizador, a contingência e quem cai junto.
+- **Manutenção programada do SVRS** (domingos, 7h–9h) avisada na tela; horários no fuso de
+  Brasília.
 - **Filtros** por documento e por UF; **banner** de saúde geral.
 - **Três modos de layout** (Operação, Painel, Painel + métricas) e **tema claro/escuro**.
 - **Últimas Notas Técnicas** e um FAQ explicando cStat, autorizadores e contingência.
