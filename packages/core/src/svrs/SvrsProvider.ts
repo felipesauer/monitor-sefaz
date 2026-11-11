@@ -3,8 +3,10 @@ import { backoffMs, defaultSleeper, type Sleeper } from '../domain/retry.js';
 import { SvrsParser, type SvrsAuthorizerStatus } from './SvrsParser.js';
 
 /**
- * URLs de PRODUÇÃO do portal de disponibilidade do SVRS, por documento. NF-e e
- * NFC-e compartilham a página da NF-e; DC-e roda no SVRS e usa a página da MDF-e
+ * URLs de PRODUÇÃO do portal de disponibilidade do SVRS, por documento. A NFC-e
+ * tem página própria, com outro conjunto de webservices e outros cStat que os da
+ * NF-e: ler a da NF-e para a NFC-e mostrava o estado de outra infraestrutura. A
+ * DC-e roda no SVRS e usa a página da MDF-e
  * como melhor proxy oficial disponível (ambos são serviços do SVRS nacional). O
  * BP-e tem página própria, que cobre só as UFs atendidas pelo SVRS: MG, MS, MT,
  * PR e SP autorizam o BP-e em ambiente próprio, sem página pública. O mesmo vale
@@ -15,7 +17,7 @@ import { SvrsParser, type SvrsAuthorizerStatus } from './SvrsParser.js';
  */
 export const SVRS_URLS: Partial<Record<DocumentType, string>> = {
   [DocumentType.NFe]: 'https://dfe-portal.svrs.rs.gov.br/Nfe/Disponibilidade',
-  [DocumentType.NFCe]: 'https://dfe-portal.svrs.rs.gov.br/Nfe/Disponibilidade',
+  [DocumentType.NFCe]: 'https://dfe-portal.svrs.rs.gov.br/Nfce/Disponibilidade',
   [DocumentType.CTe]: 'https://dfe-portal.svrs.rs.gov.br/Cte/Disponibilidade',
   [DocumentType.MDFe]: 'https://dfe-portal.svrs.rs.gov.br/Mdfe/Disponibilidade',
   [DocumentType.DCe]: 'https://dfe-portal.svrs.rs.gov.br/Mdfe/Disponibilidade',
