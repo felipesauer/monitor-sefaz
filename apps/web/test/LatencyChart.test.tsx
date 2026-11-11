@@ -1,22 +1,7 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
 import type { HistoryPointDTO } from '@monitor-sefaz/contracts';
 import { LatencyChart } from '../src/components/LatencyChart.js';
-
-/**
- * O jsdom não tem layout: o `ResponsiveContainer` do Recharts mede 0×0 e não
- * desenha nada. Este ResizeObserver devolve um tamanho fixo na observação, que
- * é o que o container espera de um navegador de verdade.
- */
-class FixedSizeObserver {
-  constructor(private readonly callback: ResizeObserverCallback) {}
-  public observe(target: Element): void {
-    const entry = { target, contentRect: { width: 400, height: 160 } } as ResizeObserverEntry;
-    this.callback([entry], this as unknown as ResizeObserver);
-  }
-  public unobserve(): void {}
-  public disconnect(): void {}
-}
 
 const point = (timestamp: string, latencyMs: number): HistoryPointDTO => ({
   timestamp,
@@ -25,31 +10,50 @@ const point = (timestamp: string, latencyMs: number): HistoryPointDTO => ({
   latencyMs,
 });
 
+/** Leituras de 5 em 5 minutos a partir de um horário. */
+const every5min = (start: string, values: number[]) =>
+  values.map((v, i) => point(new Date(Date.parse(start) + i * 5 * 60_000).toISOString(), v));
+
 describe('LatencyChart', () => {
-  beforeEach(() => vi.stubGlobal('ResizeObserver', FixedSizeObserver));
-  afterEach(() => vi.unstubAllGlobals());
-
-  it('desenha a área da latência com os pontos do histórico', () => {
+  it('desenha a área e a linha da latência, com os zeros incluídos', () => {
     const { container } = render(
-      <LatencyChart
-        points={[
-          point('2026-11-10T10:00:00Z', 120),
-          point('2026-11-10T11:00:00Z', 340),
-          point('2026-11-10T12:00:00Z', 0),
-        ]}
-      />
+      <LatencyChart points={every5min('2026-11-10T10:00:00Z', [120, 340, 0, 200])} />
     );
+    const segments = container.querySelectorAll('[data-segment]');
+    expect(segments).toHaveLength(1);
+    const line = segments[0]!.querySelectorAll('path')[1]!;
+    // 4 pontos: um M e três L.
+    expect(line.getAttribute('d')!.match(/[ML]/g)).toHaveLength(4);
+  });
 
-    const area = container.querySelector('.recharts-area-area');
-    expect(area?.getAttribute('d')?.length ?? 0).toBeGreaterThan(10);
-    expect(container.querySelectorAll('.recharts-xAxis .recharts-cartesian-axis-tick').length).toBe(
-      3
+  it('quebra a linha num buraco de coleta', () => {
+    const points = [
+      ...every5min('2026-11-10T10:00:00Z', [100, 110, 120]),
+      ...every5min('2026-11-10T13:00:00Z', [130, 140, 150]),
+    ];
+    const { container } = render(<LatencyChart points={points} />);
+    expect(container.querySelectorAll('[data-segment]')).toHaveLength(2);
+  });
+
+  it('resume a série para leitor de tela', () => {
+    render(<LatencyChart points={every5min('2026-11-10T10:00:00Z', [120, 340, 80])} />);
+    expect(screen.getByRole('img').getAttribute('aria-label')).toMatch(
+      /mínima 80 ms, máxima 340 ms, última 80 ms/
     );
+  });
+
+  it('mostra o horário e a latência do ponto sob o cursor', () => {
+    render(<LatencyChart points={every5min('2026-11-10T10:00:00Z', [120, 340, 80])} />);
+    const svg = screen.getByRole('img');
+    svg.getBoundingClientRect = () => ({ left: 0, width: 400, top: 0, height: 140 }) as DOMRect;
+    fireEvent.pointerMove(svg, { clientX: 400 });
+    expect(screen.getByText(/· 80 ms/)).toBeInTheDocument();
+    fireEvent.pointerLeave(svg);
+    expect(screen.queryByText(/· 80 ms/)).toBeNull();
   });
 
   it('avisa quando há menos de dois pontos', () => {
     render(<LatencyChart points={[point('2026-11-10T10:00:00Z', 120)]} />);
-
     expect(screen.getByText('Dados insuficientes para o gráfico de latência.')).toBeInTheDocument();
   });
 });

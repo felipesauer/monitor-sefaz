@@ -40,8 +40,8 @@ function buildPaths(values: number[]): { line: string; area: string } {
  * custava caro duas vezes: o Recharts respondia por 522 KB dos 752 KB do bundle
  * (151 KB dos 223 KB comprimidos) e cada card montava um `ResponsiveContainer`
  * com seu próprio `ResizeObserver`. Para uma linha de ~60 px, um `<path>` faz o
- * mesmo trabalho — e o Recharts fica só no gráfico do painel de detalhe, que é
- * aberto sob demanda e carrega em lazy.
+ * mesmo trabalho. O gráfico do painel de detalhe (`LatencyChart`) seguiu o mesmo
+ * caminho depois, e o Recharts saiu do projeto.
  */
 export function Sparkline({ values, color, gradientId }: SparklineProps) {
   if (values.length < 2) return null;
