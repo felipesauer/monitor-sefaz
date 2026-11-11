@@ -70,6 +70,19 @@ mantém o mesmo motor rodando nas três pontas do projeto.
 catálogo, ela distingue os dois casos que um monitor não pode confundir: "o
 serviço da SEFAZ caiu" e "a nossa fonte parou de responder ou mudou o HTML".
 
+A cobertura de cada fonte é medida sobre os documentos que ela publica: um coletor
+que implementa `supportedDocuments()` (os três do consenso padrão implementam) tem
+o `expected` contado só nesses documentos, e um documento que só parte das fontes
+publica não derruba as demais abaixo do piso. Sem o método, o coletor é medido
+sobre o catálogo inteiro.
+
+```ts
+const { services, sources } = await collector.collectWithDiagnostics();
+for (const s of sources) {
+  if (s.official && s.degraded) console.warn(`${s.source}: ${s.collected}/${s.expected}`);
+}
+```
+
 ```ts
 import { Catalog, Environment } from '@monitor-sefaz/catalog';
 
