@@ -1,7 +1,9 @@
 import { lazy, Suspense, useState } from 'react';
 import { X, Info } from 'lucide-react';
 import { DocumentType, type HistoryPeriod, type ServiceStatusDTO } from '@monitor-sefaz/contracts';
-import { useServiceHistory } from '../hooks/useStatus.js';
+import { useDetails, useServiceHistory } from '../hooks/useStatus.js';
+import { AuthorizerOperations } from './AuthorizerOperations.js';
+import { detailFor } from '../lib/details.js';
 import { StatusBadge } from './StatusBadge.js';
 import { UptimeBar } from './UptimeBar.js';
 // Único ponto do app que ainda usa Recharts (522 KB / 151 KB gzip). O painel
@@ -32,6 +34,8 @@ export function ServiceDetailPanel({ service, onClose }: ServiceDetailPanelProps
   const stats = computeUptime(points, period);
   const maxGapHours = Math.round(maxGapMs(points) / (60 * 60 * 1000));
   const isDerived = SVRS_DERIVED.has(service.document);
+  const details = useDetails();
+  const detailView = detailFor(details.data, service);
 
   return (
     <div
@@ -89,6 +93,8 @@ export function ServiceDetailPanel({ service, onClose }: ServiceDetailPanelProps
             </span>
           </div>
         )}
+
+        <AuthorizerOperations view={detailView} generatedAt={details.data?.generatedAt} />
 
         <div className="flex gap-1.5">
           {PERIODS.map((p) => (

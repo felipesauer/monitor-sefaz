@@ -1,4 +1,5 @@
 import type {
+  DetailSnapshotDTO,
   HistoryPeriod,
   HistoryResponseDTO,
   StatusSnapshotDTO,
@@ -97,5 +98,10 @@ export class HybridDataSource implements DataSource {
   public getTechnicalNotes(): Promise<TechnicalNotesFileDTO> {
     // Conteúdo estático (como o histórico) — delega à fonte versionada.
     return this.history.getTechnicalNotes();
+  }
+
+  public getDetails(): Promise<DetailSnapshotDTO> {
+    // O detalhe só sai da coleta do Actions, publicado no Pages: delega à estática.
+    return this.history.getDetails();
   }
 }

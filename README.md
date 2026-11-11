@@ -103,6 +103,11 @@ status…) como o SVRS e a Receita as publicam, em produção e, para NF-e e CT-
 homologação. No CT-e, a Receita mostra ali também a recepção do CT-e OS e da GTV-e,
 que não têm consulta de status própria. O detalhe é lido das mesmas páginas que a
 coleta já baixa; só as duas páginas de homologação são buscadas a mais.
+No painel de cada serviço, a seção **Serviços do autorizador** mostra essas operações
+do autorizador da UF, da contingência SVC que também a atende e, recolhida, da
+homologação. Quando o SVRS e a Receita publicam o mesmo autorizador, vale o SVRS, como
+no consenso. Fica sem a seção o serviço que não tem página própria de operações: a DC-e,
+a NFC-e fora do SVRS e o BP-e dos autorizadores próprios.
 
 Cada coleta mede a **cobertura por fonte** e marca quando uma fonte oficial fica
 degradada (cobertura abaixo do piso) — o sinal que distingue "a fonte parou de
