@@ -16,7 +16,8 @@
   --color-down: oklch(0.63 0.23 27);
   --color-err: oklch(0.6 0.02 260);
   --color-contingency: oklch(0.6 0.19 264);
-  --color-accent: oklch(0.62 0.21 264);
+  /* 0,55: o accent como texto passa de 4,5:1 sobre surface e surface-2 (WCAG AA). */
+  --color-accent: oklch(0.55 0.21 264);
   --color-star: oklch(0.8 0.16 85);
 }
 
@@ -26,7 +27,8 @@
   --surface-2: oklch(0.97 0.005 260);
   --border: oklch(0.9 0.006 260);
   --text: oklch(0.25 0.02 260);
-  --text-dim: oklch(0.55 0.02 260);
+  /* 0,53: 4,8:1 sobre surface-2 (0,55 dava 4,45, abaixo do AA). */
+  --text-dim: oklch(0.53 0.02 260);
   --shadow: 0 1px 2px oklch(0.2 0.02 260 / 0.06), 0 4px 16px oklch(0.2 0.02 260 / 0.04);
 
   --ok: var(--color-ok);
@@ -35,6 +37,8 @@
   --err: var(--color-err);
   --contingency: var(--color-contingency);
   --accent: var(--color-accent);
+  /* Cor de link e de texto em accent. O --accent fica para fundos (com texto branco). */
+  --link: var(--color-accent);
   --star: var(--color-star);
 }
 
@@ -45,6 +49,8 @@
   --border: oklch(0.3 0.016 260);
   --text: oklch(0.96 0.005 260);
   --text-dim: oklch(0.68 0.02 260);
+  /* No escuro o link precisa ser mais claro que o accent dos botões: 5,8:1 sobre surface-2. */
+  --link: oklch(0.72 0.15 264);
   --shadow: 0 1px 2px oklch(0 0 0 / 0.3), 0 8px 24px oklch(0 0 0 / 0.25);
 }
 

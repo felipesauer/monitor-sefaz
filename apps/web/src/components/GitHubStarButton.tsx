@@ -23,7 +23,9 @@ export function GitHubStarButton() {
       className="inline-flex h-9 items-center gap-1.5 rounded-lg border px-3 text-xs font-semibold transition-colors hover:opacity-80"
       style={{ background: 'var(--surface)' }}
       title="Dar uma estrela ao projeto no GitHub"
-      aria-label={count ? `Star no GitHub, ${count} estrelas` : undefined}
+      // O nome acessível começa pelo texto visível ("Star no GitHub 42"), como pede o
+      // WCAG 2.5.3; o "estrelas" no fim só explica o número.
+      aria-label={count ? `Star no GitHub ${count} estrelas` : undefined}
     >
       <Star
         className="h-4 w-4"

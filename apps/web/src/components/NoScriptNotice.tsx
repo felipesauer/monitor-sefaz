@@ -6,7 +6,8 @@ export function NoScriptNotice() {
         O status ao vivo precisa de JavaScript. Sem ele, consulte a{' '}
         <a
           href="https://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx"
-          style={{ color: 'var(--accent)' }}
+          className="underline underline-offset-2"
+          style={{ color: 'var(--link)' }}
         >
           página oficial de disponibilidade da SEFAZ
         </a>
