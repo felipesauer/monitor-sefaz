@@ -44,13 +44,25 @@ function buildNFCeAuthorizerMap(): Record<UF, AuthorizerCode> {
 const NFE_AUTHORIZERS = buildNFeAuthorizerMap();
 const NFCE_AUTHORIZERS = buildNFCeAuthorizerMap();
 
-/** UFs com autorizador CT-e próprio; as demais delegam ao SVRS. */
+/**
+ * UFs com autorizador CT-e próprio. AP, PE e RR usam a Sefaz Virtual de São Paulo
+ * (SVSP); as demais delegam ao SVRS. Fonte: "Relação de Serviços Web" do Portal do
+ * CT-e ("Estados que utilizam a SVSP: AP, PE, RR"), conferida em 2026-11-10; confere
+ * com o nfephp-org/sped-cte (storage/autorizadores.json).
+ */
 const CTE_OWN_AUTHORIZERS: UF[] = ['MG', 'MS', 'MT', 'PR', 'RS', 'SP'];
+const CTE_SVSP_UFS: UF[] = ['AP', 'PE', 'RR'];
 
 function buildCTeAuthorizerMap(): Record<UF, AuthorizerCode> {
   const map = {} as Record<UF, AuthorizerCode>;
   for (const uf of ALL_UFS) {
-    map[uf] = CTE_OWN_AUTHORIZERS.includes(uf) ? uf : 'SVRS';
+    if (CTE_OWN_AUTHORIZERS.includes(uf)) {
+      map[uf] = uf;
+    } else if (CTE_SVSP_UFS.includes(uf)) {
+      map[uf] = 'SVSP';
+    } else {
+      map[uf] = 'SVRS';
+    }
   }
   return map;
 }

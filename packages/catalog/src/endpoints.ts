@@ -88,7 +88,8 @@ const NFCE_ENDPOINTS: DocumentEndpoints = {
 
 /**
  * Endpoints CT-e (`CTeStatusServico`, v4.00). Estados com autorizador próprio
- * mantêm sua URL; os demais usam o SVRS. Lista expansível conforme o MOC CT-e.
+ * mantêm sua URL; AP, PE e RR usam a SVSP e os demais o SVRS. Fonte: "Relação de
+ * Serviços Web" do portal DFe do SVRS (/Cte/Servicos), conferida em 2026-11-10.
  */
 const CTE_ENDPOINTS: DocumentEndpoints = {
   production: {
@@ -98,6 +99,8 @@ const CTE_ENDPOINTS: DocumentEndpoints = {
     PR: 'https://cte.fazenda.pr.gov.br/cte4/CTeStatusServicoV4',
     RS: 'https://cte.svrs.rs.gov.br/ws/CTeStatusServicoV4/CTeStatusServicoV4.asmx',
     SP: 'https://nfe.fazenda.sp.gov.br/CTeWS/WS/CTeStatusServicoV4.asmx',
+    // A SVSP roda na infraestrutura da SEFAZ-SP: mesmo endereço do SP.
+    SVSP: 'https://nfe.fazenda.sp.gov.br/CTeWS/WS/CTeStatusServicoV4.asmx',
     SVRS: 'https://cte.svrs.rs.gov.br/ws/CTeStatusServicoV4/CTeStatusServicoV4.asmx',
     SVCRS: 'https://cte.svrs.rs.gov.br/ws/CTeStatusServicoV4/CTeStatusServicoV4.asmx',
     SVCAN: 'https://www.cte.fazenda.gov.br/CTeStatusServicoV4/CTeStatusServicoV4.asmx',
@@ -110,6 +113,7 @@ const CTE_ENDPOINTS: DocumentEndpoints = {
     PR: 'https://homologacao.cte.fazenda.pr.gov.br/cte4/CTeStatusServicoV4',
     RS: 'https://cte-homologacao.svrs.rs.gov.br/ws/CTeStatusServicoV4/CTeStatusServicoV4.asmx',
     SP: 'https://homologacao.nfe.fazenda.sp.gov.br/CTeWS/WS/CTeStatusServicoV4.asmx',
+    SVSP: 'https://homologacao.nfe.fazenda.sp.gov.br/CTeWS/WS/CTeStatusServicoV4.asmx',
     SVRS: 'https://cte-homologacao.svrs.rs.gov.br/ws/CTeStatusServicoV4/CTeStatusServicoV4.asmx',
     SVCRS: 'https://cte-homologacao.svrs.rs.gov.br/ws/CTeStatusServicoV4/CTeStatusServicoV4.asmx',
     SVCAN: 'https://hom.cte.fazenda.gov.br/CTeStatusServicoV4/CTeStatusServicoV4.asmx',

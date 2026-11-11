@@ -59,6 +59,7 @@ export function inUf(uf: UF): string {
 export const AUTHORIZER_NAME: Record<string, string> = {
   SVRS: 'Sefaz Virtual do Rio Grande do Sul',
   SVAN: 'Sefaz Virtual do Ambiente Nacional',
+  SVSP: 'Sefaz Virtual de São Paulo',
   AN: 'Ambiente Nacional',
   SVCAN: 'Sefaz Virtual de Contingência do Ambiente Nacional',
   SVCRS: 'Sefaz Virtual de Contingência do Rio Grande do Sul',

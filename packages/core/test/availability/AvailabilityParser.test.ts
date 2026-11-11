@@ -42,6 +42,8 @@ describe('AvailabilityParser', () => {
     const rows = cteParser.parse(loadAvailability('cte-disponibilidade.html'));
     expect(rows.length).toBeGreaterThanOrEqual(6);
     expect(rows.map((r) => r.authorizer)).toContain('SVRS');
+    // A SVSP (CT-e de AP, PE e RR) tem linha própria na página.
+    expect(rows.map((r) => r.authorizer)).toContain('SVSP');
     // Com o layout correto (coluna 2), todo estado é válido.
     for (const row of rows) {
       expect([ServiceState.Operational, ServiceState.SlowDown, ServiceState.Down]).toContain(

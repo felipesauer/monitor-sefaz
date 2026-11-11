@@ -46,6 +46,29 @@ describe('AvailabilityCollector', () => {
     expect(ma?.state).toBe(ServiceState.Operational);
   });
 
+  it('dá ao CT-e de AP, PE e RR o estado da linha SVSP, não o do SVRS', async () => {
+    const provider = {
+      supportedDocuments: () => [DocumentType.CTe],
+      fetch: async (): Promise<AvailabilityRow[]> => [
+        { authorizer: 'SVRS', state: ServiceState.Operational, tMedSeconds: null },
+        { authorizer: 'SVSP', state: ServiceState.Down, tMedSeconds: null },
+      ],
+    };
+    const collected = await new AvailabilityCollector(
+      provider as never,
+      undefined,
+      fakeClock()
+    ).collect();
+    const cte = (uf: string) =>
+      collected.find((s) => s.document === DocumentType.CTe && s.uf === uf);
+
+    for (const uf of ['AP', 'PE', 'RR']) {
+      expect(cte(uf)?.authorizer, uf).toBe('SVSP');
+      expect(cte(uf)?.state, uf).toBe(ServiceState.Down);
+    }
+    expect(cte('AC')?.state).toBe(ServiceState.Operational);
+  });
+
   it('mapeia o cStat correto para cada estado (107/108/109)', async () => {
     const provider = {
       supportedDocuments: () => [DocumentType.NFe],
