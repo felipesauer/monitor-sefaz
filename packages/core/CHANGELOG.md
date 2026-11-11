@@ -1,5 +1,31 @@
 # @monitor-sefaz/core
 
+## 0.5.0
+
+### Minor Changes
+
+- a01f4cc: A latência das fontes passa a ser medida com a conexão já aberta, e reflete o tempo de resposta da página, não o de abrir a conexão até ela. Antes, o cliente HTTP dos portais (`axios-cookiejar-support`) criava um agente novo a cada requisição, e cada busca pagava DNS, TCP e TLS de novo. Num runner fora do Brasil isso dava ~2,5 s para a página da Receita, que responde em ~0,1 s com a conexão aberta.
+
+  - Novo `createPortalClient` (interno): cookie jar com `http-cookie-agent` e `keepAlive`, usado pela disponibilidade, pelo SVRS e pelas Notas Técnicas. A dependência `axios-cookiejar-support` sai do `core`.
+  - `AvailabilityProviderLike.warmUp?(document)` e `IntegraNotasFetcher.warmUp?(url)`, opcionais: abrem a conexão com um `HEAD` antes da busca cronometrada. `HttpAvailabilityProvider` e `createHttpIntegraNotasFetcher` já os implementam; providers próprios sem eles continuam funcionando, com a medida incluindo a conexão.
+  - Quem guarda histórico de `latencyMs` vai ver os valores caírem a partir desta versão: é a mudança de medida, não uma melhora da fonte.
+
+- 9c99cab: Adiciona a NF3e (Nota Fiscal de Energia Elétrica Eletrônica, modelo 66) como oitavo documento.
+
+  - `@monitor-sefaz/catalog`: `DocumentType.NF3e`, o mapa UF → autorizador (MG, MS, MT e PR próprios, as demais UFs no SVRS) e os endpoints de `NF3eStatusServico` dos cinco autorizadores, em produção e homologação, da "Relação de Serviços Web" do SVRS. `listAll` passa de 189 para 216 serviços.
+  - `@monitor-sefaz/core`: `NF3eStatusEnvelopeBuilder` e `NF3eStatusParser` (`consStatServNF3e` / `retConsStatServNF3e`, versão 1.00, sem cabeçalho SOAP), registrados na `CheckerFactory`, e a página `Nf3e/Disponibilidade` do SVRS no `SvrsProvider`, que cobre 23 UFs. O IntegraNotas não publica o NF3e.
+
+- 29ce6ca: Adiciona a NFCom (Nota Fiscal Fatura de Serviços de Comunicação Eletrônica, modelo 62) como sétimo documento.
+
+  - `@monitor-sefaz/catalog`: `DocumentType.NFCom`, o mapa UF → autorizador (MG, MS e MT próprios, as demais UFs no SVRS) e os endpoints de `NFComStatusServico` dos quatro autorizadores, em produção e homologação, conferidos com a "Relação de Serviços Web" do SVRS. Quem itera `Object.values(DocumentType)` passa a receber a NFCom, e `listAll` passa de 162 para 189 serviços.
+  - `@monitor-sefaz/core`: `NFComStatusEnvelopeBuilder` e `NFComStatusParser` (`consStatServNFCom` / `retConsStatServNFCom`, versão 1.00, sem cabeçalho SOAP), registrados na `CheckerFactory`. A página `Nfcom/Disponibilidade` do SVRS entra no `SvrsProvider` (24 UFs) e a rota `nfcom` entra no `IntegraNotasProvider` (27 UFs).
+
+### Patch Changes
+
+- Updated dependencies [9c99cab]
+- Updated dependencies [29ce6ca]
+  - @monitor-sefaz/catalog@0.5.0
+
 ## 0.4.0
 
 ### Minor Changes

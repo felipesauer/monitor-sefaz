@@ -1,5 +1,13 @@
 # @monitor-sefaz/contracts
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [9c99cab]
+- Updated dependencies [29ce6ca]
+  - @monitor-sefaz/catalog@0.5.0
+
 ## 0.2.0
 
 ### Minor Changes

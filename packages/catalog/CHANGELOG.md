@@ -1,5 +1,19 @@
 # @monitor-sefaz/catalog
 
+## 0.5.0
+
+### Minor Changes
+
+- 9c99cab: Adiciona a NF3e (Nota Fiscal de Energia Elétrica Eletrônica, modelo 66) como oitavo documento.
+
+  - `@monitor-sefaz/catalog`: `DocumentType.NF3e`, o mapa UF → autorizador (MG, MS, MT e PR próprios, as demais UFs no SVRS) e os endpoints de `NF3eStatusServico` dos cinco autorizadores, em produção e homologação, da "Relação de Serviços Web" do SVRS. `listAll` passa de 189 para 216 serviços.
+  - `@monitor-sefaz/core`: `NF3eStatusEnvelopeBuilder` e `NF3eStatusParser` (`consStatServNF3e` / `retConsStatServNF3e`, versão 1.00, sem cabeçalho SOAP), registrados na `CheckerFactory`, e a página `Nf3e/Disponibilidade` do SVRS no `SvrsProvider`, que cobre 23 UFs. O IntegraNotas não publica o NF3e.
+
+- 29ce6ca: Adiciona a NFCom (Nota Fiscal Fatura de Serviços de Comunicação Eletrônica, modelo 62) como sétimo documento.
+
+  - `@monitor-sefaz/catalog`: `DocumentType.NFCom`, o mapa UF → autorizador (MG, MS e MT próprios, as demais UFs no SVRS) e os endpoints de `NFComStatusServico` dos quatro autorizadores, em produção e homologação, conferidos com a "Relação de Serviços Web" do SVRS. Quem itera `Object.values(DocumentType)` passa a receber a NFCom, e `listAll` passa de 162 para 189 serviços.
+  - `@monitor-sefaz/core`: `NFComStatusEnvelopeBuilder` e `NFComStatusParser` (`consStatServNFCom` / `retConsStatServNFCom`, versão 1.00, sem cabeçalho SOAP), registrados na `CheckerFactory`. A página `Nfcom/Disponibilidade` do SVRS entra no `SvrsProvider` (24 UFs) e a rota `nfcom` entra no `IntegraNotasProvider` (27 UFs).
+
 ## 0.4.0
 
 ### Minor Changes
