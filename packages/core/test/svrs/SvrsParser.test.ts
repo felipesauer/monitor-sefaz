@@ -63,6 +63,16 @@ describe('SvrsParser', () => {
     ]);
   });
 
+  it('lê as duas seções da página de NFC-e, cujo WS Status traz o sufixo HMLE', () => {
+    const rows = new SvrsParser().parse(fixture('nfce-disponibilidade.html'));
+    expect(rows.map((r) => r.authorizer)).toEqual(['SEFAZ-RS', 'SVRS']);
+    // "WS Status (URL) - HMLE" ainda é o WS Status: o cStat representativo vem dele.
+    expect(rows[1]!.webServices.map((w) => w.operation)).toContain('WS Status (URL) - HMLE');
+    expect(rows[1]!.cStat).toBe(410);
+    // A NFC-e não tem o "WS Consulta Recibo" que a página da NF-e lista.
+    expect(rows[0]!.webServices.some((w) => /Recibo/.test(w.operation))).toBe(false);
+  });
+
   it('extrai o autorizador único da página de BP-e, com o cStat do WS Status', () => {
     const rows = new SvrsParser().parse(fixture('bpe-disponibilidade.html'));
     expect(rows).toHaveLength(1);
