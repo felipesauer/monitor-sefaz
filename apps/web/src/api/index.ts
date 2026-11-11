@@ -5,9 +5,9 @@ import { HybridDataSource } from './HybridDataSource.js';
 
 /**
  * Seleciona a fonte de dados em build/runtime:
- * - Com `VITE_API_BASE_URL` → status/summary AO VIVO do Worker/API, mas o
- *   histórico vem do JSON estático (o Worker é stateless, sem acúmulo).
- * - Sem ela → tudo dos JSONs estáticos versionados (modo GitHub Pages).
+ * - Com `VITE_API_BASE_URL` → status/summary AO VIVO do Worker/API, e o
+ *   histórico junta o KV do Worker (72h) com o JSON estático (`HybridDataSource`).
+ * - Sem ela → tudo dos JSONs estáticos que a coleta publica no GitHub Pages.
  */
 export function createDataSource(): DataSource {
   const apiBase = import.meta.env.VITE_API_BASE_URL?.trim();

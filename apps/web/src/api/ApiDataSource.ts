@@ -57,8 +57,8 @@ export class ApiDataSource implements DataSource {
    * Todas as séries de uma vez, para os sparklines dos cards.
    *
    * Vem do blob compacto do Worker (`/history`, acumulado no KV pelo cron).
-   * Expandimos na resolução GROSSA de 1h de propósito: são 135 séries, e na
-   * cadência real da coleta isso daria ~117 mil pontos só para desenhar
+   * Expandimos na resolução GROSSA de 1h de propósito: são mais de 150 séries, e
+   * a um ponto a cada 5 minutos isso daria mais de 130 mil pontos só para desenhar
    * sparklines de poucos pixels. O painel de detalhe pede a série fina à parte.
    */
   public async getHistorySeries(): Promise<HistorySeries> {

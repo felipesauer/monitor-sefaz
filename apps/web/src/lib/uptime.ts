@@ -40,7 +40,8 @@ function medianGapMs(points: HistoryPointDTO[]): number {
  * Calcula uptime e a CONFIABILIDADE dele. O uptime simples (operacionais /
  * total de pontos) engana com histórico esparso: uma falha de horas que caia
  * entre coletas não aparece. Em vez de comparar contra um intervalo fixo
- * presumido (o cron é best-effort e roda bem menos que de hora em hora), medimos
+ * presumido (a coleta é pedida a cada 5 minutos, mas o Actions pode atrasar ou
+ * pular rodadas, e a série antiga é esparsa), medimos
  * a CADÊNCIA REAL pela mediana dos gaps observados e só alertamos quando há um
  * buraco anormalmente grande — aí sim uma instabilidade pode ter passado batida.
  */
