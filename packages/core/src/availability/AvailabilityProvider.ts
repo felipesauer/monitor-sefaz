@@ -1,9 +1,8 @@
-import axios, { type AxiosInstance } from 'axios';
-import { wrapper } from 'axios-cookiejar-support';
-import { CookieJar } from 'tough-cookie';
+import type { AxiosInstance } from 'axios';
 import { DocumentType } from '@monitor-sefaz/catalog';
 import { backoffMs, defaultSleeper, type Sleeper } from '../domain/retry.js';
 import { AvailabilityParser, type AvailabilityRow } from './AvailabilityParser.js';
+import { createPortalClient, warmUpConnection } from '../http/portalClient.js';
 
 // Reexporta o backoff/Sleeper compartilhado para não quebrar importações antigas
 // que apontam para este módulo (ex.: SvrsProvider e os testes).
@@ -36,9 +35,6 @@ export const HOMOLOGATION_AVAILABILITY_URLS: Partial<Record<DocumentType, string
   [DocumentType.CTe]: 'https://hom.cte.fazenda.gov.br/portal/disponibilidade.aspx',
 };
 
-const BROWSER_UA =
-  'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36';
-
 /**
  * Obtém o status dos autorizadores a partir da página oficial de
  * disponibilidade da SEFAZ — fonte pública que NÃO exige certificado A1.
@@ -61,23 +57,17 @@ export class HttpAvailabilityProvider {
      */
     private readonly onPage?: (url: string, html: string) => void
   ) {
-    const jar = new CookieJar();
-    this.http = wrapper(
-      axios.create({
-        jar,
-        timeout: this.timeoutMs,
-        // O portal usa AspxAutoDetectCookieSupport e pode encadear vários
-        // redirects até fixar o cookie de sessão; damos folga suficiente.
-        maxRedirects: 15,
-        responseType: 'arraybuffer', // a página é latin-1; decodificamos manualmente
-        headers: {
-          'User-Agent': BROWSER_UA,
-          Accept: 'text/html,application/xhtml+xml',
-          'Accept-Language': 'pt-BR,pt;q=0.9',
-        },
-        validateStatus: () => true,
-      })
-    );
+    this.http = createPortalClient(this.timeoutMs);
+  }
+
+  /**
+   * Abre a conexão com a página do documento antes da busca medida (ADR-23):
+   * assim a latência registrada é a resposta da fonte, não a abertura da
+   * conexão a partir do runner.
+   */
+  public async warmUp(document: DocumentType): Promise<void> {
+    const url = AVAILABILITY_URLS[document]?.[0];
+    if (url) await warmUpConnection(this.http, url);
   }
 
   /** Lista os documentos cobertos por este provider. */

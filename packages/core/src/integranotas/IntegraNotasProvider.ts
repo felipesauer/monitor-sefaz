@@ -24,6 +24,12 @@ interface IntegraNotasPayload {
 /** Transporte HTTP injetável (axios no Node, fetch no Worker). */
 export interface IntegraNotasFetcher {
   (url: string): Promise<string>;
+  /**
+   * Abre a conexão com o host antes da requisição medida (ADR-23), para a
+   * latência ser a resposta da API e não a abertura da conexão. Opcional: sem
+   * ele, a medida inclui a conexão.
+   */
+  warmUp?: (url: string) => Promise<void>;
 }
 
 /** Resultado de uma busca: as linhas + a latência de REDE medida do fetch. */
@@ -158,8 +164,10 @@ export class IntegraNotasProvider {
     // Cronometra a requisição: esta é a latência de REDE real do documento — a
     // métrica que o front exibe. O tMed do IntegraNotas é tempo médio da SEFAZ
     // em segundos inteiros (grosseiro: 0/1/6s), inútil como latência.
+    const url = `${BASE}/${slug}`;
+    await this.fetcher.warmUp?.(url);
     const start = this.now();
-    const body = await this.fetcher(`${BASE}/${slug}`);
+    const body = await this.fetcher(url);
     const fetchLatencyMs = this.now() - start;
     const parsed = JSON.parse(body) as IntegraNotasPayload;
     const d = parsed.dados;

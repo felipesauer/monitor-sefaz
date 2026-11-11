@@ -64,9 +64,9 @@
   "dependencies": {
     "@monitor-sefaz/catalog": "workspace:*",
     "axios": "^1.21.0",
-    "axios-cookiejar-support": "^7.0.0",
     "cheerio": "^1.2.0",
     "fast-xml-parser": "^5.12.0",
+    "http-cookie-agent": "^8.0.0",
     "tough-cookie": "^5.1.2"
   },
   "devDependencies": {

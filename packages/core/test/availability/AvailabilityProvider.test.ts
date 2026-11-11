@@ -16,8 +16,13 @@ const get = vi.fn(async (_url: string) => {
   return { status: next.status, data: next.body };
 });
 
-// O provider monta o cliente com `wrapper(axios.create(...))`; trocamos o wrapper.
-vi.mock('axios-cookiejar-support', () => ({ wrapper: () => ({ get }) }));
+// O provider monta o cliente com `createPortalClient`; trocamos o cliente, e
+// nenhuma requisição sai para a rede (regra 5: nunca a SEFAZ real nos testes).
+const head = vi.fn(async (_url: string) => ({ status: 200, data: '' }));
+vi.mock('../../src/http/portalClient.js', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('../../src/http/portalClient.js')>()),
+  createPortalClient: () => ({ get, head }),
+}));
 
 const { HttpAvailabilityProvider, AVAILABILITY_URLS, HOMOLOGATION_AVAILABILITY_URLS } =
   await import('../../src/availability/AvailabilityProvider.js');
@@ -28,6 +33,7 @@ describe('HttpAvailabilityProvider', () => {
   beforeEach(() => {
     responses.length = 0;
     get.mockClear();
+    head.mockClear();
   });
 
   it('avisa o gancho onPage com a página válida baixada', async () => {
@@ -65,5 +71,18 @@ describe('HttpAvailabilityProvider', () => {
     expect(html).toContain('bola_');
     expect(get).toHaveBeenCalledTimes(2);
     expect(get.mock.calls[0]![0]).toBe(url);
+  });
+
+  it('aquece a conexão com um HEAD na página do documento, sem baixá-la', async () => {
+    const provider = new HttpAvailabilityProvider(20_000, noSleep);
+    await provider.warmUp(DocumentType.NFe);
+    expect(head).toHaveBeenCalledWith(AVAILABILITY_URLS[DocumentType.NFe]![0], expect.anything());
+    expect(get).not.toHaveBeenCalled();
+  });
+
+  it('não falha quando o aquecimento falha', async () => {
+    head.mockRejectedValueOnce(new Error('ECONNRESET'));
+    const provider = new HttpAvailabilityProvider(20_000, noSleep);
+    await expect(provider.warmUp(DocumentType.NFe)).resolves.toBeUndefined();
   });
 });
