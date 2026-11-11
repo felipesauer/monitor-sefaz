@@ -17,6 +17,7 @@ const fixtureFetcher: SvrsFetcher = async (url) => {
   if (url.includes('/Cte/')) return fixture('cte-disponibilidade.html');
   if (url.includes('/Mdfe/')) return fixture('mdfe-disponibilidade.html');
   if (url.includes('/Bpe/')) return fixture('bpe-disponibilidade.html');
+  if (url.includes('/Nfcom/')) return fixture('nfcom-disponibilidade.html');
   throw new Error(`URL inesperada: ${url}`);
 };
 
@@ -63,6 +64,18 @@ describe('SvrsCollector', () => {
       expect(cte.some((s) => s.uf === uf)).toBe(false);
     }
     expect(cte.find((s) => s.uf === 'AC')?.authorizer).toBe('SVRS');
+  });
+
+  it('cobre a NFCom só nas UFs que o SVRS autoriza', async () => {
+    const collector = new SvrsCollector(new SvrsProvider(fixtureFetcher));
+    const nfcom = (await collector.collect()).filter((s) => s.document === DocumentType.NFCom);
+
+    // MG, MS e MT autorizam a NFCom em ambiente próprio, fora desta página.
+    expect(nfcom).toHaveLength(24);
+    for (const uf of ['MG', 'MS', 'MT']) {
+      expect(nfcom.some((s) => s.uf === uf)).toBe(false);
+    }
+    expect(nfcom.every((s) => s.authorizer === 'SVRS')).toBe(true);
   });
 
   it('propaga o horário de aferição do SVRS em sourceCheckedAt', async () => {

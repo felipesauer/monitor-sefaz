@@ -42,6 +42,7 @@ export const INTEGRANOTAS_DOCUMENTS: Partial<Record<DocumentType, string>> = {
   [DocumentType.CTe]: 'cte',
   [DocumentType.MDFe]: 'mdfe',
   [DocumentType.DCe]: 'dce',
+  [DocumentType.NFCom]: 'nfcom',
 };
 
 const VALID_UFS = new Set<string>([

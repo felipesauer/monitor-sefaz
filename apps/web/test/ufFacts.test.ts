@@ -18,6 +18,7 @@ describe('ufAuthorizations', () => {
       [DocumentType.MDFe, 'SVRS', false],
       [DocumentType.DCe, 'SVRS', false],
       [DocumentType.BPe, 'SP', true],
+      [DocumentType.NFCom, 'SVRS', false],
     ]);
     expect(ufAuthorizations('MA')[0]).toMatchObject({ authorizer: 'SVAN', own: false });
   });

@@ -11,6 +11,10 @@ import { ServiceState } from '../../src/domain/types.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const nfeFixture = readFileSync(join(here, '..', 'fixtures', 'integranotas', 'nfe.json'), 'utf8');
+const nfcomFixture = readFileSync(
+  join(here, '..', 'fixtures', 'integranotas', 'nfcom.json'),
+  'utf8'
+);
 
 describe('mapIntegraNotasState', () => {
   const GREEN = 'rgb(46, 202, 139)';
@@ -40,6 +44,18 @@ describe('IntegraNotasProvider', () => {
     expect(rows).toHaveLength(27);
     expect(rows.map((r) => r.uf)).toContain('SP');
     expect(rows.every((r) => r.state === ServiceState.Operational)).toBe(true);
+  });
+
+  it('parseia a fixture real de NFCom (27 UFs) pela rota nfcom', async () => {
+    const urls: string[] = [];
+    const provider = new IntegraNotasProvider(async (url) => {
+      urls.push(url);
+      return nfcomFixture;
+    });
+    const { rows } = await provider.fetch(DocumentType.NFCom);
+    expect(urls[0]).toMatch(/\/monitor\/nfcom$/);
+    expect(rows).toHaveLength(27);
+    expect(rows.map((r) => r.uf)).toContain('MG');
   });
 
   it('mede a latência de rede do fetch (now injetável)', async () => {
@@ -96,12 +112,13 @@ describe('IntegraNotasProvider', () => {
     await expect(provider.fetch(DocumentType.NFe)).rejects.toThrow(/desalinhad|incompleto/);
   });
 
-  it('cobre os 5 documentos suportados', () => {
+  it('cobre os 6 documentos suportados', () => {
     const provider = new IntegraNotasProvider(async () => nfeFixture);
     const docs = provider.supportedDocuments();
     expect(docs).toContain(DocumentType.MDFe);
     expect(docs).toContain(DocumentType.DCe);
-    expect(docs).toHaveLength(5);
+    expect(docs).toContain(DocumentType.NFCom);
+    expect(docs).toHaveLength(6);
   });
 
   // Sleeper fake: não dorme de verdade, só registra os atrasos pedidos.

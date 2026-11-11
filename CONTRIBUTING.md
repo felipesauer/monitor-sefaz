@@ -70,10 +70,33 @@ O design é Open/Closed: estender raramente exige mexer no que já existe.
 
 ### Adicionar um novo documento
 
-1. Em `packages/core/src/envelopes/`, crie um `EnvelopeBuilder` (envelope SOAP).
-2. Em `packages/core/src/parsers/`, crie um `ResponseParser` (nó de retorno).
-3. Registre o par na `CheckerFactory` (`packages/core/src/registry/`).
-4. Adicione fixtures e testes.
+O BP-e (#32) e a NFCom foram feitos assim; use-os como molde.
+
+1. **Catálogo** (`packages/catalog/src/`): o valor novo em `DocumentType`
+   (`types.ts`), o mapa UF → autorizador (`authorizers.ts`) e as URLs de
+   `…StatusServico` de produção e homologação (`endpoints.ts`), com a fonte
+   oficial (a "Relação de Serviços Web") num comentário. Teste em
+   `packages/catalog/test/`.
+2. **Consulta SOAP** (`packages/core/src/`): um `EnvelopeBuilder` em `envelopes/`,
+   seguindo o schema oficial da consulta de status; um `ResponseParser` em
+   `parsers/DocumentStatusParsers.ts`; o par registrado na `CheckerFactory`
+   (`registry/`) e exportado em `index.ts`.
+3. **Fontes públicas** (`packages/core/src/`): a página do SVRS em `SVRS_URLS`
+   (`svrs/SvrsProvider.ts`) e, se o IntegraNotas publicar o documento, a rota em
+   `INTEGRANOTAS_DOCUMENTS` (`integranotas/IntegraNotasProvider.ts`). O documento
+   novo entra em `DOCUMENT_COLUMNS` (`availability/AvailabilityParser.ts`), que é
+   exaustivo; sem página na Receita, o layout lá não se aplica.
+4. **Fixtures e testes**: a página real do SVRS e o JSON real do IntegraNotas em
+   `packages/core/test/fixtures/`, e a resposta SOAP; testes do envelope, do
+   parser, do `SvrsParser`/`SvrsCollector` e do IntegraNotas. As contagens fixas
+   (serviços do catálogo, documentos por fonte) sobem junto.
+5. **Web** (`apps/web/src/`): rótulo e descrição em `lib/labels.ts`, a lista
+   `DOCUMENTS` em `lib/ufFacts.ts`, o filtro em `components/FilterBar.tsx` e os
+   textos que listam os documentos (`Header`, `HelpSection`, `UfPage`, `lib/seo.ts`,
+   `public/site.webmanifest`).
+6. **Documentação e versão**: as contagens e a lista de documentos do `README.md` e
+   dos READMEs dos pacotes, `pnpm --filter @monitor-sefaz/web readme`, e um
+   changeset `minor` para `catalog` e `core`.
 
 ### Adicionar ou corrigir um autorizador ou endpoint
 

@@ -80,6 +80,7 @@ export const DOC_LABEL: Record<string, string> = {
   MDFe: 'MDF-e',
   DCe: 'DC-e',
   BPe: 'BP-e',
+  NFCom: 'NFCom',
 };
 
 /** Descrição curta de cada documento, para tooltips e o painel de detalhe. */
@@ -90,6 +91,8 @@ export const DOC_DESCRIPTION: Record<string, string> = {
   MDFe: 'Manifesto Eletrônico de Documentos Fiscais — agrupa as notas/CT-e de uma carga em trânsito.',
   DCe: 'Declaração de Conteúdo eletrônica — usada no transporte de bens entre não contribuintes.',
   BPe: 'Bilhete de Passagem Eletrônico — documenta a venda de passagem no transporte de passageiros (modelo 63).',
+  NFCom:
+    'Nota Fiscal Fatura de Serviços de Comunicação Eletrônica — emitida por quem presta serviço de telecomunicação e comunicação (modelo 62).',
 };
 
 /**

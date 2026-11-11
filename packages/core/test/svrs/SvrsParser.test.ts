@@ -39,6 +39,18 @@ describe('SvrsParser', () => {
     expect(rows[0]!.webServices.length).toBeGreaterThan(0);
   });
 
+  it('extrai o autorizador único da página de NFCom, com os 4 WS', () => {
+    const rows = new SvrsParser().parse(fixture('nfcom-disponibilidade.html'));
+    expect(rows).toHaveLength(1);
+    expect(rows[0]!.authorizer).toBe('SVRS');
+    expect(rows[0]!.webServices.map((w) => w.operation)).toEqual([
+      'WS Autorizacao Sincrona',
+      'WS Consulta Situacao',
+      'WS Eventos',
+      'WS Status',
+    ]);
+  });
+
   it('extrai o autorizador único da página de BP-e, com o cStat do WS Status', () => {
     const rows = new SvrsParser().parse(fixture('bpe-disponibilidade.html'));
     expect(rows).toHaveLength(1);

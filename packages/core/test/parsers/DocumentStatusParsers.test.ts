@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { DocumentType } from '@monitor-sefaz/catalog';
 import {
   BPeStatusParser,
+  NFComStatusParser,
   CTeStatusParser,
   DCeStatusParser,
   MDFeStatusParser,
@@ -24,6 +25,13 @@ describe('DocumentStatusParsers', () => {
     const result = new BPeStatusParser().parse(loadFixture('bpe-107.xml'));
     expect(result.cStat).toBe(107);
     expect(result.xMotivo).toBe('Servico em Operacao');
+  });
+
+  it('NFComStatusParser extrai cStat do nó retConsStatServNFCom', () => {
+    const result = new NFComStatusParser().parse(loadFixture('nfcom-107.xml'));
+    expect(result.cStat).toBe(107);
+    expect(result.xMotivo).toBe('Servico em Operacao');
+    expect(new NFComStatusParser().document).toBe(DocumentType.NFCom);
   });
 
   it('cada parser expõe o tipo de documento correto', () => {
