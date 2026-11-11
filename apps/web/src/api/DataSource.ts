@@ -1,5 +1,6 @@
 import {
   resilientStatusSnapshotSchema,
+  type DetailSnapshotDTO,
   type HistoryPeriod,
   type HistoryPointDTO,
   type HistoryResponseDTO,
@@ -31,7 +32,15 @@ export interface DataSource {
   getHistorySeries(): Promise<HistorySeries>;
   /** Notas Técnicas publicadas no portal (conteúdo estático versionado). */
   getTechnicalNotes(): Promise<TechnicalNotesFileDTO>;
+  /** Estado de cada operação de cada autorizador (o details.json da coleta). */
+  getDetails(): Promise<DetailSnapshotDTO>;
 }
+
+/** Snapshot de detalhe vazio: a seção do painel simplesmente não aparece. */
+export const EMPTY_DETAILS: DetailSnapshotDTO = {
+  generatedAt: new Date(0).toISOString(),
+  authorizers: [],
+};
 
 export async function fetchJson(url: string): Promise<unknown> {
   const response = await fetch(url, { headers: { Accept: 'application/json' } });

@@ -5,6 +5,7 @@ import {
   LATENCY_BUCKET_MS,
   statusSnapshotSchema,
   summarySchema,
+  type DetailSnapshotDTO,
   type HistoryPeriod,
   type HistoryResponseDTO,
   type StatusSnapshotDTO,
@@ -12,6 +13,7 @@ import {
   type TechnicalNotesFileDTO,
 } from '@monitor-sefaz/contracts';
 import {
+  EMPTY_DETAILS,
   fetchJson,
   type DataSource,
   type HistorySeries,
@@ -71,5 +73,13 @@ export class ApiDataSource implements DataSource {
    */
   public async getTechnicalNotes(): Promise<TechnicalNotesFileDTO> {
     return { updatedAt: new Date(0).toISOString(), notes: [] };
+  }
+
+  /**
+   * A API/Worker também não serve o detalhe: o details.json sai só da coleta do
+   * Actions. No modo híbrido quem responde é o estático.
+   */
+  public async getDetails(): Promise<DetailSnapshotDTO> {
+    return EMPTY_DETAILS;
   }
 }
