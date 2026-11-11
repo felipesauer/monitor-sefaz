@@ -30,7 +30,7 @@ describe('OverviewCharts', () => {
       />
     );
     const nfe = screen.getByRole('row', { name: /NF-e/ });
-    expect(nfe).toHaveTextContent('66.7%');
+    expect(nfe).toHaveTextContent('66,7%');
     expect(screen.getByRole('row', { name: /CT-e/ })).toHaveTextContent('100%');
     expect(
       screen.getByRole('img', { name: /No máximo 1 serviço com problema/ })

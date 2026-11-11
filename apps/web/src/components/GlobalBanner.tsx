@@ -1,6 +1,6 @@
 import { CheckCircle2, AlertTriangle, XCircle, CircleDashed } from 'lucide-react';
 import { isUp, type ServiceStatusDTO, type SummaryDTO } from '@monitor-sefaz/contracts';
-import { DOC_LABEL, formatLatency } from '../lib/labels.js';
+import { DOC_LABEL, formatLatency, formatPercent } from '../lib/labels.js';
 import { stateTextColor } from './serviceState.js';
 
 interface GlobalBannerProps {
@@ -50,8 +50,8 @@ export function GlobalBanner({ summary, services = [] }: GlobalBannerProps) {
       <div className="min-w-0">
         <strong className="block text-sm font-semibold">{title}</strong>
         <span className="text-xs" style={{ color: 'var(--text-dim)' }}>
-          {summary.operational} de {summary.total} serviços no ar · {summary.availability}% de
-          disponibilidade
+          {summary.operational} de {summary.total} serviços no ar ·{' '}
+          {formatPercent(summary.availability)} de disponibilidade
           {summary.avgLatencyMs != null && summary.avgLatencyMs > 0 && (
             <>
               {' '}
