@@ -9,7 +9,8 @@ export function utcDate(now: Date): string {
  * Decide se esta rodada deve emitir o resumo diário e monta o evento DAILY_DIGEST.
  * Função PURA (recebe a hora atual e a data do último digest).
  *
- * Gatilho IDEMPOTENTE por dia, robusto ao cron best-effort (~3h, irregular):
+ * Gatilho IDEMPOTENTE por dia, robusto a rodadas que falham ou atrasam (o despachante
+ * do Worker pede uma a cada 5 min, mas o Actions não garante nenhuma):
  * emite quando a hora UTC atual é >= `targetHour` E ainda não houve digest hoje
  * (`lastDigestDate !== hoje`). Assim:
  * - se o cron PULAR a hora-alvo exata, o digest ainda sai na próxima rodada do dia;
