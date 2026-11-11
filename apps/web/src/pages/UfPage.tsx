@@ -14,7 +14,7 @@ import { ServiceDetailPanel } from '../components/ServiceDetailPanel.js';
 import { NoScriptNotice } from '../components/NoScriptNotice.js';
 import { UfDirectory } from '../components/UfDirectory.js';
 import { Footer } from '../components/Footer.js';
-import { STATE_META, STATE_SEVERITY } from '../components/serviceState.js';
+import { STATE_META, STATE_SEVERITY, stateTextColor } from '../components/serviceState.js';
 import {
   AUTHORIZER_NAME,
   DOC_DESCRIPTION,
@@ -121,7 +121,7 @@ function UfBanner({ uf, services }: { uf: UF; services: ServiceStatusDTO[] }) {
         {failing.length > 0 && (
           <p className="mt-1 text-xs" style={{ color: 'var(--text-dim)' }}>
             Com problema:{' '}
-            <span style={{ color }}>
+            <span style={{ color: stateTextColor(color) }}>
               {failing
                 .map((s) => `${DOC_LABEL[s.document] ?? s.document} (${STATE_META[s.state].label})`)
                 .join(', ')}

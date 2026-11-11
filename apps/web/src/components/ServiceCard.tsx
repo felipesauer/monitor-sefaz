@@ -1,7 +1,7 @@
 import { CircleDashed } from 'lucide-react';
 import type { HistoryPointDTO, ServiceStatusDTO } from '@monitor-sefaz/contracts';
 import { Sparkline } from './Sparkline.js';
-import { STATE_META } from './serviceState.js';
+import { STATE_META, stateTextColor } from './serviceState.js';
 import { DOC_LABEL, UF_NAME, formatLatency } from '../lib/labels.js';
 
 interface ServiceCardProps {
@@ -73,7 +73,7 @@ export function ServiceCard({ service, spark = [], onSelect }: ServiceCardProps)
           className="flex shrink-0 items-center gap-1.5 rounded-full px-2 py-1 text-[11px] font-medium"
           style={{
             background: `color-mix(in srgb, ${meta.color} 14%, transparent)`,
-            color: meta.color,
+            color: stateTextColor(meta.color),
           }}
         >
           {service.state === 'OPERATIONAL' && (
