@@ -64,6 +64,11 @@ export interface CollectedStatus {
 export interface AvailabilityProviderLike {
   supportedDocuments(): DocumentType[];
   fetch(document: DocumentType): Promise<AvailabilityRow[]>;
+  /**
+   * Abre a conexão com a página antes da busca medida (ADR-23). Opcional: sem
+   * ele, a latência inclui a abertura da conexão.
+   */
+  warmUp?(document: DocumentType): Promise<void>;
 }
 
 /**
@@ -115,6 +120,7 @@ export class AvailabilityCollector {
     const documents = this.provider.supportedDocuments();
     const fetched = await Promise.allSettled(
       documents.map(async (document) => {
+        await this.provider.warmUp?.(document);
         const start = this.now();
         const rows = await this.provider.fetch(document);
         return { rows, latencyMs: this.now() - start };

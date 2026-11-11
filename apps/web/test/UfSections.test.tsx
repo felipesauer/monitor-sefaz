@@ -128,4 +128,26 @@ describe('UfSections', () => {
     expect(onSelect).toHaveBeenCalledWith(expect.objectContaining({ id: 'BPe:AC' }));
     expect(screen.queryByText('tempo de acesso')).toBeNull();
   });
+
+  it('adia o desenho só dos estados depois dos primeiros, e só quando pedido', () => {
+    const ufs = ['AC', 'AL', 'AM', 'AP', 'BA'] as const;
+    const services = ufs.flatMap((uf) => [service('NFe', uf), service('BPe', uf)]);
+    const { container, rerender } = render(
+      <UfSections services={services} documents={DOCS} ufs={ufs} series={{}} onSelect={() => {}} />
+    );
+    expect(container.querySelectorAll('section[class*="content-visibility"]')).toHaveLength(0);
+    rerender(
+      <UfSections
+        deferOffscreen
+        services={services}
+        documents={DOCS}
+        ufs={ufs}
+        series={{}}
+        onSelect={() => {}}
+      />
+    );
+    // Em ordem de nome: Acre, Alagoas, Amapá ficam; Amazonas e Bahia adiam.
+    const deferred = [...container.querySelectorAll('section[class*="content-visibility"]')];
+    expect(deferred.map((s) => s.id)).toEqual(['uf-AM', 'uf-BA']);
+  });
 });
